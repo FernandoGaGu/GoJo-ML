@@ -1,0 +1,374 @@
+# Module with tools used to calculate performance metrics.
+#
+# Author: Fernando García Gutiérrez
+# Email: fgarcia@fundacioace.org
+#
+# STATUS: completed and functional
+#
+import numpy as np
+import warnings
+import sklearn.metrics as sk_metrics
+
+from ..util.validation import (
+    checkMultiInputTypes,
+    checkInputType,
+    checkCallable
+)
+from ..util.io import createObjectRepresentation
+from ..exception import (
+    IncorrectNumberOfClasses,
+    MissingArrayDimensions
+)
+
+
+class Metric(object):
+    """ Base class used to create any type of performance evaluation metric compatible with the "deid" framework.
+
+    Parameters
+    ----------
+    name : str
+        Name given to the performance metric
+
+    function : callable
+        Function that will receive as input two numpy.array ("y_true" and "y_pred") and must return
+        a scalar or a numpy array.
+
+    bin_threshold : float or int, default=None
+        Threshold used to binarize the input predictions. By default, no thresholding is applied.
+
+    multiclass : bool, default=False
+        Parameter indicating if a multi-class classification metric is being computed.
+
+    number_of_classes : int, default=None
+        Parameter indicating the number of classes in a multi-class classification problem. This
+        parameter will not have any effect when "multiclass=False".
+
+    use_multiclass_sparse : bool, default=False
+        Parameter indicating if the multi-class level predictions are provided as a one-hot vector.
+        This parameter will not have any effect when "multiclass=False".
+
+    **kwargs
+        Optional parameters provided to the input callable specified by "function".
+    """
+    def __init__(self, name: str, function: callable, bin_threshold: float or int = None,
+                 multiclass: bool = False, number_of_classes: int = None,
+                 use_multiclass_sparse: bool = True, **kwargs):
+        checkCallable('function', function)
+        checkMultiInputTypes(
+            ('name', name, [str]),
+            ('bin_threshold', bin_threshold, [float, int, type(None)]),
+            ('multiclass', multiclass, [bool]),
+            ('number_of_classes', number_of_classes, [int, type(None)]),
+            ('use_multiclass_sparse', use_multiclass_sparse, [bool])
+        )
+
+        if multiclass and number_of_classes is None:
+            raise TypeError(
+                'deid.core.evaluation.Metric: if "multiclass" is True the number of classes must be '
+                'provided using the parameter "number_of_classes"')
+
+        self.name = name.replace(' ', '_')  # replace spaces
+        self.function = function
+        self.function_kw = kwargs
+        self.bin_threshold = bin_threshold
+        self.multiclass = multiclass
+        self.number_of_classes = number_of_classes
+        self.use_multiclass_sparse = use_multiclass_sparse
+
+    def __repr__(self):
+        parameters = {
+            'function_kw': self.function_kw
+        }
+        if self.multiclass:
+            parameters['number_of_classes'] = self.number_of_classes
+            parameters['use_multiclass_sparse'] = self.use_multiclass_sparse
+            parameters['bin_threshold'] = self.use_multiclass_sparse
+        else:
+            parameters['multiclass'] = self.multiclass
+
+        return createObjectRepresentation(self.name, **parameters)
+
+    def __str__(self):
+        return self.__repr__()
+
+    def __call__(self, y_true: np.ndarray, y_pred: np.ndarray, bin_threshold: float = None) -> float or np.ndarray:
+        """
+        Parameters
+        ----------
+        y_true : np.ndarray
+        y_pred : np.ndarray
+        bin_threshold : float, default=None
+            Threshold used to binarize the input predictions. By default, no thresholding is applied. If the
+            parameter "bin_threshold" was defined in constructor, its specification will be overwritten
+            by this parameter.
+
+        Note
+        ----
+        This function do not perform inplace modifications.
+        """
+        checkMultiInputTypes(
+            ('y_true', y_true, [np.ndarray]),
+            ('y_pred', y_pred, [np.ndarray]),
+            ('bin_threshold', bin_threshold, [float, int, type(None)]))
+
+        # if not bin_threshold was provided use the value provided in the constructor
+        if bin_threshold is None:
+            bin_threshold = self.bin_threshold
+
+        # binarize predictions
+        if bin_threshold is not None:
+            if self.multiclass:
+                warnings.warn(
+                    'deid.core.evaluation.Metric. bin_threshold parameter will not have effect when the multiclass '
+                    'parameter have been selected as True.')
+            else:
+                y_pred = (y_pred > bin_threshold).astype(int)
+
+        if self.multiclass:
+            checkInputType('number_of_classes', self.number_of_classes, [int])
+
+            # compare prediction and true labels coded as dummy variables
+            if self.use_multiclass_sparse:
+
+                # convert to dummy variables: (y_X) -> (y_X, n_classes)
+                if len(y_pred.shape) == 1:   # categorical output
+                    y_pred = _convertCategoricalToSparse(
+                        arr=y_pred, n_classes=self.number_of_classes, var_name='y_pred')
+                if len(y_true.shape) == 1:
+                    y_true = _convertCategoricalToSparse(
+                        arr=y_true, n_classes=self.number_of_classes, var_name='y_true')
+
+                # check the number of classes are correct
+                _checkNumberOfClassesSparse(arr=y_pred, n_classes=self.number_of_classes, var_name='y_pred')
+                _checkNumberOfClassesSparse(arr=y_true, n_classes=self.number_of_classes, var_name='y_true')
+
+            else:
+                # convert from dummy variables to categorical: (y_X, n_classes) -> (y_X)
+                if len(y_pred.shape) != 1:   # categorical output
+                    y_pred = _convertSparseToCategorical(
+                        arr=y_pred, n_classes=self.number_of_classes, var_name='y_pred')
+                if len(y_true.shape) != 1:
+                    y_true = _convertSparseToCategorical(
+                        arr=y_true, n_classes=self.number_of_classes, var_name='y_true')
+
+                # check that the number of classes are correct
+                _checkNumberOfClassesCategorical(arr=y_pred, n_classes=self.number_of_classes, var_name='y_pred')
+                _checkNumberOfClassesCategorical(arr=y_true, n_classes=self.number_of_classes, var_name='y_true')
+
+        return self.function(y_true, y_pred, **self.function_kw)
+
+
+def getScores(y_true: np.ndarray, y_pred: np.ndarray, metrics: list) -> dict:
+    """ Function used to calculate the scores given by the metrics passed within the metrics parameter.
+
+    Parameters
+    ----------
+    y_true : np.ndarray
+        True labels.
+
+    y_pred : np.ndarray
+        Predicted labels.
+
+    metrics : List[deid.core.Metric]
+        List of deid.core.Metric instances.
+
+    Returns
+    -------
+    metric_scores : dict
+        Dictionary where the keys will correspond to the metric names and the values to the metric scores.
+
+    """
+    checkMultiInputTypes(
+        ('y_true', y_true, [np.ndarray]),
+        ('y_pred', y_pred, [np.ndarray]),
+        ('metrics', metrics, [list]))
+
+    if len(metrics) == 0:
+        raise TypeError('Empty metrics parameter.')
+
+    for i, m in enumerate(metrics):
+        checkInputType('metrics[%d]' % i, m, [Metric])
+
+    # check for duplicated metric names
+    metric_names = [m.name for m in metrics]
+
+    if len(metric_names) != len(set(metric_names)):
+        raise TypeError('Detected metrics with duplicated names (%r)' % metric_names)
+
+    results = {}
+    for metric in metrics:
+        try:
+            results[metric.name] = metric(y_true=y_true, y_pred=y_pred)
+        except Exception as ex:
+            warnings.warn('Exception in metric {}'.format(metric))
+            raise ex
+
+    return results
+
+
+def flatFunctionInput(fn: callable):
+    """ Function used to flatten the input predictions before the computation of the metric.
+
+    Example
+    -------
+    >>> from deid import core
+    >>> from sklearn import metrics
+
+    >>> metric = core.Metric('accuracy', core.flatFunctionInput(metrics.accuracy_score), bin_threshold=0.5)
+    >>> y_pred = np.array([[0.2, 0.9, 0.7, 0.3], [0.2, 0.9, 0.7, 0.3]])
+    >>> y_true = np.array([[0, 1, 1, 0], [1, 0, 0, 1]])
+    """
+    checkCallable('fn', fn)
+
+    def _wrappedFunction(y_pred, y_true, **kwargs):
+        return fn(y_pred.reshape(-1), y_true.reshape(-1), **kwargs)
+
+    return _wrappedFunction
+
+
+def getDefaultMetrics(task: str, select: list = None) -> list:
+    """ Function used to get a series of pre-defined scores for evaluate the model performance.
+
+    Parameters
+    ---------
+    task : str
+        Task-associated metrics. Currently available tasks are: 'binary_classification' and 'regression'.
+
+    select : list, default=None
+        Metrics of those returned that will be selected (in case you do not want to calculate all the metrics).
+        By default, all metrics associated with the task will be returned.
+
+        Note: metrics are represented by strings.
+
+    Returns
+    -------
+    metrics : list
+        List of instances of the deid.core.Metric class.
+    """
+    checkMultiInputTypes(
+        ('task', task, [str]),
+        ('select', select, [list, type(None)]))
+
+    if task not in DEFINED_METRICS.keys():
+        raise TypeError('Unknown task "%s". Available tasks are: %r' % (task, list(DEFINED_METRICS.keys())))
+
+    # select task-metrics
+    task_metrics = DEFINED_METRICS[task]
+    selected_task_metrics = []
+    if select is not None:
+        for _metric_name in select:
+            if _metric_name in task_metrics.keys():
+                selected_task_metrics.append(task_metrics[_metric_name])
+            else:
+                warnings.warn(
+                    'Metric "%s" not found in task-metrics. To see available metrics use: '
+                    '"deid.core.getAvailableDefaultNetrics()"' % _metric_name)
+    else:
+        selected_task_metrics = list(task_metrics.values())
+
+    return selected_task_metrics
+
+
+def getAvailableDefaultNetrics(task: str = None) -> dict:
+    """ Return to dictionary with task names and default metrics defined for those tasks. The selected problems for
+    which you want to see the metrics can be filtered by the task parameter indicating the task for which you want
+    to see the metrics.
+
+    Parameters
+    ----------
+    task : str, default=None
+        Specify the task to see the defined metrics associated to that task.
+
+    Returns
+    -------
+    task_info : dict
+        Dictionary where the keys correspond to the task and the values to the metrics defined by default for the
+        associated task.
+    """
+    checkInputType('task', task, [str, type(None)])
+
+    task_metric_info = {
+        key: list(task_dict.keys()) for key, task_dict in DEFINED_METRICS.items() if task is None or task == key}
+
+    return task_metric_info
+
+
+def _checkNumberOfClassesCategorical(arr: np.ndarray, n_classes: int, var_name: str = None):
+    """ Function that checks that the number of classes are valid for a categorical input. """
+    in_n_classes = np.max(arr) + 1    # labels starts with 0, they represent array indices
+
+    if np.min(arr) < 0:
+        raise ValueError('Class label less than 0. Index should start from 0. Error in variable: "{}"'.format(var_name))
+
+    if n_classes < in_n_classes:
+        raise IncorrectNumberOfClasses(
+            detected_classes=in_n_classes, specified_classes=n_classes, in_var=var_name)
+
+
+def _checkNumberOfClassesSparse(arr: np.ndarray, n_classes: int, var_name: str = None):
+    """ Function that checks that the number of classes are valid for a sparse input. """
+    if n_classes != arr.shape[1]:
+        raise IncorrectNumberOfClasses(
+            detected_classes=arr.shape[1], specified_classes=n_classes, in_var=var_name)
+
+
+def _convertCategoricalToSparse(arr: np.ndarray, n_classes: int, var_name: str = None) -> np.ndarray:
+    """ Convert from (n_samples) to (n_samples, n_classes). """
+    _checkNumberOfClassesCategorical(arr=arr, n_classes=n_classes, var_name=var_name)
+
+    return np.squeeze(np.eye(n_classes)[arr])
+
+
+def _convertSparseToCategorical(arr: np.ndarray, n_classes: int, var_name: str = None) -> np.ndarray:
+    """ Convert from (n_samples, n_classes) to (n_samples). """
+    if len(arr.shape) != 2:
+        raise MissingArrayDimensions(expected_n_dims=2, input_n_dims=len(arr.shape), in_var=var_name)
+
+    if arr.shape[1] != n_classes:
+        raise IncorrectNumberOfClasses(
+            detected_classes=arr.shape[1], specified_classes=n_classes, in_var=var_name)
+
+    return arr.argmax(axis=1)
+
+
+def _specificity(y_true: np.ndarray, y_pred: np.ndarray):
+    """ Calculate the specificity (not defined in sklearn.metrics). """
+    tn, fp, fn, tp = sk_metrics.confusion_matrix(y_true, y_pred).ravel()
+    return tn / (tn + fp)
+
+
+def _negativePredictiveValue(y_true: np.ndarray, y_pred: np.ndarray):
+    """ Calculate the negative predictive value (not defined in sklearn.metrics). """
+    tn, fp, fn, tp = sk_metrics.confusion_matrix(y_true, y_pred).ravel()
+    if (tn + fn) == 0:  # the model predicts all positive
+        return 0.0
+    return tn / (tn + fn)
+
+
+def _correlation(y_true: np.ndarray, y_pred: np.ndarray):
+    """ Calculate the correlation coefficient between y_true and y_pred. (not defined in sklearn.metrics). """
+    return np.corrcoef(y_true, y_pred)[0, 1]
+
+
+# hash containing pre-defined metrics for different tasks
+DEFINED_METRICS = {
+    'binary_classification': dict(
+        accuracy=Metric('accuracy', sk_metrics.accuracy_score, bin_threshold=0.5),
+        balanced_accuracy=Metric('balanced_accuracy', sk_metrics.balanced_accuracy_score, bin_threshold=0.5),
+        precision=Metric('precision', sk_metrics.precision_score, bin_threshold=0.5, zero_division=0),
+        recall=Metric('recall', sk_metrics.recall_score, bin_threshold=0.5, zero_division=0),
+        sensitivity=Metric('sensitivity', sk_metrics.recall_score, bin_threshold=0.5, zero_division=0),
+        specificity=Metric('specificity', _specificity, bin_threshold=0.5),
+        npv=Metric('negative_predictive_value', _negativePredictiveValue, bin_threshold=0.5),
+        f1_score=Metric('f1_score', sk_metrics.f1_score, bin_threshold=0.5),
+        auc=Metric('auc', sk_metrics.roc_auc_score)
+    ),
+    'regression': dict(
+        explained_variance=Metric('explained_variance', sk_metrics.explained_variance_score),
+        mse=Metric('mse', sk_metrics.mean_squared_error),
+        mae=Metric('mae', sk_metrics.mean_absolute_error),
+        r2_score=Metric('r2', sk_metrics.r2_score),
+        correlation_metric=Metric('correlation', _correlation)
+    )
+}
+
