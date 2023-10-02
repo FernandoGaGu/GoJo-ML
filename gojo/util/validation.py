@@ -24,7 +24,7 @@ def checkMultiInputTypes(*args):
     for element in args:
         if not ((isinstance(element, tuple) or isinstance(element, list)) and len(element) == 3):
             raise TypeError('The arguments of this function must consist of tuples or lists of three arguments '
-                            'following the signature of the deid.util.checkInputType() function.')
+                            'following the signature of the gojo.util.checkInputType() function.')
 
         checkInputType(*element)
 

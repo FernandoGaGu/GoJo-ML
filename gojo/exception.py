@@ -26,3 +26,11 @@ class MissingArrayDimensions(Exception):
 
         super().__init__(self.message)
 
+
+class UnfittedEstimator(Exception):
+    """ Exception thrown when trying to make predictions without performing a previous model fit. """
+    def __init__(self):
+        self.message = 'Before making inferences through a model by calling the "train()" method, it is necessary to '\
+                       'adjust the model by calling the train() method.'
+
+        super().__init__(self.message)

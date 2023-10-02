@@ -1,2 +1,2 @@
-# Data Enhancement and Integration for Decision-making (deid)
+# GoJo
 Refactored version "Machine-Learning-Tools"

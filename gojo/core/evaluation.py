@@ -22,7 +22,7 @@ from ..exception import (
 
 
 class Metric(object):
-    """ Base class used to create any type of performance evaluation metric compatible with the "deid" framework.
+    """ Base class used to create any type of performance evaluation metric compatible with the "gojo" framework.
 
     Parameters
     ----------
@@ -53,19 +53,6 @@ class Metric(object):
     def __init__(self, name: str, function: callable, bin_threshold: float or int = None,
                  multiclass: bool = False, number_of_classes: int = None,
                  use_multiclass_sparse: bool = True, **kwargs):
-        checkCallable('function', function)
-        checkMultiInputTypes(
-            ('name', name, [str]),
-            ('bin_threshold', bin_threshold, [float, int, type(None)]),
-            ('multiclass', multiclass, [bool]),
-            ('number_of_classes', number_of_classes, [int, type(None)]),
-            ('use_multiclass_sparse', use_multiclass_sparse, [bool])
-        )
-
-        if multiclass and number_of_classes is None:
-            raise TypeError(
-                'deid.core.evaluation.Metric: if "multiclass" is True the number of classes must be '
-                'provided using the parameter "number_of_classes"')
 
         self.name = name.replace(' ', '_')  # replace spaces
         self.function = function
@@ -74,6 +61,23 @@ class Metric(object):
         self.multiclass = multiclass
         self.number_of_classes = number_of_classes
         self.use_multiclass_sparse = use_multiclass_sparse
+
+        # parameter checking
+        self._checkMetricParams()
+
+    def _checkMetricParams(self):
+        """ Subroutine to perform the metric parameters. """
+        checkCallable('function', self.function)
+        checkMultiInputTypes(
+            ('name', self.name, [str]),
+            ('bin_threshold', self.bin_threshold, [float, int, type(None)]),
+            ('multiclass', self.multiclass, [bool]),
+            ('number_of_classes', self.number_of_classes, [int, type(None)]),
+            ('use_multiclass_sparse', self.use_multiclass_sparse, [bool]))
+        if self.multiclass and self.number_of_classes is None:
+            raise TypeError(
+                'gojo.core.evaluation.Metric: if "multiclass" is True the number of classes must be '
+                'provided using the parameter "number_of_classes". Review metric initialization or parameters.')
 
     def __repr__(self):
         parameters = {
@@ -96,7 +100,11 @@ class Metric(object):
         Parameters
         ----------
         y_true : np.ndarray
+            True labels.
+
         y_pred : np.ndarray
+            Predicted labels.
+
         bin_threshold : float, default=None
             Threshold used to binarize the input predictions. By default, no thresholding is applied. If the
             parameter "bin_threshold" was defined in constructor, its specification will be overwritten
@@ -106,6 +114,9 @@ class Metric(object):
         ----
         This function do not perform inplace modifications.
         """
+        # parameter checking
+        self._checkMetricParams()
+
         checkMultiInputTypes(
             ('y_true', y_true, [np.ndarray]),
             ('y_pred', y_pred, [np.ndarray]),
@@ -119,7 +130,7 @@ class Metric(object):
         if bin_threshold is not None:
             if self.multiclass:
                 warnings.warn(
-                    'deid.core.evaluation.Metric. bin_threshold parameter will not have effect when the multiclass '
+                    'gojo.core.evaluation.Metric. bin_threshold parameter will not have effect when the multiclass '
                     'parameter have been selected as True.')
             else:
                 y_pred = (y_pred > bin_threshold).astype(int)
@@ -169,8 +180,8 @@ def getScores(y_true: np.ndarray, y_pred: np.ndarray, metrics: list) -> dict:
     y_pred : np.ndarray
         Predicted labels.
 
-    metrics : List[deid.core.Metric]
-        List of deid.core.Metric instances.
+    metrics : List[gojo.core.Metric]
+        List of gojo.core.Metric instances.
 
     Returns
     -------
@@ -211,7 +222,7 @@ def flatFunctionInput(fn: callable):
 
     Example
     -------
-    >>> from deid import core
+    >>> from gojo import core
     >>> from sklearn import metrics
 
     >>> metric = core.Metric('accuracy', core.flatFunctionInput(metrics.accuracy_score), bin_threshold=0.5)
@@ -226,7 +237,8 @@ def flatFunctionInput(fn: callable):
     return _wrappedFunction
 
 
-def getDefaultMetrics(task: str, select: list = None) -> list:
+def getDefaultMetrics(task: str, select: list = None, bin_threshold: float or int = None, multiclass: bool = False,
+                      number_of_classes: int = None, use_multiclass_sparse: bool = True) -> list:
     """ Function used to get a series of pre-defined scores for evaluate the model performance.
 
     Parameters
@@ -240,10 +252,24 @@ def getDefaultMetrics(task: str, select: list = None) -> list:
 
         Note: metrics are represented by strings.
 
+    bin_threshold : float or int, default=None
+        Threshold used to binarize the input predictions. By default, no thresholding is applied.
+
+    multiclass : bool, default=False
+        Parameter indicating if a multi-class classification metric is being computed.
+
+    number_of_classes : int, default=None
+        Parameter indicating the number of classes in a multi-class classification problem. This
+        parameter will not have any effect when "multiclass=False".
+
+    use_multiclass_sparse : bool, default=False
+        Parameter indicating if the multi-class level predictions are provided as a one-hot vector.
+        This parameter will not have any effect when "multiclass=False".
+
     Returns
     -------
     metrics : list
-        List of instances of the deid.core.Metric class.
+        List of instances of the gojo.core.Metric class.
     """
     checkMultiInputTypes(
         ('task', task, [str]),
@@ -262,9 +288,27 @@ def getDefaultMetrics(task: str, select: list = None) -> list:
             else:
                 warnings.warn(
                     'Metric "%s" not found in task-metrics. To see available metrics use: '
-                    '"deid.core.getAvailableDefaultNetrics()"' % _metric_name)
+                    '"gojo.core.getAvailableDefaultNetrics()"' % _metric_name)
     else:
         selected_task_metrics = list(task_metrics.values())
+
+    # modify metrics according to the input parameters
+
+    # - modify binary_threshold
+    for metric in selected_task_metrics:
+        setattr(metric, 'bin_threshold', bin_threshold)
+
+    # - modify multiclass
+    for metric in selected_task_metrics:
+        setattr(metric, 'multiclass', multiclass)
+
+    # - modify number_of_classes
+    for metric in selected_task_metrics:
+        setattr(metric, 'number_of_classes', number_of_classes)
+
+    # - modify use_multiclass_sparse
+    for metric in selected_task_metrics:
+        setattr(metric, 'use_multiclass_sparse', use_multiclass_sparse)
 
     return selected_task_metrics
 
@@ -353,14 +397,14 @@ def _correlation(y_true: np.ndarray, y_pred: np.ndarray):
 # hash containing pre-defined metrics for different tasks
 DEFINED_METRICS = {
     'binary_classification': dict(
-        accuracy=Metric('accuracy', sk_metrics.accuracy_score, bin_threshold=0.5),
-        balanced_accuracy=Metric('balanced_accuracy', sk_metrics.balanced_accuracy_score, bin_threshold=0.5),
-        precision=Metric('precision', sk_metrics.precision_score, bin_threshold=0.5, zero_division=0),
-        recall=Metric('recall', sk_metrics.recall_score, bin_threshold=0.5, zero_division=0),
-        sensitivity=Metric('sensitivity', sk_metrics.recall_score, bin_threshold=0.5, zero_division=0),
-        specificity=Metric('specificity', _specificity, bin_threshold=0.5),
-        npv=Metric('negative_predictive_value', _negativePredictiveValue, bin_threshold=0.5),
-        f1_score=Metric('f1_score', sk_metrics.f1_score, bin_threshold=0.5),
+        accuracy=Metric('accuracy', sk_metrics.accuracy_score),
+        balanced_accuracy=Metric('balanced_accuracy', sk_metrics.balanced_accuracy_score),
+        precision=Metric('precision', sk_metrics.precision_score, zero_division=0),
+        recall=Metric('recall', sk_metrics.recall_score, zero_division=0),
+        sensitivity=Metric('sensitivity', sk_metrics.recall_score, zero_division=0),
+        specificity=Metric('specificity', _specificity),
+        npv=Metric('negative_predictive_value', _negativePredictiveValue),
+        f1_score=Metric('f1_score', sk_metrics.f1_score),
         auc=Metric('auc', sk_metrics.roc_auc_score)
     ),
     'regression': dict(
