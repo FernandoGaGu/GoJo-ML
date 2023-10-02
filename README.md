@@ -1,2 +1,2 @@
-# GoJo
-Refactored version "Machine-Learning-Tools"
+# GoJo (implementation in progress)
+Refactored version "Machine-Learning-Tools" 
