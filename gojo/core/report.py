@@ -114,6 +114,12 @@ class CVReport(object):
         self.X = X_dataset
         self.y = y_dataset
         self._trained_models = trained_models
+        self._metadata = {}
+
+    @property
+    def metadata(self) -> dict:
+        """ Return the report metadata. """
+        return deepcopy(self._metadata)
 
     def getTestPredictions(self) -> pd.DataFrame:
         """ Function that returns a dataframe with the model predictions, indexes and true labels for the test set.
@@ -202,6 +208,13 @@ class CVReport(object):
                 predictions=train_predictions_df, metrics=metrics, loocv=loocv)
 
         return scores
+
+    def addMetadata(self, **kwargs):
+        """ Function used to add metadata to the report. """
+        for k, v in kwargs.items():
+            if k in self._metadata.keys():
+                warnings.warn('Overwriting metadata information for key "%s".' % k)
+            self._metadata[k] = v
 
     def _calculatePerformanceMetrics(self, predictions: pd.DataFrame, metrics: list, loocv: bool) -> pd.DataFrame:
         """ Subroutine used to calculate the performance metrics over a dataframe of predictions. """
