@@ -11,6 +11,7 @@ import numpy as np
 import warnings
 import joblib
 import multiprocessing as mp
+import optuna
 from copy import deepcopy
 from tqdm import tqdm
 from sklearn.model_selection import (
@@ -255,4 +256,132 @@ def evalCrossVal(
     )
 
     return cv_report
+
+# TODO. Check minimization / maximization performed for the optuna library
+# TODO. Review implementation
+# TODO. Add more imput parameters
+# TODO. Save HPO statistics
+# TODO. Add parameter checking
+def evalCrossValNestedHPO(
+        X: np.ndarray or pd.DataFrame,
+        y: np.ndarray or pd.DataFrame or pd.Series,
+        model: Model,
+        search_space: dict,
+        outer_cv: RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut,
+        inner_cv: RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut,
+        verbose: int = -1,
+        n_jobs: int = 1,
+        save_train_preds: bool = False,
+        save_models: bool = False,
+
+    ):
+    """
+
+    Example of 'search_space'
+    -----------------------
+    >>> search_space = {
+    >>>     'max_depth': ( (2, 10), 'suggest_int' ),   # sample from a categorical distribution
+    >>>     'max_samples': ( (0.5, 1.0), 'suggest_float' ),   # ... from a uniform distribution
+    >>> }
+
+    """
+    def _trialHPO(
+            _trial,
+            _X: np.ndarray,
+            _y: np.ndarray,
+            _model: Model,
+            _search_space: dict,
+            _cv: RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut,
+            _metrics: list,
+            _minimize: bool,
+            _objective_metric: str = None,
+            _customAggFunction: callable = None
+        ) -> float or int:
+        """ Subroutine used to run a HPO trial. """
+
+        if _objective_metric is None and _customAggFunction is None:
+            raise TypeError('Either "_objective_metric" or "_customAggFunction" should be defined')
+
+        # sample parameters from the trial distribution
+        _optim_params = {
+            name: getattr(_trial, values[1])(name, *values[0])
+            for name, values in _search_space.items()
+        }
+
+        _model = deepcopy(_model)  # avoid inplace modifications
+        _model.update(**_optim_params)   # update model parameters
+
+        # perform the nested cross-validation
+        _cv_report = evalCrossVal(
+            X=_X,
+            y=_y,
+            model=_model,
+            cv=_cv,
+            verbose=0,
+            n_jobs=1,                # avoid using nested parallel executions
+            save_train_preds=True,   # compute training predictions (still thinking aboud this...)
+            save_models=False        # does not save models
+        )
+
+        # compute performance metrics
+        _scores = _cv_report.getScores(metrics=_metrics)
+
+        if _customAggFunction is not None:
+            # use a custom aggregation function to aggregate the fold results, the input for this
+            # function will correspond to the scores returned by the gojo.core.report.CVReport.getScores
+            # function
+            _objective_score = _customAggFunction(_scores)
+        else:
+            # by default consider the average value of the specified function over the test set
+            assert 'test' in _scores.keys(), 'Internal error in gojo.core.loops.evalCrossValNestedHPO._trialHPO. ' \
+                                             'Missing "test" key in CVReport.getScores keys.'
+            # select the test scores
+            _test_scores = _scores['test']
+
+            # check that the specified metric exists
+            if _objective_metric not in _test_scores.columns:
+                raise TypeError('Missing metric "%s". Available metrics are: %r' % (
+                    _objective_metric, _test_scores.columns.tolist()))
+
+            _objective_score = _test_scores[_objective_metric].mean()
+
+        # by default optuna perform a minimization
+        if not _minimize:
+            _objective_score = -1 * _objective_score
+
+        if not isinstance(_objective_score, (int, float)):
+            raise TypeError(
+                'Returned score used to optimize model hyperparameters should be a scalar. '
+                'Returned type: {}'.format(type(_objective_score)))
+
+        return _objective_score
+
+
+    checkMultiInputTypes(
+        ('X', X, [np.ndarray, pd.DataFrame]),
+        ('y', y, [np.ndarray, pd.DataFrame, pd.Series]),
+        ('model', model, [Model]),
+        ('search_space', search_space, [dict]),
+        ('outer_cv', outer_cv, [RepeatedKFold, RepeatedStratifiedKFold, LeaveOneOut]),
+        ('inner_cv', inner_cv, [RepeatedKFold, RepeatedStratifiedKFold, LeaveOneOut]),
+        ('verbose', verbose, [int]),
+        ('n_jobs', n_jobs, [int]),
+        ('save_models', save_models, [bool]),
+        ('save_train_preds', save_train_preds, [bool]),
+    )
+
+    # create the model datasets
+    X_dt = Dataset(X)
+    y_dt = Dataset(y)
+
+    # verbose parameters
+    verbose = np.inf if verbose < 0 else verbose   # negative values indicate activate all
+    show_pbar = False
+
+    # levels > 0 should display a tqdm loading bar
+    if verbose > 0:
+        show_pbar = True
+
+
+
 
