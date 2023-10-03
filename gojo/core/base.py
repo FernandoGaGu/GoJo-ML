@@ -45,6 +45,9 @@ class Model(object):
             This method must return a dictionary containing the parameters used by the model. The parameters
             returned by this method will be used to store metadata about the model.
 
+        - updateParameters()
+            This method must update the inner parameters of the model.
+
     This abstract class provides the following properties:
 
         - parameters -> dict
@@ -111,6 +114,11 @@ class Model(object):
         """
         raise NotImplementedError
 
+    @abstractmethod
+    def updateParameters(self, **kwargs):
+        """ Method used to update model parameters. """
+        raise NotImplementedError
+
     @property
     def parameters(self) -> dict:
         """ Return the model parameters defined in the 'getParameters()' method.
@@ -136,6 +144,11 @@ class Model(object):
             Returns True if the model was fitted.
         """
         return self._is_fitted
+
+    def update(self, **kwargs):
+        """ Method used to update model parameters. """
+        self.updateParameters(**kwargs)
+        self.resetFit()
 
     def fitted(self):
         """ Method called to indicate that a given model have been fitted. """
@@ -210,6 +223,15 @@ class SklearnModelWrapper(Model):
 
     def getParameters(self) -> dict:
         return self._in_params
+
+    def updateParameters(self, **kwargs):
+        """ Method used to update the inner model parameters.
+
+        IMPORTANT NOTE: Model parameters should be updated by calling the update() method
+        from the model superclass.
+        """
+        for name, value in kwargs.items():
+            self._in_params[name] = value
 
     def train(self, X: np.ndarray, y: np.ndarray or None, **kwargs):
         """ Method used to fit a model to a given input data.
