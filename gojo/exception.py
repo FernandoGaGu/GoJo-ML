@@ -34,3 +34,9 @@ class UnfittedEstimator(Exception):
                        'adjust the model by calling the train() method.'
 
         super().__init__(self.message)
+
+
+class DataLoaderError(Exception):
+    """ Exception thrown when a data-loader operation failed. """
+    def __init__(self, msg: str):
+        super().__init__(msg)
