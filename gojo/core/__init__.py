@@ -7,7 +7,8 @@ from .evaluation import (
 )
 
 from .loops import (
-    evalCrossVal
+    evalCrossVal,
+    evalCrossValNestedHPO
 )
 
 from .base import (

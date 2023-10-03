@@ -4,7 +4,8 @@
 # Author: Fernando García Gutiérrez
 # Email: fgarcia@fundacioace.org
 #
-# STATUS: uncompleted and not functional, still in development
+# STATUS: completed and functional
+# TODO. Add documentation for the function 'evalCrossValNestedHPO'
 #
 import pandas as pd
 import numpy as np
@@ -154,6 +155,25 @@ def _evalCrossValFold(
     )
 
 
+def _createCVReport(cv_results: list, X_dataset, y_dataset) -> CVReport:
+    # HACk. a little hard-coded...
+    cv_report = CVReport(
+        raw_results=cv_results,
+        X_dataset=X_dataset,
+        y_dataset=y_dataset,
+        n_fold_key='n_fold',
+        pred_test_key='pred_test',
+        true_test_key='true_test',
+        pred_train_key='pred_train',
+        true_train_key='true_train',
+        test_idx_key='test_idx',
+        train_idx_key='train_idx',
+        trained_model_key='trained_model'
+    )
+
+    return cv_report
+
+
 def evalCrossVal(
         X: np.ndarray or pd.DataFrame,
         y: np.ndarray or pd.DataFrame or pd.Series,
@@ -242,28 +262,16 @@ def evalCrossVal(
         warnings.warn(
             'Detected a fitted model after cross-validation procedure in "gojo.core.loops.evalCrossVal(...)"')
 
-    # HACk. a little hard-coded...
-    cv_report = CVReport(
-        raw_results=cv_results,
+    cv_report = _createCVReport(
+        cv_results=cv_results,
         X_dataset=X_dt,
         y_dataset=y_dt,
-        n_fold_key='n_fold',
-        pred_test_key='pred_test',
-        true_test_key='true_test',
-        pred_train_key='pred_train',
-        true_train_key='true_train',
-        test_idx_key='test_idx',
-        train_idx_key='train_idx',
-        trained_model_key='trained_model'
     )
 
     return cv_report
 
 
-# TODO. Review implementation
-# TODO. Add more input parameters
-# TODO. Save HPO statistics
-# TODO. Add parameter checking
+# TODO. Add documentation
 def evalCrossValNestedHPO(
         X: np.ndarray or pd.DataFrame,
         y: np.ndarray or pd.DataFrame or pd.Series,
@@ -286,8 +294,8 @@ def evalCrossValNestedHPO(
     Example of 'search_space'
     -----------------------
     >>> search_space = {
-    >>>     'max_depth': ( (2, 10), 'suggest_int' ),   # sample from a categorical distribution
-    >>>     'max_samples': ( (0.5, 1.0), 'suggest_float' ),   # ... from a uniform distribution
+    >>>     'max_depth': ('suggest_int', (2, 10)),           # sample from a categorical distribution
+    >>>     'max_samples': ('suggest_float', (0.5, 1.0) ),   # ... from a uniform distribution
     >>> }
 
     """
@@ -311,7 +319,7 @@ def evalCrossValNestedHPO(
 
         # sample parameters from the trial distribution
         _optim_params = {
-            name: getattr(_trial, values[1])(name, *values[0])    # example trial.suggest_int('param_name', (0, 10))
+            name: getattr(_trial, values[0])(name, *values[1])    # example trial.suggest_int('param_name', (0, 10))
             for name, values in _search_space.items()
         }
 
@@ -331,7 +339,7 @@ def evalCrossValNestedHPO(
         )
 
         # compute performance metrics
-        _scores = _cv_report.getScores(metrics=_metrics)
+        _scores = _cv_report.getScores(metrics=_metrics, supress_warnings=True)
 
         if _customAggFunction is not None:
             # use a custom aggregation function to aggregate the fold results, the input for this
@@ -387,8 +395,8 @@ def evalCrossValNestedHPO(
         checkMultiInputTypes(
             ('search_space (item %d)' % i, param_name, [str]),
             ('search_space["%s"]' % param_name, hpo_values, [tuple, list]),
-            ('search_space["%s"][0]' % param_name, hpo_values[0], [tuple, list]),
-            ('search_space["%s"][1]' % param_name, hpo_values[1], [str]))
+            ('search_space["%s"][0]' % param_name, hpo_values[0], [str]),
+            ('search_space["%s"][1]' % param_name, hpo_values[1], [tuple, list]))
 
     # check the provided aggregation function
     if agg_function is not None:
@@ -408,20 +416,33 @@ def evalCrossValNestedHPO(
 
     # verbose parameters
     verbose = np.inf if verbose < 0 else verbose   # negative values indicate activate all
-    show_fold_number = False
 
     # levels > 0 should display the number of the current fold
+    show_fold_number = False
+    show_best_combinations = False
+    show_hpo_best_values = False
     if verbose > 0:
         show_fold_number = True
+        show_best_combinations = True
+        show_hpo_best_values = True
+
+    if verbose <= 1:
+        optuna.logging.set_verbosity(optuna.logging.WARNING)   # supress optuna warnings below verbosity level <= 1
 
     # train the model optimizing their hyperparameters
+    hpo_trials_history = {}
+    hpo_trials_best_params = {}
+    fold_stats = []   # used to init the gojo.core.report.CVReport instance
     for i, (train_idx, test_idx) in enumerate(outer_cv.split(X_dt.array_data, y_dt.array_data)):
 
         if show_fold_number:    # verbose information
-            print('\n============================================= Fold %d\n' % i)
+            print('\nFold %d =============================================\n' % (i+1))
 
+        # extract train/test data
         X_train = X_dt.array_data[train_idx]
         y_train = y_dt.array_data[train_idx]
+        X_test = X_dt.array_data[test_idx]
+        y_test = y_dt.array_data[test_idx]
 
         # create a partial initialization of the function to optimize
         partial_trialHPO = partial(
@@ -442,6 +463,58 @@ def evalCrossValNestedHPO(
         study = optuna.create_study(sampler=deepcopy(hpo_sampler))
         study.optimize(partial_trialHPO, n_trials=hpo_n_trials, n_jobs=n_jobs)
 
-        # save HPO results (Still in development)
-        return study
+        # save HPO results
+        hpo_trials_history[i] = study.trials_dataframe()
+        hpo_trials_best_params[i] = study.best_params
+
+        # display verbosity information
+        if show_hpo_best_values:
+            study_df = study.trials_dataframe()
+            print('Best trial: %d' % study_df.iloc[np.argmin(study_df['value'].values)].loc['number'])
+            print('Best value: %.5f' % study_df.iloc[np.argmin(study_df['value'].values)].loc['value'])
+            print()
+
+        if show_best_combinations:
+            print('Optimized model hyperparameters: {}\n'.format(study.best_params))
+
+        # update input model hyperparameters
+        optim_model = deepcopy(model)
+        optim_model.update(**study.best_params)
+
+        # train the model and make the predictions on the test data
+        fold_results = _evalCrossValFold(
+            _n_fold=i,
+            _model=optim_model,
+            _X_train=X_train,
+            _y_train=y_train,
+            _X_test=X_test,
+            _y_test=y_test,
+            _train_idx=train_idx,
+            _test_idx=test_idx,
+            _predict_train=save_train_preds,
+            _return_model=save_models,
+            _reset_model_fit=True)
+
+        fold_stats.append(fold_results)
+
+    # the model should not remain fitted after the execution of the previous subroutines
+    if model.is_fitted:
+        warnings.warn(
+            'Detected a fitted model after cross-validation procedure in "gojo.core.loops.evalCrossVal(...)"')
+
+    cv_report = _createCVReport(
+        cv_results=fold_stats,
+        X_dataset=X_dt,
+        y_dataset=y_dt)
+
+    # add HPO metadata
+    cv_report.addMetadata(
+        hpo_history=hpo_trials_history,
+        hpo_best_params=hpo_trials_best_params,
+    )
+
+    return cv_report
+
+
+
 

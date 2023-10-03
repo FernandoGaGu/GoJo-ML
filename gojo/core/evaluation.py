@@ -81,6 +81,7 @@ class Metric(object):
 
     def __repr__(self):
         parameters = {
+            'name': self.name,
             'function_kw': self.function_kw
         }
         if self.multiclass:
@@ -90,7 +91,7 @@ class Metric(object):
         else:
             parameters['multiclass'] = self.multiclass
 
-        return createObjectRepresentation(self.name, **parameters)
+        return createObjectRepresentation('Metric', **parameters)
 
     def __str__(self):
         return self.__repr__()

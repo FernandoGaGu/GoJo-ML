@@ -131,18 +131,23 @@ class CVReport(object):
         """
         return self._convertPredDict2Df(self.test_preds)
 
-    def getTrainPredictions(self) -> pd.DataFrame or None:
+    def getTrainPredictions(self, supress_warnings: bool = False) -> pd.DataFrame or None:
         """ Function that returns a dataframe with the model predictions, indexes and true labels for the train set.
 
         Predictions will only be returned if they are available. In some subroutines of 'gojo.core.loops' it should
         be noted that the predictions made on the training set are not saved or this decision is relegated to the user.
+
+        Parameters
+        ---------
+        supress_warnings : bool, default=False
+            Silence the warning raised when not training predictions have been made.
 
         Returns
         -------
         test_predictions : pandas.DataFrame or None
              Model predictions over the train set.
         """
-        return self._convertPredDict2Df(self.train_preds)
+        return self._convertPredDict2Df(self.train_preds, supress_warnings=supress_warnings)
 
     def getTrainedModels(self, copy: bool = True) -> dict:
         """ Function that returns the trained models if they have been saved in the 'gojo.core.loops' subroutine.
@@ -167,7 +172,7 @@ class CVReport(object):
 
         return self._trained_models
 
-    def getScores(self, metrics: list, loocv: bool = False) -> dict:
+    def getScores(self, metrics: list, loocv: bool = False, supress_warnings: bool = False) -> dict:
         """ Method used to calculate performance metrics for folds from a list of metrics (gojo.core.Metric
         instances) provided. If the subroutine from gojo.core.loops performed a leave-one-out cross-validation
         you must specify the parameter loocv as True.
@@ -179,6 +184,9 @@ class CVReport(object):
 
         loocv : bool
             Parameter indicating if the predictions correspond to a LOOCV schema
+
+        supress_warnings : bool, default=False
+            Indicates whether to supress the possible warnings returned by the method.
 
 
         Returns
@@ -202,7 +210,7 @@ class CVReport(object):
         scores['test'] = self._calculatePerformanceMetrics(
             predictions=test_predictions_df, metrics=metrics, loocv=loocv)
 
-        train_predictions_df = self.getTrainPredictions()
+        train_predictions_df = self.getTrainPredictions(supress_warnings=supress_warnings)
         if train_predictions_df is not None:
             scores['train'] = self._calculatePerformanceMetrics(
                 predictions=train_predictions_df, metrics=metrics, loocv=loocv)
@@ -248,13 +256,14 @@ class CVReport(object):
             checkInputType('metrics[%d]' % i, metrics[i], [Metric])
 
         fold_metrics = []
-        detected_loocv = False
+        detected_loocv = True
         if loocv:
             fold_metrics.append(_getMetricsDict(0, predictions, metrics))
+            detected_loocv = False   # not-relevant
         else:
             for n_fold, fold_df in predictions.groupby(self._N_FOLD_FLAG):
                 if fold_df.shape[0] > 1:   # check that all the predictions contains more than one instance
-                    detected_loocv = True
+                    detected_loocv = False
 
                 fold_metrics.append(_getMetricsDict(n_fold, fold_df, metrics))
 
@@ -267,7 +276,7 @@ class CVReport(object):
 
         return pd.DataFrame(fold_metrics)
 
-    def _convertPredDict2Df(self, d: dict) -> pd.DataFrame or None:
+    def _convertPredDict2Df(self, d: dict, supress_warnings: bool = False) -> pd.DataFrame or None:
         """ Subroutine used to convert the predictions dict to a pandas DataFrame. """
         checkInputType('d', d, [dict])
 
@@ -279,7 +288,9 @@ class CVReport(object):
                     all_none = False
 
         if all_none:
-            warnings.warn('Empty predictions. Returning None')
+            if not supress_warnings:
+                warnings.warn('Empty predictions. Returning None')
+
             return None
 
         # gather model predictions and true labels
