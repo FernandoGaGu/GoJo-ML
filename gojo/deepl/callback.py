@@ -3,8 +3,11 @@
 # Author: Fernando García Gutiérrez
 # Email: fgarcia@fundacioace.org
 #
-# STATUS: still under development
+# STATUS: completed and testing to be done
 #
+import numpy as np
+import pandas as pd
+import warnings
 from abc import ABCMeta, abstractmethod
 
 from ..util.validation import (
@@ -12,16 +15,42 @@ from ..util.validation import (
     checkInputType
 )
 
+
 class Callback(object):
-    """ Description """
+    """ Base class (interface) used to define the callbacks to be executed in each iteration of the training
+    loop of the neural networks defined in 'gojo.deepl.loop.fitNeuralNetwork'.
+    These callbacks provide directives to modify the training of the models. A classic example would be the
+    early stopping callback (defined in 'gojo.deepl.callback.EarlyStopping'.
+
+    Subclasses must define the following methods:
+
+        - evaluate()
+            This method will make available to the callback the following arguments used (and updated) in the current
+            iteration of the 'gojo.deepl.loop.fitNeuralNetwork' training loop:
+
+                model : 'gojo.base.PytorchModelWrapper'
+                    Model to be trained.
+                train_metrics : list
+                    Train computed metrics until the last epoch.
+                valid_metrics : list
+                    Validation computed metrics until the last epoch.
+                train_loss : list
+                    Train computed loss until the last epoch.
+                valid_loss : list
+                    Validation computed loss until the last epoch.
+
+            This method has to return a directive (as a string) that will be interpreted by the
+            'gojo.deepl.loop.fitNeuralNetwork' inner loop.
+
+        - resetState()
+            This method should reset the inner state of the callback.
+    """
     __metaclass__ = ABCMeta
 
-    def __init__(self, name: str, verbose: bool):
+    def __init__(self, name: str):
         checkMultiInputTypes(
-            ('name', name, [str]),
-            ('verbose', verbose, [bool]))
+            ('name', name, [str]))
 
-        self.verbose = verbose
         self._name = name
 
     def __repr__(self):
@@ -33,15 +62,90 @@ class Callback(object):
     def __call__(self, *args, **kwargs) -> str:
         command = self.evaluate(*args, **kwargs)
 
-        checkInputType('gojo.deepl.callback.Callbak.__call__()', command, [str, type(None)])
+        checkInputType('gojo.deepl.callback.Callback.__call__()', command, [str, type(None)])
 
         return command
 
     @abstractmethod
-    def evaluate(self, *args, **kwargs):
+    def evaluate(self, *args, **kwargs) -> str:
         raise NotImplementedError
 
     @abstractmethod
     def resetState(self):
         raise NotImplementedError
+
+
+class EarlyStopping(Callback):
+    """ Callback used to perform an early stopping of the 'gojo.deepl.loop.fitNeuralNetwork' training loop.
+
+    Parameters
+    ----------
+    it_without_improve: int
+        Number of iterations that must be completed without the model showing a decrease in the loss value
+        over the validation set (average of the last epochs or count of the last epochs, as defined by
+        parameter 'track') to perform an early stopping ending the loop execution.
+
+    track : str, default='mean'
+        Method used to compare the latest value of the loss on the validation set with respect to the
+        historical value. Methods currently available:
+
+            - 'mean': compare the current value with respect to the average of the 'it_without_improve' epochs.
+            - 'count': compare the current value with respect to 'it_without_improve' epochs.
+
+    """
+
+    VALID_TRACKING_OPTS = ['mean', 'count']
+    _LOSS_IDENTIFICATION_KEY = 'loss (mean)'   # HACK. Hard-coding, key used to identify the average loss values
+    DIRECTIVE = 'stop'
+
+    def __init__(self, it_without_improve: int, track: str = 'mean'):
+        super().__init__(name='EarlyStopping')
+
+        assert track in EarlyStopping.VALID_TRACKING_OPTS
+
+        self.it_without_improve = it_without_improve
+        self.track = track
+
+        self._saved_valid_loss = []
+
+    def _getLastLossValue(self, stats: list) -> float:
+        """ Function used to get and check the current loss values. """
+        curr_loss = stats[-1].get(self._LOSS_IDENTIFICATION_KEY, np.nan)
+
+        # check for NaNs in the current loss
+        if pd.isna(curr_loss):
+            warnings.warn('Current average loss value is NaN.')
+
+        return curr_loss
+
+    def evaluate(self, valid_loss: list, **_) -> str:
+        """ Early stopping inner logic. """
+        # check input type
+        checkInputType('gojo.deepl.callback.EarlyStopping.evaluate(valid_loss)', valid_loss, [list])
+
+        command = None
+
+        if len(self._saved_valid_loss) < self.it_without_improve:
+            # not enough iterations performed
+            self._saved_valid_loss.append(self._getLastLossValue(valid_loss))
+
+        else:
+            # there is enough iterations performed to check loss improvements
+            curr_loss = self._getLastLossValue(valid_loss)
+            if self.track == 'count':
+                if np.all(curr_loss > np.array(self._saved_valid_loss)[-1 * self.it_without_improve:]):
+                    command = self.DIRECTIVE
+            elif self.track == 'mean':
+                if curr_loss > np.mean(self._saved_valid_loss[-1 * self.it_without_improve:]):
+                    command = self.DIRECTIVE
+            else:
+                raise NotImplementedError()
+
+            self._saved_valid_loss.append(curr_loss)
+
+        return command
+
+    def resetState(self):
+        """ Reset callback """
+        self._saved_valid_loss = []
 

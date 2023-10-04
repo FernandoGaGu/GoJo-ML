@@ -4,6 +4,7 @@
 # Email: fgarcia@fundacioace.org
 #
 import os
+from collections.abc import Iterable
 
 
 def checkInputType(input_var_name: str, input_var: object, valid_types: list or tuple):
@@ -47,4 +48,12 @@ def checkCallable(input_obj_name: str, obj: callable):
     """ Function used to check if a given object is callable. """
     if not callable(obj):
         raise NotImplementedError('"{}" is not callable.'.format(input_obj_name))
+
+
+def checkIterable(input_obj_name: str, obj):
+    """ Function used to check if a given object is an iterable. """
+    if not isinstance(obj, Iterable):
+        raise NotImplementedError('"{}" is not an iterable.'.format(input_obj_name))
+
+
 
