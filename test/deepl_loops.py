@@ -63,6 +63,10 @@ def test_loops():
     )
     print(output)
 
+def test_ffn_generation():
+    pass
+
 
 if __name__ == '__main__':
-    test_loops()
+    #test_loops()
+    test_ffn_generation()
