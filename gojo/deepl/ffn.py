@@ -28,23 +28,22 @@ def generateParametrizedLayers(
     ) -> list:
     """ Function that allows to generate FFN-layer layout based on a set of hyperparameters.
 
-
     Parameters
     ----------
     n_layers : int
         Number of layers.
 
     init_layer_dim : int
-        TODO. DESCRIBE
+        Dimensions of the first layer.
 
     scaffold : str
         Model scaffold to arrange the layers. Valid scaffolds are:
-            - 'exponential': TODO. DESCRIBE
+            - 'exponential': exponential decay in the number of layers. Controlled by the 'beta' parameter.
 
                     n^(l) = (1/beta)^(l) * init
 
-            - 'linear': TODO. DESCRIBE
-                    n^(l) = init + alpha * (l)
+            - 'linear': linear decay in the number of layers. Controlled by the 'alpha' parameter.
+                    n^(l) = init - alpha * (l)
 
     min_width : int
         Minimum layer width.
@@ -57,6 +56,11 @@ def generateParametrizedLayers(
 
     alpha : float or int
         Applied for lineal scaffolds.
+
+    Returns
+    -------
+    dim_per_layer : list
+        Dimensions of each layer (total of layers defined by 'n_layers').
     """
     _VALID_SCAFFOLDS = ['linear', 'exponential']
 
@@ -94,7 +98,7 @@ def generateParametrizedLayers(
             np.array([init_layer_dim] * n_layers) * ( (1/beta) ** np.arange(n_layers) ))
     elif scaffold == 'linear':
         layers = np.ceil(
-            np.array([init_layer_dim] * n_layers) + ( alpha * np.arange(n_layers) ))
+            np.array([init_layer_dim] * n_layers) - ( alpha * np.arange(n_layers) ))
     else:
         assert False, 'Unhandled case in gojo.deepl.ffn.generateParametrizedLayers (scaffold)'
 
@@ -102,7 +106,7 @@ def generateParametrizedLayers(
     layers[layers <= min_width] = min_width
     layers[layers >= max_width] = max_width
 
-    return list(layers)
+    return list(layers.astype(int))
 
 
 

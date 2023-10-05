@@ -24,8 +24,9 @@ from ..util.validation import (
 
 
 def _processInputParams(model: torch.nn.Module, device: str, metrics: list = None) -> tuple:
-    """ Description """
-    # TODO. Add model checking
+    """ Function used to check and process the input data. For the model this implies pass the model to
+     the correct device. Regarding the metrics, they are initialized to an empty list if the input parameter
+     is None, otherwise, this function checks if there are duplicated metrics. """
     checkMultiInputTypes(
         ('model', model, [torch.nn.Module]),
         ('device', device, [str]),
@@ -52,7 +53,6 @@ def _processInputParams(model: torch.nn.Module, device: str, metrics: list = Non
     return model, metrics
 
 
-# TODO. Add dataloader checking
 def iterSupervisedEpoch(
         model: torch.nn.Module,
         dataloader: Iterable,
@@ -63,7 +63,35 @@ def iterSupervisedEpoch(
         metrics: list,
         **kwargs
     ) -> tuple:
-    """ Description """
+    """ Basic function applied to supervised problems that executes the code necessary to perform an epoch.
+
+    This function will return a tuple where the first element correspond to dictionary with the loss-related
+    parameters, and the second element to a dictionary with the calculated metrics.
+
+    Example
+    -------
+    >>> import torch
+    >>> from gojo import deepl
+    >>> from gojo import core
+    >>>
+    >>> # ... previous dataloader creation and model definition
+    >>> history = deepl.fitNeuralNetwork(
+    >>>     iter_fn=deepl.iterSupervisedEpoch,    # function used to perform an epoch
+    >>>     model=model,
+    >>>     train_dl=train_dl,
+    >>>     valid_dl=valid_dl,
+    >>>     n_epochs=50,
+    >>>     loss_fn=torch.nn.BCELoss(),
+    >>>     optimizer_class=torch.optim.Adam,
+    >>>     optimizer_params={'lr': 0.001},
+    >>>     device='cuda',
+    >>>     metrics=core.getDefaultMetrics('binary_classification', bin_threshold=0.5)
+    >>> )
+    >>>
+
+    NOTE: the input dataloader is required to return at least two arguments where the first parameter
+    must correspond to the predictor variables and the second parameter to the target variable.
+    """
 
     # check input dataloader
     checkIterable('dataloader', dataloader)
@@ -78,6 +106,7 @@ def iterSupervisedEpoch(
                 'The minimum number of arguments returned by a dataloader must be 2 where the first element will '
                 'correspond to the input data (the Xs) and the second to the target to be approximated (the Ys). '
                 'The rest of the returned arguments will be passed in the order returned to the model.')
+
         X = dlargs[0].to(device=device)
         y = dlargs[1].to(device=device)
         var_args = dlargs[2:]
@@ -88,7 +117,7 @@ def iterSupervisedEpoch(
             # training loop (calculate gradients and apply backpropagation)
             y_hat = model(X, *var_args)
             # evaluate loss function
-            loss = loss_fn(y_hat, y)
+            loss = loss_fn(y_hat, y)    # in: (input, target)
             # apply backpropagation
             optimizer.zero_grad()
             loss.backward()
@@ -98,7 +127,7 @@ def iterSupervisedEpoch(
             with torch.no_grad():
                 y_hat = model(X, *var_args)
                 # evaluate loss function
-                loss = loss_fn(y_hat, y)
+                loss = loss_fn(y_hat, y)    # in: (input, target)
 
         # gather model predictions and true labels
         y_pred_np = y_hat.detach().cpu().numpy().astype(float)
@@ -125,6 +154,7 @@ def iterSupervisedEpoch(
     return loss_stats, metric_stats
 
 
+# TODO. Organize returned data
 def fitNeuralNetwork(
         iter_fn,
         model: torch.nn.Module,
@@ -138,8 +168,64 @@ def fitNeuralNetwork(
         verbose: int = 1,
         metrics: list = None,
         callbacks: List[Callback] = None,
-        **kwargs):
-    """ Description """
+        **kwargs) -> pd.DataFrame:
+    """
+    Main function of the 'gojo.deepl' module. This function is used to fit a pytorch model using the
+    provided "iteration function" (parameter 'iter_fn') that defined how to run an epoch.
+
+    Parameters
+    ----------
+    iter_fn : callable
+        Function used to execute an epoch during model training. Currently available are:
+
+            - gojo.deepl.iterSupervisedEpoch
+                Used for typical supervised approaches.
+
+    model : torch.nn.Module
+        Pytorch model to be trained.
+
+    train_dl : Iterable
+        Train dataloader (see torch.utils.data.DataLoader class).
+
+        https://pytorch.org/tutorials/beginner/basics/data_tutorial.html
+
+    valid_dl : Iterable
+        Validation dataloader (see torch.utils.data.DataLoader class).
+
+        https://pytorch.org/tutorials/beginner/basics/data_tutorial.html
+
+    n_epochs : int
+        Maximum number of epochs for training a model.
+
+    loss_fn : callable
+        Loss function used to fit the model. This loss function must follow the pytorch guideliness.
+
+        IMPORTANTE: be carreful with this function does not break the Pytorch gradient calculation.
+
+    optimizer_class : type
+        Optimizer class used to adjust model weights (see torch module https://pytorch.org/docs/stable/optim.html).
+
+    optimizer_params : dict, default=None
+        Parameters used to initialize the optimizer provided using 'optimizer_params".
+
+    device : str, default=None
+        Device used to optimize the input model. Commonly devices are: 'cpu', 'cuda', 'mps'.
+
+    verbose : int, default=1
+        Verbosity level.
+
+    metrics : list, defualt=None
+        Metrics to compute in each epoch during model training across the train and validation datasets.
+
+    callbacks : List[Callback], default=None
+        Callbacks used to modify the training loop (for more information see 'gojo.deepl.callback')
+
+    Returns
+    -------
+    fitting_history : dict
+        History with the model metrics (if provided) and loss for each epoch for the training ('train' key)
+        and validation ('validation' key) datasets.
+    """
     def _checkValidReturnedIteration(output, func: callable, step: str):
         # check that the returned objects correspond to a two-element tuple
         checkInputType('Output from function "%s" (step "%s")' % (func, step), output, [tuple])
@@ -275,7 +361,7 @@ def fitNeuralNetwork(
                     print('!=!=!=!=!=!=!= Executing early stopping')
                 break
 
-    # TODO. Organize returned function output
+    # separate train / validation
     return dict(
         train_metrics=train_metrics,
         valid_metrics=valid_metrics,
