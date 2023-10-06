@@ -125,3 +125,5 @@ def zscoresScaling(data: pd.DataFrame or np.ndarray) -> pd.DataFrame or np.ndarr
     return _applyScaling(data, StandardScaler)
 
 
+def none2dict(v):
+    return {} if v is None else v

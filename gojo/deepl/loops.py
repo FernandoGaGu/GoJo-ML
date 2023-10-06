@@ -7,6 +7,7 @@
 #
 import torch
 import numpy as np
+import pandas as pd
 from typing import List, Iterable
 
 from .callback import (
@@ -154,7 +155,6 @@ def iterSupervisedEpoch(
     return loss_stats, metric_stats
 
 
-# TODO. Organize returned data
 def fitNeuralNetwork(
         iter_fn,
         model: torch.nn.Module,
@@ -168,7 +168,7 @@ def fitNeuralNetwork(
         verbose: int = 1,
         metrics: list = None,
         callbacks: List[Callback] = None,
-        **kwargs) -> pd.DataFrame:
+        **kwargs) -> dict:
     """
     Main function of the 'gojo.deepl' module. This function is used to fit a pytorch model using the
     provided "iteration function" (parameter 'iter_fn') that defined how to run an epoch.
@@ -361,12 +361,24 @@ def fitNeuralNetwork(
                     print('!=!=!=!=!=!=!= Executing early stopping')
                 break
 
-    # separate train / validation
+    # convert loss information to a pandas dataframe
+    train_info_df = pd.DataFrame(train_loss)
+    valid_info_df = pd.DataFrame(valid_loss)
+
+    # add metric information (if provided)
+    if len(metrics) > 0:
+        train_info_df = pd.concat([train_info_df, pd.DataFrame(train_metrics)], axis=1)
+        valid_info_df = pd.concat([valid_info_df, pd.DataFrame(valid_metrics)], axis=1)
+
+    # format output dataframes
+    train_info_df.index.names = ['epoch']
+    valid_info_df.index.names = ['epoch']
+    train_info_df = train_info_df.reset_index()
+    valid_info_df = valid_info_df.reset_index()
+
     return dict(
-        train_metrics=train_metrics,
-        valid_metrics=valid_metrics,
-        train_loss=train_loss,
-        valid_loss=valid_loss)
+        train=train_info_df,
+        valid=valid_info_df)
 
 
 def getAvailableIterationFunctions() -> list:

@@ -63,8 +63,29 @@ def test_loops():
     )
     print(output)
 
+
 def test_ffn_generation():
-    pass
+    model = deepl.ffn.createSimpleFFNModel(
+        in_feats=10,
+        out_feats=99,
+        layer_dims=[100, 60, 20],
+        layer_activations=[torch.nn.Tanh(), None, torch.nn.ReLU()],
+        layer_dropouts=[0.3, None, 0.1],
+        batchnorm=True,
+        weights_init=[torch.nn.init.kaiming_uniform_] * 3 + [None],
+        output_activation=torch.nn.Sigmoid()
+    )
+    model = deepl.ffn.createSimpleFFNModel(
+        in_feats=100,
+        out_feats=1,
+        layer_dims=[100, 60, 20],
+        layer_activations=torch.nn.ReLU(),
+        layer_dropouts=0.3,
+        batchnorm=True,
+        output_activation=torch.nn.Sigmoid()
+    )
+
+    print(model)
 
 
 if __name__ == '__main__':

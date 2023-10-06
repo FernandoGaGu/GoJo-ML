@@ -14,6 +14,7 @@ from .loops import (
 from .base import (
     Model,
     SklearnModelWrapper,
+    TorchSKInterface,
     Dataset
 )
 

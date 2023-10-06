@@ -40,3 +40,4 @@ class DataLoaderError(Exception):
     """ Exception thrown when a data-loader operation failed. """
     def __init__(self, msg: str):
         super().__init__(msg)
+

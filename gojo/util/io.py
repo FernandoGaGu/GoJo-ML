@@ -44,7 +44,7 @@ def createObjectRepresentation(class_name: str, **parameters) -> str:
         representation += ')'
     else:
         for k, v in parameters.items():
-            representation += '\n\t{}={},'.format(k, v)
+            representation += '\n    {}={},'.format(k, v)
         representation = representation.rstrip(',')
         representation += '\n)'
 

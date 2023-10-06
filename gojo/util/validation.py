@@ -4,6 +4,7 @@
 # Email: fgarcia@fundacioace.org
 #
 import os
+import inspect
 from collections.abc import Iterable
 
 
@@ -56,4 +57,8 @@ def checkIterable(input_obj_name: str, obj):
         raise NotImplementedError('"{}" is not an iterable.'.format(input_obj_name))
 
 
+def checkClass(input_obj_name: str, obj):
+    """ Function used to check if a given object is a class. """
+    if not inspect.isclass(obj):
+        raise TypeError('"{}" is not a class.'.format(input_obj_name))
 

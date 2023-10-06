@@ -6,17 +6,26 @@
 #
 # STATUS: completed and functional
 #
+import torch
 import pandas as pd
 import numpy as np
 import warnings
+from copy import deepcopy
 from abc import ABCMeta, abstractmethod
+from sklearn.model_selection import train_test_split
 
+from ..deepl.loops import fitNeuralNetwork
 from ..util.validation import (
     checkInputType,
-    checkMultiInputTypes
+    checkCallable,
+    checkMultiInputTypes,
+    checkClass
 )
 from ..util.io import (
     createObjectRepresentation
+)
+from ..util.tools import (
+    none2dict
 )
 from ..exception import (
     UnfittedEstimator
@@ -333,5 +342,271 @@ class Dataset(object):
     @property
     def index_values(self) -> np.array:
         return self._index_values
+
+
+class TorchSKInterface(Model):
+    """ Description """
+    def __init__(
+            self,
+            model: torch.nn.Module,
+            iter_fn: callable,
+            loss_function,
+
+            # training parameters
+            n_epochs: int,
+            train_split: float,
+
+            # classes
+            optimizer_class,
+            dataset_class,
+            dataloader_class,
+
+            # optional arguments for the input classes
+            optimizer_kw: dict = None,
+            train_dataset_kw: dict = None,
+            valid_dataset_kw: dict = None,
+            train_dataloader_kw: dict = None,
+            valid_dataloader_kw: dict = None,
+            iter_fn_kw: dict = None,
+
+            # other parameters
+            train_split_stratify: bool = False,
+            callbacks: list = None,
+            metrics: list = None,
+            seed: int = None,
+            device: str = 'cpu',
+            verbose: int = -1
+
+    ):
+        super(TorchSKInterface, self).__init__()
+
+        self.model = model
+        self.iter_fn = iter_fn
+        self.loss_function = loss_function
+
+        # input classes
+        self.optimizer_class = optimizer_class
+        self.dataset_class = dataset_class
+        self.dataloader_class = dataloader_class
+
+        # input classes initialization parameters
+        self.optimizer_kw = none2dict(optimizer_kw)
+        self.train_dataset_kw = none2dict(train_dataset_kw)
+        self.valid_dataset_kw = none2dict(valid_dataset_kw)
+        self.train_dataloader_kw = none2dict(train_dataloader_kw)
+        self.valid_dataloader_kw = none2dict(valid_dataloader_kw)
+        self.iter_fn_kw = none2dict(iter_fn_kw)
+
+        # other parameters
+        self.n_epochs = n_epochs
+        self.train_split = train_split
+        self.train_split_stratify = train_split_stratify
+        self.callbacks = callbacks
+        self.metrics = metrics
+        self.seed = seed
+        self.device = device
+        self.verbose = verbose
+
+        # save a copy of the input model for resetting the inner state
+        self._in_model = deepcopy(model)
+        self._fitting_history = None
+
+        # check model parameters
+        self._checkModelParams()
+
+    def _checkModelParams(self):
+        # check input parameters
+        checkCallable('iter_fn', self.iter_fn)
+        checkCallable('loss_function', self.loss_function)
+        checkClass('optimizer_class', self.optimizer_class)
+        checkClass('dataset_class', self.dataset_class)
+        checkClass('dataloader_class', self.dataloader_class)
+        checkMultiInputTypes(
+            ('model', self.model, [torch.nn.Module]),
+            ('n_epochs', self.n_epochs, [int]),
+            ('train_split', self.train_split, [float]),
+            ('optimizer_kw', self.optimizer_kw, [dict, type(None)]),
+            ('train_dataset_kw', self.train_dataset_kw, [dict, type(None)]),
+            ('valid_dataset_kw', self.valid_dataset_kw, [dict, type(None)]),
+            ('train_dataloader_kw', self.train_dataloader_kw, [dict, type(None)]),
+            ('valid_dataloader_kw', self.valid_dataloader_kw, [dict, type(None)]),
+            ('iter_fn_kw', self.iter_fn_kw, [dict, type(None)]),
+            ('train_split_stratify', self.train_split_stratify, [bool]),
+            ('callbacks', self.callbacks, [list, type(None)]),
+            ('metrics', self.metrics, [list, type(None)]),
+            ('seed', self.seed, [int, type(None)]),
+            ('device', self.device, [str]),
+            ('verbose', self.verbose, [int]))
+
+    def __repr__(self):
+        return createObjectRepresentation(
+            'TorchSKInterface',
+            **self.getParameters())
+
+    def __str__(self):
+        return self.__repr__()
+
+    @property
+    def fitting_history(self) -> tuple:
+        return self._fitting_history
+
+    def getParameters(self) -> dict:
+        params = dict(
+            model=self.model,
+            iter_fn=self.iter_fn,
+            loss_function=self.loss_function,
+            n_epochs=self.n_epochs,
+            train_split=self.train_split,
+            train_split_stratify=self.train_split_stratify,
+            optimizer_class=self.optimizer_class,
+            dataset_class=self.dataset_class,
+            dataloader_class=self.dataloader_class,
+            optimizer_kw=self.optimizer_kw,
+            train_dataset_kw=self.train_dataset_kw,
+            valid_dataset_kw=self.valid_dataset_kw,
+            train_dataloader_kw=self.train_dataloader_kw,
+            valid_dataloader_kw=self.valid_dataloader_kw,
+            iter_fn_kw=self.iter_fn_kw,
+            callbacks=self.callbacks,
+            metrics=self.metrics,
+            seed=self.seed,
+            device=self.device,
+            verbose=self.verbose)
+
+        return params
+
+    # TODO. Implement inner working for HPO
+    def updateParameters(self, **kwargs):
+
+        # update base model and inner model
+        if 'model' in kwargs.keys():
+            self.model = deepcopy(kwargs['model'])
+            self._in_model = deepcopy(kwargs['model'])
+
+            # remove model key
+            del kwargs['model']
+
+        # check model parameters
+        self._checkModelParams()
+
+    def train(self, X: np.ndarray, y: np.ndarray or None, **kwargs):
+
+        # reset callbacks inner states
+        if self.callbacks is not None:
+            for callback in self.callbacks:
+                callback.resetState()
+
+        # separate train/validation data
+        stratify = None
+        if self.train_split_stratify:
+            stratify = y
+            if y is None:
+                warnings.warn(
+                    'target indices have been specified to be stratified by class but a value of "y" has not been '
+                    'provided as input. Ignoring "train_split_stratify"')
+                stratify = None
+
+        # train/validation split based on indices
+        indices = np.arange(X.shape[0])
+        train_idx, valid_idx = train_test_split(
+            indices, train_size=self.train_split, random_state=self.seed, shuffle=True, stratify=stratify)
+
+        # create dataloaders
+        train_dl = self.dataloader_class(
+            self.dataset_class(
+                X=X[train_idx],
+                y=y[train_idx] if y is not None else y,
+                **self.train_dataset_kw),
+            **self.train_dataloader_kw)
+
+        valid_dl = self.dataloader_class(
+            self.dataset_class(
+                X=X[valid_idx],
+                y=y[valid_idx] if y is not None else y,
+                **self.valid_dataset_kw),
+            **self.valid_dataloader_kw)
+
+        # train the model
+        history = fitNeuralNetwork(
+            iter_fn=self.iter_fn,
+            model=self.model,
+            train_dl=train_dl,
+            valid_dl=valid_dl,
+            n_epochs=self.n_epochs,
+            loss_fn=self.loss_function,
+            optimizer_class=self.optimizer_class,
+            optimizer_params=self.optimizer_kw,
+            device=self.device,
+            verbose=self.verbose,
+            metrics=self.metrics,
+            callbacks=self.callbacks,
+            **self.iter_fn_kw)
+
+        # save model fitting history
+        self._fitting_history = history
+
+        self.fitted()
+
+    def reset(self):
+        self.model = deepcopy(self._in_model)
+        self._fitting_history = None
+
+    def performInference(self, X: np.ndarray, batch_size: int = None, **kwargs) -> np.ndarray:
+
+        checkMultiInputTypes(
+            ('batch_size', batch_size, (int, type(None))))
+
+        # select the model in inference mode
+        self.model = self.model.eval()
+        self.model = self.model.to(device=self.device)
+
+        if batch_size is None:
+            batch_size = X.shape[0]
+        else:
+            if batch_size < 0:
+                warnings.warn('Batch size cannot be less than 0. Selecting batch size to 1.')
+                batch_size = 1
+            if batch_size > X.shape[0]:   # maximum batch size will be cast to the input data shape
+                batch_size = X.shape[0]
+
+        with torch.no_grad():
+            y_pred = []
+
+            # iterate over the input data in batches
+            curr_batch_split = 0
+            while curr_batch_split < X.shape[0]:
+                # select batch predictions
+                inX = X[curr_batch_split:(curr_batch_split + batch_size), ...]
+                # convert predictions to torch Tensor
+                inX = torch.from_numpy(inX).type(torch.float).to(device=self.device)
+                # make predictions
+                y_hat = self.model(inX).detach().cpu().numpy()
+                y_pred.append(y_hat)
+
+                curr_batch_split += batch_size
+
+        y_pred = np.concatenate(y_pred)
+
+        # flatten y_pred with dimensions are (n_samples, 1)
+        if len(y_pred.shape) == 2 and y_pred.shape[1] == 1:
+            y_pred = y_pred.reshape(-1)
+
+        return y_pred
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
