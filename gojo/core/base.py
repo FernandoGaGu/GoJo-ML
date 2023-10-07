@@ -32,6 +32,62 @@ from ..exception import (
 )
 
 
+class Dataset(object):
+    """ Class representing a dataset.
+
+    Parameters
+    ----------
+    data : np.ndarray or pd.DataFrame or pd.Series
+        Data to be homogenized as a dataset.
+    """
+    def __init__(self, data: np.ndarray or pd.DataFrame or pd.Series):
+        checkInputType('data', data, [np.ndarray, pd.DataFrame, pd.Series])
+
+        var_names = None
+        index_values = None
+        array_data = None
+        in_type = ''
+        if isinstance(data, pd.DataFrame):
+            array_data = data.values
+            var_names = list(data.columns)
+            index_values = np.array(data.index.values)
+            in_type = 'pandas.DataFrame'
+        elif isinstance(data, pd.Series):
+            array_data = data.values
+            var_names = [data.name]
+            index_values = np.array(data.index.values)
+            in_type = 'pandas.Series'
+        elif isinstance(data, np.ndarray):
+            # numpy arrays will not contain var_names
+            array_data = data
+            index_values = np.array(np.arange(data.shape[0]))
+            in_type = 'numpy.array'
+
+        self._array_data = array_data
+        self._var_names = var_names
+        self._index_values = index_values
+        self._in_type = in_type
+
+    def __repr__(self):
+        return createObjectRepresentation(
+            'Dataset', shape=self._array_data.shape, in_type=self._in_type)
+
+    def __str__(self):
+        return self.__repr__()
+
+    @property
+    def array_data(self) -> np.ndarray:
+        return self._array_data
+
+    @property
+    def var_names(self) -> list:
+        return self._var_names
+
+    @property
+    def index_values(self) -> np.array:
+        return self._index_values
+
+
 class Model(object):
     """
     Base class (interface) used to define a model that can interact with the 'gojo' library.
@@ -288,71 +344,15 @@ class SklearnModelWrapper(Model):
         return predictions
 
 
-class Dataset(object):
-    """ Class representing a dataset.
-
-    Parameters
-    ----------
-    data : np.ndarray or pd.DataFrame or pd.Series
-        Data to be homogenized as a dataset.
-    """
-    def __init__(self, data: np.ndarray or pd.DataFrame or pd.Series):
-        checkInputType('data', data, [np.ndarray, pd.DataFrame, pd.Series])
-
-        var_names = None
-        index_values = None
-        array_data = None
-        in_type = ''
-        if isinstance(data, pd.DataFrame):
-            array_data = data.values
-            var_names = list(data.columns)
-            index_values = np.array(data.index.values)
-            in_type = 'pandas.DataFrame'
-        elif isinstance(data, pd.Series):
-            array_data = data.values
-            var_names = [data.name]
-            index_values = np.array(data.index.values)
-            in_type = 'pandas.Series'
-        elif isinstance(data, np.ndarray):
-            # numpy arrays will not contain var_names
-            array_data = data
-            index_values = np.array(np.arange(data.shape[0]))
-            in_type = 'numpy.array'
-
-        self._array_data = array_data
-        self._var_names = var_names
-        self._index_values = index_values
-        self._in_type = in_type
-
-    def __repr__(self):
-        return createObjectRepresentation(
-            'Dataset', shape=self._array_data.shape, in_type=self._in_type)
-
-    def __str__(self):
-        return self.__repr__()
-
-    @property
-    def array_data(self) -> np.ndarray:
-        return self._array_data
-
-    @property
-    def var_names(self) -> list:
-        return self._var_names
-
-    @property
-    def index_values(self) -> np.array:
-        return self._index_values
-
-
 class TorchSKInterface(Model):
     """ Description """
     def __init__(
             self,
             model: torch.nn.Module,
             iter_fn: callable,
-            loss_function,
 
             # training parameters
+            loss_function,
             n_epochs: int,
             train_split: float,
 
@@ -375,7 +375,7 @@ class TorchSKInterface(Model):
             metrics: list = None,
             seed: int = None,
             device: str = 'cpu',
-            verbose: int = -1
+            verbose: int = 1
 
     ):
         super(TorchSKInterface, self).__init__()
@@ -475,19 +475,10 @@ class TorchSKInterface(Model):
 
         return params
 
-    # TODO. Implement inner working for HPO
     def updateParameters(self, **kwargs):
 
-        # update base model and inner model
-        if 'model' in kwargs.keys():
-            self.model = deepcopy(kwargs['model'])
-            self._in_model = deepcopy(kwargs['model'])
-
-            # remove model key
-            del kwargs['model']
-
-        # check model parameters
-        self._checkModelParams()
+        raise NotImplementedError('This class not support parameter updates. See alternative classes such as: '
+                                  '"gojo.core.ParametrizedTorchSKInterface"')
 
     def train(self, X: np.ndarray, y: np.ndarray or None, **kwargs):
 
@@ -594,14 +585,140 @@ class TorchSKInterface(Model):
         return y_pred
 
 
+class ParametrizedTorchSKInterface(TorchSKInterface):
+    """ Description """
+    _NOT_DEFINED_PARAMETER = '__NOT_DEFINED'
 
+    def __init__(
+            self,
+            generating_fn: callable,
+            gf_params: dict,
+            iter_fn: callable,
+            # training parameters
+            loss_function,
+            n_epochs: int,
+            train_split: float,
 
+            # classes
+            optimizer_class,
+            dataset_class,
+            dataloader_class,
 
+            # optional arguments for the input classes
+            optimizer_kw: dict = None,
+            train_dataset_kw: dict = None,
+            valid_dataset_kw: dict = None,
+            train_dataloader_kw: dict = None,
+            valid_dataloader_kw: dict = None,
+            iter_fn_kw: dict = None,
 
+            # other parameters
+            train_split_stratify: bool = False,
+            callbacks: list = None,
+            metrics: list = None,
+            seed: int = None,
+            device: str = 'cpu',
+            verbose: int = 1
+    ):
+        # check input parameters
+        checkCallable('generating_func', generating_fn)
+        checkInputType('gf_params', gf_params, [dict, type(None)])
+        gf_params = {} if gf_params is None else gf_params
 
+        # generate the model
+        model = generating_fn(**gf_params)
 
+        super(ParametrizedTorchSKInterface, self).__init__(
+            model=model,
+            iter_fn=iter_fn,
+            loss_function=loss_function,
+            n_epochs=n_epochs,
+            train_split=train_split,
+            optimizer_class=optimizer_class,
+            dataset_class=dataset_class,
+            dataloader_class=dataloader_class,
+            optimizer_kw=optimizer_kw,
+            train_dataset_kw=train_dataset_kw,
+            valid_dataset_kw=valid_dataset_kw,
+            train_dataloader_kw=train_dataloader_kw,
+            valid_dataloader_kw=valid_dataloader_kw,
+            iter_fn_kw=iter_fn_kw,
+            train_split_stratify=train_split_stratify,
+            callbacks=callbacks,
+            metrics=metrics,
+            seed=seed,
+            device=device,
+            verbose=verbose)
 
+        # save parameter-specific values
+        self.gf_params = gf_params
+        self._generating_fn = generating_fn
 
+    def __repr__(self):
+        return createObjectRepresentation(
+            'ParametrizedTorchSKInterface',
+            **self.getParameters())
+
+    def __str__(self):
+        return self.__repr__()
+
+    def updateParameters(self, **kwargs):
+
+        for name, value in kwargs.items():
+
+            if name == 'model':
+                warnings.warn(
+                    'The internal model is being modified. This will have no effect because the model will'
+                    ' be subsequently regenerated.')
+
+            if name.startswith('_'):
+                raise KeyError('Parameter "%s" is not accessible.' % name)
+
+            # update dict-level parameters
+            if '__' in name:
+                name_levels = name.split('__')
+                if len(name_levels) != 2:
+                    raise TypeError(
+                        'If you want to modify the values of an internal dictionary, you must specify the name of '
+                        'the dictionary by separating the key with "__" so that two parameters are involved. In this '
+                        'case a different number of parameters has been detected: %r' % name_levels)
+
+                dict_name, key = name_levels
+
+                # check that the input parameter was defined
+                if getattr(self, dict_name, self._NOT_DEFINED_PARAMETER) is self._NOT_DEFINED_PARAMETER:
+                    raise TypeError('Parameter "%s" not found. Review gojo.core.ParametrizedTorchSKInterface '
+                                    'documentation.' % dict_name)
+
+                # check that the specified parameter is a dictionary
+                checkInputType(dict_name, getattr(self, dict_name), [dict])
+
+                # check if the dictionary key exists
+                if key not in getattr(self, dict_name).keys():
+                    raise KeyError('Key "%s" not found in parameter "%s".' % (key, dict_name))
+
+                # update parameter
+                getattr(self, dict_name)[key] = value
+
+            else:
+                # update para-level parameters
+                # check that the input parameter was defined
+                if getattr(self, name, self._NOT_DEFINED_PARAMETER) is self._NOT_DEFINED_PARAMETER:
+                    raise TypeError(
+                        'Parameter "%s" not found. Review gojo.core.ParametrizedTorchSKInterface documentation.' % name)
+
+                # set the new value
+                setattr(self, name, value)
+
+        # regenerate the model
+        self._in_model = self._generating_fn(**self.gf_params)
+
+    def getParameters(self) -> dict:
+        params = super().getParameters()
+        params['generating_fn'] = self._generating_fn
+        params['gf_params'] = self.gf_params
+        
+        return params
 
 
 

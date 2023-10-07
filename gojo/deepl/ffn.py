@@ -215,11 +215,11 @@ def createSimpleFFNModel(
         in_feats: int,
         out_feats: int,
         layer_dims: list,
-        layer_activation: list or torch.nn.Module or None,
+        layer_activation: list or torch.nn.Module or None or str,
         layer_dropout: list or float = None,
         batchnorm: bool = False,
         weights_init: callable or list = None,
-        output_activation: str or torch.nn.Module or None = None) -> torch.nn.Module:
+        output_activation: str or torch.nn.Module or None or str = None) -> torch.nn.Module:
     """ Auxiliary function that allows to easily create a simple FFN architecture from the provided input parameters.
 
     See examples for a quick overview of the posibilities of this function.
@@ -236,8 +236,9 @@ def createSimpleFFNModel(
     layer_dims : list
         Layer widths.
 
-    layer_activation : list or torch.nn.Module or None
-        Activation funtions. If None is provided a simple affine transformation will take place.
+    layer_activation : list or torch.nn.Module or None or str
+        Activation funtions. If None is provided a simple affine transformation will take place. If a string
+        is provided, the name should match to the name of the torch.nn class (i.e., 'ReLU' for torch.nn.ReLU).
 
     layer_dropout : list or float, default=None
         Layer dropouts. If an scalar is provided the same dropout rate will be applied for all the layers.
@@ -249,7 +250,7 @@ def createSimpleFFNModel(
         Function (os list of functions) applied to the generated lienar layers for initializing their weights.
 
     output_activation : str or torch.nn.Module or None, default=None
-        Output activation function.
+        Output activation function (similar to 'layer_activation').
 
     Returns
     -------
@@ -325,10 +326,10 @@ def createSimpleFFNModel(
         ('in_feats', in_feats, [int]),
         ('out_feats', out_feats, [int]),
         ('layer_dims', layer_dims, [list]),
-        ('layer_activation', layer_activation, [list, torch.nn.Module, type(None)]),
+        ('layer_activation', layer_activation, [list, torch.nn.Module, type(None), str]),
         ('layer_dropout', layer_dropout, [list, float, type(None)]),
         ('batchnorm', batchnorm, [bool]),
-        ('output_activation', output_activation, [str, torch.nn.Module, type(None)]))
+        ('output_activation', output_activation, [str, torch.nn.Module, type(None), str]))
 
     # check parameter values
     if len(layer_dims) < 1:
@@ -345,6 +346,12 @@ def createSimpleFFNModel(
                     param_name, len(param_val), len(_layer_dims)))
 
         return param_val
+
+    def _getActivation(_activation):
+        # return the activation function to be used
+        if isinstance(_activation, str):
+            return getattr(torch.nn, _activation)()
+        return _activation
 
     layer_activation = _param2list('layer_activation', layer_activation, layer_dims)
     layer_dropout = _param2list('layer_dropout', layer_dropout, layer_dims)
@@ -364,7 +371,7 @@ def createSimpleFFNModel(
 
         # add the activation function
         if activation is not None:
-            config.append(('Activation %d' % i, _ACTIVATION_LAYERS_IDENTIFIER, activation))
+            config.append(('Activation %d' % i, _ACTIVATION_LAYERS_IDENTIFIER, _getActivation(activation)))
 
         # add dropout (after activation)
         if do is not None:
@@ -374,7 +381,8 @@ def createSimpleFFNModel(
     config.append(('LinearLayer %d' % len(layer_dims), _LINEAR_LAYERS_IDENTIFIER, out_feats))
 
     if output_activation is not None:
-        config.append(('Activation %d' % len(layer_dims), _ACTIVATION_LAYERS_IDENTIFIER, output_activation))
+        config.append(
+            ('Activation %d' % len(layer_dims), _ACTIVATION_LAYERS_IDENTIFIER, _getActivation(output_activation)))
 
     return _createFFN(
         in_feats=in_feats,

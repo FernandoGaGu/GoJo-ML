@@ -9,6 +9,7 @@ import torch
 import numpy as np
 import pandas as pd
 from typing import List, Iterable
+from tqdm import tqdm
 
 from .callback import (
     Callback,
@@ -165,7 +166,7 @@ def fitNeuralNetwork(
         optimizer_class,
         optimizer_params: dict = None,
         device: str = None,
-        verbose: int = 1,
+        verbose: int = 2,
         metrics: list = None,
         callbacks: List[Callback] = None,
         **kwargs) -> dict:
@@ -271,6 +272,10 @@ def fitNeuralNetwork(
     # verbose parameters
     verbose = np.inf if verbose < 0 else verbose   # negative values indicate activate all
 
+    show_pbar = False
+    if verbose == 1:
+        show_pbar = True
+
     # process input parameters
     model, metrics = _processInputParams(
         model=model, device=device, metrics=metrics)
@@ -283,8 +288,8 @@ def fitNeuralNetwork(
     valid_metrics = []
     train_loss = []
     valid_loss = []
-    for epoch in range(n_epochs):
-        if verbose >= 1:
+    for epoch in tqdm(range(n_epochs), desc='Training model...', disable=not show_pbar):
+        if verbose >= 2:
             print('\nEpoch (%d) ============================================ ' % (epoch+1))
 
         # -- training step -> (loss_stats: dict, metric_stats: dict)
@@ -310,7 +315,7 @@ def fitNeuralNetwork(
         train_metrics.append(epoch_train_metrics)
 
         # display training statistics
-        if verbose >= 1:
+        if verbose >= 2:
             for info_dict in train_out:
                 for name, val in info_dict.items():
                     print('\t (train) %s: %.5f' % (name, val))
@@ -339,7 +344,7 @@ def fitNeuralNetwork(
         valid_metrics.append(epoch_valid_metrics)
 
         # display validation statistics
-        if verbose >= 1:
+        if verbose >= 2:
             for info_dict in valid_out:
                 for name, val in info_dict.items():
                     print('\t (valid) %s: %.5f' % (name, val))
@@ -357,7 +362,7 @@ def fitNeuralNetwork(
 
             # Early stopping directive
             if EarlyStopping.DIRECTIVE in commands_to_exec:
-                if verbose >= 1:
+                if verbose >= 2:
                     print('!=!=!=!=!=!=!= Executing early stopping')
                 break
 

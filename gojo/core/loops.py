@@ -174,6 +174,7 @@ def _createCVReport(cv_results: list, X_dataset, y_dataset) -> CVReport:
     return cv_report
 
 
+# TODO. Document function
 def evalCrossVal(
         X: np.ndarray or pd.DataFrame,
         y: np.ndarray or pd.DataFrame or pd.Series,

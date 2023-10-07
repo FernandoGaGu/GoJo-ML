@@ -15,6 +15,7 @@ from .base import (
     Model,
     SklearnModelWrapper,
     TorchSKInterface,
+    ParametrizedTorchSKInterface,
     Dataset
 )
 
