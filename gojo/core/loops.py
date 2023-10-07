@@ -535,19 +535,30 @@ def evalCrossValNestedHPO(
     show_fold_number = False
     show_best_combinations = False
     show_hpo_best_values = False
-    if verbose > 0:
+
+    # verbosity 1 to show pbar
+    show_pbar = False
+    if verbose == 1:
+        show_pbar = True
+
+    # verbosity greater than 1
+    if verbose  > 1:
         show_fold_number = True
         show_best_combinations = True
         show_hpo_best_values = True
 
-    if verbose <= 1:
+    # verbosity grater than 2 to show optuna logs
+    if verbose < 2:
         optuna.logging.set_verbosity(optuna.logging.WARNING)   # supress optuna warnings below verbosity level <= 1
 
     # train the model optimizing their hyperparameters
     hpo_trials_history = {}
     hpo_trials_best_params = {}
     fold_stats = []   # used to init the gojo.core.report.CVReport instance
-    for i, (train_idx, test_idx) in enumerate(outer_cv.split(X_dt.array_data, y_dt.array_data)):
+    for i, (train_idx, test_idx) in tqdm(
+            enumerate(outer_cv.split(X_dt.array_data, y_dt.array_data)),
+            desc='Performing cross-validation...',
+            disable=not show_pbar):
 
         if show_fold_number:    # verbose information
             print('\nFold %d =============================================\n' % (i+1))
@@ -568,7 +579,9 @@ def evalCrossValNestedHPO(
                 transforms_ = [trans.copy() for trans in transforms]
             else:
                 # reset fit and allow inplace modifications of the input transforms
-                transforms_ = [trans.resetFit() for trans in transforms]
+                for transform in transforms:
+                    transform.resetFit()
+                transforms_ = transforms
 
             # fit and apply the input transformations based on the training data
             X_train, X_test = _fitAndApplyTransforms(

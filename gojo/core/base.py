@@ -148,7 +148,7 @@ class Model(object):
         raise NotImplementedError
 
     @abstractmethod
-    def train(self, X: np.ndarray, y: np.ndarray or None, **kwargs):
+    def train(self, X: np.ndarray, y: np.ndarray or None = None, **kwargs):
         """ Method used to fit a model to a given input data.
 
         Parameters
@@ -156,7 +156,7 @@ class Model(object):
         X : np.ndarray
             Input data to fit the model.
 
-        y : np.ndarray or None, optional
+        y : np.ndarray or None, default=None
             Data labels (optional).
 
         **kwargs
@@ -272,9 +272,8 @@ class SklearnModelWrapper(Model):
     def __init__(self, model_class, predict_proba: bool = False, **kwargs):
         super(SklearnModelWrapper, self).__init__()
 
-        checkMultiInputTypes(
-            ('model_class', model_class, [ABCMeta]),
-            ('predict_proba', predict_proba, [bool]))
+        checkClass('model_class', model_class)
+        checkInputType('predict_proba', predict_proba, [bool])
 
         self._model_class = model_class
         self._in_params = kwargs
@@ -304,7 +303,7 @@ class SklearnModelWrapper(Model):
         for name, value in kwargs.items():
             self._in_params[name] = value
 
-    def train(self, X: np.ndarray, y: np.ndarray or None, **kwargs):
+    def train(self, X: np.ndarray, y: np.ndarray or None = None, **kwargs):
         """ Method used to fit a model to a given input data.
 
         Parameters
@@ -312,7 +311,7 @@ class SklearnModelWrapper(Model):
         X : np.ndarray
             Input data to fit the model.
 
-        y : np.ndarray or None, optional
+        y : np.ndarray or None, default=None
             Data labels (optional).
         """
         self._model_obj = self._model_obj.fit(X, y)
@@ -493,7 +492,7 @@ class TorchSKInterface(Model):
         raise NotImplementedError('This class not support parameter updates. See alternative classes such as: '
                                   '"gojo.core.ParametrizedTorchSKInterface"')
 
-    def train(self, X: np.ndarray, y: np.ndarray or None, **kwargs):
+    def train(self, X: np.ndarray, y: np.ndarray or None = None, **kwargs):
 
         # reset callbacks inner states
         if self.callbacks is not None:

@@ -24,5 +24,6 @@ from .report import (
 )
 
 from .transform import (
-    Transform
+    Transform,
+    SKLearnTransformWrapper
 )
