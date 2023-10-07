@@ -25,7 +25,8 @@ from ..util.io import (
     createObjectRepresentation
 )
 from ..util.tools import (
-    none2dict
+    none2dict,
+    getNumModelParams
 )
 from ..exception import (
     UnfittedEstimator
@@ -210,6 +211,11 @@ class Model(object):
         """
         return self._is_fitted
 
+    @abstractmethod
+    def copy(self):
+        """ Method used to make a copy of the model. """
+        raise NotImplementedError
+
     def update(self, **kwargs):
         """ Method used to update model parameters. """
         self.updateParameters(**kwargs)
@@ -343,6 +349,9 @@ class SklearnModelWrapper(Model):
 
         return predictions
 
+    def copy(self):
+        return deepcopy(self)
+
 
 class TorchSKInterface(Model):
     """ Description """
@@ -449,6 +458,10 @@ class TorchSKInterface(Model):
     @property
     def fitting_history(self) -> tuple:
         return self._fitting_history
+
+    @property
+    def num_params(self) -> int:
+        return getNumModelParams(self.model)
 
     def getParameters(self) -> dict:
         params = dict(
@@ -584,6 +597,13 @@ class TorchSKInterface(Model):
 
         return y_pred
 
+    def copy(self):
+        self_copy = deepcopy(self)
+        self_copy.model.to('cpu')  # save in cpu
+        self_copy._in_model.to('cpu')  # save in cpu
+
+        return self_copy
+
 
 class ParametrizedTorchSKInterface(TorchSKInterface):
     """ Description """
@@ -717,10 +737,15 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
         params = super().getParameters()
         params['generating_fn'] = self._generating_fn
         params['gf_params'] = self.gf_params
-        
+
         return params
 
+    def copy(self):
+        self_copy = deepcopy(self)
+        self_copy.model.to('cpu')  # save in cpu
+        self_copy._in_model.to('cpu')  # save in cpu
 
+        return self_copy
 
 
 

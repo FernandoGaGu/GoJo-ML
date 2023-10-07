@@ -179,7 +179,7 @@ def linePlot(
                     df[x].values,
                     df[y].values + df[err].values,
                     df[y].values - df[err].values,
-                    alpha=err_alpha)
+                    color=color, alpha=err_alpha)
 
         # figure layout
         ax.spines['top'].set_visible(False)

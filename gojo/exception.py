@@ -30,8 +30,17 @@ class MissingArrayDimensions(Exception):
 class UnfittedEstimator(Exception):
     """ Exception thrown when trying to make predictions without performing a previous model fit. """
     def __init__(self):
-        self.message = 'Before making inferences through a model by calling the "train()" method, it is necessary to '\
-                       'adjust the model by calling the train() method.'
+        self.message = 'Before making inferences through a model by calling the "performInferences()" method, it ' \
+                       'is necessary to adjust the model by calling the "train()" method.'
+
+        super().__init__(self.message)
+
+
+class UnfittedTransform(Exception):
+    """ Exception thrown when trying to apply transforms without performing a previous transform fit. """
+    def __init__(self):
+        self.message = 'Before applying transforms by calling the "transform()" method, it is necessary to '\
+                       'adjust the transform by calling the "fit()" method.'
 
         super().__init__(self.message)
 

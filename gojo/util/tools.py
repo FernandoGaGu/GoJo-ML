@@ -5,6 +5,7 @@
 #
 # STATUS: uncompleted and not functional, still in development
 #
+import torch
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import (
@@ -16,7 +17,9 @@ from sklearn.preprocessing import (
     MinMaxScaler)
 
 
-from .validation import checkMultiInputTypes
+from .validation import (
+    checkMultiInputTypes,
+    checkInputType)
 
 
 def getCrossValObj(cv: int = None, repeats: int = 1, stratified: bool = False, loocv: bool = False,
@@ -127,3 +130,10 @@ def zscoresScaling(data: pd.DataFrame or np.ndarray) -> pd.DataFrame or np.ndarr
 
 def none2dict(v):
     return {} if v is None else v
+
+
+def getNumModelParams(model: torch.nn.Module) -> int:
+    """ Function that returns the number of trainable parameters from a torch.nn.Module instance. """
+    checkInputType('model', model, [torch.nn.Module])
+
+    return sum(param.numel() for param in model.parameters())

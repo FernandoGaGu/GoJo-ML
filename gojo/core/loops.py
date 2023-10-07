@@ -14,6 +14,7 @@ import joblib
 import multiprocessing as mp
 import optuna
 from functools import partial
+from typing import List
 from copy import deepcopy
 from tqdm import tqdm
 from sklearn.model_selection import (
@@ -28,14 +29,20 @@ from .base import (
 from .report import (
     CVReport
 )
+from .transform import (
+    Transform
+)
 from ..util.validation import (
     checkMultiInputTypes,
     checkInputType,
     checkCallable
 )
+from ..exception import (
+    UnfittedTransform
+)
 
 
-def _getModelPredictions(model: Model, X: np.ndarray,) -> np.ndarray:
+def _getModelPredictions(model: Model, X: np.ndarray) -> np.ndarray:
     """ Subroutine that return the model predictions. Model prediction order resolution:
     The predictions will be returned as numpy.arrays.
     """
@@ -71,6 +78,62 @@ def _fitModelAndPredict(model: Model, X_train: np.ndarray, X_test: np.ndarray,
     return predictions
 
 
+def _applyTransforms(transforms: List[Transform], X: np.ndarray, y: np.ndarray = None) -> np.ndarray:
+    """ Subroutine that applies the provided transforms.  """
+    checkMultiInputTypes(
+        ('transforms', transforms, [list]),
+        ('X', X, [np.ndarray]),
+        ('y', y, [np.ndarray, type(None)]))
+
+    if len(transforms) == 0:
+        raise TypeError('Parameter "transformations" is an empty list.')
+
+    for i, transform in enumerate(transforms):
+        checkInputType('transformations[%d]' % i, transform, [Transform])
+        # check for unfitted transforms
+        if not transform.is_fitted:
+            raise UnfittedTransform()
+
+        X = transform.transform(X=X, y=y)
+
+    return X
+
+
+def _fitAndApplyTransforms(transforms: List[Transform], X_train: np.ndarray, X_test: np.ndarray,
+                           y_train: np.ndarray = None, y_test: np.ndarray = None) -> tuple:
+    """ Subroutine used to fit transforms and make predictions.
+
+    NOTE: This functions performs inplace modification of the input transforms.
+    """
+    checkMultiInputTypes(
+        ('transforms', transforms, [list]),
+        ('X_train', X_train, [np.ndarray]),
+        ('X_test', X_test, [np.ndarray]),
+        ('y_train', y_train, [np.ndarray, type(None)]),
+        ('y_test', y_test, [np.ndarray, type(None)]))
+
+    if len(transforms) == 0:
+        raise TypeError('Parameter "transformations" is an empty list.')
+
+    for i, transform in enumerate(transforms):
+        checkInputType('transformations[%d]' % i, transform, [Transform])
+
+        # check for fitted transforms
+        if transform.is_fitted:
+            warnings.warn(
+                'Providing a fitted transform to "gojo.core.loops._fitTransformsAndApply()". The transform provided '
+                'will be automatically reset using "transform.resetFit()" and re-fitted.')
+            transform.resetFit()
+
+        # fit the transformations based on the training data, and apply the transformation
+        # to the training/test data
+        transform.fit(X=X_train, y=y_train)
+        X_train = transform.transform(X=X_train, y=y_train)
+        X_test = transform.transform(X=X_test, y=y_test)
+
+    return X_train, X_test
+
+
 def _evalCrossValFold(
         _n_fold: int,
         _model: Model,
@@ -82,7 +145,10 @@ def _evalCrossValFold(
         _test_idx: np.ndarray,
         _predict_train: bool,
         _return_model: bool,
-        _reset_model_fit: bool) -> tuple:
+        _reset_model_fit: bool,
+        _transforms: list or None,
+        _return_transforms: bool,
+        _reset_transforms: bool) -> tuple:
     """ Subroutine used internally to train and perform the predictions of a model in relation to a fold. This
     subroutine has been segmented to allow parallelization of training.
 
@@ -111,17 +177,37 @@ def _evalCrossValFold(
         Parameter indicating if the model should be reset by calling to the 'resetFit()'
         method.
 
+    _transforms : list or None
+        Transformations that will be applied to the data before training the model. These
+        transformations will be adjusted based on the training data and will be used to transform
+        the training and test data. They will be applied sequentially.
+
+    _return_transforms : bool
+        Parameter indicating whether to return the transforms.
+
+    _reset_transforms : bool
+        Parameter indicating if the transforms should be reset by calling to the
+        'resetFit()' method.
+
     Returns
     -------
-    (_n_fold, y_pred_test, y_pred_train, y_true_test, y_true_train, test_idx, train_idx, trained_model) : tuple
+    (_n_fold, y_pred_test, y_pred_train, y_true_test, y_true_train, test_idx, train_idx, trained_model,
+    _transforms) : tuple
         Elements specified according to the input parameters of the method. The tuple will contain sub-tuples
         of two elements, where the first element will identify the information and the second will correspond
         to the information.
 
 
     IMPORTANT NOTE: If the input parameter '_reset_model_fit' is set to False the input model will remain trained (
-    inplace modifications will take place).
+    inplace modifications will take place). Applicable also for transforms ('_transforms' and '_reset_transforms'
+    parameter).
     """
+
+    # fit transformations to the training data and apply to the test data
+    if _transforms is not None:
+        _X_train, _X_test = _fitAndApplyTransforms(
+            transforms=_transforms, X_train=_X_train, X_test=_X_test, y_train=_y_train, y_test=_y_test)
+
     # train the model and make the predictions on the test data
     y_pred_test = _fitModelAndPredict(
         model=_model, X_train=_X_train, X_test=_X_test, y_train=_y_train)
@@ -137,7 +223,16 @@ def _evalCrossValFold(
 
     trained_model = None
     if _return_model:
-        trained_model = deepcopy(_model)
+        trained_model = _model.copy()
+
+    transforms = None
+    if _return_transforms and _transforms is not None:
+        transforms = [_trans.copy() for _trans in _transforms]
+
+    # reset transforms
+    if _reset_transforms and _transforms is not None:
+        for _transform in _transforms:
+            _transform.resetFit()
 
     # reset trained model
     if _reset_model_fit:
@@ -151,7 +246,8 @@ def _evalCrossValFold(
         ('true_train', y_true_train),
         ('test_idx', _test_idx),
         ('train_idx', train_idx),
-        ('trained_model', trained_model)
+        ('trained_model', trained_model),
+        ('transforms', transforms)
     )
 
 
@@ -168,7 +264,8 @@ def _createCVReport(cv_results: list, X_dataset, y_dataset) -> CVReport:
         true_train_key='true_train',
         test_idx_key='test_idx',
         train_idx_key='train_idx',
-        trained_model_key='trained_model'
+        trained_model_key='trained_model',
+        fitted_transforms_key='transforms'
     )
 
     return cv_report
@@ -180,9 +277,11 @@ def evalCrossVal(
         y: np.ndarray or pd.DataFrame or pd.Series,
         model: Model,
         cv: RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut,
+        transforms: List[Transform] or None = None,
         verbose: int = -1,
         n_jobs: int = 1,
         save_train_preds: bool = False,
+        save_transforms: bool = False,
         save_models: bool = False,
 
     ):
@@ -192,9 +291,11 @@ def evalCrossVal(
         ('y', y, [np.ndarray, pd.DataFrame, pd.Series]),
         ('model', model, [Model]),
         ('cv', cv, [RepeatedKFold, RepeatedStratifiedKFold, LeaveOneOut]),
+        ('transforms', transforms, [list, type(None)]),
         ('verbose', verbose, [int]),
         ('n_jobs', n_jobs, [int]),
         ('save_models', save_models, [bool]),
+        ('save_transforms', save_transforms, [bool]),
         ('save_train_preds', save_train_preds, [bool]),
     )
 
@@ -225,10 +326,13 @@ def evalCrossVal(
                 _test_idx=test_idx,
                 _predict_train=save_train_preds,
                 _return_model=save_models,
-                _reset_model_fit=True     # inplace modifications take place inside this function
+                _reset_model_fit=True,     # inplace modifications take place inside this function
+                _transforms=transforms,
+                _return_transforms=save_transforms,
+                _reset_transforms=True     # inplace modifications take place inside this function
             ) for i, (train_idx, test_idx) in tqdm(
                 enumerate(cv.split(X_dt.array_data, y_dt.array_data)),
-                desc='Making predictions...', disable=not show_pbar)
+                desc='Performing cross-validation...', disable=not show_pbar)
         ]
     else:
         if n_jobs == -1:
@@ -252,10 +356,13 @@ def evalCrossVal(
                 _return_model=save_models,
                 # inplace modifications will not take place inside this function so save the computation setting this
                 # to False, but... better prevent
-                _reset_model_fit=True
+                _reset_model_fit=True,     # inplace modifications take place inside this function
+                _transforms=transforms,
+                _return_transforms=save_transforms,
+                _reset_transforms=True     # inplace modifications take place inside this function
             ) for i, (train_idx, test_idx) in tqdm(
                 enumerate(cv.split(X_dt.array_data, y_dt.array_data)),
-                desc='Making predictions...', disable=not show_pbar)
+                desc='Performing cross-validation...', disable=not show_pbar)
         )
 
     # the model should not remain fitted after the execution of the previous subroutines
@@ -286,9 +393,11 @@ def evalCrossValNestedHPO(
         metrics: list,
         objective_metric: str = None,
         agg_function: callable = None,
+        transforms: List[Transform] or None = None,
         verbose: int = -1,
         n_jobs: int = 1,
         save_train_preds: bool = False,
+        save_transforms: bool = False,
         save_models: bool = False):
     """
 
@@ -324,7 +433,7 @@ def evalCrossValNestedHPO(
             for name, values in _search_space.items()
         }
 
-        _model = deepcopy(_model)        # avoid inplace modifications
+        _model = model.copy()        # avoid inplace modifications
         _model.update(**_optim_params)   # update model parameters
 
         # perform the nested cross-validation
@@ -333,10 +442,12 @@ def evalCrossValNestedHPO(
             y=_y,
             model=_model,
             cv=_cv,
+            transforms=None,
             verbose=0,
             n_jobs=1,                # avoid using nested parallel executions
             save_train_preds=_customAggFunction is not None,  # save only if a costume aggregation function was provided
-            save_models=False        # does not save models
+            save_models=False,        # does not save models
+            save_transforms=False
         )
 
         # compute performance metrics
@@ -385,9 +496,11 @@ def evalCrossValNestedHPO(
         ('objective_metric', objective_metric, [str, type(None)]),
         ('hpo_n_trials', hpo_n_trials, [int]),
         ('minimization', minimization, [bool]),
+        ('transforms', transforms, [list, type(None)]),
         ('verbose', verbose, [int]),
         ('n_jobs', n_jobs, [int]),
         ('save_models', save_models, [bool]),
+        ('save_transforms', save_transforms, [bool]),
         ('save_train_preds', save_train_preds, [bool]),
     )
 
@@ -445,6 +558,22 @@ def evalCrossValNestedHPO(
         X_test = X_dt.array_data[test_idx]
         y_test = y_dt.array_data[test_idx]
 
+        transforms_ = None
+        if transforms is not None:
+            # TODO. Another option is to apply the transforms inside the HPO, but
+            # TODO. it can become a very computationally-intensive alternative...
+            # apply transformations based on the training data (DESIGN DECISION)
+            if save_transforms:
+                # fit a copy of the input transformations
+                transforms_ = [trans.copy() for trans in transforms]
+            else:
+                # reset fit and allow inplace modifications of the input transforms
+                transforms_ = [trans.resetFit() for trans in transforms]
+
+            # fit and apply the input transformations based on the training data
+            X_train, X_test = _fitAndApplyTransforms(
+                transforms=transforms_, X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test)
+
         # create a partial initialization of the function to optimize
         partial_trialHPO = partial(
             _trialHPO,
@@ -479,7 +608,7 @@ def evalCrossValNestedHPO(
             print('Optimized model hyperparameters: {}\n'.format(study.best_params))
 
         # update input model hyperparameters
-        optim_model = deepcopy(model)
+        optim_model = model.copy()
         optim_model.update(**study.best_params)
 
         # train the model and make the predictions on the test data
@@ -494,7 +623,20 @@ def evalCrossValNestedHPO(
             _test_idx=test_idx,
             _predict_train=save_train_preds,
             _return_model=save_models,
-            _reset_model_fit=True)
+            _reset_model_fit=True,
+            _transforms=None,   # transforms were applied at the beginning of the loop
+            _return_transforms=False,
+            _reset_transforms=False
+        )
+
+        # add transforms to the returned fold results
+        if save_transforms:
+            fold_results = list(fold_results)   # convert to list for inplace modifications
+            for idx, (name, _) in enumerate(fold_results):
+                # replace 'transforms' key
+                if name == 'transforms':
+                    fold_results[idx] = (name, transforms_)
+            fold_results = tuple(fold_results)
 
         fold_stats.append(fold_results)
 

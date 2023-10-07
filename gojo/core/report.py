@@ -22,8 +22,10 @@ from ..util.validation import (
 )
 
 
+# TODO. Documentation
 class CVReport(object):
-    """ Object returned by the subroutines defined in X with the results of the cross validation. """
+    """ Object returned by the subroutines defined in 'gojo.core.loops' functions with the results of the
+    cross validation. """
 
     # Flags used to identify the columns of the generated dataframes where the predictions and true
     # labels are located
@@ -43,7 +45,8 @@ class CVReport(object):
                  true_train_key: str,
                  test_idx_key: str,
                  train_idx_key: str,
-                 trained_model_key: str):
+                 trained_model_key: str,
+                 fitted_transforms_key: str):
 
         checkMultiInputTypes(
             ('raw_results', raw_results, [list]),
@@ -54,7 +57,8 @@ class CVReport(object):
             ('true_train_key', true_train_key, [str]),
             ('test_idx_key', test_idx_key, [str]),
             ('train_idx_key', train_idx_key, [str]),
-            ('trained_model_key', trained_model_key, [str])
+            ('trained_model_key', trained_model_key, [str]),
+            ('fitted_transforms_key', fitted_transforms_key, [str]),
         )
 
         if len(raw_results) == 0:
@@ -74,6 +78,7 @@ class CVReport(object):
         test_preds = {}
         train_preds = {}
         trained_models = {}
+        fitted_transforms = {}
         for fold_results in raw_results:
             fold_results_dict = dict(fold_results)   # transform list of tuples to a hash
             n_fold = fold_results_dict[n_fold_key]
@@ -108,12 +113,14 @@ class CVReport(object):
 
             # save the trained models
             trained_models[n_fold] = fold_results_dict[trained_model_key]
+            fitted_transforms[n_fold] = fold_results_dict[fitted_transforms_key]
 
         self.test_preds = test_preds
         self.train_preds = train_preds
         self.X = X_dataset
         self.y = y_dataset
         self._trained_models = trained_models
+        self._fitted_transforms = fitted_transforms
         self._metadata = {}
 
     @property
@@ -171,6 +178,29 @@ class CVReport(object):
             return trained_models_copy
 
         return self._trained_models
+
+    def getFittedTransforms(self, copy: bool = True) -> dict:
+        """ Function that returns the fitted transforms if they have been saved in the 'gojo.core.loops' subroutine.
+
+        Parameters
+        ----------
+        copy : bool, default=True
+            Parameter that indicates whether to return a deepcopy of the transforms or directly the saved transforms.
+            Defaults to True to avoid inplace modifications.
+
+        Returns
+        -------
+        fitted_transforms : dict or None
+            Trained models or None if the models were not saved.
+        """
+        if copy:
+            fitted_transforms_copy = {
+                n_fold: deepcopy(trans) if trans is not None else trans
+                for n_fold, trans in self._fitted_transforms.items()
+            }
+            return fitted_transforms_copy
+
+        return self._fitted_transforms
 
     def getScores(self, metrics: list, loocv: bool = False, supress_warnings: bool = False) -> dict:
         """ Method used to calculate performance metrics for folds from a list of metrics (gojo.core.Metric
