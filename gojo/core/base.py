@@ -4,7 +4,7 @@
 # Author: Fernando García Gutiérrez
 # Email: fgarcia@fundacioace.org
 #
-# STATUS: completed and functional
+# STATUS: completed, functional, and documented.
 #
 import torch
 import pandas as pd
@@ -34,7 +34,8 @@ from ..exception import (
 
 
 class Dataset(object):
-    """ Class representing a dataset.
+    """ Class representing a dataset. This class is used internally by the functions defined
+    in :py:mod:`gojo.core.loops`.
 
     Parameters
     ----------
@@ -78,31 +79,35 @@ class Dataset(object):
 
     @property
     def array_data(self) -> np.ndarray:
+        """ Returns the input data as a numpy.array. """
         return self._array_data
 
     @property
     def var_names(self) -> list:
+        """ Returns the name of the variables. """
         return self._var_names
 
     @property
     def index_values(self) -> np.array:
+        """ Returns the input data index values. """
         return self._index_values
 
 
 class Model(object):
     """
-    Base class (interface) used to define a model that can interact with the 'gojo' library.
+    Base class (interface) used to define a model that can interact with the :py:mod:`gojo` library.
 
     Subclasses must define the following methods:
 
         - train()
             This method is used to fit a given model to the input data. Once the model has been fitted, inside
-            this method, the superclass method 'fitted()' must be called; otherwise, the model will not be recognized
-            as fitted to any data, and 'performInference()' will raise a 'gojo.exception.UnfittedEstimator' error.
+            this method, the superclass method :meth:`fitted` must be called; otherwise, the model will not be
+            recognized as fitted to any data, and :meth:`performInference` will raise a
+            :class:`gojo.exception.UnfittedEstimator` error.
 
         - performInference()
-            Once the model has been fitted using the 'train()' method (when the 'is_fitted' property is called, the
-            returned value should be True), this method allows performing inferences on new data.
+            Once the model has been fitted using the :meth:`train` method (when the :attr:`is_fitted` property is
+            called, the returned value should be True), this method allows performing inferences on new data.
 
         - reset()
             This method should reset the inner estimator, forgetting all the data seen.
@@ -114,19 +119,22 @@ class Model(object):
         - updateParameters()
             This method must update the inner parameters of the model.
 
+        - copy()
+            This method must return a copy of the model.
+
     This abstract class provides the following properties:
 
         - parameters -> dict
             Returns the hyperparameters of the model.
 
         - is_fitted -> bool
-            Indicates whether a given model has been fitted (i.e., if the 'train()' method was called).
+            Indicates whether a given model has been fitted (i.e., if the :meth:`train` method was called).
 
     And the following methods:
 
         - fitted()
-            This method should be called inside the 'train()' method to indicate that the model was
-            fitted to the input data and can now perform inferences using the 'performInference()' subroutine.
+            This method should be called inside the :meth:`train` method to indicate that the model was
+            fitted to the input data and can now perform inferences using the :meth:`performInference` subroutine.
 
         - resetFit()
             This method is used to reset learned model weights.
@@ -185,9 +193,14 @@ class Model(object):
         """ Method used to update model parameters. """
         raise NotImplementedError
 
+    @abstractmethod
+    def copy(self):
+        """ Method used to make a copy of the model. """
+        raise NotImplementedError
+
     @property
     def parameters(self) -> dict:
-        """ Return the model parameters defined in the 'getParameters()' method.
+        """ Return the model parameters defined in the :meth:`getParameters` method.
 
         Returns
         -------
@@ -202,7 +215,7 @@ class Model(object):
 
     @property
     def is_fitted(self) -> bool:
-        """ Indicates whether the model has been trained by calling the 'train()' method.
+        """ Indicates whether the model has been trained by calling the :meth:`train` method.
 
         Returns
         -------
@@ -210,11 +223,6 @@ class Model(object):
             Returns True if the model was fitted.
         """
         return self._is_fitted
-
-    @abstractmethod
-    def copy(self):
-        """ Method used to make a copy of the model. """
-        raise NotImplementedError
 
     def update(self, **kwargs):
         """ Method used to update model parameters. """
@@ -232,23 +240,25 @@ class Model(object):
 
 
 class SklearnModelWrapper(Model):
-    """ Wrapper used for easy integration of models following the sklearn interface into the 'gojo' library
+    """ Wrapper used for easy integration of models following the sklearn interface into the :py:mod:`gojo` library
     and functionality.
 
     Parameters
-    ---------
+    ----------
     model_class : type
         Model following the 'sklearn.base.BaseEstimator' interface. The class provided need not be a subclass
-        of the sklearn interface but should provide the basic 'fit()' and 'predict()' (or 'predict_proba()') methods.
+        of the sklearn interface but should provide the basic :meth:`fit` and :meth:`predict` (or
+        :meth:`predict_proba`) methods.
 
     predict_proba : bool, default=False
-         Parameter that indicates whether to call the predict_proba() method when making predictions. If this
-         parameter is False (default behavior) the 'predict()' method will be called. If the parameter is set to
-         True and the model provided does not have the predict_proba method implemented, the 'predict()' method
-         will be called and a warning will inform that an attempt has been made to call the predict_proba() method.
+         Parameter that indicates whether to call the :meth:`predict_proba` method when making predictions. If this
+         parameter is False (default behavior) the :meth:`predict` method will be called. If the parameter is set to
+         True and the model provided does not have the predict_proba method implemented, the :meth:`predict` method
+         will be called and a warning will inform that an attempt has been made to call the :meth:`predict_proba`
+         method.
 
     **kwargs
-        Additional model hyparameters. This parameters will be passed to the 'model_class' constructor.
+        Additional model hyparameters. This parameters will be passed to the `model_class` constructor.
 
     Example
     -------
@@ -297,8 +307,7 @@ class SklearnModelWrapper(Model):
     def updateParameters(self, **kwargs):
         """ Method used to update the inner model parameters.
 
-        IMPORTANT NOTE: Model parameters should be updated by calling the update() method
-        from the model superclass.
+        - NOTE: Model parameters should be updated by calling the :meth:`update` method from the model superclass.
         """
         for name, value in kwargs.items():
             self._in_params[name] = value
@@ -353,7 +362,111 @@ class SklearnModelWrapper(Model):
 
 
 class TorchSKInterface(Model):
-    """ Description """
+    """ Wrapper class designed to integrate pytorch models ('torch.nn.Module' instances) in the :py:mod:`gojo`.
+    library functionalities.
+
+    Parameters
+    ----------
+    model : torch.nn.Module
+        Subclass of 'torch.nn.Module'.
+
+    iter_fn : callable
+        Function that executes an epoch of the torch.nn.Module typical training pipeline. For more information
+        consult :py:mod:`gojo.deepl.loops`.
+
+    loss_function : callable
+        Loss function used to train the model.
+
+    n_epochs : int
+        Number of epochs used to train the model.
+
+    train_split : float
+        Percentage of the training data received in :meth:`train` that will be used to train the model. The rest of
+        the data will be used as validation set.
+
+    optimizer_class : type
+        Pytorch optimizer used to train the model (see `torch.optim` module.)
+
+    dataset_class : type
+        Pytorch class dataset used to train the model (see `torch.utils.data` module or the `gojo` submodule
+        :py:mod:`gojo.deepl.loading`).
+
+    dataloader_class : type
+        Pytorch dataloader class (`torch.utils.data.DataLoader`).
+
+    optimizer_kw : dict, default=None
+        Parameters used to initialize the provided optimizer class.
+
+    train_dataset_kw : dict, default=None
+        Parameters used to initialize the provided dataset class for the data used for training.
+
+    valid_dataset_kw : dict, default= None
+        Parameters used to initialize the provided dataset class for the data used for validation.
+
+    train_dataloader_kw : dict, default=None
+        Parameters used to initialize the provided dataloader class for the data used for training.
+
+    valid_dataloader_kw : dict, default=None
+        Parameters used to initialize the provided dataloader class for the data used for validation.
+
+    iter_fn_kw : dict, default=None
+        Optional arguments of the parameter `iter_fn`.
+
+    train_split_stratify : bool, default=False
+        Parameter indicating whether to perform the train/validation split with class stratification.
+
+    callbacks : List[:class:`gojo.deepl.callback.Callback`], default=None
+        Callbacks during model training. For more information see :py:mod:`gojo.deepl.callback`.
+
+    metrics : List[:class:`gojo.core.evaluation.Metric`], default=None
+        Metrics used to evaluate the model performance during training. Fore more information see
+        :py:mod:`gojo.core.evaluation.Metric`.
+
+    seed : int, default=None
+        Random seed used for controlling the randomness.
+
+    device : str, default='cpu'
+        Device used for training the model.
+
+    verbose : int, default=1
+        Verbosity level. Use -1 to indicate maximum verbosity.
+
+
+    Example
+    -------
+    >>> import torch
+    >>> from torch.utils.data import DataLoader
+    >>> from gojo import deepl
+    >>> from gojo import core
+    >>>
+    >>>
+    >>> # create a basic FFN
+    >>> model = deepl.ffn.createSimpleFFNModel(
+    >>>     in_feats=13,
+    >>>     out_feats=1,
+    >>>     layer_dims=[20],
+    >>>     layer_activation=torch.nn.ELU(),
+    >>>     output_activation=torch.nn.Sigmoid())
+    >>>
+    >>>
+    >>> model = core.TorchSKInterface(
+    >>>     model=model,
+    >>>     iter_fn=deepl.iterSupervisedEpoch,
+    >>>     loss_function=torch.nn.BCELoss(),
+    >>>     n_epochs=50,
+    >>>     train_split=0.8,
+    >>>     train_split_stratify=True,
+    >>>     optimizer_class=torch.optim.Adam,
+    >>>     dataset_class=deepl.loading.TorchDataset,
+    >>>     dataloader_class=torch.utils.data.DataLoader,
+    >>>     optimizer_kw=dict(lr=0.001),
+    >>>     train_dataloader_kw=dict(batch_size=16, shuffle=True),
+    >>>     valid_dataloader_kw=dict(batch_size=100),
+    >>>     device='cuda',
+    >>>     metrics=core.getDefaultMetrics('binary_classification', bin_threshold=0.5),
+    >>>     verbose=1
+    >>> )
+    """
     def __init__(
             self,
             model: torch.nn.Module,
@@ -456,13 +569,18 @@ class TorchSKInterface(Model):
 
     @property
     def fitting_history(self) -> tuple:
+        """ Returns a tuple with the training/validation fitting history of the models returned by the
+        :func:`gojo.deepl.loops.fitNeuralNetwork` function. The first element will correspond to the training
+        data while the second element to the validation data. """
         return self._fitting_history
 
     @property
     def num_params(self) -> int:
+        """ Returns the number model trainable parameters. """
         return getNumModelParams(self.model)
 
     def getParameters(self) -> dict:
+        """ Returns the model parameters. """
         params = dict(
             model=self.model,
             iter_fn=self.iter_fn,
@@ -488,6 +606,8 @@ class TorchSKInterface(Model):
         return params
 
     def updateParameters(self, **kwargs):
+        """ Function not available for this class objects. If you want to use a parametrized version see
+        :class:`gojo.core.base.ParametrizedTorchSKInterface`."""
 
         raise NotImplementedError('This class not support parameter updates. See alternative classes such as: '
                                   '"gojo.core.ParametrizedTorchSKInterface"')
@@ -555,7 +675,22 @@ class TorchSKInterface(Model):
         self._fitting_history = None
 
     def performInference(self, X: np.ndarray, batch_size: int = None, **kwargs) -> np.ndarray:
+        """ Method used to perform the model predictions.
 
+        Parameters
+        ----------
+        X : np.ndarray
+            Input data used to perform inference.
+
+        batch_size : int, default=None
+            Parameter indicating whether to perform the inference using batches instead of
+            all input data at once. By default, all input data will by used.
+
+        Returns
+        -------
+        model_predictions : np.ndarray
+            Model predictions associated with the input data.
+        """
         checkMultiInputTypes(
             ('batch_size', batch_size, (int, type(None))))
 
@@ -605,7 +740,82 @@ class TorchSKInterface(Model):
 
 
 class ParametrizedTorchSKInterface(TorchSKInterface):
-    """ Description """
+    """ Parameterized version of :class:`gojo.core.base.TorchSKInterface`. This implementation is useful for performing
+    a cross validation with hyperparameter optimization using the :func:`gojo.core.loops.evalCrossValNestedHPO`
+    function. This class provides an implementation of the :meth:`updateParameters` method.
+
+
+    Parameters
+    ----------
+    generating_fn : callable
+        Function used to generate a model from a set of parameters. Currently, there are some implemented functions
+        such as :func:`gojo.deepl.ffn.createSimpleFFNModel`. Also, the user can define its own generating function.
+
+    gf_params : dict
+        Parameters used by the input function `generating_fn` to generate a `torch.nn.Module` instance.
+
+    iter_fn : callable
+        Function that executes an epoch of the torch.nn.Module typical training pipeline. For more information
+        consult :py:mod:`gojo.deepl.loops`.
+
+    loss_function : callable
+        Loss function used to train the model.
+
+    n_epochs : int
+        Number of epochs used to train the model.
+
+    train_split : float
+        Percentage of the training data received in :meth:`train` that will be used to train the model. The rest of
+        the data will be used as validation set.
+
+    optimizer_class : type
+        Pytorch optimizer used to train the model (see `torch.optim` module.)
+
+    dataset_class : type
+        Pytorch class dataset used to train the model (see `torch.utils.data` module or the `gojo` submodule
+        :py:mod:`gojo.deepl.loading`).
+
+    dataloader_class : type
+        Pytorch dataloader class (`torch.utils.data.DataLoader`).
+
+    optimizer_kw : dict, default=None
+        Parameters used to initialize the provided optimizer class.
+
+    train_dataset_kw : dict, default=None
+        Parameters used to initialize the provided dataset class for the data used for training.
+
+    valid_dataset_kw : dict, default= None
+        Parameters used to initialize the provided dataset class for the data used for validation.
+
+    train_dataloader_kw : dict, default=None
+        Parameters used to initialize the provided dataloader class for the data used for training.
+
+    valid_dataloader_kw : dict, default=None
+        Parameters used to initialize the provided dataloader class for the data used for validation.
+
+    iter_fn_kw : dict, default=None
+        Optional arguments of the parameter `iter_fn`.
+
+    train_split_stratify : bool, default=False
+        Parameter indicating whether to perform the train/validation split with class stratification.
+
+    callbacks : List[:class:`gojo.deepl.callback.Callback`], default=None
+        Callbacks during model training. For more information see :py:mod:`gojo.deepl.callback`.
+
+    metrics : List[:class:`gojo.core.evaluation.Metric`], default=None
+        Metrics used to evaluate the model performance during training. Fore more information see
+        :py:mod:`gojo.core.evaluation.Metric`.
+
+    seed : int, default=None
+        Random seed used for controlling the randomness.
+
+    device : str, default='cpu'
+        Device used for training the model.
+
+    verbose : int, default=1
+        Verbosity level. Use -1 to indicate maximum verbosity.
+
+    """
     _NOT_DEFINED_PARAMETER = '__NOT_DEFINED'
 
     def __init__(
@@ -613,6 +823,7 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
             generating_fn: callable,
             gf_params: dict,
             iter_fn: callable,
+
             # training parameters
             loss_function,
             n_epochs: int,
@@ -682,7 +893,130 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
         return self.__repr__()
 
     def updateParameters(self, **kwargs):
+        """ Method that allows updating the model parameters. If you want to update a parameter contained in a
+        dictionary, the name of the dictionary key must be specified together with the name of the parameter
+        separated by "__".
 
+        - NOTE: Model parameters should be updated by calling the :meth:`update` method from the model superclass.
+
+        Examples
+        --------
+        >>> from gojo import core
+        >>> from gojo import deepl
+        >>>
+        >>> # create the model to be evaluated
+        >>> model = core.ParametrizedTorchSKInterface(
+        >>>     # example of generating function
+        >>>     generating_fn=deepl.ffn.createSimpleFFNModel,
+        >>>     gf_params=dict(
+        >>>         in_feats=13,
+        >>>         out_feats=1,
+        >>>         layer_dims=[20, 10],
+        >>>         layer_activation='ELU',
+        >>>         output_activation='Sigmoid'),
+        >>>     # example of iteration function
+        >>>     iter_fn=deepl.iterSupervisedEpoch,
+        >>>     loss_function=torch.nn.BCELoss(),
+        >>>     n_epochs=50,
+        >>>     train_split=0.8,
+        >>>     train_split_stratify=True,
+        >>>     optimizer_class=torch.optim.Adam,
+        >>>     dataset_class=deepl.loading.TorchDataset,
+        >>>     dataloader_class=torch.utils.data.DataLoader,
+        >>>     optimizer_kw=dict(
+        >>>         lr=0.001
+        >>>     ),
+        >>>     train_dataloader_kw=dict(
+        >>>         batch_size=16,
+        >>>         shuffle=True
+        >>>     ),
+        >>>     valid_dataloader_kw=dict(
+        >>>         batch_size=200
+        >>>     ),
+        >>>     # use default classification metrics
+        >>>     metrics=core.getDefaultMetrics(
+        >>>        'binary_classification', bin_threshold=0.5, select=['f1_score']),
+        >>> )
+        >>> model
+        Out [0]
+            ParametrizedTorchSKInterface(
+                model=Sequential(
+              (LinearLayer 0): Linear(in_features=13, out_features=20, bias=True)
+              (Activation 0): ELU(alpha=1.0)
+              (LinearLayer 1): Linear(in_features=20, out_features=10, bias=True)
+              (Activation 1): ELU(alpha=1.0)
+              (LinearLayer 2): Linear(in_features=10, out_features=1, bias=True)
+              (Activation 2): Sigmoid()
+            ),
+                iter_fn=<function iterSupervisedEpoch at 0x7fd7ca47b940>,
+                loss_function=BCELoss(),
+                n_epochs=50,
+                train_split=0.8,
+                train_split_stratify=True,
+                optimizer_class=<class 'torch.optim.adam.Adam'>,
+                dataset_class=<class 'gojo.deepl.loading.TorchDataset'>,
+                dataloader_class=<class 'torch.utils.data.dataloader.DataLoader'>,
+                optimizer_kw={'lr': 0.001},
+                train_dataset_kw={},
+                valid_dataset_kw={},
+                train_dataloader_kw={'batch_size': 16, 'shuffle': True},
+                valid_dataloader_kw={'batch_size': 200},
+                iter_fn_kw={},
+                callbacks=None,
+                metrics=[Metric(
+                name=f1_score,
+                function_kw={},
+                multiclass=False
+            )],
+                seed=None,
+                device=cpu,
+                verbose=1,
+                generating_fn=<function createSimpleFFNModel at 0x7fd7ca4805e0>,
+                gf_params={'in_feats': 13, 'out_feats': 1, 'layer_dims': [20, 10], 'layer_activation': 'ELU',
+                'output_activation': 'Sigmoid'}
+            )
+        >>>
+        >>> # update parameters by using the update() method provided by the Model interface
+        >>> model.update(
+        >>>    gf_params__layer_dims=[5],    # update dictionary-level parameter
+        >>>    n_epochs=100                  # update model-level parameter
+        >>> )
+        Out [1]
+            ParametrizedTorchSKInterface(
+                model=Sequential(
+              (LinearLayer 0): Linear(in_features=13, out_features=5, bias=True)
+              (Activation 0): ELU(alpha=1.0)
+              (LinearLayer 1): Linear(in_features=5, out_features=1, bias=True)
+              (Activation 1): Sigmoid()
+            ),
+                iter_fn=<function iterSupervisedEpoch at 0x7fd7ca47b940>,
+                loss_function=BCELoss(),
+                n_epochs=100,
+                train_split=0.8,
+                train_split_stratify=True,
+                optimizer_class=<class 'torch.optim.adam.Adam'>,
+                dataset_class=<class 'gojo.deepl.loading.TorchDataset'>,
+                dataloader_class=<class 'torch.utils.data.dataloader.DataLoader'>,
+                optimizer_kw={'lr': 0.001},
+                train_dataset_kw={},
+                valid_dataset_kw={},
+                train_dataloader_kw={'batch_size': 16, 'shuffle': True},
+                valid_dataloader_kw={'batch_size': 200},
+                iter_fn_kw={},
+                callbacks=None,
+                metrics=[Metric(
+                name=f1_score,
+                function_kw={},
+                multiclass=False
+            )],
+                seed=None,
+                device=cpu,
+                verbose=1,
+                generating_fn=<function createSimpleFFNModel at 0x7fd7ca4805e0>,
+                gf_params={'in_feats': 13, 'out_feats': 1, 'layer_dims': [5], 'layer_activation': 'ELU',
+                'output_activation': 'Sigmoid'}
+            )
+        """
         for name, value in kwargs.items():
 
             if name == 'model':
@@ -745,9 +1079,3 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
         self_copy._in_model.to('cpu')  # save in cpu
 
         return self_copy
-
-
-
-
-
-

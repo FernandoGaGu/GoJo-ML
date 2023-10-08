@@ -145,7 +145,7 @@ class CVReport(object):
         be noted that the predictions made on the training set are not saved or this decision is relegated to the user.
 
         Parameters
-        ---------
+        ----------
         supress_warnings : bool, default=False
             Silence the warning raised when not training predictions have been made.
 

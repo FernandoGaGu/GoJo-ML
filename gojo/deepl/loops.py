@@ -63,8 +63,7 @@ def iterSupervisedEpoch(
         device: str,
         training: bool,
         metrics: list,
-        **kwargs
-    ) -> tuple:
+        **kwargs) -> tuple:
     """ Basic function applied to supervised problems that executes the code necessary to perform an epoch.
 
     This function will return a tuple where the first element correspond to dictionary with the loss-related
