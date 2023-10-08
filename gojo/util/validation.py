@@ -31,18 +31,32 @@ def checkMultiInputTypes(*args):
         checkInputType(*element)
 
 
-def fileExists(file: str, must_exists: bool):
-    """ Function that checks if a given file exists or not exists"""
+def _checkExists(path: str, must_exists: bool, file: bool):
+    """ Check if a given file/path exists. """
+    checkInputType('file', file, [bool])
+
+    path_type = 'File' if file else 'Path'
+
     checkMultiInputTypes(
-        ('file', file, [str]),
+        (path_type.lower(), path, [str]),
         ('must_exists', must_exists, [bool]))
 
     if must_exists:
-        if not os.path.exists(file):
-            raise FileNotFoundError('File "{}" not found.'.format(os.path.abspath(file)))
+        if not os.path.exists(path):
+            raise FileNotFoundError('{} "{}" not found.'.format(path_type, os.path.abspath(path)))
     else:
-        if os.path.exists(file):
-            raise FileExistsError('File "{}" already exists.'.format(os.path.abspath(file)))
+        if os.path.exists(path):
+            raise FileExistsError('{} "{}" already exists.'.format(path_type, os.path.abspath(path)))
+
+
+def fileExists(file: str, must_exists: bool):
+    """ Function that checks if a given file exists or not exists"""
+    _checkExists(file, must_exists, file=True)
+
+
+def pathExists(path: str, must_exists: bool):
+    """ Function that checks if a given path exists. """
+    _checkExists(path, must_exists, file=False)
 
 
 def checkCallable(input_obj_name: str, obj: callable):
