@@ -4,8 +4,7 @@
 # Author: Fernando García Gutiérrez
 # Email: fgarcia@fundacioace.org
 #
-# STATUS: completed and functional
-# TODO. Add documentation for the function 'evalCrossValNestedHPO'
+# STATUS: completed, functional, and documented.
 #
 import pandas as pd
 import numpy as np
@@ -24,7 +23,10 @@ from sklearn.model_selection import (
 
 from .base import (
     Model,
-    Dataset
+    Dataset,
+)
+from .evaluation import (
+    Metric
 )
 from .report import (
     CVReport
@@ -282,10 +284,58 @@ def evalCrossVal(
         n_jobs: int = 1,
         save_train_preds: bool = False,
         save_transforms: bool = False,
-        save_models: bool = False,
+        save_models: bool = False) -> CVReport:
+    """ Subroutine used to evaluate a model according to a cross-validation scheme provided by the `cv` argument.
 
-    ):
-    """ Description """
+    Parameters
+    ----------
+    X : np.ndarray or pd.DataFrame
+        Variables used to fit the model.
+
+    y : np.ndarray or pd.DataFrame or pd.Series
+        Target prediction variable.
+
+    model : gojo.base.Model
+        Model to be trained. The input model must follow the :class:`gojo.base.Model` interfaz.
+
+    cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut
+        Cross-validation schema. For more information about cross validation see `sklearn.model_selection` module.
+        The gojo module implements useful functions for easy loading of cross-validation objects (see
+        :func:`gojo.util.getCrossValObj`).
+
+    transforms : List[Transform] or None, default=None
+        Transformations applied to the data before being provided to the models. These transformations will be fitted
+        using the training data, and will be applied to both training and test data. For more information see the
+        module :py:mod:`gojo.core.transform`.
+
+    verbose : int, default=-1
+        Verbosity level.
+
+    n_jobs : int, default=1
+        Number of jobs used for parallelization.
+
+    save_train_preds : bool, default=False
+        Parameter that indicates whether the predictions made on the training set will be saved in
+        :class:`gojo.core.report.CVReport`. For large  training sets this may involve higher computational and
+        storage costs.
+
+    save_transforms : bool, default=False
+        Parameter that indicates whether the fitted transforms will be saved in :class:`gojo.core.report.CVReport`.
+
+    save_models : bool, default=False
+        Parameter that indicates whether the fitted models will be saved in :class:`gojo.core.report.CVReport`. For
+        larger models this may involve higher computational and storage costs.
+
+    Returns
+    -------
+    cv_obj : :class:`gojo.core.report.CVReport`
+        Cross validation report. For more information see :class:`gojo.core.report.CVReport`.
+
+
+    Examples
+    --------
+    <TODO>
+    """
     checkMultiInputTypes(
         ('X', X, [np.ndarray, pd.DataFrame]),
         ('y', y, [np.ndarray, pd.DataFrame, pd.Series]),
@@ -379,7 +429,6 @@ def evalCrossVal(
     return cv_report
 
 
-# TODO. Add documentation
 def evalCrossValNestedHPO(
         X: np.ndarray or pd.DataFrame,
         y: np.ndarray or pd.DataFrame or pd.Series,
@@ -390,7 +439,7 @@ def evalCrossValNestedHPO(
         hpo_sampler: optuna.samplers.BaseSampler,
         hpo_n_trials: int,
         minimization: bool,
-        metrics: list,
+        metrics: List[Metric],
         objective_metric: str = None,
         agg_function: callable = None,
         transforms: List[Transform] or None = None,
@@ -399,14 +448,100 @@ def evalCrossValNestedHPO(
         save_train_preds: bool = False,
         save_transforms: bool = False,
         save_models: bool = False):
-    """
+    """ Subroutine used to evaluate a model according to a cross-validation scheme provided by the `outer_cv` argument.
+    This function also perform a nested cross-validation for hyperparameter optimization (HPO) based on the `optuna`
+    library.
 
-    Example of 'search_space'
-    -----------------------
-    >>> search_space = {
-    >>>     'max_depth': ('suggest_int', (2, 10)),           # sample from a categorical distribution
-    >>>     'max_samples': ('suggest_float', (0.5, 1.0) ),   # ... from a uniform distribution
-    >>> }
+    Parameters
+    ----------
+    X : np.ndarray or pd.DataFrame
+        Variables used to fit the model.
+
+    y : np.ndarray or pd.DataFrame or pd.Series
+        Target prediction variable.
+
+    model : gojo.base.Model
+        Model to be trained. The input model must follow the :class:`gojo.base.Model` interfaz.
+
+    search_space : dict
+        Search space used for performing the HPO. For more information about distributions and sampling strategies
+        consult `https://optuna.org/`.
+
+        >>> search_space = {
+        >>>     # sample from a categorical distribution
+        >>>     'max_depth': ('suggest_int', (2, 10)),
+        >>>     # ... from a uniform distribution
+        >>>     'max_samples': ('suggest_float', (0.5, 1.0) ),
+        >>> }
+
+    outer_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut
+        Cross-validation schema. For more information about cross validation see `sklearn.model_selection` module.
+        The gojo module implements useful functions for easy loading of cross-validation objects (see
+        :func:`gojo.util.getCrossValObj`).
+
+    inner_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut
+        Inner cross-validation schema used for evaluating model performance in the nested cross-validation used for
+        optimize the model hyperparameters. For more information about cross validation see `sklearn.model_selection`
+        module. The gojo module implements useful functions for easy loading of cross-validation objects (see
+        :func:`gojo.util.getCrossValObj`).
+
+    hpo_sampler : optuna.samplers.BaseSampler
+        Sampler used for suggest model hyperparameters. For more information see `https://optuna.org/`.
+
+    hpo_n_trials : int
+        Number of HPO iterations.
+
+    minimization: bool
+        Parameter indicating if the HPO objetive function must be minimized. If `minimization=False` the objective
+        function will be maximized.
+
+    metrics : List[:class:`gojo.core.evaluation.Metric`]
+        Metrics used within the nested-cross validation to evaluate the hyperparameter configuration.
+
+    objective_metric : str, default=None
+        It is possible to indicate which of the metrics provided by the `metrics` parameter are to be optimized within
+        the HPO. The metric must be provided as a string and must be included in the list of metrics provided. If this
+        parameter is not provided, an aggregation function must be provided by means of the `agg_function` parameter.
+
+    agg_function : callable, default=None
+        This function will receive a dataframe with the metrics calculated on each of the folds generated by the
+        `inner_cv` and taking into account this information it will provide a score that will be maximized/minimized
+        within the HPO. If the X parameter is not provided, this parameter must be provided. If both parameters are
+        provided, X will be ignored.
+
+    transforms : List[Transform] or None, default=None
+        Transformations applied to the data before being provided to the models. These transformations will be fitted
+        using the training data, and will be applied to both training and test data. For more information see the
+        module :py:mod:`gojo.core.transform`.
+
+    verbose : int, default=-1
+        Verbosity level.
+
+    n_jobs : int, default=1
+        Number of jobs used for parallelization.
+
+    save_train_preds : bool, default=False
+        Parameter that indicates whether the predictions made on the training set will be saved in
+        :class:`gojo.core.report.CVReport`. For large  training sets this may involve higher computational and
+        storage costs.
+
+    save_transforms : bool, default=False
+        Parameter that indicates whether the fitted transforms will be saved in :class:`gojo.core.report.CVReport`.
+
+    save_models : bool, default=False
+        Parameter that indicates whether the fitted models will be saved in :class:`gojo.core.report.CVReport`. For
+        larger models this may involve higher computational and storage costs.
+
+    Returns
+    -------
+    cv_obj : :class:`gojo.core.report.CVReport`
+        Cross validation report. For more information see :class:`gojo.core.report.CVReport`. The HPO history will be
+        save in the report metadata (:attr:`gojo.core.report.CVReport.metadata`.
+
+    Examples
+    --------
+    <TODO>
+
 
     """
     def _trialHPO(

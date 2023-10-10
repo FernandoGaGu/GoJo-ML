@@ -40,10 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../gojo.html">gojo package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.core.html">gojo.core package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.deepl.html">gojo.deepl package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.plotting.html">gojo.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.util.html">gojo.util package</a></li>
 </ul>
 
         </div>
@@ -76,7 +76,7 @@
 <span class="c1"># Author: Fernando García Gutiérrez</span>
 <span class="c1"># Email: fgarcia@fundacioace.org</span>
 <span class="c1">#</span>
-<span class="c1"># STATUS: completed and functional</span>
+<span class="c1"># STATUS: completed, functional, and documented.</span>
 <span class="c1">#</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
@@ -97,7 +97,7 @@
 <div class="viewcode-block" id="Metric">
 <a class="viewcode-back" href="../../../gojo.core.html#gojo.core.evaluation.Metric">[docs]</a>
 <span class="k">class</span> <span class="nc">Metric</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Base class used to create any type of performance evaluation metric compatible with the &quot;gojo&quot; framework.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Base class used to create any type of performance evaluation metric compatible with the :py:mod:`gojo` framework.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -105,8 +105,8 @@
 <span class="sd">        Name given to the performance metric</span>
 
 <span class="sd">    function : callable</span>
-<span class="sd">        Function that will receive as input two numpy.array (&quot;y_true&quot; and &quot;y_pred&quot;) and must return</span>
-<span class="sd">        a scalar or a numpy array.</span>
+<span class="sd">        Function that will receive as input two `numpy.ndarray` (`y_true` and `y_pred`) and must return</span>
+<span class="sd">        a scalar or a `numpy.ndarray`.</span>
 
 <span class="sd">    bin_threshold : float or int, default=None</span>
 <span class="sd">        Threshold used to binarize the input predictions. By default, no thresholding is applied.</span>
@@ -116,14 +116,14 @@
 
 <span class="sd">    number_of_classes : int, default=None</span>
 <span class="sd">        Parameter indicating the number of classes in a multi-class classification problem. This</span>
-<span class="sd">        parameter will not have any effect when &quot;multiclass=False&quot;.</span>
+<span class="sd">        parameter will not have any effect when `multiclass=False`.</span>
 
 <span class="sd">    use_multiclass_sparse : bool, default=False</span>
 <span class="sd">        Parameter indicating if the multi-class level predictions are provided as a one-hot vector.</span>
-<span class="sd">        This parameter will not have any effect when &quot;multiclass=False&quot;.</span>
+<span class="sd">        This parameter will not have any effect when `multiclass=False`.</span>
 
 <span class="sd">    **kwargs</span>
-<span class="sd">        Optional parameters provided to the input callable specified by &quot;function&quot;.</span>
+<span class="sd">        Optional parameters provided to the input callable specified by `function`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">callable</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">multiclass</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">number_of_classes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -183,7 +183,7 @@
 
 <span class="sd">        bin_threshold : float, default=None</span>
 <span class="sd">            Threshold used to binarize the input predictions. By default, no thresholding is applied. If the</span>
-<span class="sd">            parameter &quot;bin_threshold&quot; was defined in constructor, its specification will be overwritten</span>
+<span class="sd">            parameter `bin_threshold` was defined in constructor, its specification will be overwritten</span>
 <span class="sd">            by this parameter.</span>
 
 <span class="sd">        Note</span>
@@ -300,16 +300,19 @@
 <div class="viewcode-block" id="flatFunctionInput">
 <a class="viewcode-back" href="../../../gojo.core.html#gojo.core.evaluation.flatFunctionInput">[docs]</a>
 <span class="k">def</span> <span class="nf">flatFunctionInput</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">callable</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Function used to flatten the input predictions before the computation of the metric.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Function used to flatten the input predictions before the computation of the metric. Internally, the input</span>
+<span class="sd">    `y_pred` and `y_true` will be flattened before calling the provided function.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; from gojo import core</span>
 <span class="sd">    &gt;&gt;&gt; from sklearn import metrics</span>
 
-<span class="sd">    &gt;&gt;&gt; metric = core.Metric(&#39;accuracy&#39;, core.flatFunctionInput(metrics.accuracy_score), bin_threshold=0.5)</span>
-<span class="sd">    &gt;&gt;&gt; y_pred = np.array([[0.2, 0.9, 0.7, 0.3], [0.2, 0.9, 0.7, 0.3]])</span>
-<span class="sd">    &gt;&gt;&gt; y_true = np.array([[0, 1, 1, 0], [1, 0, 0, 1]])</span>
+<span class="sd">    &gt;&gt;&gt; metric = core.Metric(</span>
+<span class="sd">    &gt;&gt;&gt;     &#39;accuracy&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     core.flatFunctionInput(metrics.accuracy_score),</span>
+<span class="sd">    &gt;&gt;&gt;     bin_threshold=0.5)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">checkCallable</span><span class="p">(</span><span class="s1">&#39;fn&#39;</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
 
@@ -329,7 +332,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ---------</span>
 <span class="sd">    task : str</span>
-<span class="sd">        Task-associated metrics. Currently available tasks are: &#39;binary_classification&#39; and &#39;regression&#39;.</span>
+<span class="sd">        Task-associated metrics. Currently available tasks are: `binary_classification` and `regression`.</span>
 
 <span class="sd">    select : list, default=None</span>
 <span class="sd">        Metrics of those returned that will be selected (in case you do not want to calculate all the metrics).</span>
@@ -345,11 +348,11 @@
 
 <span class="sd">    number_of_classes : int, default=None</span>
 <span class="sd">        Parameter indicating the number of classes in a multi-class classification problem. This</span>
-<span class="sd">        parameter will not have any effect when &quot;multiclass=False&quot;.</span>
+<span class="sd">        parameter will not have any effect when `multiclass=False`.</span>
 
 <span class="sd">    use_multiclass_sparse : bool, default=False</span>
 <span class="sd">        Parameter indicating if the multi-class level predictions are provided as a one-hot vector.</span>
-<span class="sd">        This parameter will not have any effect when &quot;multiclass=False&quot;.</span>
+<span class="sd">        This parameter will not have any effect when `multiclass=False`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>

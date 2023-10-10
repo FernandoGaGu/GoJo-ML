@@ -40,10 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../gojo.html">gojo package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.core.html">gojo.core package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.deepl.html">gojo.deepl package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.plotting.html">gojo.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.util.html">gojo.util package</a></li>
 </ul>
 
         </div>
@@ -77,8 +77,7 @@
 <span class="c1"># Author: Fernando García Gutiérrez</span>
 <span class="c1"># Email: fgarcia@fundacioace.org</span>
 <span class="c1">#</span>
-<span class="c1"># STATUS: completed and functional</span>
-<span class="c1"># TODO. Add documentation for the function &#39;evalCrossValNestedHPO&#39;</span>
+<span class="c1"># STATUS: completed, functional, and documented.</span>
 <span class="c1">#</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -97,7 +96,10 @@
 
 <span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Model</span><span class="p">,</span>
-    <span class="n">Dataset</span>
+    <span class="n">Dataset</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.evaluation</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Metric</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.report</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">CVReport</span>
@@ -357,10 +359,58 @@
         <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">save_train_preds</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">save_transforms</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">save_models</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">save_models</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CVReport</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Subroutine used to evaluate a model according to a cross-validation scheme provided by the `cv` argument.</span>
 
-    <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Description &quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : np.ndarray or pd.DataFrame</span>
+<span class="sd">        Variables used to fit the model.</span>
+
+<span class="sd">    y : np.ndarray or pd.DataFrame or pd.Series</span>
+<span class="sd">        Target prediction variable.</span>
+
+<span class="sd">    model : gojo.base.Model</span>
+<span class="sd">        Model to be trained. The input model must follow the :class:`gojo.base.Model` interfaz.</span>
+
+<span class="sd">    cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut</span>
+<span class="sd">        Cross-validation schema. For more information about cross validation see `sklearn.model_selection` module.</span>
+<span class="sd">        The gojo module implements useful functions for easy loading of cross-validation objects (see</span>
+<span class="sd">        :func:`gojo.util.getCrossValObj`).</span>
+
+<span class="sd">    transforms : List[Transform] or None, default=None</span>
+<span class="sd">        Transformations applied to the data before being provided to the models. These transformations will be fitted</span>
+<span class="sd">        using the training data, and will be applied to both training and test data. For more information see the</span>
+<span class="sd">        module :py:mod:`gojo.core.transform`.</span>
+
+<span class="sd">    verbose : int, default=-1</span>
+<span class="sd">        Verbosity level.</span>
+
+<span class="sd">    n_jobs : int, default=1</span>
+<span class="sd">        Number of jobs used for parallelization.</span>
+
+<span class="sd">    save_train_preds : bool, default=False</span>
+<span class="sd">        Parameter that indicates whether the predictions made on the training set will be saved in</span>
+<span class="sd">        :class:`gojo.core.report.CVReport`. For large  training sets this may involve higher computational and</span>
+<span class="sd">        storage costs.</span>
+
+<span class="sd">    save_transforms : bool, default=False</span>
+<span class="sd">        Parameter that indicates whether the fitted transforms will be saved in :class:`gojo.core.report.CVReport`.</span>
+
+<span class="sd">    save_models : bool, default=False</span>
+<span class="sd">        Parameter that indicates whether the fitted models will be saved in :class:`gojo.core.report.CVReport`. For</span>
+<span class="sd">        larger models this may involve higher computational and storage costs.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cv_obj : :class:`gojo.core.report.CVReport`</span>
+<span class="sd">        Cross validation report. For more information see :class:`gojo.core.report.CVReport`.</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &lt;TODO&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">checkMultiInputTypes</span><span class="p">(</span>
         <span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]),</span>
         <span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">]),</span>
@@ -455,7 +505,6 @@
 
 
 
-<span class="c1"># TODO. Add documentation</span>
 <div class="viewcode-block" id="evalCrossValNestedHPO">
 <a class="viewcode-back" href="../../../gojo.core.html#gojo.core.loops.evalCrossValNestedHPO">[docs]</a>
 <span class="k">def</span> <span class="nf">evalCrossValNestedHPO</span><span class="p">(</span>
@@ -468,7 +517,7 @@
         <span class="n">hpo_sampler</span><span class="p">:</span> <span class="n">optuna</span><span class="o">.</span><span class="n">samplers</span><span class="o">.</span><span class="n">BaseSampler</span><span class="p">,</span>
         <span class="n">hpo_n_trials</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">minimization</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-        <span class="n">metrics</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">metrics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Metric</span><span class="p">],</span>
         <span class="n">objective_metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">agg_function</span><span class="p">:</span> <span class="nb">callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">transforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Transform</span><span class="p">]</span> <span class="ow">or</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -477,14 +526,106 @@
         <span class="n">save_train_preds</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">save_transforms</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">save_models</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Subroutine used to evaluate a model according to a cross-validation scheme provided by the `outer_cv` argument.</span>
+<span class="sd">    This function also perform a nested cross-validation for hyperparameter optimization (HPO) based on the `optuna`</span>
+<span class="sd">    library.</span>
 
-<span class="sd">    Example of &#39;search_space&#39;</span>
-<span class="sd">    -----------------------</span>
-<span class="sd">    &gt;&gt;&gt; search_space = {</span>
-<span class="sd">    &gt;&gt;&gt;     &#39;max_depth&#39;: (&#39;suggest_int&#39;, (2, 10)),           # sample from a categorical distribution</span>
-<span class="sd">    &gt;&gt;&gt;     &#39;max_samples&#39;: (&#39;suggest_float&#39;, (0.5, 1.0) ),   # ... from a uniform distribution</span>
-<span class="sd">    &gt;&gt;&gt; }</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : np.ndarray or pd.DataFrame</span>
+<span class="sd">        Variables used to fit the model.</span>
+
+<span class="sd">    y : np.ndarray or pd.DataFrame or pd.Series</span>
+<span class="sd">        Target prediction variable.</span>
+
+<span class="sd">    model : gojo.base.Model</span>
+<span class="sd">        Model to be trained. The input model must follow the :class:`gojo.base.Model` interfaz.</span>
+
+<span class="sd">    search_space : dict</span>
+<span class="sd">        Search space used for performing the HPO. For more information about distributions and sampling strategies</span>
+<span class="sd">        consult `https://optuna.org/`.</span>
+
+<span class="sd">        &gt;&gt;&gt; search_space = {</span>
+<span class="sd">        &gt;&gt;&gt;     &#39;max_depth&#39;: (&#39;suggest_int&#39;, (2, 10)),           # sample from a categorical distribution</span>
+<span class="sd">        &gt;&gt;&gt;     &#39;max_samples&#39;: (&#39;suggest_float&#39;, (0.5, 1.0) ),   # ... from a uniform distribution</span>
+<span class="sd">        &gt;&gt;&gt; }</span>
+
+<span class="sd">    outer_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut</span>
+<span class="sd">        Cross-validation schema. For more information about cross validation see `sklearn.model_selection` module.</span>
+<span class="sd">        The gojo module implements useful functions for easy loading of cross-validation objects (see</span>
+<span class="sd">        :func:`gojo.util.getCrossValObj`).</span>
+
+<span class="sd">    inner_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut</span>
+<span class="sd">        Inner cross-validation schema used for evaluating model performance in the nested cross-validation used for</span>
+<span class="sd">        optimize the model hyperparameters. For more information about cross validation see `sklearn.model_selection`</span>
+<span class="sd">        module. The gojo module implements useful functions for easy loading of cross-validation objects (see</span>
+<span class="sd">        :func:`gojo.util.getCrossValObj`).</span>
+
+<span class="sd">    hpo_sampler : optuna.samplers.BaseSampler</span>
+<span class="sd">        Sampler used for suggest model hyperparameters. For more information see `https://optuna.org/`.</span>
+
+<span class="sd">    hpo_n_trials : int</span>
+<span class="sd">        Number of HPO iterations.</span>
+
+<span class="sd">    minimization: bool</span>
+<span class="sd">        Parameter indicating if the HPO objetive function must be minimized. If `minimization=False` the objective</span>
+<span class="sd">        function will be maximized.</span>
+
+<span class="sd">    metrics : List[:class:`gojo.core.evaluation.Metric`]</span>
+<span class="sd">        Metrics used within the nested-cross validation to evaluate the hyperparameter configuration.</span>
+
+<span class="sd">    objective_metric : str, default=None</span>
+<span class="sd">        It is possible to indicate which of the metrics provided by the `metrics` parameter are to be optimized within</span>
+<span class="sd">        the HPO. The metric must be provided as a string and must be included in the list of metrics provided. If this</span>
+<span class="sd">        parameter is not provided, an aggregation function must be provided by means of the `agg_function` parameter.</span>
+
+<span class="sd">    agg_function : callable, default=None</span>
+<span class="sd">        This function will receive a dataframe with the metrics calculated on each of the folds generated by the</span>
+<span class="sd">        `inner_cv` and taking into account this information it will provide a score that will be maximized/minimized</span>
+<span class="sd">        within the HPO. If the X parameter is not provided, this parameter must be provided. If both parameters are</span>
+<span class="sd">        provided, X will be ignored.</span>
+
+<span class="sd">    transforms : List[Transform] or None, default=None</span>
+<span class="sd">        Transformations applied to the data before being provided to the models. These transformations will be fitted</span>
+<span class="sd">        using the training data, and will be applied to both training and test data. For more information see the</span>
+<span class="sd">        module :py:mod:`gojo.core.transform`.</span>
+
+<span class="sd">    verbose : int, default=-1</span>
+<span class="sd">        Verbosity level.</span>
+
+<span class="sd">    n_jobs : int, default=1</span>
+<span class="sd">        Number of jobs used for parallelization.</span>
+
+<span class="sd">    save_train_preds : bool, default=False</span>
+<span class="sd">        Parameter that indicates whether the predictions made on the training set will be saved in</span>
+<span class="sd">        :class:`gojo.core.report.CVReport`. For large  training sets this may involve higher computational and</span>
+<span class="sd">        storage costs.</span>
+
+<span class="sd">    save_transforms : bool, default=False</span>
+<span class="sd">        Parameter that indicates whether the fitted transforms will be saved in :class:`gojo.core.report.CVReport`.</span>
+
+<span class="sd">    save_models : bool, default=False</span>
+<span class="sd">        Parameter that indicates whether the fitted models will be saved in :class:`gojo.core.report.CVReport`. For</span>
+<span class="sd">        larger models this may involve higher computational and storage costs.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cv_obj : :class:`gojo.core.report.CVReport`</span>
+<span class="sd">        Cross validation report. For more information see :class:`gojo.core.report.CVReport`. The HPO history will be</span>
+<span class="sd">        save in the report metadata (:attr:`gojo.core.report.CVReport.metadata`.</span>
+
+
+
+<span class="sd">    Example of `search_space`</span>
+<span class="sd">    ------------------------</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &lt;TODO&gt;</span>
+
+
+
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">_trialHPO</span><span class="p">(</span>

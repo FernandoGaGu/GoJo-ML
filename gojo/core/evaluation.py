@@ -3,7 +3,7 @@
 # Author: Fernando García Gutiérrez
 # Email: fgarcia@fundacioace.org
 #
-# STATUS: completed and functional
+# STATUS: completed, functional, and documented.
 #
 import numpy as np
 import warnings
@@ -22,7 +22,7 @@ from ..exception import (
 
 
 class Metric(object):
-    """ Base class used to create any type of performance evaluation metric compatible with the "gojo" framework.
+    """ Base class used to create any type of performance evaluation metric compatible with the :py:mod:`gojo` framework.
 
     Parameters
     ----------
@@ -30,8 +30,8 @@ class Metric(object):
         Name given to the performance metric
 
     function : callable
-        Function that will receive as input two numpy.array ("y_true" and "y_pred") and must return
-        a scalar or a numpy array.
+        Function that will receive as input two `numpy.ndarray` (`y_true` and `y_pred`) and must return
+        a scalar or a `numpy.ndarray`.
 
     bin_threshold : float or int, default=None
         Threshold used to binarize the input predictions. By default, no thresholding is applied.
@@ -41,14 +41,14 @@ class Metric(object):
 
     number_of_classes : int, default=None
         Parameter indicating the number of classes in a multi-class classification problem. This
-        parameter will not have any effect when "multiclass=False".
+        parameter will not have any effect when `multiclass=False`.
 
     use_multiclass_sparse : bool, default=False
         Parameter indicating if the multi-class level predictions are provided as a one-hot vector.
-        This parameter will not have any effect when "multiclass=False".
+        This parameter will not have any effect when `multiclass=False`.
 
     **kwargs
-        Optional parameters provided to the input callable specified by "function".
+        Optional parameters provided to the input callable specified by `function`.
     """
     def __init__(self, name: str, function: callable, bin_threshold: float or int = None,
                  multiclass: bool = False, number_of_classes: int = None,
@@ -108,7 +108,7 @@ class Metric(object):
 
         bin_threshold : float, default=None
             Threshold used to binarize the input predictions. By default, no thresholding is applied. If the
-            parameter "bin_threshold" was defined in constructor, its specification will be overwritten
+            parameter `bin_threshold` was defined in constructor, its specification will be overwritten
             by this parameter.
 
         Note
@@ -219,16 +219,19 @@ def getScores(y_true: np.ndarray, y_pred: np.ndarray, metrics: list) -> dict:
 
 
 def flatFunctionInput(fn: callable):
-    """ Function used to flatten the input predictions before the computation of the metric.
+    """ Function used to flatten the input predictions before the computation of the metric. Internally, the input
+    `y_pred` and `y_true` will be flattened before calling the provided function.
 
     Example
     -------
     >>> from gojo import core
     >>> from sklearn import metrics
 
-    >>> metric = core.Metric('accuracy', core.flatFunctionInput(metrics.accuracy_score), bin_threshold=0.5)
-    >>> y_pred = np.array([[0.2, 0.9, 0.7, 0.3], [0.2, 0.9, 0.7, 0.3]])
-    >>> y_true = np.array([[0, 1, 1, 0], [1, 0, 0, 1]])
+    >>> metric = core.Metric(
+    >>>     'accuracy',
+    >>>     core.flatFunctionInput(metrics.accuracy_score),
+    >>>     bin_threshold=0.5)
+    >>>
     """
     checkCallable('fn', fn)
 
@@ -245,7 +248,7 @@ def getDefaultMetrics(task: str, select: list = None, bin_threshold: float or in
     Parameters
     ---------
     task : str
-        Task-associated metrics. Currently available tasks are: 'binary_classification' and 'regression'.
+        Task-associated metrics. Currently available tasks are: `binary_classification` and `regression`.
 
     select : list, default=None
         Metrics of those returned that will be selected (in case you do not want to calculate all the metrics).
@@ -261,11 +264,11 @@ def getDefaultMetrics(task: str, select: list = None, bin_threshold: float or in
 
     number_of_classes : int, default=None
         Parameter indicating the number of classes in a multi-class classification problem. This
-        parameter will not have any effect when "multiclass=False".
+        parameter will not have any effect when `multiclass=False`.
 
     use_multiclass_sparse : bool, default=False
         Parameter indicating if the multi-class level predictions are provided as a one-hot vector.
-        This parameter will not have any effect when "multiclass=False".
+        This parameter will not have any effect when `multiclass=False`.
 
     Returns
     -------
