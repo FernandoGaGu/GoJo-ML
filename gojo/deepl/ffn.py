@@ -4,7 +4,7 @@
 # Author: Fernando García Gutiérrez
 # Email: fgarcia@fundacioace.org
 #
-# STATUS: still under development functional
+# STATUS: completed, functional, and documented.
 #
 import torch
 import numpy as np
@@ -44,11 +44,11 @@ def generateParametrizedLayers(
 
     scaffold : str
         Model scaffold to arrange the layers. Valid scaffolds are:
-            - 'exponential': exponential decay in the number of layers. Controlled by the 'beta' parameter.
+            - 'exponential': exponential decay in the number of layers. Controlled by the `beta` parameter.
 
                     n^(l) = (1/beta)^(l) * init
 
-            - 'linear': linear decay in the number of layers. Controlled by the 'alpha' parameter.
+            - 'linear': linear decay in the number of layers. Controlled by the `alpha` parameter.
                     n^(l) = init - alpha * (l)
 
     min_width : int
@@ -66,7 +66,7 @@ def generateParametrizedLayers(
     Returns
     -------
     dim_per_layer : list
-        Dimensions of each layer (total of layers defined by 'n_layers').
+        Dimensions of each layer (total of layers defined by `n_layers`).
     """
     _VALID_SCAFFOLDS = ['linear', 'exponential']
 
@@ -238,7 +238,7 @@ def createSimpleFFNModel(
 
     layer_activation : list or torch.nn.Module or None or str
         Activation funtions. If None is provided a simple affine transformation will take place. If a string
-        is provided, the name should match to the name of the torch.nn class (i.e., 'ReLU' for torch.nn.ReLU).
+        is provided, the name should match to the name of the torch.nn class (i.e., 'ReLU' for `torch.nn.ReLU`).
 
     layer_dropout : list or float, default=None
         Layer dropouts. If an scalar is provided the same dropout rate will be applied for all the layers.
@@ -250,7 +250,7 @@ def createSimpleFFNModel(
         Function (os list of functions) applied to the generated lienar layers for initializing their weights.
 
     output_activation : str or torch.nn.Module or None, default=None
-        Output activation function (similar to 'layer_activation').
+        Output activation function (similar to `layer_activation`).
 
     Returns
     -------

@@ -3,7 +3,7 @@
 # Author: Fernando García Gutiérrez
 # Email: fgarcia@fundacioace.org
 #
-# STATUS: still under development
+# STATUS: completed, functional, and documented.
 #
 import torch
 import numpy as np
@@ -170,29 +170,27 @@ def fitNeuralNetwork(
         callbacks: List[Callback] = None,
         **kwargs) -> dict:
     """
-    Main function of the 'gojo.deepl' module. This function is used to fit a pytorch model using the
-    provided "iteration function" (parameter 'iter_fn') that defined how to run an epoch.
+    Main function of the :func:`gojo.deepl` module. This function is used to fit a pytorch model using the
+    provided "iteration function" (parameter `iter_fn`) that defined how to run an epoch.
 
     Parameters
     ----------
     iter_fn : callable
         Function used to execute an epoch during model training. Currently available are:
 
-            - gojo.deepl.iterSupervisedEpoch
+            - :func:`gojo.deepl.iterSupervisedEpoch`
                 Used for typical supervised approaches.
 
     model : torch.nn.Module
         Pytorch model to be trained.
 
     train_dl : Iterable
-        Train dataloader (see torch.utils.data.DataLoader class).
-
-        https://pytorch.org/tutorials/beginner/basics/data_tutorial.html
+        Train dataloader (see `torch.utils.data.DataLoader`
+        :web:`class <https://pytorch.org/tutorials/beginner/basics/data_tutorial.html>`).
 
     valid_dl : Iterable
-        Validation dataloader (see torch.utils.data.DataLoader class).
-
-        https://pytorch.org/tutorials/beginner/basics/data_tutorial.html
+        Validation dataloader (see `torch.utils.data.DataLoader`
+        :web:`class <https://pytorch.org/tutorials/beginner/basics/data_tutorial.html>`).
 
     n_epochs : int
         Maximum number of epochs for training a model.
@@ -203,10 +201,11 @@ def fitNeuralNetwork(
         IMPORTANTE: be carreful with this function does not break the Pytorch gradient calculation.
 
     optimizer_class : type
-        Optimizer class used to adjust model weights (see torch module https://pytorch.org/docs/stable/optim.html).
+        Optimizer class used to adjust model weights (see torch
+        :web:`module <https://pytorch.org/docs/stable/optim.html>`).
 
     optimizer_params : dict, default=None
-        Parameters used to initialize the optimizer provided using 'optimizer_params".
+        Parameters used to initialize the optimizer provided using `optimizer_params`.
 
     device : str, default=None
         Device used to optimize the input model. Commonly devices are: 'cpu', 'cuda', 'mps'.
@@ -218,7 +217,7 @@ def fitNeuralNetwork(
         Metrics to compute in each epoch during model training across the train and validation datasets.
 
     callbacks : List[Callback], default=None
-        Callbacks used to modify the training loop (for more information see 'gojo.deepl.callback')
+        Callbacks used to modify the training loop (for more information see :py:mod:`gojo.deepl.callback`)
 
     Returns
     -------
@@ -386,8 +385,8 @@ def fitNeuralNetwork(
 
 
 def getAvailableIterationFunctions() -> list:
-    """ Function that returns a list with all the available iteration functions used as 'iter_fn' argument in
-    gojo.deepl.loops.fitNeuralNetwork() callings. """
+    """ Function that returns a list with all the available iteration functions used as `iter_fn` argument in
+    :func:`gojo.deepl.loops.fitNeuralNetwork` callings. """
     return list(_AVAILABLE_ITERATION_FUNCTIONS.keys())
 
 

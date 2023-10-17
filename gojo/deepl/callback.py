@@ -3,7 +3,7 @@
 # Author: Fernando García Gutiérrez
 # Email: fgarcia@fundacioace.org
 #
-# STATUS: completed and testing to be done
+# STATUS: completed, and testing to be done, and documented.
 #
 import numpy as np
 import pandas as pd
@@ -18,17 +18,17 @@ from ..util.validation import (
 
 class Callback(object):
     """ Base class (interface) used to define the callbacks to be executed in each iteration of the training
-    loop of the neural networks defined in 'gojo.deepl.loop.fitNeuralNetwork'.
+    loop of the neural networks defined in :func:'gojo.deepl.loop.fitNeuralNetwork'.
     These callbacks provide directives to modify the training of the models. A classic example would be the
-    early stopping callback (defined in 'gojo.deepl.callback.EarlyStopping'.
+    early stopping callback (defined in :func:'gojo.deepl.callback.EarlyStopping').
 
     Subclasses must define the following methods:
 
         - evaluate()
             This method will make available to the callback the following arguments used (and updated) in the current
-            iteration of the 'gojo.deepl.loop.fitNeuralNetwork' training loop:
+            iteration of the :func:'gojo.deepl.loop.fitNeuralNetwork' training loop:
 
-                model : 'gojo.base.PytorchModelWrapper'
+                model : :class:'gojo.base.PytorchModelWrapper'
                     Model to be trained.
                 train_metrics : list
                     Train computed metrics until the last epoch.
@@ -40,7 +40,7 @@ class Callback(object):
                     Validation computed loss until the last epoch.
 
             This method has to return a directive (as a string) that will be interpreted by the
-            'gojo.deepl.loop.fitNeuralNetwork' inner loop.
+            :func:'gojo.deepl.loop.fitNeuralNetwork' inner loop.
 
         - resetState()
             This method should reset the inner state of the callback.
@@ -76,21 +76,21 @@ class Callback(object):
 
 
 class EarlyStopping(Callback):
-    """ Callback used to perform an early stopping of the 'gojo.deepl.loop.fitNeuralNetwork' training loop.
+    """ Callback used to perform an early stopping of the :func:'gojo.deepl.loop.fitNeuralNetwork' training loop.
 
     Parameters
     ----------
-    it_without_improve: int
+    it_without_improve : int
         Number of iterations that must be completed without the model showing a decrease in the loss value
         over the validation set (average of the last epochs or count of the last epochs, as defined by
-        parameter 'track') to perform an early stopping ending the loop execution.
+        parameter `track`) to perform an early stopping ending the loop execution.
 
     track : str, default='mean'
         Method used to compare the latest value of the loss on the validation set with respect to the
         historical value. Methods currently available:
 
-            - 'mean': compare the current value with respect to the average of the 'it_without_improve' epochs.
-            - 'count': compare the current value with respect to 'it_without_improve' epochs.
+            - 'mean': compare the current value with respect to the average of the `it_without_improve` epochs.
+            - 'count': compare the current value with respect to `it_without_improve` epochs.
 
     """
 
@@ -148,4 +148,3 @@ class EarlyStopping(Callback):
     def resetState(self):
         """ Reset callback """
         self._saved_valid_loss = []
-

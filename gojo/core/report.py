@@ -24,7 +24,7 @@ from ..util.validation import (
 
 # TODO. Documentation
 class CVReport(object):
-    """ Object returned by the subroutines defined in 'gojo.core.loops' functions with the results of the
+    """ Object returned by the subroutines defined in :py:mod:`gojo.core.loops` functions with the results of the
     cross validation. """
 
     # Flags used to identify the columns of the generated dataframes where the predictions and true
@@ -129,7 +129,7 @@ class CVReport(object):
         return deepcopy(self._metadata)
 
     def getTestPredictions(self) -> pd.DataFrame:
-        """ Function that returns a dataframe with the model predictions, indexes and true labels for the test set.
+        """ Function that returns a dataframe with the model predictions, indices, and true labels for the test set.
 
         Returns
         -------
@@ -139,10 +139,11 @@ class CVReport(object):
         return self._convertPredDict2Df(self.test_preds)
 
     def getTrainPredictions(self, supress_warnings: bool = False) -> pd.DataFrame or None:
-        """ Function that returns a dataframe with the model predictions, indexes and true labels for the train set.
+        """ Function that returns a dataframe with the model predictions, indices, and true labels for the train set.
 
-        Predictions will only be returned if they are available. In some subroutines of 'gojo.core.loops' it should
-        be noted that the predictions made on the training set are not saved or this decision is relegated to the user.
+        Predictions will only be returned if they are available. In some subroutines of :py:mod:`gojo.core.loops` it
+        should be noted that the predictions made on the training set are not saved or this decision is relegated to
+        the user.
 
         Parameters
         ----------
@@ -157,12 +158,13 @@ class CVReport(object):
         return self._convertPredDict2Df(self.train_preds, supress_warnings=supress_warnings)
 
     def getTrainedModels(self, copy: bool = True) -> dict:
-        """ Function that returns the trained models if they have been saved in the 'gojo.core.loops' subroutine.
+        """ Function that returns the trained models if they have been saved in the :py:mod:`gojo.core.loops`
+        subroutine.
 
         Parameters
         ----------
         copy : bool, default=True
-            Parameter that indicates whether to return a deepcopy of the models (using the copy.deepcopy) or
+            Parameter that indicates whether to return a deepcopy of the models (using the `copy.deepcopy`) or
             directly the saved model. Defaults to True to avoid inplace modifications.
 
         Returns
@@ -180,7 +182,8 @@ class CVReport(object):
         return self._trained_models
 
     def getFittedTransforms(self, copy: bool = True) -> dict:
-        """ Function that returns the fitted transforms if they have been saved in the 'gojo.core.loops' subroutine.
+        """ Function that returns the fitted transforms if they have been saved in the :py:mod:`gojo.core.loops`
+        subroutine.
 
         Parameters
         ----------
@@ -203,14 +206,14 @@ class CVReport(object):
         return self._fitted_transforms
 
     def getScores(self, metrics: list, loocv: bool = False, supress_warnings: bool = False) -> dict:
-        """ Method used to calculate performance metrics for folds from a list of metrics (gojo.core.Metric
-        instances) provided. If the subroutine from gojo.core.loops performed a leave-one-out cross-validation
-        you must specify the parameter loocv as True.
+        """ Method used to calculate performance metrics for folds from a list of metrics (
+        :class:`gojo.core.evaluation.Metric` instances) provided. If the subroutine from :py:mod:`gojo.core.loops`
+        performed a leave-one-out cross-validation you must specify the parameter `loocv` as True.
 
         Parameters
         ----------
         metrics : list
-            List of gojo.core.Metric instances
+            List of :class:`gojo.core.evaluation.Metric` instances
 
         loocv : bool
             Parameter indicating if the predictions correspond to a LOOCV schema
@@ -224,6 +227,10 @@ class CVReport(object):
         performance_metrics : dict
             Dictionary with the performance associated with the test data (identified with the 'test' key) and
             with the training data (identified with the 'train' key).
+
+        Examples
+        --------
+        <TODO>
         """
         # check input parameters
         checkInputType('metrics', metrics, [list])
@@ -396,8 +403,3 @@ class CVReport(object):
                 'True labels contains a number of dimensions different from 1 o 2 (%d)' % len(true_labels.shape)
 
         return out_dict
-
-
-
-
-

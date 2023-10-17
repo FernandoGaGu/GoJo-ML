@@ -3,7 +3,7 @@
 # Author: Fernando García Gutiérrez
 # Email: fgarcia@fundacioace.org
 #
-# STATUS: still under development functional
+# STATUS: completed, functional, and documented.
 #
 import pandas as pd
 import numpy as np
@@ -94,6 +94,10 @@ def linePlot(
 
     show : bool, default=True
         Parameter indicating whether to save the generated plot.
+
+    Examples
+    --------
+    <TODO>
     """
 
     checkMultiInputTypes(

@@ -3,7 +3,7 @@
 # Author: Fernando García Gutiérrez
 # Email: fgarcia@fundacioace.org
 #
-# STATUS: completed and functional
+# STATUS: completed, functional, and documented.
 #
 
 import torch
@@ -16,8 +16,8 @@ from ..core import base as core_base
 
 
 class TorchDataset(Dataset):
-    """ Basic Dataset class for typical tabular data. This class can be passed to torch.DataLoaders
-    and subsequently used by the 'gojo.deepl.loops.fitNeuralNetwork' function.
+    """ Basic Dataset class for typical tabular data. This class can be passed to `torch.DataLoaders`
+    and subsequently used by the :func:`gojo.deepl.loops.fitNeuralNetwork` function.
 
     Parameters
     ----------

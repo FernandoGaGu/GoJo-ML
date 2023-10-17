@@ -4,7 +4,7 @@
 # Author: Fernando García Gutiérrez
 # Email: fgarcia@fundacioace.org
 #
-# STATUS: completed and functional
+# STATUS: completed, functional, and documented.
 #
 import numpy as np
 from abc import ABCMeta, abstractmethod
@@ -22,7 +22,48 @@ from ..exception import UnfittedTransform
 
 
 class Transform(object):
-    """ Description """
+    """ Base interface for applying transformations to the input data in the :py:mod:`gojo.core.loops` subroutines.
+    Internally, the training data will be passed to the :meth:`fit` method for adjusting the transformation to the
+    training dataset statistics, and subsequently, the transformation will be applied to the training and test data
+    by means of the :meth:`transform`.
+
+    Subclasses must define the following methods:
+
+        - fit()
+            Method used to fit a transform to a given input data.
+
+        - transform()
+            Method used to perform the transformations to the input data.
+
+        - reset()
+            Method used to reset the fitted transform
+
+        - copy()
+            Method used to make a copy of the transform.
+
+        - getParameters()
+            Method that must return the transform parameters.
+
+        - updateParameters()
+            Method used to update the transform parameters.
+
+    This abstract class provides the following properties:
+
+        - is_fitted -> True
+            Indicates whether the transformation has been fitted by calling the :meth:`fit` method.
+
+    And the following methods:
+
+        - update()
+            Method used to update the transform parameters.
+
+        - fitted()
+            Method called (usually internally) to indicate that a given transformation have been fitted.
+
+        - resetFit()
+            Method used to reset a fitted transformation (usually called internally).
+
+    """
     __metaclass__ = ABCMeta
 
     def __init__(self):
@@ -81,7 +122,7 @@ class Transform(object):
 
     @property
     def is_fitted(self) -> bool:
-        """ Indicates whether the transformation has been fitted by calling the 'fit()' method.
+        """ Indicates whether the transformation has been fitted by calling the :meth:`fit` method.
 
         Returns
         -------
@@ -106,8 +147,22 @@ class Transform(object):
 
 
 class SKLearnTransformWrapper(Transform):
-    """ Description """
+    """ Wrapper used to easily incorporate the transformations implemented in the `sklearn' library.
 
+    Parameters
+    ----------
+    transform_class : Type
+        `sklearn` transform. The instances of this class must have the `fit` and `transform` methods defined according
+        to the `sklearn` implementation.
+
+    **kwargs
+        Optional arguments used to initialize instances of the provided class.
+
+
+    Examples
+    --------
+    <TODO>
+    """
     def __init__(self, transform_class, **kwargs):
         super(SKLearnTransformWrapper, self).__init__()
 
@@ -133,8 +188,8 @@ class SKLearnTransformWrapper(Transform):
     def updateParameters(self, **kwargs):
         """ Method used to update the inner transform parameters.
 
-        IMPORTANT NOTE: Transform parameters should be updated by calling the update() method
-        from the model superclass.
+        IMPORTANT NOTE: Transform parameters should be updated by calling the :meth:`update` method from the
+        superclass :class:`gojo.core.transform.Transform`.
         """
         for name, value in kwargs.items():
             self._in_params[name] = value
@@ -177,5 +232,5 @@ class SKLearnTransformWrapper(Transform):
         return self._transform_obj.transform(X)
 
     def copy(self):
+        """ Make a deepcopy of the instance. """
         return deepcopy(self)
-
