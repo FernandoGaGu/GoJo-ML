@@ -563,23 +563,47 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; import sys</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; sys.path.append(&#39;..&#39;)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &gt;&gt;&gt; import torch</span>
-<span class="sd">    &gt;&gt;&gt; from torch.utils.data import DataLoader</span>
-<span class="sd">    &gt;&gt;&gt; from gojo import deepl</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn import datasets</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.model_selection import train_test_split</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # DEID libraries</span>
 <span class="sd">    &gt;&gt;&gt; from gojo import core</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import deepl</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import util</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import plotting</span>
 <span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &gt;&gt;&gt;</span>
-<span class="sd">    &gt;&gt;&gt; # create a basic FFN</span>
-<span class="sd">    &gt;&gt;&gt; model = deepl.ffn.createSimpleFFNModel(</span>
-<span class="sd">    &gt;&gt;&gt;     in_feats=13,</span>
-<span class="sd">    &gt;&gt;&gt;     out_feats=1,</span>
-<span class="sd">    &gt;&gt;&gt;     layer_dims=[20],</span>
-<span class="sd">    &gt;&gt;&gt;     layer_activation=torch.nn.ELU(),</span>
-<span class="sd">    &gt;&gt;&gt;     output_activation=torch.nn.Sigmoid())</span>
+<span class="sd">    &gt;&gt;&gt; DEVICE = &#39;mps&#39;</span>
 <span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # load test dataset (Wine)</span>
+<span class="sd">    &gt;&gt;&gt; wine_dt = datasets.load_wine()</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # create the target variable. Classification problem 0 vs rest</span>
+<span class="sd">    &gt;&gt;&gt; # to see the target names you can use wine_dt[&#39;target_names&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; y = (wine_dt[&#39;target&#39;] == 1).astype(int)</span>
+<span class="sd">    &gt;&gt;&gt; X = wine_dt[&#39;data&#39;]</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # standardize input data</span>
+<span class="sd">    &gt;&gt;&gt; std_X = util.zscoresScaling(X)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # split Xs and Ys in training and validation</span>
+<span class="sd">    &gt;&gt;&gt; X_train, X_valid, y_train, y_valid = train_test_split(</span>
+<span class="sd">    &gt;&gt;&gt;     std_X, y, train_size=0.8, random_state=1997, shuffle=True, stratify=y)</span>
 <span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &gt;&gt;&gt; model = core.TorchSKInterface(</span>
-<span class="sd">    &gt;&gt;&gt;     model=model,</span>
+<span class="sd">    &gt;&gt;&gt;     model=deepl.ffn.createSimpleFFNModel(</span>
+<span class="sd">    &gt;&gt;&gt;         in_feats=X_train.shape[1],</span>
+<span class="sd">    &gt;&gt;&gt;         out_feats=1,</span>
+<span class="sd">    &gt;&gt;&gt;         layer_dims=[20],</span>
+<span class="sd">    &gt;&gt;&gt;         layer_activation=torch.nn.ELU(),</span>
+<span class="sd">    &gt;&gt;&gt;         output_activation=torch.nn.Sigmoid()),</span>
 <span class="sd">    &gt;&gt;&gt;     iter_fn=deepl.iterSupervisedEpoch,</span>
 <span class="sd">    &gt;&gt;&gt;     loss_function=torch.nn.BCELoss(),</span>
 <span class="sd">    &gt;&gt;&gt;     n_epochs=50,</span>
@@ -588,13 +612,51 @@
 <span class="sd">    &gt;&gt;&gt;     optimizer_class=torch.optim.Adam,</span>
 <span class="sd">    &gt;&gt;&gt;     dataset_class=deepl.loading.TorchDataset,</span>
 <span class="sd">    &gt;&gt;&gt;     dataloader_class=torch.utils.data.DataLoader,</span>
-<span class="sd">    &gt;&gt;&gt;     optimizer_kw=dict(lr=0.001),</span>
-<span class="sd">    &gt;&gt;&gt;     train_dataloader_kw=dict(batch_size=16, shuffle=True),</span>
-<span class="sd">    &gt;&gt;&gt;     valid_dataloader_kw=dict(batch_size=100),</span>
-<span class="sd">    &gt;&gt;&gt;     device=&#39;cuda&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     optimizer_kw=dict(</span>
+<span class="sd">    &gt;&gt;&gt;         lr=0.001</span>
+<span class="sd">    &gt;&gt;&gt;     ),</span>
+<span class="sd">    &gt;&gt;&gt;     train_dataset_kw=None,</span>
+<span class="sd">    &gt;&gt;&gt;     valid_dataset_kw=None,</span>
+<span class="sd">    &gt;&gt;&gt;     train_dataloader_kw=dict(</span>
+<span class="sd">    &gt;&gt;&gt;         batch_size=16,</span>
+<span class="sd">    &gt;&gt;&gt;         shuffle=True</span>
+<span class="sd">    &gt;&gt;&gt;     ),</span>
+<span class="sd">    &gt;&gt;&gt;     valid_dataloader_kw=dict(</span>
+<span class="sd">    &gt;&gt;&gt;         batch_size=X_train.shape[0]</span>
+<span class="sd">    &gt;&gt;&gt;     ),</span>
+<span class="sd">    &gt;&gt;&gt;     iter_fn_kw= None,</span>
+<span class="sd">    &gt;&gt;&gt;     callbacks= None,</span>
+<span class="sd">    &gt;&gt;&gt;     seed=1997,</span>
+<span class="sd">    &gt;&gt;&gt;     device=DEVICE,</span>
 <span class="sd">    &gt;&gt;&gt;     metrics=core.getDefaultMetrics(&#39;binary_classification&#39;, bin_threshold=0.5),</span>
 <span class="sd">    &gt;&gt;&gt;     verbose=1</span>
 <span class="sd">    &gt;&gt;&gt; )</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # train the model</span>
+<span class="sd">    &gt;&gt;&gt; model.train(X_train, y_train)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # get the model convergence information</span>
+<span class="sd">    &gt;&gt;&gt; model_history = model.fitting_history</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # display model convergence</span>
+<span class="sd">    &gt;&gt;&gt; plotting.linePlot(</span>
+<span class="sd">    &gt;&gt;&gt;     model_history[&#39;train&#39;], model_history[&#39;valid&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     x=&#39;epoch&#39;, y=&#39;loss (mean)&#39;, err=&#39;loss (std)&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     legend_labels=[&#39;Train&#39;, &#39;Validation&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     title=&#39;Model convergence&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     ls=[&#39;solid&#39;, &#39;dashed&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     legend_pos=&#39;center right&#39;)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # display model performance</span>
+<span class="sd">    &gt;&gt;&gt; plotting.linePlot(</span>
+<span class="sd">    &gt;&gt;&gt;     model_history[&#39;train&#39;], model_history[&#39;valid&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     x=&#39;epoch&#39;, y=&#39;f1_score&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     legend_labels=[&#39;Train&#39;, &#39;Validation&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     title=&#39;Model F1-score&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     ls=[&#39;solid&#39;, &#39;dashed&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     legend_pos=&#39;center right&#39;)</span>
+
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
@@ -965,6 +1027,114 @@
 <span class="sd">    verbose : int, default=1</span>
 <span class="sd">        Verbosity level. Use -1 to indicate maximum verbosity.</span>
 
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; import sys</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; sys.path.append(&#39;..&#39;)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn import datasets</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.model_selection import train_test_split</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # GOJO libraries</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import core</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import deepl</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import util</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import plotting</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; DEVICE = &#39;mps&#39;</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # load test dataset (Wine)</span>
+<span class="sd">    &gt;&gt;&gt; wine_dt = datasets.load_wine()</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # create the target variable. Classification problem 0 vs rest</span>
+<span class="sd">    &gt;&gt;&gt; # to see the target names you can use wine_dt[&#39;target_names&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; y = (wine_dt[&#39;target&#39;] == 1).astype(int)</span>
+<span class="sd">    &gt;&gt;&gt; X = wine_dt[&#39;data&#39;]</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # standarize input data</span>
+<span class="sd">    &gt;&gt;&gt; std_X = util.zscoresScaling(X)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # split Xs and Ys in training and validation</span>
+<span class="sd">    &gt;&gt;&gt; X_train, X_valid, y_train, y_valid = train_test_split(</span>
+<span class="sd">    &gt;&gt;&gt;     std_X, y, train_size=0.8, random_state=1997, shuffle=True,</span>
+<span class="sd">    &gt;&gt;&gt;     stratify=y</span>
+<span class="sd">    &gt;&gt;&gt; )</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; model = core.ParametrizedTorchSKInterface(</span>
+<span class="sd">    &gt;&gt;&gt;     generating_fn=deepl.ffn.createSimpleFFNModel,</span>
+<span class="sd">    &gt;&gt;&gt;     gf_params=dict(</span>
+<span class="sd">    &gt;&gt;&gt;         in_feats=X_train.shape[1],</span>
+<span class="sd">    &gt;&gt;&gt;         out_feats=1,</span>
+<span class="sd">    &gt;&gt;&gt;         layer_dims=[20],</span>
+<span class="sd">    &gt;&gt;&gt;         layer_activation=&#39;ELU&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;         output_activation=&#39;Sigmoid&#39;),</span>
+<span class="sd">    &gt;&gt;&gt;     iter_fn=deepl.iterSupervisedEpoch,</span>
+<span class="sd">    &gt;&gt;&gt;     loss_function=torch.nn.BCELoss(),</span>
+<span class="sd">    &gt;&gt;&gt;     n_epochs=50,</span>
+<span class="sd">    &gt;&gt;&gt;     train_split=0.8,</span>
+<span class="sd">    &gt;&gt;&gt;     train_split_stratify=True,</span>
+<span class="sd">    &gt;&gt;&gt;     optimizer_class=torch.optim.Adam,</span>
+<span class="sd">    &gt;&gt;&gt;     dataset_class=deepl.loading.TorchDataset,</span>
+<span class="sd">    &gt;&gt;&gt;     dataloader_class=torch.utils.data.DataLoader,</span>
+<span class="sd">    &gt;&gt;&gt;     optimizer_kw=dict(</span>
+<span class="sd">    &gt;&gt;&gt;         lr=0.001</span>
+<span class="sd">    &gt;&gt;&gt;     ),</span>
+<span class="sd">    &gt;&gt;&gt;     train_dataset_kw=None,</span>
+<span class="sd">    &gt;&gt;&gt;     valid_dataset_kw=None,</span>
+<span class="sd">    &gt;&gt;&gt;     train_dataloader_kw=dict(</span>
+<span class="sd">    &gt;&gt;&gt;         batch_size=16,</span>
+<span class="sd">    &gt;&gt;&gt;         shuffle=True</span>
+<span class="sd">    &gt;&gt;&gt;     ),</span>
+<span class="sd">    &gt;&gt;&gt;     valid_dataloader_kw=dict(</span>
+<span class="sd">    &gt;&gt;&gt;         batch_size=X_train.shape[0]</span>
+<span class="sd">    &gt;&gt;&gt;     ),</span>
+<span class="sd">    &gt;&gt;&gt;     iter_fn_kw= None,</span>
+<span class="sd">    &gt;&gt;&gt;     callbacks= None,</span>
+<span class="sd">    &gt;&gt;&gt;     seed=1997,</span>
+<span class="sd">    &gt;&gt;&gt;     device=DEVICE,</span>
+<span class="sd">    &gt;&gt;&gt;     metrics=core.getDefaultMetrics(&#39;binary_classification&#39;, bin_threshold=0.5, select=[&#39;f1_score&#39;]),</span>
+<span class="sd">    &gt;&gt;&gt;     verbose=1</span>
+<span class="sd">    &gt;&gt;&gt; )</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # train the model</span>
+<span class="sd">    &gt;&gt;&gt; model.train(X_train, y_train)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # display model convergence</span>
+<span class="sd">    &gt;&gt;&gt; model_history = model.fitting_history</span>
+<span class="sd">    &gt;&gt;&gt; plotting.linePlot(</span>
+<span class="sd">    &gt;&gt;&gt;     model_history[&#39;train&#39;], model_history[&#39;valid&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     x=&#39;epoch&#39;, y=&#39;loss (mean)&#39;, err=&#39;loss (std)&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     legend_labels=[&#39;Train&#39;, &#39;Validation&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     title=&#39;Model convergence&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     ls=[&#39;solid&#39;, &#39;dashed&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     legend_pos=&#39;center right&#39;)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # display model performance</span>
+<span class="sd">    &gt;&gt;&gt; plotting.linePlot(</span>
+<span class="sd">    &gt;&gt;&gt;     model_history[&#39;train&#39;], model_history[&#39;valid&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     x=&#39;epoch&#39;, y=&#39;f1_score&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     legend_labels=[&#39;Train&#39;, &#39;Validation&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     title=&#39;Model F1-score&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     ls=[&#39;solid&#39;, &#39;dashed&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     legend_pos=&#39;center right&#39;)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # update model paramters</span>
+<span class="sd">    &gt;&gt;&gt; model.update(</span>
+<span class="sd">    &gt;&gt;&gt;     n_epochs=100,</span>
+<span class="sd">    &gt;&gt;&gt;     train_dataloader_kw__batch_size=32,</span>
+<span class="sd">    &gt;&gt;&gt;     gf_params__layer_dims=[5, 5, 5],</span>
+<span class="sd">    &gt;&gt;&gt;     metrics=core.getDefaultMetrics(&#39;binary_classification&#39;, bin_threshold=0.5, select=[&#39;f1_score&#39;, &#39;auc&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; )</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # after parameter updating the model is reseted</span>
+<span class="sd">    &gt;&gt;&gt; y_hat = model.performInference(X_valid)</span>
+<span class="sd">    &gt;&gt;&gt; pd.DataFrame([core.getScores(y_true=y_valid, y_pred=y_hat,</span>
+<span class="sd">    &gt;&gt;&gt;                metrics=core.getDefaultMetrics(&#39;binary_classification&#39;, bin_threshold=0.5))]</span>
+<span class="sd">    &gt;&gt;&gt; ).T.round(decimals=3)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_NOT_DEFINED_PARAMETER</span> <span class="o">=</span> <span class="s1">&#39;__NOT_DEFINED&#39;</span>
 

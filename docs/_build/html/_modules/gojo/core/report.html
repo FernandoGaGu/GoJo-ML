@@ -93,6 +93,7 @@
     <span class="n">checkMultiInputTypes</span><span class="p">,</span>
     <span class="n">checkInputType</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..util.io</span> <span class="kn">import</span> <span class="n">pprint</span>
 
 
 <div class="viewcode-block" id="CVReport">
@@ -318,7 +319,11 @@
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
-<span class="sd">        &lt;TODO&gt;</span>
+<span class="sd">        &gt;&gt;&gt; from gojo import core</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # ... cv_report = core.loops.evalCrossVal(...)</span>
+<span class="sd">        &gt;&gt;&gt; scores = cv_report.getScores(core.getDefaultMetrics(&#39;binary_classification&#39;, bin_threshold=0.5))</span>
+<span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># check input parameters</span>
         <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;metrics&#39;</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">])</span>
@@ -430,7 +435,7 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">key_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Internal error in gojo.core.report.CVReport._convertPredDict2Df &#39;</span>
+                <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;Internal error in gojo.core.report.CVReport._convertPredDict2Df &#39;</span>
                       <span class="s1">&#39;function during pd.DataFrame creation.&#39;</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="n">ex</span>
 

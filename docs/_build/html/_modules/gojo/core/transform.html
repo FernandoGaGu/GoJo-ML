@@ -266,7 +266,32 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &lt;TODO&gt;</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.svm import SVC</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.preprocessing import StandardScaler</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.decomposition import PCA</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # GOJO libraries</span>
+<span class="sd">    &gt;&gt;&gt; import gojo</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import core</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # previous model transforms</span>
+<span class="sd">    &gt;&gt;&gt; transforms = [</span>
+<span class="sd">    &gt;&gt;&gt;     core.SKLearnTransformWrapper(StandardScaler),</span>
+<span class="sd">    &gt;&gt;&gt;     core.SKLearnTransformWrapper(PCA, n_components=5)</span>
+<span class="sd">    &gt;&gt;&gt; ]</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # default model</span>
+<span class="sd">    &gt;&gt;&gt; model = core.SklearnModelWrapper(</span>
+<span class="sd">    &gt;&gt;&gt;     SVC, kernel=&#39;poly&#39;, degree=1, coef0=0.0,</span>
+<span class="sd">    &gt;&gt;&gt;     cache_size=1000, class_weight=None</span>
+<span class="sd">    &gt;&gt;&gt; )</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; cv_report = core.evalCrossVal(</span>
+<span class="sd">    &gt;&gt;&gt;     X=X, y=y,</span>
+<span class="sd">    &gt;&gt;&gt;     model=model,</span>
+<span class="sd">    &gt;&gt;&gt;     cv=gojo.util.getCrossValObj(cv=5),</span>
+<span class="sd">    &gt;&gt;&gt;     transforms=transforms)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">SKLearnTransformWrapper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>

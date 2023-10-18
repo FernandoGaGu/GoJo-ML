@@ -172,7 +172,17 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &lt;TODO&gt;</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import plotting</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # train_info, test_info are pandas dataframes returned by gojo.deepl.fitNeuralNetwork</span>
+<span class="sd">    &gt;&gt;&gt; plotting.linePlot(</span>
+<span class="sd">    &gt;&gt;&gt;     train_info, valid_info,</span>
+<span class="sd">    &gt;&gt;&gt;     x=&#39;epoch&#39;, y=&#39;loss (mean)&#39;, err=&#39;loss (std)&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     legend_labels=[&#39;Train&#39;, &#39;Validation&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     title=&#39;Model convergence&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     ls=[&#39;solid&#39;, &#39;dashed&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     style=&#39;default&#39;, legend_pos=&#39;center right&#39;)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">checkMultiInputTypes</span><span class="p">(</span>

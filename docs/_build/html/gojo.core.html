@@ -458,6 +458,117 @@ the data will be used as validation set.</p>
 <dt>verbose<span class="classifier">int, default=1</span></dt><dd><p>Verbosity level. Use -1 to indicate maximum verbosity.</p>
 </dd>
 </dl>
+</section>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># GOJO libraries</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">core</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">deepl</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">util</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">plotting</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DEVICE</span> <span class="o">=</span> <span class="s1">&#39;mps&#39;</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># load test dataset (Wine)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wine_dt</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_wine</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># create the target variable. Classification problem 0 vs rest</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># to see the target names you can use wine_dt[&#39;target_names&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">wine_dt</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">wine_dt</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># standarize input data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">std_X</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">zscoresScaling</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># split Xs and Ys in training and validation</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_valid</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_valid</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">std_X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1997</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">ParametrizedTorchSKInterface</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">generating_fn</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">ffn</span><span class="o">.</span><span class="n">createSimpleFFNModel</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">gf_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">in_feats</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">out_feats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">layer_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">layer_activation</span><span class="o">=</span><span class="s1">&#39;ELU&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">output_activation</span><span class="o">=</span><span class="s1">&#39;Sigmoid&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">iter_fn</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">iterSupervisedEpoch</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">loss_function</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">(),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">n_epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_split</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_split_stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">optimizer_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">dataset_class</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">loading</span><span class="o">.</span><span class="n">TorchDataset</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">dataloader_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">optimizer_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_dataset_kw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">valid_dataset_kw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_dataloader_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">valid_dataloader_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">batch_size</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">iter_fn_kw</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">callbacks</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">seed</span><span class="o">=</span><span class="mi">1997</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">metrics</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;f1_score&#39;</span><span class="p">]),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># train the model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># display model convergence</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model_history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fitting_history</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plotting</span><span class="o">.</span><span class="n">linePlot</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;valid&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">x</span><span class="o">=</span><span class="s1">&#39;epoch&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;loss (mean)&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="s1">&#39;loss (std)&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">legend_labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Train&#39;</span><span class="p">,</span> <span class="s1">&#39;Validation&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Model convergence&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ls</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="s1">&#39;dashed&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">legend_pos</span><span class="o">=</span><span class="s1">&#39;center right&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># display model performance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plotting</span><span class="o">.</span><span class="n">linePlot</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;valid&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">x</span><span class="o">=</span><span class="s1">&#39;epoch&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;f1_score&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">legend_labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Train&#39;</span><span class="p">,</span> <span class="s1">&#39;Validation&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Model F1-score&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ls</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="s1">&#39;dashed&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">legend_pos</span><span class="o">=</span><span class="s1">&#39;center right&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># update model paramters</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">n_epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_dataloader_kw__batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">gf_params__layer_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">metrics</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;f1_score&#39;</span><span class="p">,</span> <span class="s1">&#39;auc&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># after parameter updating the model is reseted</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_hat</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">performInference</span><span class="p">(</span><span class="n">X_valid</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">core</span><span class="o">.</span><span class="n">getScores</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_valid</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_hat</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>               <span class="n">metrics</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="gojo.core.base.ParametrizedTorchSKInterface.copy">
 <span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/core/base.html#ParametrizedTorchSKInterface.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.base.ParametrizedTorchSKInterface.copy" title="Link to this definition"></a></dt>
@@ -627,8 +738,8 @@ method.</p>
 </dd>
 </dl>
 </section>
-<section id="example">
-<h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
+<section id="id11">
+<h3>Example<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">core</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <span class="n">GaussianNB</span>
 <span class="gp">&gt;&gt;&gt;</span>
@@ -657,8 +768,8 @@ method.</p>
 <dt class="sig sig-object py" id="gojo.core.base.SklearnModelWrapper.getParameters">
 <span class="sig-name descname"><span class="pre">getParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/core/base.html#SklearnModelWrapper.getParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.base.SklearnModelWrapper.getParameters" title="Link to this definition"></a></dt>
 <dd><p>Method that must return the model parameters.</p>
-<section id="id11">
-<h4>Returns<a class="headerlink" href="#id11" title="Link to this heading"></a></h4>
+<section id="id12">
+<h4>Returns<a class="headerlink" href="#id12" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>model_parameters<span class="classifier">dict</span></dt><dd><p>Model parameters.</p>
 </dd>
@@ -670,15 +781,15 @@ method.</p>
 <dt class="sig sig-object py" id="gojo.core.base.SklearnModelWrapper.performInference">
 <span class="sig-name descname"><span class="pre">performInference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gojo/core/base.html#SklearnModelWrapper.performInference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.base.SklearnModelWrapper.performInference" title="Link to this definition"></a></dt>
 <dd><p>Method used to perform the model predictions.</p>
-<section id="id12">
-<h4>Parameters<a class="headerlink" href="#id12" title="Link to this heading"></a></h4>
+<section id="id13">
+<h4>Parameters<a class="headerlink" href="#id13" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data used to perform inference.</p>
 </dd>
 </dl>
 </section>
-<section id="id13">
-<h4>Returns<a class="headerlink" href="#id13" title="Link to this heading"></a></h4>
+<section id="id14">
+<h4>Returns<a class="headerlink" href="#id14" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>model_predictions<span class="classifier">np.ndarray</span></dt><dd><p>Model predictions associated with the input data.</p>
 </dd>
@@ -696,8 +807,8 @@ method.</p>
 <dt class="sig sig-object py" id="gojo.core.base.SklearnModelWrapper.train">
 <span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/core/base.html#SklearnModelWrapper.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.base.SklearnModelWrapper.train" title="Link to this definition"></a></dt>
 <dd><p>Method used to fit a model to a given input data.</p>
-<section id="id14">
-<h4>Parameters<a class="headerlink" href="#id14" title="Link to this heading"></a></h4>
+<section id="id15">
+<h4>Parameters<a class="headerlink" href="#id15" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data to fit the model.</p>
 </dd>
@@ -725,8 +836,8 @@ method.</p>
 <dd><p>Bases: <a class="reference internal" href="#gojo.core.base.Model" title="gojo.core.base.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a></p>
 <p>Wrapper class designed to integrate pytorch models (‘torch.nn.Module’ instances) in the <a class="reference internal" href="gojo.html#module-gojo" title="gojo"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo</span></code></a>.
 library functionalities.</p>
-<section id="id15">
-<h3>Parameters<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<section id="id16">
+<h3>Parameters<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
 <dl>
 <dt>model<span class="classifier">torch.nn.Module</span></dt><dd><p>Subclass of ‘torch.nn.Module’.</p>
 </dd>
@@ -774,25 +885,49 @@ the data will be used as validation set.</p>
 </dd>
 </dl>
 </section>
-<section id="id16">
-<h3>Example<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">deepl</span>
+<section id="id17">
+<h3>Example<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># DEID libraries</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">core</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">deepl</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">util</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">plotting</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a basic FFN</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">deepl</span><span class="o">.</span><span class="n">ffn</span><span class="o">.</span><span class="n">createSimpleFFNModel</span><span class="p">(</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">in_feats</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">out_feats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">layer_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">],</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">layer_activation</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ELU</span><span class="p">(),</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">output_activation</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DEVICE</span> <span class="o">=</span> <span class="s1">&#39;mps&#39;</span>
 <span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># load test dataset (Wine)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wine_dt</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_wine</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># create the target variable. Classification problem 0 vs rest</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># to see the target names you can use wine_dt[&#39;target_names&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">wine_dt</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">wine_dt</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># standardize input data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">std_X</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">zscoresScaling</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># split Xs and Ys in training and validation</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_valid</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_valid</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">std_X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1997</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">TorchSKInterface</span><span class="p">(</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">model</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">ffn</span><span class="o">.</span><span class="n">createSimpleFFNModel</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">in_feats</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">out_feats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">layer_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">layer_activation</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ELU</span><span class="p">(),</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">output_activation</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()),</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">iter_fn</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">iterSupervisedEpoch</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">loss_function</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">(),</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">n_epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
@@ -801,13 +936,49 @@ the data will be used as validation set.</p>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">optimizer_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">dataset_class</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">loading</span><span class="o">.</span><span class="n">TorchDataset</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">dataloader_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">optimizer_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_dataloader_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">valid_dataloader_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">optimizer_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_dataset_kw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">valid_dataset_kw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_dataloader_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">valid_dataloader_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">batch_size</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">iter_fn_kw</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">callbacks</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">seed</span><span class="o">=</span><span class="mi">1997</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">metrics</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># train the model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># get the model convergence information</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model_history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fitting_history</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># display model convergence</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plotting</span><span class="o">.</span><span class="n">linePlot</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;valid&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">x</span><span class="o">=</span><span class="s1">&#39;epoch&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;loss (mean)&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="s1">&#39;loss (std)&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">legend_labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Train&#39;</span><span class="p">,</span> <span class="s1">&#39;Validation&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Model convergence&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ls</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="s1">&#39;dashed&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">legend_pos</span><span class="o">=</span><span class="s1">&#39;center right&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># display model performance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plotting</span><span class="o">.</span><span class="n">linePlot</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;valid&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">x</span><span class="o">=</span><span class="s1">&#39;epoch&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;f1_score&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">legend_labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Train&#39;</span><span class="p">,</span> <span class="s1">&#39;Validation&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Model F1-score&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ls</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="s1">&#39;dashed&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">legend_pos</span><span class="o">=</span><span class="s1">&#39;center right&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="py method">
@@ -840,8 +1011,8 @@ data while the second element to the validation data.</p>
 <dt class="sig sig-object py" id="gojo.core.base.TorchSKInterface.performInference">
 <span class="sig-name descname"><span class="pre">performInference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gojo/core/base.html#TorchSKInterface.performInference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.base.TorchSKInterface.performInference" title="Link to this definition"></a></dt>
 <dd><p>Method used to perform the model predictions.</p>
-<section id="id17">
-<h4>Parameters<a class="headerlink" href="#id17" title="Link to this heading"></a></h4>
+<section id="id18">
+<h4>Parameters<a class="headerlink" href="#id18" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data used to perform inference.</p>
 </dd>
@@ -850,8 +1021,8 @@ all input data at once. By default, all input data will by used.</p>
 </dd>
 </dl>
 </section>
-<section id="id18">
-<h4>Returns<a class="headerlink" href="#id18" title="Link to this heading"></a></h4>
+<section id="id19">
+<h4>Returns<a class="headerlink" href="#id19" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>model_predictions<span class="classifier">np.ndarray</span></dt><dd><p>Model predictions associated with the input data.</p>
 </dd>
@@ -869,14 +1040,14 @@ all input data at once. By default, all input data will by used.</p>
 <dt class="sig sig-object py" id="gojo.core.base.TorchSKInterface.train">
 <span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/core/base.html#TorchSKInterface.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.base.TorchSKInterface.train" title="Link to this definition"></a></dt>
 <dd><p>Method used to fit a model to a given input data.</p>
-<section id="id19">
-<h4>Parameters<a class="headerlink" href="#id19" title="Link to this heading"></a></h4>
+<section id="id20">
+<h4>Parameters<a class="headerlink" href="#id20" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data to fit the model.</p>
 </dd>
 <dt>y<span class="classifier">np.ndarray or None, default=None</span></dt><dd><p>Data labels (optional).</p>
 </dd>
-<dt><a href="#id20"><span class="problematic" id="id21">**</span></a>kwargs</dt><dd><p>Additional training parameters.</p>
+<dt><a href="#id21"><span class="problematic" id="id22">**</span></a>kwargs</dt><dd><p>Additional training parameters.</p>
 </dd>
 </dl>
 </section>
@@ -900,8 +1071,8 @@ all input data at once. By default, all input data will by used.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.core.evaluation.</span></span><span class="sig-name descname"><span class="pre">Metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiclass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_multiclass_sparse</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/core/evaluation.html#Metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.evaluation.Metric" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class used to create any type of performance evaluation metric compatible with the <a class="reference internal" href="gojo.html#module-gojo" title="gojo"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo</span></code></a> framework.</p>
-<section id="id22">
-<h3>Parameters<a class="headerlink" href="#id22" title="Link to this heading"></a></h3>
+<section id="id23">
+<h3>Parameters<a class="headerlink" href="#id23" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>name<span class="classifier">str</span></dt><dd><p>Name given to the performance metric</p>
 </dd>
@@ -918,7 +1089,7 @@ parameter will not have any effect when <cite>multiclass=False</cite>.</p>
 <dt>use_multiclass_sparse<span class="classifier">bool, default=False</span></dt><dd><p>Parameter indicating if the multi-class level predictions are provided as a one-hot vector.
 This parameter will not have any effect when <cite>multiclass=False</cite>.</p>
 </dd>
-<dt><a href="#id23"><span class="problematic" id="id24">**</span></a>kwargs</dt><dd><p>Optional parameters provided to the input callable specified by <cite>function</cite>.</p>
+<dt><a href="#id24"><span class="problematic" id="id25">**</span></a>kwargs</dt><dd><p>Optional parameters provided to the input callable specified by <cite>function</cite>.</p>
 </dd>
 </dl>
 </section>
@@ -929,8 +1100,8 @@ This parameter will not have any effect when <cite>multiclass=False</cite>.</p>
 <span class="sig-prename descclassname"><span class="pre">gojo.core.evaluation.</span></span><span class="sig-name descname"><span class="pre">flatFunctionInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/core/evaluation.html#flatFunctionInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.evaluation.flatFunctionInput" title="Link to this definition"></a></dt>
 <dd><p>Function used to flatten the input predictions before the computation of the metric. Internally, the input
 <cite>y_pred</cite> and <cite>y_true</cite> will be flattened before calling the provided function.</p>
-<section id="id25">
-<h3>Example<a class="headerlink" href="#id25" title="Link to this heading"></a></h3>
+<section id="id26">
+<h3>Example<a class="headerlink" href="#id26" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">core</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
 </pre></div>
@@ -951,15 +1122,15 @@ This parameter will not have any effect when <cite>multiclass=False</cite>.</p>
 <dd><p>Return to dictionary with task names and default metrics defined for those tasks. The selected problems for
 which you want to see the metrics can be filtered by the task parameter indicating the task for which you want
 to see the metrics.</p>
-<section id="id26">
-<h3>Parameters<a class="headerlink" href="#id26" title="Link to this heading"></a></h3>
+<section id="id27">
+<h3>Parameters<a class="headerlink" href="#id27" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>task<span class="classifier">str, default=None</span></dt><dd><p>Specify the task to see the defined metrics associated to that task.</p>
 </dd>
 </dl>
 </section>
-<section id="id27">
-<h3>Returns<a class="headerlink" href="#id27" title="Link to this heading"></a></h3>
+<section id="id28">
+<h3>Returns<a class="headerlink" href="#id28" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>task_info<span class="classifier">dict</span></dt><dd><p>Dictionary where the keys correspond to the task and the values to the metrics defined by default for the
 associated task.</p>
@@ -972,8 +1143,8 @@ associated task.</p>
 <dt class="sig sig-object py" id="gojo.core.evaluation.getDefaultMetrics">
 <span class="sig-prename descclassname"><span class="pre">gojo.core.evaluation.</span></span><span class="sig-name descname"><span class="pre">getDefaultMetrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiclass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_multiclass_sparse</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/gojo/core/evaluation.html#getDefaultMetrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.evaluation.getDefaultMetrics" title="Link to this definition"></a></dt>
 <dd><p>Function used to get a series of pre-defined scores for evaluate the model performance.</p>
-<section id="id28">
-<h3>Parameters<a class="headerlink" href="#id28" title="Link to this heading"></a></h3>
+<section id="id29">
+<h3>Parameters<a class="headerlink" href="#id29" title="Link to this heading"></a></h3>
 <dl>
 <dt>task<span class="classifier">str</span></dt><dd><p>Task-associated metrics. Currently available tasks are: <cite>binary_classification</cite> and <cite>regression</cite>.</p>
 </dd>
@@ -993,8 +1164,8 @@ This parameter will not have any effect when <cite>multiclass=False</cite>.</p>
 </dd>
 </dl>
 </section>
-<section id="id29">
-<h3>Returns<a class="headerlink" href="#id29" title="Link to this heading"></a></h3>
+<section id="id30">
+<h3>Returns<a class="headerlink" href="#id30" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>metrics<span class="classifier">list</span></dt><dd><p>List of instances of the gojo.core.Metric class.</p>
 </dd>
@@ -1006,8 +1177,8 @@ This parameter will not have any effect when <cite>multiclass=False</cite>.</p>
 <dt class="sig sig-object py" id="gojo.core.evaluation.getScores">
 <span class="sig-prename descclassname"><span class="pre">gojo.core.evaluation.</span></span><span class="sig-name descname"><span class="pre">getScores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/core/evaluation.html#getScores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.evaluation.getScores" title="Link to this definition"></a></dt>
 <dd><p>Function used to calculate the scores given by the metrics passed within the metrics parameter.</p>
-<section id="id30">
-<h3>Parameters<a class="headerlink" href="#id30" title="Link to this heading"></a></h3>
+<section id="id31">
+<h3>Parameters<a class="headerlink" href="#id31" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>y_true<span class="classifier">np.ndarray</span></dt><dd><p>True labels.</p>
 </dd>
@@ -1017,8 +1188,8 @@ This parameter will not have any effect when <cite>multiclass=False</cite>.</p>
 </dd>
 </dl>
 </section>
-<section id="id31">
-<h3>Returns<a class="headerlink" href="#id31" title="Link to this heading"></a></h3>
+<section id="id32">
+<h3>Returns<a class="headerlink" href="#id32" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>metric_scores<span class="classifier">dict</span></dt><dd><p>Dictionary where the keys will correspond to the metric names and the values to the metric scores.</p>
 </dd>
@@ -1033,8 +1204,8 @@ This parameter will not have any effect when <cite>multiclass=False</cite>.</p>
 <dt class="sig sig-object py" id="gojo.core.loops.evalCrossVal">
 <span class="sig-prename descclassname"><span class="pre">gojo.core.loops.</span></span><span class="sig-name descname"><span class="pre">evalCrossVal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gojo.core.base.Model" title="gojo.core.base.Model"><span class="pre">Model</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">RepeatedKFold</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transforms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gojo.core.transform.Transform" title="gojo.core.transform.Transform"><span class="pre">Transform</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_train_preds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_transforms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gojo.core.report.CVReport" title="gojo.core.report.CVReport"><span class="pre">CVReport</span></a></span></span><a class="reference internal" href="_modules/gojo/core/loops.html#evalCrossVal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.loops.evalCrossVal" title="Link to this definition"></a></dt>
 <dd><p>Subroutine used to evaluate a model according to a cross-validation scheme provided by the <cite>cv</cite> argument.</p>
-<section id="id32">
-<h3>Parameters<a class="headerlink" href="#id32" title="Link to this heading"></a></h3>
+<section id="id33">
+<h3>Parameters<a class="headerlink" href="#id33" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>X<span class="classifier">np.ndarray or pd.DataFrame</span></dt><dd><p>Variables used to fit the model.</p>
 </dd>
@@ -1065,16 +1236,72 @@ larger models this may involve higher computational and storage costs.</p>
 </dd>
 </dl>
 </section>
-<section id="id33">
-<h3>Returns<a class="headerlink" href="#id33" title="Link to this heading"></a></h3>
+<section id="id34">
+<h3>Returns<a class="headerlink" href="#id34" title="Link to this heading"></a></h3>
 <dl>
 <dt>cv_obj<span class="classifier"><a class="reference internal" href="#gojo.core.report.CVReport" title="gojo.core.report.CVReport"><code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.core.report.CVReport</span></code></a></span></dt><dd><p>Cross validation report. For more information see <a class="reference internal" href="#gojo.core.report.CVReport" title="gojo.core.report.CVReport"><code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.core.report.CVReport</span></code></a>.</p>
 </dd>
 </dl>
 </section>
-<section id="id34">
-<h3>Examples<a class="headerlink" href="#id34" title="Link to this heading"></a></h3>
-<p>&lt;TODO&gt;</p>
+<section id="id35">
+<h3>Examples<a class="headerlink" href="#id35" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">optuna</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># GOJO libraries</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gojo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">core</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">N_JOBS</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># load test dataset (Wine)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wine_dt</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_wine</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># create the target variable. Classification problem 0 vs rest</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># to see the target names you can use wine_dt[&#39;target_names&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">wine_dt</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">wine_dt</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># previous model transforms</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">transforms</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">core</span><span class="o">.</span><span class="n">SKLearnTransformWrapper</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">core</span><span class="o">.</span><span class="n">SKLearnTransformWrapper</span><span class="p">(</span><span class="n">PCA</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># default model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">SklearnModelWrapper</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">SVC</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;poly&#39;</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">coef0</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">cache_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="kc">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># evaluate the model using a simple cross-validation strategy with a</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># default parameters</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cv_report</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">evalCrossVal</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">cv</span><span class="o">=</span><span class="n">gojo</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">getCrossValObj</span><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">repeats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stratified</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">loocv</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1997</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">transforms</span><span class="o">=</span><span class="n">transforms</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">save_train_preds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">save_models</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">save_transforms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">n_jobs</span><span class="o">=</span><span class="n">N_JOBS</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scores</span> <span class="o">=</span> <span class="n">cv_report</span><span class="o">.</span><span class="n">getScores</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;n_fold&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Train&#39;</span><span class="p">,</span> <span class="s1">&#39;Test&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span>
+<span class="gp">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
 </section>
 </dd></dl>
 
@@ -1084,8 +1311,8 @@ larger models this may involve higher computational and storage costs.</p>
 <dd><p>Subroutine used to evaluate a model according to a cross-validation scheme provided by the <cite>outer_cv</cite> argument.
 This function also perform a nested cross-validation for hyperparameter optimization (HPO) based on the <cite>optuna</cite>
 library.</p>
-<section id="id35">
-<h3>Parameters<a class="headerlink" href="#id35" title="Link to this heading"></a></h3>
+<section id="id36">
+<h3>Parameters<a class="headerlink" href="#id36" title="Link to this heading"></a></h3>
 <dl>
 <dt>X<span class="classifier">np.ndarray or pd.DataFrame</span></dt><dd><p>Variables used to fit the model.</p>
 </dd>
@@ -1150,17 +1377,86 @@ larger models this may involve higher computational and storage costs.</p>
 </dd>
 </dl>
 </section>
-<section id="id36">
-<h3>Returns<a class="headerlink" href="#id36" title="Link to this heading"></a></h3>
+<section id="id37">
+<h3>Returns<a class="headerlink" href="#id37" title="Link to this heading"></a></h3>
 <dl>
 <dt>cv_obj<span class="classifier"><a class="reference internal" href="#gojo.core.report.CVReport" title="gojo.core.report.CVReport"><code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.core.report.CVReport</span></code></a></span></dt><dd><p>Cross validation report. For more information see <a class="reference internal" href="#gojo.core.report.CVReport" title="gojo.core.report.CVReport"><code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.core.report.CVReport</span></code></a>. The HPO history will be
 save in the report metadata (<a class="reference internal" href="#gojo.core.report.CVReport.metadata" title="gojo.core.report.CVReport.metadata"><code class="xref py py-attr docutils literal notranslate"><span class="pre">gojo.core.report.CVReport.metadata</span></code></a>.</p>
 </dd>
 </dl>
 </section>
-<section id="id37">
-<h3>Examples<a class="headerlink" href="#id37" title="Link to this heading"></a></h3>
-<p>&lt;TODO&gt;</p>
+<section id="id38">
+<h3>Examples<a class="headerlink" href="#id38" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">optuna</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># GOJO libraries</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gojo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">core</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">N_JOBS</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># load test dataset (Wine)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wine_dt</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_wine</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># create the target variable. Classification problem 0 vs rest</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># to see the target names you can use wine_dt[&#39;target_names&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">wine_dt</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">wine_dt</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># previous model transforms</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">transforms</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">core</span><span class="o">.</span><span class="n">SKLearnTransformWrapper</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">core</span><span class="o">.</span><span class="n">SKLearnTransformWrapper</span><span class="p">(</span><span class="n">PCA</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># model hyperparameters</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">search_space</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;degree&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;suggest_int&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;class_weight&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;suggest_categorical&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s1">&#39;balanced&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;coef0&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;suggest_float&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.00</span> <span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># default model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">SklearnModelWrapper</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">SVC</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;poly&#39;</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">coef0</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">cache_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="kc">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># perform the HPO to optimice model-hyperparameters</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cv_report</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">evalCrossValNestedHPO</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">outer_cv</span><span class="o">=</span><span class="n">gojo</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">getCrossValObj</span><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">repeats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stratified</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">loocv</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1997</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">inner_cv</span><span class="o">=</span><span class="n">gojo</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">getCrossValObj</span><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">repeats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stratified</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">loocv</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1997</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">hpo_sampler</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">samplers</span><span class="o">.</span><span class="n">TPESampler</span><span class="p">(</span><span class="n">n_startup_trials</span><span class="o">=</span><span class="mi">40</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">hpo_n_trials</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">minimization</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">transforms</span><span class="o">=</span><span class="n">transforms</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">metrics</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">objective_metric</span><span class="o">=</span><span class="s1">&#39;f1_score&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">save_train_preds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">save_models</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">8</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scores</span> <span class="o">=</span> <span class="n">cv_report</span><span class="o">.</span><span class="n">getScores</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;n_fold&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Train&#39;</span><span class="p">,</span> <span class="s1">&#39;Test&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span>
+<span class="gp">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
 </section>
 </dd></dl>
 
@@ -1184,16 +1480,16 @@ cross validation.</p>
 <span class="sig-name descname"><span class="pre">getFittedTransforms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/core/report.html#CVReport.getFittedTransforms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.report.CVReport.getFittedTransforms" title="Link to this definition"></a></dt>
 <dd><p>Function that returns the fitted transforms if they have been saved in the <a class="reference internal" href="#module-gojo.core.loops" title="gojo.core.loops"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.core.loops</span></code></a>
 subroutine.</p>
-<section id="id38">
-<h3>Parameters<a class="headerlink" href="#id38" title="Link to this heading"></a></h3>
+<section id="id39">
+<h3>Parameters<a class="headerlink" href="#id39" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>copy<span class="classifier">bool, default=True</span></dt><dd><p>Parameter that indicates whether to return a deepcopy of the transforms or directly the saved transforms.
 Defaults to True to avoid inplace modifications.</p>
 </dd>
 </dl>
 </section>
-<section id="id39">
-<h3>Returns<a class="headerlink" href="#id39" title="Link to this heading"></a></h3>
+<section id="id40">
+<h3>Returns<a class="headerlink" href="#id40" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>fitted_transforms<span class="classifier">dict or None</span></dt><dd><p>Trained models or None if the models were not saved.</p>
 </dd>
@@ -1207,8 +1503,8 @@ Defaults to True to avoid inplace modifications.</p>
 <dd><p>Method used to calculate performance metrics for folds from a list of metrics (
 <a class="reference internal" href="#gojo.core.evaluation.Metric" title="gojo.core.evaluation.Metric"><code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.core.evaluation.Metric</span></code></a> instances) provided. If the subroutine from <a class="reference internal" href="#module-gojo.core.loops" title="gojo.core.loops"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.core.loops</span></code></a>
 performed a leave-one-out cross-validation you must specify the parameter <cite>loocv</cite> as True.</p>
-<section id="id40">
-<h3>Parameters<a class="headerlink" href="#id40" title="Link to this heading"></a></h3>
+<section id="id41">
+<h3>Parameters<a class="headerlink" href="#id41" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>metrics<span class="classifier">list</span></dt><dd><p>List of <a class="reference internal" href="#gojo.core.evaluation.Metric" title="gojo.core.evaluation.Metric"><code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.core.evaluation.Metric</span></code></a> instances</p>
 </dd>
@@ -1218,17 +1514,23 @@ performed a leave-one-out cross-validation you must specify the parameter <cite>
 </dd>
 </dl>
 </section>
-<section id="id41">
-<h3>Returns<a class="headerlink" href="#id41" title="Link to this heading"></a></h3>
+<section id="id42">
+<h3>Returns<a class="headerlink" href="#id42" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>performance_metrics<span class="classifier">dict</span></dt><dd><p>Dictionary with the performance associated with the test data (identified with the ‘test’ key) and
 with the training data (identified with the ‘train’ key).</p>
 </dd>
 </dl>
 </section>
-<section id="id42">
-<h3>Examples<a class="headerlink" href="#id42" title="Link to this heading"></a></h3>
-<p>&lt;TODO&gt;</p>
+<section id="id43">
+<h3>Examples<a class="headerlink" href="#id43" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">core</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># ... cv_report = core.loops.evalCrossVal(...)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scores</span> <span class="o">=</span> <span class="n">cv_report</span><span class="o">.</span><span class="n">getScores</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
 </section>
 </dd></dl>
 
@@ -1236,8 +1538,8 @@ with the training data (identified with the ‘train’ key).</p>
 <dt class="sig sig-object py" id="gojo.core.report.CVReport.getTestPredictions">
 <span class="sig-name descname"><span class="pre">getTestPredictions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/gojo/core/report.html#CVReport.getTestPredictions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.report.CVReport.getTestPredictions" title="Link to this definition"></a></dt>
 <dd><p>Function that returns a dataframe with the model predictions, indices, and true labels for the test set.</p>
-<section id="id43">
-<h3>Returns<a class="headerlink" href="#id43" title="Link to this heading"></a></h3>
+<section id="id44">
+<h3>Returns<a class="headerlink" href="#id44" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>test_predictions<span class="classifier">pd.DataFrame</span></dt><dd><p>Model predictions over the test set.</p>
 </dd>
@@ -1252,15 +1554,15 @@ with the training data (identified with the ‘train’ key).</p>
 <p>Predictions will only be returned if they are available. In some subroutines of <a class="reference internal" href="#module-gojo.core.loops" title="gojo.core.loops"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.core.loops</span></code></a> it
 should be noted that the predictions made on the training set are not saved or this decision is relegated to
 the user.</p>
-<section id="id44">
-<h3>Parameters<a class="headerlink" href="#id44" title="Link to this heading"></a></h3>
+<section id="id45">
+<h3>Parameters<a class="headerlink" href="#id45" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>supress_warnings<span class="classifier">bool, default=False</span></dt><dd><p>Silence the warning raised when not training predictions have been made.</p>
 </dd>
 </dl>
 </section>
-<section id="id45">
-<h3>Returns<a class="headerlink" href="#id45" title="Link to this heading"></a></h3>
+<section id="id46">
+<h3>Returns<a class="headerlink" href="#id46" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>test_predictions<span class="classifier">pd.DataFrame or None</span></dt><dd><p>Model predictions over the train set.</p>
 </dd>
@@ -1273,16 +1575,16 @@ the user.</p>
 <span class="sig-name descname"><span class="pre">getTrainedModels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/core/report.html#CVReport.getTrainedModels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.report.CVReport.getTrainedModels" title="Link to this definition"></a></dt>
 <dd><p>Function that returns the trained models if they have been saved in the <a class="reference internal" href="#module-gojo.core.loops" title="gojo.core.loops"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.core.loops</span></code></a>
 subroutine.</p>
-<section id="id46">
-<h3>Parameters<a class="headerlink" href="#id46" title="Link to this heading"></a></h3>
+<section id="id47">
+<h3>Parameters<a class="headerlink" href="#id47" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>copy<span class="classifier">bool, default=True</span></dt><dd><p>Parameter that indicates whether to return a deepcopy of the models (using the <cite>copy.deepcopy</cite>) or
 directly the saved model. Defaults to True to avoid inplace modifications.</p>
 </dd>
 </dl>
 </section>
-<section id="id47">
-<h3>Returns<a class="headerlink" href="#id47" title="Link to this heading"></a></h3>
+<section id="id48">
+<h3>Returns<a class="headerlink" href="#id48" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>trained_models<span class="classifier">dict or None</span></dt><dd><p>Trained models or None if the models were not saved.</p>
 </dd>
@@ -1306,19 +1608,46 @@ directly the saved model. Defaults to True to avoid inplace modifications.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.core.transform.</span></span><span class="sig-name descname"><span class="pre">SKLearnTransformWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transform_class</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/core/transform.html#SKLearnTransformWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.SKLearnTransformWrapper" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gojo.core.transform.Transform" title="gojo.core.transform.Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transform</span></code></a></p>
 <p>Wrapper used to easily incorporate the transformations implemented in the <cite>sklearn</cite> library.</p>
-<section id="id48">
-<h3>Parameters<a class="headerlink" href="#id48" title="Link to this heading"></a></h3>
+<section id="id49">
+<h3>Parameters<a class="headerlink" href="#id49" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>transform_class<span class="classifier">Type</span></dt><dd><p><cite>sklearn</cite> transform. The instances of this class must have the <cite>fit</cite> and <cite>transform</cite> methods defined according
 to the <cite>sklearn</cite> implementation.</p>
 </dd>
-<dt><a href="#id49"><span class="problematic" id="id50">**</span></a>kwargs</dt><dd><p>Optional arguments used to initialize instances of the provided class.</p>
+<dt><a href="#id50"><span class="problematic" id="id51">**</span></a>kwargs</dt><dd><p>Optional arguments used to initialize instances of the provided class.</p>
 </dd>
 </dl>
 </section>
-<section id="id51">
-<h3>Examples<a class="headerlink" href="#id51" title="Link to this heading"></a></h3>
-<p>&lt;TODO&gt;</p>
+<section id="id52">
+<h3>Examples<a class="headerlink" href="#id52" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># GOJO libraries</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gojo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">core</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># previous model transforms</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">transforms</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">core</span><span class="o">.</span><span class="n">SKLearnTransformWrapper</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">core</span><span class="o">.</span><span class="n">SKLearnTransformWrapper</span><span class="p">(</span><span class="n">PCA</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># default model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">SklearnModelWrapper</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">SVC</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;poly&#39;</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">coef0</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">cache_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="kc">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cv_report</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">evalCrossVal</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">cv</span><span class="o">=</span><span class="n">gojo</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">getCrossValObj</span><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">transforms</span><span class="o">=</span><span class="n">transforms</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="gojo.core.transform.SKLearnTransformWrapper.copy">
 <span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/core/transform.html#SKLearnTransformWrapper.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.SKLearnTransformWrapper.copy" title="Link to this definition"></a></dt>
@@ -1329,8 +1658,8 @@ to the <cite>sklearn</cite> implementation.</p>
 <dt class="sig sig-object py" id="gojo.core.transform.SKLearnTransformWrapper.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/core/transform.html#SKLearnTransformWrapper.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.SKLearnTransformWrapper.fit" title="Link to this definition"></a></dt>
 <dd><p>Method used to fit a transform to a given input data.</p>
-<section id="id52">
-<h4>Parameters<a class="headerlink" href="#id52" title="Link to this heading"></a></h4>
+<section id="id53">
+<h4>Parameters<a class="headerlink" href="#id53" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data to fit the model.</p>
 </dd>
@@ -1344,8 +1673,8 @@ to the <cite>sklearn</cite> implementation.</p>
 <dt class="sig sig-object py" id="gojo.core.transform.SKLearnTransformWrapper.getParameters">
 <span class="sig-name descname"><span class="pre">getParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/core/transform.html#SKLearnTransformWrapper.getParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.SKLearnTransformWrapper.getParameters" title="Link to this definition"></a></dt>
 <dd><p>Method that must return the transform parameters.</p>
-<section id="id53">
-<h4>Returns<a class="headerlink" href="#id53" title="Link to this heading"></a></h4>
+<section id="id54">
+<h4>Returns<a class="headerlink" href="#id54" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>model_parameters<span class="classifier">dict</span></dt><dd><p>Model parameters.</p>
 </dd>
@@ -1363,15 +1692,15 @@ to the <cite>sklearn</cite> implementation.</p>
 <dt class="sig sig-object py" id="gojo.core.transform.SKLearnTransformWrapper.transform">
 <span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gojo/core/transform.html#SKLearnTransformWrapper.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.SKLearnTransformWrapper.transform" title="Link to this definition"></a></dt>
 <dd><p>Method used to apply the transformations.</p>
-<section id="id54">
-<h4>Parameters<a class="headerlink" href="#id54" title="Link to this heading"></a></h4>
+<section id="id55">
+<h4>Parameters<a class="headerlink" href="#id55" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data to be transformed.</p>
 </dd>
 </dl>
 </section>
-<section id="id55">
-<h4>Returns<a class="headerlink" href="#id55" title="Link to this heading"></a></h4>
+<section id="id56">
+<h4>Returns<a class="headerlink" href="#id56" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>X_trans<span class="classifier">np.ndarray</span></dt><dd><p>Transformer data.</p>
 </dd>
@@ -1473,8 +1802,8 @@ by means of the <a class="reference internal" href="#gojo.core.transform.Transfo
 <dt class="sig sig-object py" id="gojo.core.transform.Transform.fit">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/core/transform.html#Transform.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.Transform.fit" title="Link to this definition"></a></dt>
 <dd><p>Method used to fit a transform to a given input data.</p>
-<section id="id56">
-<h3>Parameters<a class="headerlink" href="#id56" title="Link to this heading"></a></h3>
+<section id="id57">
+<h3>Parameters<a class="headerlink" href="#id57" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data to fit the transformation.</p>
 </dd>
@@ -1494,8 +1823,8 @@ by means of the <a class="reference internal" href="#gojo.core.transform.Transfo
 <dt class="sig sig-object py" id="gojo.core.transform.Transform.getParameters">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/core/transform.html#Transform.getParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.Transform.getParameters" title="Link to this definition"></a></dt>
 <dd><p>Method that must return the transform parameters.</p>
-<section id="id57">
-<h3>Returns<a class="headerlink" href="#id57" title="Link to this heading"></a></h3>
+<section id="id58">
+<h3>Returns<a class="headerlink" href="#id58" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>model_parameters<span class="classifier">dict</span></dt><dd><p>Model parameters.</p>
 </dd>
@@ -1507,8 +1836,8 @@ by means of the <a class="reference internal" href="#gojo.core.transform.Transfo
 <dt class="sig sig-object py" id="gojo.core.transform.Transform.is_fitted">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_fitted</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#gojo.core.transform.Transform.is_fitted" title="Link to this definition"></a></dt>
 <dd><p>Indicates whether the transformation has been fitted by calling the <a class="reference internal" href="#gojo.core.transform.Transform.fit" title="gojo.core.transform.Transform.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> method.</p>
-<section id="id58">
-<h3>Returns<a class="headerlink" href="#id58" title="Link to this heading"></a></h3>
+<section id="id59">
+<h3>Returns<a class="headerlink" href="#id59" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>model_fitted<span class="classifier">bool</span></dt><dd><p>Returns True if the model was fitted.</p>
 </dd>
@@ -1532,8 +1861,8 @@ by means of the <a class="reference internal" href="#gojo.core.transform.Transfo
 <dt class="sig sig-object py" id="gojo.core.transform.Transform.transform">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gojo/core/transform.html#Transform.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.Transform.transform" title="Link to this definition"></a></dt>
 <dd><p>Method used to perform the transformations to the input data.</p>
-<section id="id59">
-<h3>Parameters<a class="headerlink" href="#id59" title="Link to this heading"></a></h3>
+<section id="id60">
+<h3>Parameters<a class="headerlink" href="#id60" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data used to perform the transformations.</p>
 </dd>

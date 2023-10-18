@@ -96,6 +96,7 @@
     <span class="n">checkCallable</span><span class="p">,</span>
     <span class="n">checkIterable</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..util.io</span> <span class="kn">import</span> <span class="n">pprint</span>
 
 
 <span class="k">def</span> <span class="nf">_processInputParams</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
@@ -243,7 +244,7 @@
         <span class="n">optimizer_class</span><span class="p">,</span>
         <span class="n">optimizer_params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">metrics</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">callbacks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Callback</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
@@ -365,7 +366,7 @@
     <span class="n">valid_loss</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Training model...&#39;</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">show_pbar</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Epoch (</span><span class="si">%d</span><span class="s1">) ============================================ &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Epoch (</span><span class="si">%d</span><span class="s1">) ============================================ &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
 
         <span class="c1"># -- training step -&gt; (loss_stats: dict, metric_stats: dict)</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
@@ -393,8 +394,8 @@
         <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">info_dict</span> <span class="ow">in</span> <span class="n">train_out</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">info_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> (train) </span><span class="si">%s</span><span class="s1">: </span><span class="si">%.5f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
-            <span class="nb">print</span><span class="p">()</span>
+                    <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> (train) </span><span class="si">%s</span><span class="s1">: </span><span class="si">%.5f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
+            <span class="n">pprint</span><span class="p">()</span>
 
         <span class="c1"># -- validation step -&gt; (loss_stats: dict, metric_stats: dict)</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
@@ -422,8 +423,8 @@
         <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">info_dict</span> <span class="ow">in</span> <span class="n">valid_out</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">info_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> (valid) </span><span class="si">%s</span><span class="s1">: </span><span class="si">%.5f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
-            <span class="nb">print</span><span class="p">()</span>
+                    <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> (valid) </span><span class="si">%s</span><span class="s1">: </span><span class="si">%.5f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
+            <span class="n">pprint</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">callbacks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">commands_to_exec</span> <span class="o">=</span> <span class="p">[</span>
@@ -438,7 +439,7 @@
             <span class="c1"># Early stopping directive</span>
             <span class="k">if</span> <span class="n">EarlyStopping</span><span class="o">.</span><span class="n">DIRECTIVE</span> <span class="ow">in</span> <span class="n">commands_to_exec</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;!=!=!=!=!=!=!= Executing early stopping&#39;</span><span class="p">)</span>
+                    <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;!=!=!=!=!=!=!= Executing early stopping&#39;</span><span class="p">)</span>
                 <span class="k">break</span>
 
     <span class="c1"># convert loss information to a pandas dataframe</span>
