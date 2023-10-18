@@ -6,7 +6,9 @@
 Welcome to gojo - Documentation's documentation!
 ================================================
 
-> Python library with a variety of pipeline implementations typically used to develop and evaluate Deep Learning and Machine Learning models.
+.. blockquote::
+
+   Python library with a variety of pipeline implementations typically used to develop and evaluate Deep Learning and Machine Learning models.
 
 **IMPORTANT NOTE**: Library still under development and subjected to changes (this is an alpha version).
 
