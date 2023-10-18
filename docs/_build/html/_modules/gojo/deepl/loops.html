@@ -76,7 +76,7 @@
 <span class="c1"># Author: Fernando García Gutiérrez</span>
 <span class="c1"># Email: fgarcia@fundacioace.org</span>
 <span class="c1">#</span>
-<span class="c1"># STATUS: still under development</span>
+<span class="c1"># STATUS: completed, functional, and documented.</span>
 <span class="c1">#</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -248,29 +248,27 @@
         <span class="n">callbacks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Callback</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Main function of the &#39;gojo.deepl&#39; module. This function is used to fit a pytorch model using the</span>
-<span class="sd">    provided &quot;iteration function&quot; (parameter &#39;iter_fn&#39;) that defined how to run an epoch.</span>
+<span class="sd">    Main function of the :func:`gojo.deepl` module. This function is used to fit a pytorch model using the</span>
+<span class="sd">    provided &quot;iteration function&quot; (parameter `iter_fn`) that defined how to run an epoch.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    iter_fn : callable</span>
 <span class="sd">        Function used to execute an epoch during model training. Currently available are:</span>
 
-<span class="sd">            - gojo.deepl.iterSupervisedEpoch</span>
+<span class="sd">            - :func:`gojo.deepl.iterSupervisedEpoch`</span>
 <span class="sd">                Used for typical supervised approaches.</span>
 
 <span class="sd">    model : torch.nn.Module</span>
 <span class="sd">        Pytorch model to be trained.</span>
 
 <span class="sd">    train_dl : Iterable</span>
-<span class="sd">        Train dataloader (see torch.utils.data.DataLoader class).</span>
-
-<span class="sd">        https://pytorch.org/tutorials/beginner/basics/data_tutorial.html</span>
+<span class="sd">        Train dataloader (see `torch.utils.data.DataLoader</span>
+<span class="sd">        class &lt;https://pytorch.org/tutorials/beginner/basics/data_tutorial.html&gt;`_).</span>
 
 <span class="sd">    valid_dl : Iterable</span>
-<span class="sd">        Validation dataloader (see torch.utils.data.DataLoader class).</span>
-
-<span class="sd">        https://pytorch.org/tutorials/beginner/basics/data_tutorial.html</span>
+<span class="sd">        Validation dataloader (see `torch.utils.data.DataLoader</span>
+<span class="sd">        class &lt;https://pytorch.org/tutorials/beginner/basics/data_tutorial.html&gt;`_).</span>
 
 <span class="sd">    n_epochs : int</span>
 <span class="sd">        Maximum number of epochs for training a model.</span>
@@ -281,10 +279,10 @@
 <span class="sd">        IMPORTANTE: be carreful with this function does not break the Pytorch gradient calculation.</span>
 
 <span class="sd">    optimizer_class : type</span>
-<span class="sd">        Optimizer class used to adjust model weights (see torch module https://pytorch.org/docs/stable/optim.html).</span>
+<span class="sd">        Optimizer class used to adjust model weights (see torch `module &lt;https://pytorch.org/docs/stable/optim.html&gt;`_).</span>
 
 <span class="sd">    optimizer_params : dict, default=None</span>
-<span class="sd">        Parameters used to initialize the optimizer provided using &#39;optimizer_params&quot;.</span>
+<span class="sd">        Parameters used to initialize the optimizer provided using `optimizer_params`.</span>
 
 <span class="sd">    device : str, default=None</span>
 <span class="sd">        Device used to optimize the input model. Commonly devices are: &#39;cpu&#39;, &#39;cuda&#39;, &#39;mps&#39;.</span>
@@ -296,7 +294,7 @@
 <span class="sd">        Metrics to compute in each epoch during model training across the train and validation datasets.</span>
 
 <span class="sd">    callbacks : List[Callback], default=None</span>
-<span class="sd">        Callbacks used to modify the training loop (for more information see &#39;gojo.deepl.callback&#39;)</span>
+<span class="sd">        Callbacks used to modify the training loop (for more information see :py:mod:`gojo.deepl.callback`)</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -467,8 +465,8 @@
 <div class="viewcode-block" id="getAvailableIterationFunctions">
 <a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.loops.getAvailableIterationFunctions">[docs]</a>
 <span class="k">def</span> <span class="nf">getAvailableIterationFunctions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Function that returns a list with all the available iteration functions used as &#39;iter_fn&#39; argument in</span>
-<span class="sd">    gojo.deepl.loops.fitNeuralNetwork() callings. &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Function that returns a list with all the available iteration functions used as `iter_fn` argument in</span>
+<span class="sd">    :func:`gojo.deepl.loops.fitNeuralNetwork` callings. &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">_AVAILABLE_ITERATION_FUNCTIONS</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
 
 

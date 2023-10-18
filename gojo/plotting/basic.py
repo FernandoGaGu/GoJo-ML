@@ -97,7 +97,17 @@ def linePlot(
 
     Examples
     --------
-    <TODO>
+    >>> from gojo import plotting
+    >>>
+    >>> # train_info, test_info are pandas dataframes returned by gojo.deepl.fitNeuralNetwork
+    >>> plotting.linePlot(
+    >>>     train_info, valid_info,
+    >>>     x='epoch', y='loss (mean)', err='loss (std)',
+    >>>     legend_labels=['Train', 'Validation'],
+    >>>     title='Model convergence',
+    >>>     ls=['solid', 'dashed'],
+    >>>     style='default', legend_pos='center right')
+    >>>
     """
 
     checkMultiInputTypes(

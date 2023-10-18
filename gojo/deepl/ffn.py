@@ -44,12 +44,17 @@ def generateParametrizedLayers(
 
     scaffold : str
         Model scaffold to arrange the layers. Valid scaffolds are:
+
             - 'exponential': exponential decay in the number of layers. Controlled by the `beta` parameter.
 
-                    n^(l) = (1/beta)^(l) * init
+            .. math::
+                n^{(l)} = (1 / beta)^{(l)} \cdot init
 
             - 'linear': linear decay in the number of layers. Controlled by the `alpha` parameter.
-                    n^(l) = init - alpha * (l)
+
+            .. math::
+                n^{(l)} = init - alpha \cdot (l)
+
 
     min_width : int
         Minimum layer width.
@@ -303,7 +308,6 @@ def createSimpleFFNModel(
     >>>     output_activation=torch.nn.Sigmoid()
     >>> )
     >>> model
-
     Out[1]
         Sequential(
               (LinearLayer 0): Linear(in_features=10, out_features=100, bias=True)

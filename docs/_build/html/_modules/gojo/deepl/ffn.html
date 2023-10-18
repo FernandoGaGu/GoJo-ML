@@ -40,10 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../gojo.html">gojo package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.core.html">gojo.core package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.deepl.html">gojo.deepl package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.plotting.html">gojo.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.util.html">gojo.util package</a></li>
 </ul>
 
         </div>
@@ -77,7 +77,7 @@
 <span class="c1"># Author: Fernando García Gutiérrez</span>
 <span class="c1"># Email: fgarcia@fundacioace.org</span>
 <span class="c1">#</span>
-<span class="c1"># STATUS: still under development functional</span>
+<span class="c1"># STATUS: completed, functional, and documented.</span>
 <span class="c1">#</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -119,12 +119,17 @@
 
 <span class="sd">    scaffold : str</span>
 <span class="sd">        Model scaffold to arrange the layers. Valid scaffolds are:</span>
-<span class="sd">            - &#39;exponential&#39;: exponential decay in the number of layers. Controlled by the &#39;beta&#39; parameter.</span>
 
-<span class="sd">                    n^(l) = (1/beta)^(l) * init</span>
+<span class="sd">            - &#39;exponential&#39;: exponential decay in the number of layers. Controlled by the `beta` parameter.</span>
 
-<span class="sd">            - &#39;linear&#39;: linear decay in the number of layers. Controlled by the &#39;alpha&#39; parameter.</span>
-<span class="sd">                    n^(l) = init - alpha * (l)</span>
+<span class="sd">            .. math::</span>
+<span class="sd">                n^{(l)} = (1 / beta)^{(l)} \cdot init</span>
+
+<span class="sd">            - &#39;linear&#39;: linear decay in the number of layers. Controlled by the `alpha` parameter.</span>
+
+<span class="sd">            .. math::</span>
+<span class="sd">                n^{(l)} = init - alpha \cdot (l)</span>
+
 
 <span class="sd">    min_width : int</span>
 <span class="sd">        Minimum layer width.</span>
@@ -141,7 +146,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    dim_per_layer : list</span>
-<span class="sd">        Dimensions of each layer (total of layers defined by &#39;n_layers&#39;).</span>
+<span class="sd">        Dimensions of each layer (total of layers defined by `n_layers`).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_VALID_SCAFFOLDS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="s1">&#39;exponential&#39;</span><span class="p">]</span>
 
@@ -316,7 +321,7 @@
 
 <span class="sd">    layer_activation : list or torch.nn.Module or None or str</span>
 <span class="sd">        Activation funtions. If None is provided a simple affine transformation will take place. If a string</span>
-<span class="sd">        is provided, the name should match to the name of the torch.nn class (i.e., &#39;ReLU&#39; for torch.nn.ReLU).</span>
+<span class="sd">        is provided, the name should match to the name of the torch.nn class (i.e., &#39;ReLU&#39; for `torch.nn.ReLU`).</span>
 
 <span class="sd">    layer_dropout : list or float, default=None</span>
 <span class="sd">        Layer dropouts. If an scalar is provided the same dropout rate will be applied for all the layers.</span>
@@ -328,7 +333,7 @@
 <span class="sd">        Function (os list of functions) applied to the generated lienar layers for initializing their weights.</span>
 
 <span class="sd">    output_activation : str or torch.nn.Module or None, default=None</span>
-<span class="sd">        Output activation function (similar to &#39;layer_activation&#39;).</span>
+<span class="sd">        Output activation function (similar to `layer_activation`).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -381,7 +386,6 @@
 <span class="sd">    &gt;&gt;&gt;     output_activation=torch.nn.Sigmoid()</span>
 <span class="sd">    &gt;&gt;&gt; )</span>
 <span class="sd">    &gt;&gt;&gt; model</span>
-
 <span class="sd">    Out[1]</span>
 <span class="sd">        Sequential(</span>
 <span class="sd">              (LinearLayer 0): Linear(in_features=10, out_features=100, bias=True)</span>

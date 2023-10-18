@@ -22,10 +22,10 @@ from ..util.validation import (
     checkClass
 )
 from ..util.io import (
-    createObjectRepresentation
+    _createObjectRepresentation
 )
 from ..util.tools import (
-    none2dict,
+    _none2dict,
     getNumModelParams
 )
 from ..exception import (
@@ -71,7 +71,7 @@ class Dataset(object):
         self._in_type = in_type
 
     def __repr__(self):
-        return createObjectRepresentation(
+        return _createObjectRepresentation(
             'Dataset', shape=self._array_data.shape, in_type=self._in_type)
 
     def __str__(self):
@@ -291,7 +291,7 @@ class SklearnModelWrapper(Model):
         self._model_obj = model_class(**kwargs)
 
     def __repr__(self):
-        return createObjectRepresentation(
+        return _createObjectRepresentation(
             'SklearnModelWrapper',
             base_model=str(self._model_class).replace('<class ', '').replace('>', ''),
             model_params=self._in_params,
@@ -434,23 +434,47 @@ class TorchSKInterface(Model):
 
     Example
     -------
+    >>> import sys
+    >>>
+    >>> sys.path.append('..')
+    >>>
     >>> import torch
-    >>> from torch.utils.data import DataLoader
-    >>> from gojo import deepl
+    >>> import pandas as pd
+    >>> from sklearn import datasets
+    >>> from sklearn.model_selection import train_test_split
+    >>>
+    >>> # DEID libraries
     >>> from gojo import core
+    >>> from gojo import deepl
+    >>> from gojo import util
+    >>> from gojo import plotting
     >>>
     >>>
-    >>> # create a basic FFN
-    >>> model = deepl.ffn.createSimpleFFNModel(
-    >>>     in_feats=13,
-    >>>     out_feats=1,
-    >>>     layer_dims=[20],
-    >>>     layer_activation=torch.nn.ELU(),
-    >>>     output_activation=torch.nn.Sigmoid())
+    >>> DEVICE = 'mps'
     >>>
+    >>>
+    >>> # load test dataset (Wine)
+    >>> wine_dt = datasets.load_wine()
+    >>>
+    >>> # create the target variable. Classification problem 0 vs rest
+    >>> # to see the target names you can use wine_dt['target_names']
+    >>> y = (wine_dt['target'] == 1).astype(int)
+    >>> X = wine_dt['data']
+    >>>
+    >>> # standardize input data
+    >>> std_X = util.zscoresScaling(X)
+    >>>
+    >>> # split Xs and Ys in training and validation
+    >>> X_train, X_valid, y_train, y_valid = train_test_split(
+    >>>     std_X, y, train_size=0.8, random_state=1997, shuffle=True, stratify=y)
     >>>
     >>> model = core.TorchSKInterface(
-    >>>     model=model,
+    >>>     model=deepl.ffn.createSimpleFFNModel(
+    >>>         in_feats=X_train.shape[1],
+    >>>         out_feats=1,
+    >>>         layer_dims=[20],
+    >>>         layer_activation=torch.nn.ELU(),
+    >>>         output_activation=torch.nn.Sigmoid()),
     >>>     iter_fn=deepl.iterSupervisedEpoch,
     >>>     loss_function=torch.nn.BCELoss(),
     >>>     n_epochs=50,
@@ -459,13 +483,51 @@ class TorchSKInterface(Model):
     >>>     optimizer_class=torch.optim.Adam,
     >>>     dataset_class=deepl.loading.TorchDataset,
     >>>     dataloader_class=torch.utils.data.DataLoader,
-    >>>     optimizer_kw=dict(lr=0.001),
-    >>>     train_dataloader_kw=dict(batch_size=16, shuffle=True),
-    >>>     valid_dataloader_kw=dict(batch_size=100),
-    >>>     device='cuda',
+    >>>     optimizer_kw=dict(
+    >>>         lr=0.001
+    >>>     ),
+    >>>     train_dataset_kw=None,
+    >>>     valid_dataset_kw=None,
+    >>>     train_dataloader_kw=dict(
+    >>>         batch_size=16,
+    >>>         shuffle=True
+    >>>     ),
+    >>>     valid_dataloader_kw=dict(
+    >>>         batch_size=X_train.shape[0]
+    >>>     ),
+    >>>     iter_fn_kw= None,
+    >>>     callbacks= None,
+    >>>     seed=1997,
+    >>>     device=DEVICE,
     >>>     metrics=core.getDefaultMetrics('binary_classification', bin_threshold=0.5),
     >>>     verbose=1
     >>> )
+    >>>
+    >>> # train the model
+    >>> model.train(X_train, y_train)
+    >>>
+    >>> # get the model convergence information
+    >>> model_history = model.fitting_history
+    >>>
+    >>> # display model convergence
+    >>> plotting.linePlot(
+    >>>     model_history['train'], model_history['valid'],
+    >>>     x='epoch', y='loss (mean)', err='loss (std)',
+    >>>     legend_labels=['Train', 'Validation'],
+    >>>     title='Model convergence',
+    >>>     ls=['solid', 'dashed'],
+    >>>     legend_pos='center right')
+    >>>
+    >>> # display model performance
+    >>> plotting.linePlot(
+    >>>     model_history['train'], model_history['valid'],
+    >>>     x='epoch', y='f1_score',
+    >>>     legend_labels=['Train', 'Validation'],
+    >>>     title='Model F1-score',
+    >>>     ls=['solid', 'dashed'],
+    >>>     legend_pos='center right')
+
+
     """
     def __init__(
             self,
@@ -511,12 +573,12 @@ class TorchSKInterface(Model):
         self.dataloader_class = dataloader_class
 
         # input classes initialization parameters
-        self.optimizer_kw = none2dict(optimizer_kw)
-        self.train_dataset_kw = none2dict(train_dataset_kw)
-        self.valid_dataset_kw = none2dict(valid_dataset_kw)
-        self.train_dataloader_kw = none2dict(train_dataloader_kw)
-        self.valid_dataloader_kw = none2dict(valid_dataloader_kw)
-        self.iter_fn_kw = none2dict(iter_fn_kw)
+        self.optimizer_kw = _none2dict(optimizer_kw)
+        self.train_dataset_kw = _none2dict(train_dataset_kw)
+        self.valid_dataset_kw = _none2dict(valid_dataset_kw)
+        self.train_dataloader_kw = _none2dict(train_dataloader_kw)
+        self.valid_dataloader_kw = _none2dict(valid_dataloader_kw)
+        self.iter_fn_kw = _none2dict(iter_fn_kw)
 
         # other parameters
         self.n_epochs = n_epochs
@@ -560,7 +622,7 @@ class TorchSKInterface(Model):
             ('verbose', self.verbose, [int]))
 
     def __repr__(self):
-        return createObjectRepresentation(
+        return _createObjectRepresentation(
             'TorchSKInterface',
             **self.getParameters())
 
@@ -815,6 +877,114 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
     verbose : int, default=1
         Verbosity level. Use -1 to indicate maximum verbosity.
 
+    Example
+    -------
+    >>> import sys
+    >>>
+    >>> sys.path.append('..')
+    >>>
+    >>> import torch
+    >>> import pandas as pd
+    >>> from sklearn import datasets
+    >>> from sklearn.model_selection import train_test_split
+    >>>
+    >>> # GOJO libraries
+    >>> from gojo import core
+    >>> from gojo import deepl
+    >>> from gojo import util
+    >>> from gojo import plotting
+    >>>
+    >>> DEVICE = 'mps'
+    >>>
+    >>> # load test dataset (Wine)
+    >>> wine_dt = datasets.load_wine()
+    >>>
+    >>> # create the target variable. Classification problem 0 vs rest
+    >>> # to see the target names you can use wine_dt['target_names']
+    >>> y = (wine_dt['target'] == 1).astype(int)
+    >>> X = wine_dt['data']
+    >>>
+    >>> # standarize input data
+    >>> std_X = util.zscoresScaling(X)
+    >>>
+    >>> # split Xs and Ys in training and validation
+    >>> X_train, X_valid, y_train, y_valid = train_test_split(
+    >>>     std_X, y, train_size=0.8, random_state=1997, shuffle=True,
+    >>>     stratify=y
+    >>> )
+    >>>
+    >>> model = core.ParametrizedTorchSKInterface(
+    >>>     generating_fn=deepl.ffn.createSimpleFFNModel,
+    >>>     gf_params=dict(
+    >>>         in_feats=X_train.shape[1],
+    >>>         out_feats=1,
+    >>>         layer_dims=[20],
+    >>>         layer_activation='ELU',
+    >>>         output_activation='Sigmoid'),
+    >>>     iter_fn=deepl.iterSupervisedEpoch,
+    >>>     loss_function=torch.nn.BCELoss(),
+    >>>     n_epochs=50,
+    >>>     train_split=0.8,
+    >>>     train_split_stratify=True,
+    >>>     optimizer_class=torch.optim.Adam,
+    >>>     dataset_class=deepl.loading.TorchDataset,
+    >>>     dataloader_class=torch.utils.data.DataLoader,
+    >>>     optimizer_kw=dict(
+    >>>         lr=0.001
+    >>>     ),
+    >>>     train_dataset_kw=None,
+    >>>     valid_dataset_kw=None,
+    >>>     train_dataloader_kw=dict(
+    >>>         batch_size=16,
+    >>>         shuffle=True
+    >>>     ),
+    >>>     valid_dataloader_kw=dict(
+    >>>         batch_size=X_train.shape[0]
+    >>>     ),
+    >>>     iter_fn_kw= None,
+    >>>     callbacks= None,
+    >>>     seed=1997,
+    >>>     device=DEVICE,
+    >>>     metrics=core.getDefaultMetrics('binary_classification', bin_threshold=0.5, select=['f1_score']),
+    >>>     verbose=1
+    >>> )
+    >>>
+    >>> # train the model
+    >>> model.train(X_train, y_train)
+    >>>
+    >>> # display model convergence
+    >>> model_history = model.fitting_history
+    >>> plotting.linePlot(
+    >>>     model_history['train'], model_history['valid'],
+    >>>     x='epoch', y='loss (mean)', err='loss (std)',
+    >>>     legend_labels=['Train', 'Validation'],
+    >>>     title='Model convergence',
+    >>>     ls=['solid', 'dashed'],
+    >>>     legend_pos='center right')
+    >>>
+    >>> # display model performance
+    >>> plotting.linePlot(
+    >>>     model_history['train'], model_history['valid'],
+    >>>     x='epoch', y='f1_score',
+    >>>     legend_labels=['Train', 'Validation'],
+    >>>     title='Model F1-score',
+    >>>     ls=['solid', 'dashed'],
+    >>>     legend_pos='center right')
+    >>>
+    >>> # update model paramters
+    >>> model.update(
+    >>>     n_epochs=100,
+    >>>     train_dataloader_kw__batch_size=32,
+    >>>     gf_params__layer_dims=[5, 5, 5],
+    >>>     metrics=core.getDefaultMetrics('binary_classification', bin_threshold=0.5, select=['f1_score', 'auc'])
+    >>> )
+    >>>
+    >>> # after parameter updating the model is reseted
+    >>> y_hat = model.performInference(X_valid)
+    >>> pd.DataFrame([core.getScores(y_true=y_valid, y_pred=y_hat,
+    >>>                metrics=core.getDefaultMetrics('binary_classification', bin_threshold=0.5))]
+    >>> ).T.round(decimals=3)
+    >>>
     """
     _NOT_DEFINED_PARAMETER = '__NOT_DEFINED'
 
@@ -885,7 +1055,7 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
         self._generating_fn = generating_fn
 
     def __repr__(self):
-        return createObjectRepresentation(
+        return _createObjectRepresentation(
             'ParametrizedTorchSKInterface',
             **self.getParameters())
 

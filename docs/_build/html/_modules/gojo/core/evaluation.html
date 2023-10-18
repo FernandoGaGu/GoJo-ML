@@ -87,7 +87,7 @@
     <span class="n">checkInputType</span><span class="p">,</span>
     <span class="n">checkCallable</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">..util.io</span> <span class="kn">import</span> <span class="n">createObjectRepresentation</span>
+<span class="kn">from</span> <span class="nn">..util.io</span> <span class="kn">import</span> <span class="n">_createObjectRepresentation</span>
 <span class="kn">from</span> <span class="nn">..exception</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">IncorrectNumberOfClasses</span><span class="p">,</span>
     <span class="n">MissingArrayDimensions</span>
@@ -166,7 +166,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;multiclass&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multiclass</span>
 
-        <span class="k">return</span> <span class="n">createObjectRepresentation</span><span class="p">(</span><span class="s1">&#39;Metric&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_createObjectRepresentation</span><span class="p">(</span><span class="s1">&#39;Metric&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">parameters</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>

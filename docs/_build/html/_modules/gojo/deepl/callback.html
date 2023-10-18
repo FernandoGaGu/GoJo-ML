@@ -40,10 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../gojo.html">gojo package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.core.html">gojo.core package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.deepl.html">gojo.deepl package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.plotting.html">gojo.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.util.html">gojo.util package</a></li>
 </ul>
 
         </div>
@@ -76,7 +76,7 @@
 <span class="c1"># Author: Fernando García Gutiérrez</span>
 <span class="c1"># Email: fgarcia@fundacioace.org</span>
 <span class="c1">#</span>
-<span class="c1"># STATUS: completed and testing to be done</span>
+<span class="c1"># STATUS: completed, and testing to be done, and documented.</span>
 <span class="c1">#</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -93,17 +93,17 @@
 <a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.callback.Callback">[docs]</a>
 <span class="k">class</span> <span class="nc">Callback</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Base class (interface) used to define the callbacks to be executed in each iteration of the training</span>
-<span class="sd">    loop of the neural networks defined in &#39;gojo.deepl.loop.fitNeuralNetwork&#39;.</span>
+<span class="sd">    loop of the neural networks defined in :func:`gojo.deepl.loop.fitNeuralNetwork`.</span>
 <span class="sd">    These callbacks provide directives to modify the training of the models. A classic example would be the</span>
-<span class="sd">    early stopping callback (defined in &#39;gojo.deepl.callback.EarlyStopping&#39;.</span>
+<span class="sd">    early stopping callback (defined in :class:`gojo.deepl.callback.EarlyStopping`).</span>
 
 <span class="sd">    Subclasses must define the following methods:</span>
 
 <span class="sd">        - evaluate()</span>
 <span class="sd">            This method will make available to the callback the following arguments used (and updated) in the current</span>
-<span class="sd">            iteration of the &#39;gojo.deepl.loop.fitNeuralNetwork&#39; training loop:</span>
+<span class="sd">            iteration of the :func:&#39;gojo.deepl.loop.fitNeuralNetwork&#39; training loop:</span>
 
-<span class="sd">                model : &#39;gojo.base.PytorchModelWrapper&#39;</span>
+<span class="sd">                model : :class:`gojo.core.base.TorchSKInterface` or :class:`gojo.core.base.ParametrizedTorchSKInterface`</span>
 <span class="sd">                    Model to be trained.</span>
 <span class="sd">                train_metrics : list</span>
 <span class="sd">                    Train computed metrics until the last epoch.</span>
@@ -115,7 +115,7 @@
 <span class="sd">                    Validation computed loss until the last epoch.</span>
 
 <span class="sd">            This method has to return a directive (as a string) that will be interpreted by the</span>
-<span class="sd">            &#39;gojo.deepl.loop.fitNeuralNetwork&#39; inner loop.</span>
+<span class="sd">            :func:`gojo.deepl.loop.fitNeuralNetwork` inner loop.</span>
 
 <span class="sd">        - resetState()</span>
 <span class="sd">            This method should reset the inner state of the callback.</span>
@@ -160,21 +160,21 @@
 <div class="viewcode-block" id="EarlyStopping">
 <a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.callback.EarlyStopping">[docs]</a>
 <span class="k">class</span> <span class="nc">EarlyStopping</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Callback used to perform an early stopping of the &#39;gojo.deepl.loop.fitNeuralNetwork&#39; training loop.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Callback used to perform an early stopping of the :func:`gojo.deepl.loop.fitNeuralNetwork` training loop.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    it_without_improve: int</span>
+<span class="sd">    it_without_improve : int</span>
 <span class="sd">        Number of iterations that must be completed without the model showing a decrease in the loss value</span>
 <span class="sd">        over the validation set (average of the last epochs or count of the last epochs, as defined by</span>
-<span class="sd">        parameter &#39;track&#39;) to perform an early stopping ending the loop execution.</span>
+<span class="sd">        parameter `track`) to perform an early stopping ending the loop execution.</span>
 
 <span class="sd">    track : str, default=&#39;mean&#39;</span>
 <span class="sd">        Method used to compare the latest value of the loss on the validation set with respect to the</span>
 <span class="sd">        historical value. Methods currently available:</span>
 
-<span class="sd">            - &#39;mean&#39;: compare the current value with respect to the average of the &#39;it_without_improve&#39; epochs.</span>
-<span class="sd">            - &#39;count&#39;: compare the current value with respect to &#39;it_without_improve&#39; epochs.</span>
+<span class="sd">            - &#39;mean&#39;: compare the current value with respect to the average of the `it_without_improve` epochs.</span>
+<span class="sd">            - &#39;count&#39;: compare the current value with respect to `it_without_improve` epochs.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -238,7 +238,6 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Reset callback &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_saved_valid_loss</span> <span class="o">=</span> <span class="p">[]</span></div>
 </div>
-
 
 </pre></div>
 

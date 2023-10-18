@@ -95,10 +95,10 @@
     <span class="n">checkClass</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..util.io</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">createObjectRepresentation</span>
+    <span class="n">_createObjectRepresentation</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..util.tools</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">none2dict</span><span class="p">,</span>
+    <span class="n">_none2dict</span><span class="p">,</span>
     <span class="n">getNumModelParams</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..exception</span> <span class="kn">import</span> <span class="p">(</span>
@@ -146,7 +146,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_in_type</span> <span class="o">=</span> <span class="n">in_type</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">createObjectRepresentation</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">_createObjectRepresentation</span><span class="p">(</span>
             <span class="s1">&#39;Dataset&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_array_data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">in_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_in_type</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -399,7 +399,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_model_obj</span> <span class="o">=</span> <span class="n">model_class</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">createObjectRepresentation</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">_createObjectRepresentation</span><span class="p">(</span>
             <span class="s1">&#39;SklearnModelWrapper&#39;</span><span class="p">,</span>
             <span class="n">base_model</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_class</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&lt;class &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
             <span class="n">model_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_in_params</span><span class="p">,</span>
@@ -640,12 +640,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">dataloader_class</span> <span class="o">=</span> <span class="n">dataloader_class</span>
 
         <span class="c1"># input classes initialization parameters</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kw</span> <span class="o">=</span> <span class="n">none2dict</span><span class="p">(</span><span class="n">optimizer_kw</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">train_dataset_kw</span> <span class="o">=</span> <span class="n">none2dict</span><span class="p">(</span><span class="n">train_dataset_kw</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">valid_dataset_kw</span> <span class="o">=</span> <span class="n">none2dict</span><span class="p">(</span><span class="n">valid_dataset_kw</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">train_dataloader_kw</span> <span class="o">=</span> <span class="n">none2dict</span><span class="p">(</span><span class="n">train_dataloader_kw</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">valid_dataloader_kw</span> <span class="o">=</span> <span class="n">none2dict</span><span class="p">(</span><span class="n">valid_dataloader_kw</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">iter_fn_kw</span> <span class="o">=</span> <span class="n">none2dict</span><span class="p">(</span><span class="n">iter_fn_kw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kw</span> <span class="o">=</span> <span class="n">_none2dict</span><span class="p">(</span><span class="n">optimizer_kw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_dataset_kw</span> <span class="o">=</span> <span class="n">_none2dict</span><span class="p">(</span><span class="n">train_dataset_kw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">valid_dataset_kw</span> <span class="o">=</span> <span class="n">_none2dict</span><span class="p">(</span><span class="n">valid_dataset_kw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_dataloader_kw</span> <span class="o">=</span> <span class="n">_none2dict</span><span class="p">(</span><span class="n">train_dataloader_kw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">valid_dataloader_kw</span> <span class="o">=</span> <span class="n">_none2dict</span><span class="p">(</span><span class="n">valid_dataloader_kw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iter_fn_kw</span> <span class="o">=</span> <span class="n">_none2dict</span><span class="p">(</span><span class="n">iter_fn_kw</span><span class="p">)</span>
 
         <span class="c1"># other parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_epochs</span> <span class="o">=</span> <span class="n">n_epochs</span>
@@ -689,7 +689,7 @@
             <span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]))</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">createObjectRepresentation</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">_createObjectRepresentation</span><span class="p">(</span>
             <span class="s1">&#39;TorchSKInterface&#39;</span><span class="p">,</span>
             <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">getParameters</span><span class="p">())</span>
 
@@ -1035,7 +1035,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_generating_fn</span> <span class="o">=</span> <span class="n">generating_fn</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">createObjectRepresentation</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">_createObjectRepresentation</span><span class="p">(</span>
             <span class="s1">&#39;ParametrizedTorchSKInterface&#39;</span><span class="p">,</span>
             <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">getParameters</span><span class="p">())</span>
 

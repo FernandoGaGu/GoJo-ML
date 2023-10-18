@@ -51,7 +51,8 @@ def getCrossValObj(cv: int = None, repeats: int = 1, stratified: bool = False, l
     Returns
     -------
     cv_obj : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut
-        Cross-validation instance from the 'sklearn' library.
+        Cross-validation instance from the `sklearn <https://scikit-learn.org/stable/modules/cross_validation.html>`_
+        library.
     """
 
     checkMultiInputTypes(
@@ -128,12 +129,12 @@ def zscoresScaling(data: pd.DataFrame or np.ndarray) -> pd.DataFrame or np.ndarr
     return _applyScaling(data, StandardScaler)
 
 
-def none2dict(v):
+def _none2dict(v):
     return {} if v is None else v
 
 
 def getNumModelParams(model: torch.nn.Module) -> int:
-    """ Function that returns the number of trainable parameters from a torch.nn.Module instance. """
+    """ Function that returns the number of trainable parameters from a :class:`torch.nn.Module` instance. """
     checkInputType('model', model, [torch.nn.Module])
 
     return sum(param.numel() for param in model.parameters())

@@ -9,7 +9,7 @@ from collections.abc import Iterable
 
 
 def checkInputType(input_var_name: str, input_var: object, valid_types: list or tuple):
-    """ Function that checks that the type of the input variable "input_var" is within the valid types "valid_types"."""
+    """ Function that checks that the type of the input variable `input_var` is within the valid types `valid_types`."""
     if not isinstance(input_var_name, str):
         raise TypeError(f'input_var_name must be a string. Provided {str(input_var_name)}.')
     if not isinstance(valid_types, (tuple, list)):

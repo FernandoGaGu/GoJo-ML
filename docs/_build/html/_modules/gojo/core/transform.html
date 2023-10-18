@@ -40,10 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../gojo.html">gojo package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.core.html">gojo.core package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.deepl.html">gojo.deepl package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.plotting.html">gojo.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.util.html">gojo.util package</a></li>
 </ul>
 
         </div>
@@ -77,7 +77,7 @@
 <span class="c1"># Author: Fernando García Gutiérrez</span>
 <span class="c1"># Email: fgarcia@fundacioace.org</span>
 <span class="c1">#</span>
-<span class="c1"># STATUS: completed and functional</span>
+<span class="c1"># STATUS: completed, functional, and documented.</span>
 <span class="c1">#</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
@@ -89,7 +89,7 @@
     <span class="n">checkClass</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..util.io</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">createObjectRepresentation</span>
+    <span class="n">_createObjectRepresentation</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..exception</span> <span class="kn">import</span> <span class="n">UnfittedTransform</span>
 
@@ -97,7 +97,48 @@
 <div class="viewcode-block" id="Transform">
 <a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform">[docs]</a>
 <span class="k">class</span> <span class="nc">Transform</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Description &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Base interface for applying transformations to the input data in the :py:mod:`gojo.core.loops` subroutines.</span>
+<span class="sd">    Internally, the training data will be passed to the :meth:`fit` method for adjusting the transformation to the</span>
+<span class="sd">    training dataset statistics, and subsequently, the transformation will be applied to the training and test data</span>
+<span class="sd">    by means of the :meth:`transform`.</span>
+
+<span class="sd">    Subclasses must define the following methods:</span>
+
+<span class="sd">        - fit()</span>
+<span class="sd">            Method used to fit a transform to a given input data.</span>
+
+<span class="sd">        - transform()</span>
+<span class="sd">            Method used to perform the transformations to the input data.</span>
+
+<span class="sd">        - reset()</span>
+<span class="sd">            Method used to reset the fitted transform</span>
+
+<span class="sd">        - copy()</span>
+<span class="sd">            Method used to make a copy of the transform.</span>
+
+<span class="sd">        - getParameters()</span>
+<span class="sd">            Method that must return the transform parameters.</span>
+
+<span class="sd">        - updateParameters()</span>
+<span class="sd">            Method used to update the transform parameters.</span>
+
+<span class="sd">    This abstract class provides the following properties:</span>
+
+<span class="sd">        - is_fitted</span>
+<span class="sd">            Indicates whether the transformation has been fitted by calling the :meth:`fit` method.</span>
+
+<span class="sd">    And the following methods:</span>
+
+<span class="sd">        - update()</span>
+<span class="sd">            Method used to update the transform parameters.</span>
+
+<span class="sd">        - fitted()</span>
+<span class="sd">            Method called (usually internally) to indicate that a given transformation have been fitted.</span>
+
+<span class="sd">        - resetFit()</span>
+<span class="sd">            Method used to reset a fitted transformation (usually called internally).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -174,7 +215,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Indicates whether the transformation has been fitted by calling the &#39;fit()&#39; method.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Indicates whether the transformation has been fitted by calling the :meth:`fit` method.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -211,8 +252,22 @@
 <div class="viewcode-block" id="SKLearnTransformWrapper">
 <a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.SKLearnTransformWrapper">[docs]</a>
 <span class="k">class</span> <span class="nc">SKLearnTransformWrapper</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Description &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Wrapper used to easily incorporate the transformations implemented in the `sklearn` library.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    transform_class : Type</span>
+<span class="sd">        `sklearn` transform. The instances of this class must have the `fit` and `transform` methods defined according</span>
+<span class="sd">        to the `sklearn` implementation.</span>
+
+<span class="sd">    **kwargs</span>
+<span class="sd">        Optional arguments used to initialize instances of the provided class.</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &lt;TODO&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">SKLearnTransformWrapper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
@@ -223,7 +278,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_transform_obj</span> <span class="o">=</span> <span class="n">transform_class</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">createObjectRepresentation</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">_createObjectRepresentation</span><span class="p">(</span>
             <span class="s1">&#39;SKLearnTransformWrapper&#39;</span><span class="p">,</span>
             <span class="n">base_transform</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_transform_class</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&lt;class &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
             <span class="n">transform_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_in_params</span><span class="p">,</span>
@@ -243,8 +298,8 @@
     <span class="k">def</span> <span class="nf">updateParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to update the inner transform parameters.</span>
 
-<span class="sd">        IMPORTANT NOTE: Transform parameters should be updated by calling the update() method</span>
-<span class="sd">        from the model superclass.</span>
+<span class="sd">        IMPORTANT NOTE: Transform parameters should be updated by calling the :meth:`update` method from the</span>
+<span class="sd">        superclass :class:`gojo.core.transform.Transform`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_in_params</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
@@ -299,9 +354,9 @@
 <div class="viewcode-block" id="SKLearnTransformWrapper.copy">
 <a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.copy">[docs]</a>
     <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Make a deepcopy of the instance. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 </div>
-
 
 </pre></div>
 

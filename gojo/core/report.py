@@ -20,9 +20,9 @@ from ..util.validation import (
     checkMultiInputTypes,
     checkInputType
 )
+from ..util.io import pprint
 
 
-# TODO. Documentation
 class CVReport(object):
     """ Object returned by the subroutines defined in :py:mod:`gojo.core.loops` functions with the results of the
     cross validation. """
@@ -133,7 +133,7 @@ class CVReport(object):
 
         Returns
         -------
-        test_predictions : pandas.DataFrame
+        test_predictions : pd.DataFrame
              Model predictions over the test set.
         """
         return self._convertPredDict2Df(self.test_preds)
@@ -152,7 +152,7 @@ class CVReport(object):
 
         Returns
         -------
-        test_predictions : pandas.DataFrame or None
+        test_predictions : pd.DataFrame or None
              Model predictions over the train set.
         """
         return self._convertPredDict2Df(self.train_preds, supress_warnings=supress_warnings)
@@ -230,7 +230,11 @@ class CVReport(object):
 
         Examples
         --------
-        <TODO>
+        >>> from gojo import core
+        >>>
+        >>> # ... cv_report = core.loops.evalCrossVal(...)
+        >>> scores = cv_report.getScores(core.getDefaultMetrics('binary_classification', bin_threshold=0.5))
+        >>>
         """
         # check input parameters
         checkInputType('metrics', metrics, [list])
@@ -338,7 +342,7 @@ class CVReport(object):
             try:
                 key_df = pd.DataFrame(preds)
             except Exception as ex:
-                print('Internal error in gojo.core.report.CVReport._convertPredDict2Df '
+                pprint('Internal error in gojo.core.report.CVReport._convertPredDict2Df '
                       'function during pd.DataFrame creation.')
                 raise ex
 

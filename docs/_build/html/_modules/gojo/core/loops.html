@@ -346,7 +346,6 @@
     <span class="k">return</span> <span class="n">cv_report</span>
 
 
-<span class="c1"># TODO. Document function</span>
 <div class="viewcode-block" id="evalCrossVal">
 <a class="viewcode-back" href="../../../gojo.core.html#gojo.core.loops.evalCrossVal">[docs]</a>
 <span class="k">def</span> <span class="nf">evalCrossVal</span><span class="p">(</span>
@@ -546,8 +545,10 @@
 <span class="sd">        consult `https://optuna.org/`.</span>
 
 <span class="sd">        &gt;&gt;&gt; search_space = {</span>
-<span class="sd">        &gt;&gt;&gt;     &#39;max_depth&#39;: (&#39;suggest_int&#39;, (2, 10)),           # sample from a categorical distribution</span>
-<span class="sd">        &gt;&gt;&gt;     &#39;max_samples&#39;: (&#39;suggest_float&#39;, (0.5, 1.0) ),   # ... from a uniform distribution</span>
+<span class="sd">        &gt;&gt;&gt;     # sample from a categorical distribution</span>
+<span class="sd">        &gt;&gt;&gt;     &#39;max_depth&#39;: (&#39;suggest_int&#39;, (2, 10)),</span>
+<span class="sd">        &gt;&gt;&gt;     # ... from a uniform distribution</span>
+<span class="sd">        &gt;&gt;&gt;     &#39;max_samples&#39;: (&#39;suggest_float&#39;, (0.5, 1.0) ),</span>
 <span class="sd">        &gt;&gt;&gt; }</span>
 
 <span class="sd">    outer_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut</span>
@@ -614,17 +615,9 @@
 <span class="sd">        Cross validation report. For more information see :class:`gojo.core.report.CVReport`. The HPO history will be</span>
 <span class="sd">        save in the report metadata (:attr:`gojo.core.report.CVReport.metadata`.</span>
 
-
-
-<span class="sd">    Example of `search_space`</span>
-<span class="sd">    ------------------------</span>
-
-
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &lt;TODO&gt;</span>
-
-
 
 
 <span class="sd">    &quot;&quot;&quot;</span>

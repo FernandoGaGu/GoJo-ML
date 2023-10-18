@@ -40,10 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../gojo.html">gojo package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.core.html">gojo.core package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.deepl.html">gojo.deepl package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.plotting.html">gojo.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.util.html">gojo.util package</a></li>
 </ul>
 
         </div>
@@ -84,7 +84,7 @@
 <div class="viewcode-block" id="checkInputType">
 <a class="viewcode-back" href="../../../gojo.util.html#gojo.util.validation.checkInputType">[docs]</a>
 <span class="k">def</span> <span class="nf">checkInputType</span><span class="p">(</span><span class="n">input_var_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">input_var</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">valid_types</span><span class="p">:</span> <span class="nb">list</span> <span class="ow">or</span> <span class="nb">tuple</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Function that checks that the type of the input variable &quot;input_var&quot; is within the valid types &quot;valid_types&quot;.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Function that checks that the type of the input variable `input_var` is within the valid types `valid_types`.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_var_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;input_var_name must be a string. Provided </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">input_var_name</span><span class="p">)</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">valid_types</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>

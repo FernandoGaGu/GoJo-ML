@@ -40,10 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../gojo.html">gojo package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.core.html">gojo.core package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.deepl.html">gojo.deepl package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.plotting.html">gojo.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.util.html">gojo.util package</a></li>
 </ul>
 
         </div>
@@ -126,7 +126,8 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    cv_obj : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut</span>
-<span class="sd">        Cross-validation instance from the &#39;sklearn&#39; library.</span>
+<span class="sd">        Cross-validation instance from the `sklearn &lt;https://scikit-learn.org/stable/modules/cross_validation.html&gt;`_</span>
+<span class="sd">        library.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">checkMultiInputTypes</span><span class="p">(</span>
@@ -210,17 +211,14 @@
 
 
 
-<div class="viewcode-block" id="none2dict">
-<a class="viewcode-back" href="../../../gojo.util.html#gojo.util.tools.none2dict">[docs]</a>
-<span class="k">def</span> <span class="nf">none2dict</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">v</span></div>
-
+<span class="k">def</span> <span class="nf">_none2dict</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">v</span>
 
 
 <div class="viewcode-block" id="getNumModelParams">
 <a class="viewcode-back" href="../../../gojo.util.html#gojo.util.tools.getNumModelParams">[docs]</a>
 <span class="k">def</span> <span class="nf">getNumModelParams</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Function that returns the number of trainable parameters from a torch.nn.Module instance. &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Function that returns the number of trainable parameters from a :class:`torch.nn.Module` instance. &quot;&quot;&quot;</span>
     <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span></div>

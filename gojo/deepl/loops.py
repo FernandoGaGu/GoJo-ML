@@ -23,6 +23,7 @@ from ..util.validation import (
     checkCallable,
     checkIterable
 )
+from ..util.io import pprint
 
 
 def _processInputParams(model: torch.nn.Module, device: str, metrics: list = None) -> tuple:
@@ -165,7 +166,7 @@ def fitNeuralNetwork(
         optimizer_class,
         optimizer_params: dict = None,
         device: str = None,
-        verbose: int = 2,
+        verbose: int = 1,
         metrics: list = None,
         callbacks: List[Callback] = None,
         **kwargs) -> dict:
@@ -185,12 +186,12 @@ def fitNeuralNetwork(
         Pytorch model to be trained.
 
     train_dl : Iterable
-        Train dataloader (see `torch.utils.data.DataLoader`
-        :web:`class <https://pytorch.org/tutorials/beginner/basics/data_tutorial.html>`).
+        Train dataloader (see `torch.utils.data.DataLoader
+        class <https://pytorch.org/tutorials/beginner/basics/data_tutorial.html>`_).
 
     valid_dl : Iterable
-        Validation dataloader (see `torch.utils.data.DataLoader`
-        :web:`class <https://pytorch.org/tutorials/beginner/basics/data_tutorial.html>`).
+        Validation dataloader (see `torch.utils.data.DataLoader
+        class <https://pytorch.org/tutorials/beginner/basics/data_tutorial.html>`_).
 
     n_epochs : int
         Maximum number of epochs for training a model.
@@ -201,8 +202,7 @@ def fitNeuralNetwork(
         IMPORTANTE: be carreful with this function does not break the Pytorch gradient calculation.
 
     optimizer_class : type
-        Optimizer class used to adjust model weights (see torch
-        :web:`module <https://pytorch.org/docs/stable/optim.html>`).
+        Optimizer class used to adjust model weights (see torch `module <https://pytorch.org/docs/stable/optim.html>`_).
 
     optimizer_params : dict, default=None
         Parameters used to initialize the optimizer provided using `optimizer_params`.
@@ -288,7 +288,7 @@ def fitNeuralNetwork(
     valid_loss = []
     for epoch in tqdm(range(n_epochs), desc='Training model...', disable=not show_pbar):
         if verbose >= 2:
-            print('\nEpoch (%d) ============================================ ' % (epoch+1))
+            pprint('\nEpoch (%d) ============================================ ' % (epoch+1))
 
         # -- training step -> (loss_stats: dict, metric_stats: dict)
         model = model.train()
@@ -316,8 +316,8 @@ def fitNeuralNetwork(
         if verbose >= 2:
             for info_dict in train_out:
                 for name, val in info_dict.items():
-                    print('\t (train) %s: %.5f' % (name, val))
-            print()
+                    pprint('\t (train) %s: %.5f' % (name, val))
+            pprint()
 
         # -- validation step -> (loss_stats: dict, metric_stats: dict)
         model = model.eval()
@@ -345,8 +345,8 @@ def fitNeuralNetwork(
         if verbose >= 2:
             for info_dict in valid_out:
                 for name, val in info_dict.items():
-                    print('\t (valid) %s: %.5f' % (name, val))
-            print()
+                    pprint('\t (valid) %s: %.5f' % (name, val))
+            pprint()
 
         if callbacks is not None:
             commands_to_exec = [
@@ -361,7 +361,7 @@ def fitNeuralNetwork(
             # Early stopping directive
             if EarlyStopping.DIRECTIVE in commands_to_exec:
                 if verbose >= 2:
-                    print('!=!=!=!=!=!=!= Executing early stopping')
+                    pprint('!=!=!=!=!=!=!= Executing early stopping')
                 break
 
     # convert loss information to a pandas dataframe

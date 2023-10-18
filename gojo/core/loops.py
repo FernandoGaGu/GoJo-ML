@@ -37,11 +37,12 @@ from .transform import (
 from ..util.validation import (
     checkMultiInputTypes,
     checkInputType,
-    checkCallable
+    checkCallable,
 )
 from ..exception import (
     UnfittedTransform
 )
+from ..util.io import pprint
 
 
 def _getModelPredictions(model: Model, X: np.ndarray) -> np.ndarray:
@@ -333,7 +334,61 @@ def evalCrossVal(
 
     Examples
     --------
-    <TODO>
+    >>> import optuna
+    >>> import pandas as pd
+    >>> from sklearn import datasets
+    >>> from sklearn.svm import SVC
+    >>> from sklearn.preprocessing import StandardScaler
+    >>> from sklearn.decomposition import PCA
+    >>>
+    >>> # GOJO libraries
+    >>> import gojo
+    >>> from gojo import core
+    >>>
+    >>> N_JOBS = 8
+    >>>
+    >>> # load test dataset (Wine)
+    >>> wine_dt = datasets.load_wine()
+    >>>
+    >>> # create the target variable. Classification problem 0 vs rest
+    >>> # to see the target names you can use wine_dt['target_names']
+    >>> y = (wine_dt['target'] == 1).astype(int)
+    >>> X = wine_dt['data']
+    >>>
+    >>> # previous model transforms
+    >>> transforms = [
+    >>>     core.SKLearnTransformWrapper(StandardScaler),
+    >>>     core.SKLearnTransformWrapper(PCA, n_components=5)
+    >>> ]
+    >>>
+    >>> # default model
+    >>> model = core.SklearnModelWrapper(
+    >>>     SVC, kernel='poly', degree=1, coef0=0.0,
+    >>>     cache_size=1000, class_weight=None
+    >>> )
+    >>>
+    >>> # evaluate the model using a simple cross-validation strategy with a
+    >>> # default parameters
+    >>> cv_report = core.evalCrossVal(
+    >>>     X=X, y=y,
+    >>>     model=model,
+    >>>     cv=gojo.util.getCrossValObj(cv=5, repeats=1, stratified=True, loocv=False, random_state=1997),
+    >>>     transforms=transforms,
+    >>>     verbose=True,
+    >>>     save_train_preds=True,
+    >>>     save_models=False,
+    >>>     save_transforms=False,
+    >>>     n_jobs=N_JOBS
+    >>> )
+    >>>
+    >>> scores = cv_report.getScores(core.getDefaultMetrics('binary_classification', bin_threshold=0.5))
+    >>> results = pd.concat([
+    >>>     pd.DataFrame(scores['train'].mean(axis=0)).round(decimals=3),
+    >>>     pd.DataFrame(scores['test'].mean(axis=0)).round(decimals=3)],
+    >>>     axis=1).drop(index=['n_fold'])
+    >>> results.columns = ['Train', 'Test']
+    >>> results
+    >>>
     """
     checkMultiInputTypes(
         ('X', X, [np.ndarray, pd.DataFrame]),
@@ -539,9 +594,74 @@ def evalCrossValNestedHPO(
 
     Examples
     --------
-    <TODO>
-
-
+    >>> import optuna
+    >>> import pandas as pd
+    >>> from sklearn import datasets
+    >>> from sklearn.svm import SVC
+    >>> from sklearn.preprocessing import StandardScaler
+    >>> from sklearn.decomposition import PCA
+    >>>
+    >>> # GOJO libraries
+    >>> import gojo
+    >>> from gojo import core
+    >>>
+    >>> N_JOBS = 8
+    >>>
+    >>> # load test dataset (Wine)
+    >>> wine_dt = datasets.load_wine()
+    >>>
+    >>> # create the target variable. Classification problem 0 vs rest
+    >>> # to see the target names you can use wine_dt['target_names']
+    >>> y = (wine_dt['target'] == 1).astype(int)
+    >>> X = wine_dt['data']
+    >>>
+    >>> # previous model transforms
+    >>> transforms = [
+    >>>     core.SKLearnTransformWrapper(StandardScaler),
+    >>>     core.SKLearnTransformWrapper(PCA, n_components=5)
+    >>> ]
+    >>>
+    >>> # model hyperparameters
+    >>> search_space = {
+    >>>     'degree': ('suggest_int', (1, 10)),
+    >>>     'class_weight': ('suggest_categorical', [('balanced', None)]),
+    >>>     'coef0': ('suggest_float', (0.0, 100.00 ))
+    >>> }
+    >>>
+    >>> # default model
+    >>> model = core.SklearnModelWrapper(
+    >>>     SVC, kernel='poly', degree=1, coef0=0.0,
+    >>>     cache_size=1000, class_weight=None
+    >>> )
+    >>>
+    >>> # perform the HPO to optimice model-hyperparameters
+    >>> cv_report = core.evalCrossValNestedHPO(
+    >>>     X=X,
+    >>>     y=y,
+    >>>     model=model,
+    >>>     search_space=search_space,
+    >>>     outer_cv=gojo.util.getCrossValObj(cv=5, repeats=1, stratified=True, loocv=False, random_state=1997),
+    >>>     inner_cv=gojo.util.getCrossValObj(cv=5, repeats=1, stratified=True, loocv=False, random_state=1997),
+    >>>     hpo_sampler=optuna.samplers.TPESampler(n_startup_trials=40),
+    >>>     hpo_n_trials=80,
+    >>>     minimization=False,
+    >>>     transforms=transforms,
+    >>>     metrics=core.getDefaultMetrics('binary_classification', bin_threshold=0.5),
+    >>>     objective_metric='f1_score',
+    >>>     verbose=1,
+    >>>     save_train_preds=True,
+    >>>     save_models=False,
+    >>>     n_jobs=8
+    >>> )
+    >>>
+    >>> scores = cv_report.getScores(core.getDefaultMetrics('binary_classification', bin_threshold=0.5))
+    >>> results = pd.concat([
+    >>>     pd.DataFrame(scores['train'].mean(axis=0)).round(decimals=3),
+    >>>     pd.DataFrame(scores['test'].mean(axis=0)).round(decimals=3)],
+    >>>     axis=1).drop(index=['n_fold'])
+    >>> results.columns = ['Train', 'Test']
+    >>> results
+    >>>
     """
     def _trialHPO(
             _trial,
@@ -695,7 +815,7 @@ def evalCrossValNestedHPO(
             disable=not show_pbar):
 
         if show_fold_number:    # verbose information
-            print('\nFold %d =============================================\n' % (i+1))
+            pprint('\nFold %d =============================================\n' % (i+1))
 
         # extract train/test data
         X_train = X_dt.array_data[train_idx]
@@ -747,12 +867,12 @@ def evalCrossValNestedHPO(
         # display verbosity information
         if show_hpo_best_values:
             study_df = study.trials_dataframe()
-            print('Best trial: %d' % study_df.iloc[np.argmin(study_df['value'].values)].loc['number'])
-            print('Best value: %.5f' % study_df.iloc[np.argmin(study_df['value'].values)].loc['value'])
-            print()
+            pprint('Best trial: %d' % study_df.iloc[np.argmin(study_df['value'].values)].loc['number'])
+            pprint('Best value: %.5f' % study_df.iloc[np.argmin(study_df['value'].values)].loc['value'])
+            pprint()
 
         if show_best_combinations:
-            print('Optimized model hyperparameters: {}\n'.format(study.best_params))
+            pprint('Optimized model hyperparameters: {}\n'.format(study.best_params))
 
         # update input model hyperparameters
         optim_model = model.copy()

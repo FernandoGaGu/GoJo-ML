@@ -16,7 +16,7 @@ from ..util.validation import (
     checkClass
 )
 from ..util.io import (
-    createObjectRepresentation
+    _createObjectRepresentation
 )
 from ..exception import UnfittedTransform
 
@@ -49,7 +49,7 @@ class Transform(object):
 
     This abstract class provides the following properties:
 
-        - is_fitted -> True
+        - is_fitted
             Indicates whether the transformation has been fitted by calling the :meth:`fit` method.
 
     And the following methods:
@@ -147,7 +147,7 @@ class Transform(object):
 
 
 class SKLearnTransformWrapper(Transform):
-    """ Wrapper used to easily incorporate the transformations implemented in the `sklearn' library.
+    """ Wrapper used to easily incorporate the transformations implemented in the `sklearn` library.
 
     Parameters
     ----------
@@ -161,7 +161,32 @@ class SKLearnTransformWrapper(Transform):
 
     Examples
     --------
-    <TODO>
+    >>> from sklearn.svm import SVC
+    >>> from sklearn.preprocessing import StandardScaler
+    >>> from sklearn.decomposition import PCA
+    >>>
+    >>> # GOJO libraries
+    >>> import gojo
+    >>> from gojo import core
+    >>>
+    >>> # previous model transforms
+    >>> transforms = [
+    >>>     core.SKLearnTransformWrapper(StandardScaler),
+    >>>     core.SKLearnTransformWrapper(PCA, n_components=5)
+    >>> ]
+    >>>
+    >>> # default model
+    >>> model = core.SklearnModelWrapper(
+    >>>     SVC, kernel='poly', degree=1, coef0=0.0,
+    >>>     cache_size=1000, class_weight=None
+    >>> )
+    >>>
+    >>> cv_report = core.evalCrossVal(
+    >>>     X=X, y=y,
+    >>>     model=model,
+    >>>     cv=gojo.util.getCrossValObj(cv=5),
+    >>>     transforms=transforms)
+    >>>
     """
     def __init__(self, transform_class, **kwargs):
         super(SKLearnTransformWrapper, self).__init__()
@@ -173,7 +198,7 @@ class SKLearnTransformWrapper(Transform):
         self._transform_obj = transform_class(**kwargs)
 
     def __repr__(self):
-        return createObjectRepresentation(
+        return _createObjectRepresentation(
             'SKLearnTransformWrapper',
             base_transform=str(self._transform_class).replace('<class ', '').replace('>', ''),
             transform_params=self._in_params,

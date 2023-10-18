@@ -1096,8 +1096,10 @@ library.</p>
 <dt>search_space<span class="classifier">dict</span></dt><dd><p>Search space used for performing the HPO. For more information about distributions and sampling strategies
 consult <cite>https://optuna.org/</cite>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">search_space</span> <span class="o">=</span> <span class="p">{</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;suggest_int&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)),</span>           <span class="c1"># sample from a categorical distribution</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;max_samples&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;suggest_float&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="p">),</span>   <span class="c1"># ... from a uniform distribution</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># sample from a categorical distribution</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;suggest_int&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># ... from a uniform distribution</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;max_samples&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;suggest_float&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="p">),</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
 </pre></div>
 </div>
@@ -1156,9 +1158,6 @@ save in the report metadata (<a class="reference internal" href="#gojo.core.repo
 </dd>
 </dl>
 </section>
-<section id="example-of-search-space">
-<h3>Example of <cite>search_space</cite><a class="headerlink" href="#example-of-search-space" title="Link to this heading"></a></h3>
-</section>
 <section id="id37">
 <h3>Examples<a class="headerlink" href="#id37" title="Link to this heading"></a></h3>
 <p>&lt;TODO&gt;</p>
@@ -1172,7 +1171,7 @@ save in the report metadata (<a class="reference internal" href="#gojo.core.repo
 <dt class="sig sig-object py" id="gojo.core.report.CVReport">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.core.report.</span></span><span class="sig-name descname"><span class="pre">CVReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gojo.core.base.Dataset" title="gojo.core.base.Dataset"><span class="pre">Dataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gojo.core.base.Dataset" title="gojo.core.base.Dataset"><span class="pre">Dataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_fold_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_test_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_test_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_train_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_train_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_idx_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_idx_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trained_model_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitted_transforms_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/core/report.html#CVReport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.report.CVReport" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Object returned by the subroutines defined in ‘gojo.core.loops’ functions with the results of the
+<p>Object returned by the subroutines defined in <a class="reference internal" href="#module-gojo.core.loops" title="gojo.core.loops"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.core.loops</span></code></a> functions with the results of the
 cross validation.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gojo.core.report.CVReport.addMetadata">
@@ -1183,7 +1182,8 @@ cross validation.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gojo.core.report.CVReport.getFittedTransforms">
 <span class="sig-name descname"><span class="pre">getFittedTransforms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/core/report.html#CVReport.getFittedTransforms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.report.CVReport.getFittedTransforms" title="Link to this definition"></a></dt>
-<dd><p>Function that returns the fitted transforms if they have been saved in the ‘gojo.core.loops’ subroutine.</p>
+<dd><p>Function that returns the fitted transforms if they have been saved in the <a class="reference internal" href="#module-gojo.core.loops" title="gojo.core.loops"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.core.loops</span></code></a>
+subroutine.</p>
 <section id="id38">
 <h3>Parameters<a class="headerlink" href="#id38" title="Link to this heading"></a></h3>
 <dl class="simple">
@@ -1204,13 +1204,13 @@ Defaults to True to avoid inplace modifications.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gojo.core.report.CVReport.getScores">
 <span class="sig-name descname"><span class="pre">getScores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loocv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supress_warnings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/core/report.html#CVReport.getScores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.report.CVReport.getScores" title="Link to this definition"></a></dt>
-<dd><p>Method used to calculate performance metrics for folds from a list of metrics (gojo.core.Metric
-instances) provided. If the subroutine from gojo.core.loops performed a leave-one-out cross-validation
-you must specify the parameter loocv as True.</p>
+<dd><p>Method used to calculate performance metrics for folds from a list of metrics (
+<a class="reference internal" href="#gojo.core.evaluation.Metric" title="gojo.core.evaluation.Metric"><code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.core.evaluation.Metric</span></code></a> instances) provided. If the subroutine from <a class="reference internal" href="#module-gojo.core.loops" title="gojo.core.loops"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.core.loops</span></code></a>
+performed a leave-one-out cross-validation you must specify the parameter <cite>loocv</cite> as True.</p>
 <section id="id40">
 <h3>Parameters<a class="headerlink" href="#id40" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>metrics<span class="classifier">list</span></dt><dd><p>List of gojo.core.Metric instances</p>
+<dt>metrics<span class="classifier">list</span></dt><dd><p>List of <a class="reference internal" href="#gojo.core.evaluation.Metric" title="gojo.core.evaluation.Metric"><code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.core.evaluation.Metric</span></code></a> instances</p>
 </dd>
 <dt>loocv<span class="classifier">bool</span></dt><dd><p>Parameter indicating if the predictions correspond to a LOOCV schema</p>
 </dd>
@@ -1226,16 +1226,20 @@ with the training data (identified with the ‘train’ key).</p>
 </dd>
 </dl>
 </section>
+<section id="id42">
+<h3>Examples<a class="headerlink" href="#id42" title="Link to this heading"></a></h3>
+<p>&lt;TODO&gt;</p>
+</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gojo.core.report.CVReport.getTestPredictions">
 <span class="sig-name descname"><span class="pre">getTestPredictions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/gojo/core/report.html#CVReport.getTestPredictions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.report.CVReport.getTestPredictions" title="Link to this definition"></a></dt>
-<dd><p>Function that returns a dataframe with the model predictions, indexes and true labels for the test set.</p>
-<section id="id42">
-<h3>Returns<a class="headerlink" href="#id42" title="Link to this heading"></a></h3>
+<dd><p>Function that returns a dataframe with the model predictions, indices, and true labels for the test set.</p>
+<section id="id43">
+<h3>Returns<a class="headerlink" href="#id43" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>test_predictions<span class="classifier">pandas.DataFrame</span></dt><dd><p>Model predictions over the test set.</p>
+<dt>test_predictions<span class="classifier">pd.DataFrame</span></dt><dd><p>Model predictions over the test set.</p>
 </dd>
 </dl>
 </section>
@@ -1244,20 +1248,21 @@ with the training data (identified with the ‘train’ key).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gojo.core.report.CVReport.getTrainPredictions">
 <span class="sig-name descname"><span class="pre">getTrainPredictions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">supress_warnings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/gojo/core/report.html#CVReport.getTrainPredictions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.report.CVReport.getTrainPredictions" title="Link to this definition"></a></dt>
-<dd><p>Function that returns a dataframe with the model predictions, indexes and true labels for the train set.</p>
-<p>Predictions will only be returned if they are available. In some subroutines of ‘gojo.core.loops’ it should
-be noted that the predictions made on the training set are not saved or this decision is relegated to the user.</p>
-<section id="id43">
-<h3>Parameters<a class="headerlink" href="#id43" title="Link to this heading"></a></h3>
+<dd><p>Function that returns a dataframe with the model predictions, indices, and true labels for the train set.</p>
+<p>Predictions will only be returned if they are available. In some subroutines of <a class="reference internal" href="#module-gojo.core.loops" title="gojo.core.loops"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.core.loops</span></code></a> it
+should be noted that the predictions made on the training set are not saved or this decision is relegated to
+the user.</p>
+<section id="id44">
+<h3>Parameters<a class="headerlink" href="#id44" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>supress_warnings<span class="classifier">bool, default=False</span></dt><dd><p>Silence the warning raised when not training predictions have been made.</p>
 </dd>
 </dl>
 </section>
-<section id="id44">
-<h3>Returns<a class="headerlink" href="#id44" title="Link to this heading"></a></h3>
+<section id="id45">
+<h3>Returns<a class="headerlink" href="#id45" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>test_predictions<span class="classifier">pandas.DataFrame or None</span></dt><dd><p>Model predictions over the train set.</p>
+<dt>test_predictions<span class="classifier">pd.DataFrame or None</span></dt><dd><p>Model predictions over the train set.</p>
 </dd>
 </dl>
 </section>
@@ -1266,17 +1271,18 @@ be noted that the predictions made on the training set are not saved or this dec
 <dl class="py method">
 <dt class="sig sig-object py" id="gojo.core.report.CVReport.getTrainedModels">
 <span class="sig-name descname"><span class="pre">getTrainedModels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/core/report.html#CVReport.getTrainedModels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.report.CVReport.getTrainedModels" title="Link to this definition"></a></dt>
-<dd><p>Function that returns the trained models if they have been saved in the ‘gojo.core.loops’ subroutine.</p>
-<section id="id45">
-<h3>Parameters<a class="headerlink" href="#id45" title="Link to this heading"></a></h3>
+<dd><p>Function that returns the trained models if they have been saved in the <a class="reference internal" href="#module-gojo.core.loops" title="gojo.core.loops"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.core.loops</span></code></a>
+subroutine.</p>
+<section id="id46">
+<h3>Parameters<a class="headerlink" href="#id46" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>copy<span class="classifier">bool, default=True</span></dt><dd><p>Parameter that indicates whether to return a deepcopy of the models (using the copy.deepcopy) or
+<dt>copy<span class="classifier">bool, default=True</span></dt><dd><p>Parameter that indicates whether to return a deepcopy of the models (using the <cite>copy.deepcopy</cite>) or
 directly the saved model. Defaults to True to avoid inplace modifications.</p>
 </dd>
 </dl>
 </section>
-<section id="id46">
-<h3>Returns<a class="headerlink" href="#id46" title="Link to this heading"></a></h3>
+<section id="id47">
+<h3>Returns<a class="headerlink" href="#id47" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>trained_models<span class="classifier">dict or None</span></dt><dd><p>Trained models or None if the models were not saved.</p>
 </dd>
@@ -1299,19 +1305,32 @@ directly the saved model. Defaults to True to avoid inplace modifications.</p>
 <dt class="sig sig-object py" id="gojo.core.transform.SKLearnTransformWrapper">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.core.transform.</span></span><span class="sig-name descname"><span class="pre">SKLearnTransformWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transform_class</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/core/transform.html#SKLearnTransformWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.SKLearnTransformWrapper" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gojo.core.transform.Transform" title="gojo.core.transform.Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transform</span></code></a></p>
-<p>Description</p>
+<p>Wrapper used to easily incorporate the transformations implemented in the <cite>sklearn</cite> library.</p>
+<section id="id48">
+<h3>Parameters<a class="headerlink" href="#id48" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>transform_class<span class="classifier">Type</span></dt><dd><p><cite>sklearn</cite> transform. The instances of this class must have the <cite>fit</cite> and <cite>transform</cite> methods defined according
+to the <cite>sklearn</cite> implementation.</p>
+</dd>
+<dt><a href="#id49"><span class="problematic" id="id50">**</span></a>kwargs</dt><dd><p>Optional arguments used to initialize instances of the provided class.</p>
+</dd>
+</dl>
+</section>
+<section id="id51">
+<h3>Examples<a class="headerlink" href="#id51" title="Link to this heading"></a></h3>
+<p>&lt;TODO&gt;</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gojo.core.transform.SKLearnTransformWrapper.copy">
 <span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/core/transform.html#SKLearnTransformWrapper.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.SKLearnTransformWrapper.copy" title="Link to this definition"></a></dt>
-<dd><p>Method used to make a copy of the transform.</p>
+<dd><p>Make a deepcopy of the instance.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gojo.core.transform.SKLearnTransformWrapper.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/core/transform.html#SKLearnTransformWrapper.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.SKLearnTransformWrapper.fit" title="Link to this definition"></a></dt>
 <dd><p>Method used to fit a transform to a given input data.</p>
-<section id="id47">
-<h3>Parameters<a class="headerlink" href="#id47" title="Link to this heading"></a></h3>
+<section id="id52">
+<h4>Parameters<a class="headerlink" href="#id52" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data to fit the model.</p>
 </dd>
@@ -1325,8 +1344,8 @@ directly the saved model. Defaults to True to avoid inplace modifications.</p>
 <dt class="sig sig-object py" id="gojo.core.transform.SKLearnTransformWrapper.getParameters">
 <span class="sig-name descname"><span class="pre">getParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/core/transform.html#SKLearnTransformWrapper.getParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.SKLearnTransformWrapper.getParameters" title="Link to this definition"></a></dt>
 <dd><p>Method that must return the transform parameters.</p>
-<section id="id48">
-<h3>Returns<a class="headerlink" href="#id48" title="Link to this heading"></a></h3>
+<section id="id53">
+<h4>Returns<a class="headerlink" href="#id53" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>model_parameters<span class="classifier">dict</span></dt><dd><p>Model parameters.</p>
 </dd>
@@ -1344,15 +1363,15 @@ directly the saved model. Defaults to True to avoid inplace modifications.</p>
 <dt class="sig sig-object py" id="gojo.core.transform.SKLearnTransformWrapper.transform">
 <span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gojo/core/transform.html#SKLearnTransformWrapper.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.SKLearnTransformWrapper.transform" title="Link to this definition"></a></dt>
 <dd><p>Method used to apply the transformations.</p>
-<section id="id49">
-<h3>Parameters<a class="headerlink" href="#id49" title="Link to this heading"></a></h3>
+<section id="id54">
+<h4>Parameters<a class="headerlink" href="#id54" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data to be transformed.</p>
 </dd>
 </dl>
 </section>
-<section id="id50">
-<h3>Returns<a class="headerlink" href="#id50" title="Link to this heading"></a></h3>
+<section id="id55">
+<h4>Returns<a class="headerlink" href="#id55" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>X_trans<span class="classifier">np.ndarray</span></dt><dd><p>Transformer data.</p>
 </dd>
@@ -1364,17 +1383,86 @@ directly the saved model. Defaults to True to avoid inplace modifications.</p>
 <dt class="sig sig-object py" id="gojo.core.transform.SKLearnTransformWrapper.updateParameters">
 <span class="sig-name descname"><span class="pre">updateParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/core/transform.html#SKLearnTransformWrapper.updateParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.SKLearnTransformWrapper.updateParameters" title="Link to this definition"></a></dt>
 <dd><p>Method used to update the inner transform parameters.</p>
-<p>IMPORTANT NOTE: Transform parameters should be updated by calling the update() method
-from the model superclass.</p>
+<p>IMPORTANT NOTE: Transform parameters should be updated by calling the <code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code> method from the
+superclass <a class="reference internal" href="#gojo.core.transform.Transform" title="gojo.core.transform.Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.core.transform.Transform</span></code></a>.</p>
 </dd></dl>
 
+</section>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gojo.core.transform.Transform">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.core.transform.</span></span><span class="sig-name descname"><span class="pre">Transform</span></span><a class="reference internal" href="_modules/gojo/core/transform.html#Transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.Transform" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Description</p>
+<p>Base interface for applying transformations to the input data in the <a class="reference internal" href="#module-gojo.core.loops" title="gojo.core.loops"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.core.loops</span></code></a> subroutines.
+Internally, the training data will be passed to the <a class="reference internal" href="#gojo.core.transform.Transform.fit" title="gojo.core.transform.Transform.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> method for adjusting the transformation to the
+training dataset statistics, and subsequently, the transformation will be applied to the training and test data
+by means of the <a class="reference internal" href="#gojo.core.transform.Transform.transform" title="gojo.core.transform.Transform.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">transform()</span></code></a>.</p>
+<p>Subclasses must define the following methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>fit()</dt><dd><p>Method used to fit a transform to a given input data.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>transform()</dt><dd><p>Method used to perform the transformations to the input data.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>reset()</dt><dd><p>Method used to reset the fitted transform</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>copy()</dt><dd><p>Method used to make a copy of the transform.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>getParameters()</dt><dd><p>Method that must return the transform parameters.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>updateParameters()</dt><dd><p>Method used to update the transform parameters.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>This abstract class provides the following properties:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>is_fitted</dt><dd><p>Indicates whether the transformation has been fitted by calling the <a class="reference internal" href="#gojo.core.transform.Transform.fit" title="gojo.core.transform.Transform.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> method.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>And the following methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>update()</dt><dd><p>Method used to update the transform parameters.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>fitted()</dt><dd><p>Method called (usually internally) to indicate that a given transformation have been fitted.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>resetFit()</dt><dd><p>Method used to reset a fitted transformation (usually called internally).</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="gojo.core.transform.Transform.copy">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/core/transform.html#Transform.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.Transform.copy" title="Link to this definition"></a></dt>
@@ -1385,8 +1473,8 @@ from the model superclass.</p>
 <dt class="sig sig-object py" id="gojo.core.transform.Transform.fit">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/core/transform.html#Transform.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.Transform.fit" title="Link to this definition"></a></dt>
 <dd><p>Method used to fit a transform to a given input data.</p>
-<section id="id51">
-<h3>Parameters<a class="headerlink" href="#id51" title="Link to this heading"></a></h3>
+<section id="id56">
+<h3>Parameters<a class="headerlink" href="#id56" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data to fit the transformation.</p>
 </dd>
@@ -1406,8 +1494,8 @@ from the model superclass.</p>
 <dt class="sig sig-object py" id="gojo.core.transform.Transform.getParameters">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/core/transform.html#Transform.getParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.Transform.getParameters" title="Link to this definition"></a></dt>
 <dd><p>Method that must return the transform parameters.</p>
-<section id="id52">
-<h3>Returns<a class="headerlink" href="#id52" title="Link to this heading"></a></h3>
+<section id="id57">
+<h3>Returns<a class="headerlink" href="#id57" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>model_parameters<span class="classifier">dict</span></dt><dd><p>Model parameters.</p>
 </dd>
@@ -1418,9 +1506,9 @@ from the model superclass.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="gojo.core.transform.Transform.is_fitted">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_fitted</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#gojo.core.transform.Transform.is_fitted" title="Link to this definition"></a></dt>
-<dd><p>Indicates whether the transformation has been fitted by calling the ‘fit()’ method.</p>
-<section id="id53">
-<h3>Returns<a class="headerlink" href="#id53" title="Link to this heading"></a></h3>
+<dd><p>Indicates whether the transformation has been fitted by calling the <a class="reference internal" href="#gojo.core.transform.Transform.fit" title="gojo.core.transform.Transform.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> method.</p>
+<section id="id58">
+<h3>Returns<a class="headerlink" href="#id58" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>model_fitted<span class="classifier">bool</span></dt><dd><p>Returns True if the model was fitted.</p>
 </dd>
@@ -1444,8 +1532,8 @@ from the model superclass.</p>
 <dt class="sig sig-object py" id="gojo.core.transform.Transform.transform">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gojo/core/transform.html#Transform.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.core.transform.Transform.transform" title="Link to this definition"></a></dt>
 <dd><p>Method used to perform the transformations to the input data.</p>
-<section id="id54">
-<h3>Parameters<a class="headerlink" href="#id54" title="Link to this heading"></a></h3>
+<section id="id59">
+<h3>Parameters<a class="headerlink" href="#id59" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data used to perform the transformations.</p>
 </dd>

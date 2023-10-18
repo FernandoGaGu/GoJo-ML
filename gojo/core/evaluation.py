@@ -14,7 +14,7 @@ from ..util.validation import (
     checkInputType,
     checkCallable
 )
-from ..util.io import createObjectRepresentation
+from ..util.io import _createObjectRepresentation
 from ..exception import (
     IncorrectNumberOfClasses,
     MissingArrayDimensions
@@ -91,7 +91,7 @@ class Metric(object):
         else:
             parameters['multiclass'] = self.multiclass
 
-        return createObjectRepresentation('Metric', **parameters)
+        return _createObjectRepresentation('Metric', **parameters)
 
     def __str__(self):
         return self.__repr__()

@@ -40,10 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../gojo.html">gojo package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.core.html">gojo.core package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.deepl.html">gojo.deepl package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.plotting.html">gojo.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.util.html">gojo.util package</a></li>
 </ul>
 
         </div>
@@ -99,8 +99,18 @@
 <div class="viewcode-block" id="saveJson">
 <a class="viewcode-back" href="../../../gojo.util.html#gojo.util.io.saveJson">[docs]</a>
 <span class="k">def</span> <span class="nf">saveJson</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Saves the input dictionary into a json file. IMPORTANT NOTE: numpy types must be previously converted to</span>
-<span class="sd">    Python types. &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Saves the input dictionary into a json file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : dict</span>
+<span class="sd">        Dictionary to be exported to a json file.</span>
+
+<span class="sd">    file : str</span>
+<span class="sd">        Output json file</span>
+
+<span class="sd">    IMPORTANT NOTE: numpy types must be previously converted to Python types.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">checkMultiInputTypes</span><span class="p">(</span>
         <span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="p">[</span><span class="nb">dict</span><span class="p">]),</span>
         <span class="p">(</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]))</span>
@@ -114,7 +124,18 @@
 <div class="viewcode-block" id="loadJson">
 <a class="viewcode-back" href="../../../gojo.util.html#gojo.util.io.loadJson">[docs]</a>
 <span class="k">def</span> <span class="nf">loadJson</span><span class="p">(</span><span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Load a json file. &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Load a json file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    file : str</span>
+<span class="sd">        Json file to be loaded.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    content : dict</span>
+<span class="sd">        Json file content.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">])</span>
     <span class="n">fileExists</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>   <span class="c1"># the file must previously exist</span>
 
@@ -235,7 +256,7 @@
 <div class="viewcode-block" id="load">
 <a class="viewcode-back" href="../../../gojo.util.html#gojo.util.io.load">[docs]</a>
 <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">_DEFAULT_BACKEND</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Function used to load serialized Python objects (see &#39;gojo.util.io.serialize&#39;).</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Function used to load serialized Python objects (see :py:mod:`gojo.util.io.serialize`).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -278,6 +299,15 @@
 
 
 
+<div class="viewcode-block" id="pprint">
+<a class="viewcode-back" href="../../../gojo.util.html#gojo.util.io.pprint">[docs]</a>
+<span class="k">def</span> <span class="nf">pprint</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Print function for the :py:mod:`gojo` module. &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+
+
 <span class="k">def</span> <span class="nf">_loadJoblib</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Load a joblib serialized object. &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -307,17 +337,7 @@
     <span class="k">return</span> <span class="n">obj</span>
 
 
-<div class="viewcode-block" id="pprint">
-<a class="viewcode-back" href="../../../gojo.util.html#gojo.util.io.pprint">[docs]</a>
-<span class="k">def</span> <span class="nf">pprint</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="createObjectRepresentation">
-<a class="viewcode-back" href="../../../gojo.util.html#gojo.util.io.createObjectRepresentation">[docs]</a>
-<span class="k">def</span> <span class="nf">createObjectRepresentation</span><span class="p">(</span><span class="n">class_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">parameters</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_createObjectRepresentation</span><span class="p">(</span><span class="n">class_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">parameters</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Function used to create object representation for the __repr__() method. &quot;&quot;&quot;</span>
     <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;class_name&#39;</span><span class="p">,</span> <span class="n">class_name</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">])</span>
 
@@ -330,8 +350,7 @@
         <span class="n">representation</span> <span class="o">=</span> <span class="n">representation</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
         <span class="n">representation</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">)&#39;</span>
 
-    <span class="k">return</span> <span class="n">representation</span></div>
-
+    <span class="k">return</span> <span class="n">representation</span>
 
 
 </pre></div>

@@ -24,8 +24,18 @@ _DEFAULT_BACKEND = 'joblib_gzip'
 
 
 def saveJson(data: dict, file: str):
-    """ Saves the input dictionary into a json file. IMPORTANT NOTE: numpy types must be previously converted to
-    Python types. """
+    """ Saves the input dictionary into a json file.
+
+    Parameters
+    ----------
+    data : dict
+        Dictionary to be exported to a json file.
+
+    file : str
+        Output json file
+
+    IMPORTANT NOTE: numpy types must be previously converted to Python types.
+    """
     checkMultiInputTypes(
         ('data', data, [dict]),
         ('file', file, [str]))
@@ -36,7 +46,18 @@ def saveJson(data: dict, file: str):
 
 
 def loadJson(file: str) -> dict:
-    """ Load a json file. """
+    """ Load a json file.
+
+    Parameters
+    ----------
+    file : str
+        Json file to be loaded.
+
+    Returns
+    -------
+    content : dict
+        Json file content.
+    """
     checkInputType('file', file, [str])
     fileExists(file, True)   # the file must previously exist
 
@@ -151,7 +172,7 @@ def _gzip(in_path: str) -> str:
 
 
 def load(file: str, backend: str = _DEFAULT_BACKEND) -> object:
-    """ Function used to load serialized Python objects (see 'gojo.util.io.serialize').
+    """ Function used to load serialized Python objects (see :py:mod:`gojo.util.io.serialize`).
 
     Parameters
     ----------
@@ -193,6 +214,12 @@ def load(file: str, backend: str = _DEFAULT_BACKEND) -> object:
     return obj
 
 
+def pprint(*args, verbose: bool = True):
+    """ Print function for the :py:mod:`gojo` module. """
+    if verbose:
+        print(*args)
+
+
 def _loadJoblib(path: str) -> object:
     """ Load a joblib serialized object. """
     return joblib.load(path)
@@ -222,12 +249,7 @@ def _loadPickleGzip(path: str) -> object:
     return obj
 
 
-def pprint(*args, verbose: bool = True):
-    if verbose:
-        print(*args)
-
-
-def createObjectRepresentation(class_name: str, **parameters) -> str:
+def _createObjectRepresentation(class_name: str, **parameters) -> str:
     """ Function used to create object representation for the __repr__() method. """
     checkInputType('class_name', class_name, [str])
 
