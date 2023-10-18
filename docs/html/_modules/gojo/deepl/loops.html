@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gojo.deepl.loops &mdash; gojo - Documentation 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            gojo - Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.core.html">gojo.core package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.deepl.html">gojo.deepl package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.plotting.html">gojo.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.util.html">gojo.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gojo - Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gojo.deepl.loops</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gojo.deepl.loops</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Module containing the code typically used to train and evaluate Deep Learning models</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Fernando García Gutiérrez</span>
+<span class="c1"># Email: fgarcia@fundacioace.org</span>
+<span class="c1">#</span>
+<span class="c1"># STATUS: completed, functional, and documented.</span>
+<span class="c1">#</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Iterable</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span> <span class="nn">.callback</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Callback</span><span class="p">,</span>
+    <span class="n">EarlyStopping</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..core.evaluation</span> <span class="kn">import</span> <span class="n">Metric</span>
+<span class="kn">from</span> <span class="nn">..exception</span> <span class="kn">import</span> <span class="n">DataLoaderError</span>
+<span class="kn">from</span> <span class="nn">..util.validation</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">checkMultiInputTypes</span><span class="p">,</span>
+    <span class="n">checkInputType</span><span class="p">,</span>
+    <span class="n">checkCallable</span><span class="p">,</span>
+    <span class="n">checkIterable</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..util.io</span> <span class="kn">import</span> <span class="n">pprint</span>
+
+
+<span class="k">def</span> <span class="nf">_processInputParams</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Function used to check and process the input data. For the model this implies pass the model to</span>
+<span class="sd">     the correct device. Regarding the metrics, they are initialized to an empty list if the input parameter</span>
+<span class="sd">     is None, otherwise, this function checks if there are duplicated metrics. &quot;&quot;&quot;</span>
+    <span class="n">checkMultiInputTypes</span><span class="p">(</span>
+        <span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;device&#39;</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;metrics&#39;</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]))</span>
+
+    <span class="c1"># convert model to the input device</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="c1"># check provided metrics for &#39;loss&#39; or &#39;loss_std&#39; functions</span>
+    <span class="k">if</span> <span class="n">metrics</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># if not metrics were provided create the default metric (avg/std loss function)</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># check input metrics</span>
+    <span class="n">unique_metric_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">metric</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metrics</span><span class="p">):</span>
+        <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;metrics[</span><span class="si">%d</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="p">[</span><span class="n">Metric</span><span class="p">])</span>   <span class="c1"># check for gojo.core.evaluation.Metric instances</span>
+        <span class="n">unique_metric_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># check duplicated metric names</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">unique_metric_names</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_metric_names</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s1">&#39;Duplicated metric names detected. Input metric names: </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">unique_metric_names</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span>
+
+
+<div class="viewcode-block" id="iterSupervisedEpoch">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.loops.iterSupervisedEpoch">[docs]</a>
+<span class="k">def</span> <span class="nf">iterSupervisedEpoch</span><span class="p">(</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+        <span class="n">dataloader</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="p">,</span>
+        <span class="n">loss_fn</span><span class="p">:</span> <span class="nb">callable</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">metrics</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Basic function applied to supervised problems that executes the code necessary to perform an epoch.</span>
+
+<span class="sd">    This function will return a tuple where the first element correspond to dictionary with the loss-related</span>
+<span class="sd">    parameters, and the second element to a dictionary with the calculated metrics.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import deepl</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import core</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # ... previous dataloader creation and model definition</span>
+<span class="sd">    &gt;&gt;&gt; history = deepl.fitNeuralNetwork(</span>
+<span class="sd">    &gt;&gt;&gt;     iter_fn=deepl.iterSupervisedEpoch,    # function used to perform an epoch</span>
+<span class="sd">    &gt;&gt;&gt;     model=model,</span>
+<span class="sd">    &gt;&gt;&gt;     train_dl=train_dl,</span>
+<span class="sd">    &gt;&gt;&gt;     valid_dl=valid_dl,</span>
+<span class="sd">    &gt;&gt;&gt;     n_epochs=50,</span>
+<span class="sd">    &gt;&gt;&gt;     loss_fn=torch.nn.BCELoss(),</span>
+<span class="sd">    &gt;&gt;&gt;     optimizer_class=torch.optim.Adam,</span>
+<span class="sd">    &gt;&gt;&gt;     optimizer_params={&#39;lr&#39;: 0.001},</span>
+<span class="sd">    &gt;&gt;&gt;     device=&#39;cuda&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     metrics=core.getDefaultMetrics(&#39;binary_classification&#39;, bin_threshold=0.5)</span>
+<span class="sd">    &gt;&gt;&gt; )</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+
+<span class="sd">    NOTE: the input dataloader is required to return at least two arguments where the first parameter</span>
+<span class="sd">    must correspond to the predictor variables and the second parameter to the target variable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># check input dataloader</span>
+    <span class="n">checkIterable</span><span class="p">(</span><span class="s1">&#39;dataloader&#39;</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">)</span>
+
+    <span class="c1"># iterate over batches</span>
+    <span class="n">loss_values</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">y_preds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">y_trues</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">batch</span><span class="p">,</span> <span class="n">dlargs</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dlargs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DataLoaderError</span><span class="p">(</span>
+                <span class="s1">&#39;The minimum number of arguments returned by a dataloader must be 2 where the first element will &#39;</span>
+                <span class="s1">&#39;correspond to the input data (the Xs) and the second to the target to be approximated (the Ys). &#39;</span>
+                <span class="s1">&#39;The rest of the returned arguments will be passed in the order returned to the model.&#39;</span><span class="p">)</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="n">dlargs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">dlargs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">var_args</span> <span class="o">=</span> <span class="n">dlargs</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
+
+        <span class="c1"># TODO. Loss function calculation can be generalized through a Loss interface.</span>
+        <span class="c1"># perform model inference (training/testing)</span>
+        <span class="k">if</span> <span class="n">training</span><span class="p">:</span>
+            <span class="c1"># training loop (calculate gradients and apply backpropagation)</span>
+            <span class="n">y_hat</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">*</span><span class="n">var_args</span><span class="p">)</span>
+            <span class="c1"># evaluate loss function</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>    <span class="c1"># in: (input, target)</span>
+            <span class="c1"># apply backpropagation</span>
+            <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+            <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+            <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># inference model (no gradients will be computed)</span>
+            <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                <span class="n">y_hat</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">*</span><span class="n">var_args</span><span class="p">)</span>
+                <span class="c1"># evaluate loss function</span>
+                <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>    <span class="c1"># in: (input, target)</span>
+
+        <span class="c1"># gather model predictions and true labels</span>
+        <span class="n">y_pred_np</span> <span class="o">=</span> <span class="n">y_hat</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">y_true_np</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="c1"># save model predictions and true labels</span>
+        <span class="n">y_preds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_pred_np</span><span class="p">)</span>
+        <span class="n">y_trues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_true_np</span><span class="p">)</span>
+
+        <span class="c1"># save loss value</span>
+        <span class="n">loss_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+    <span class="c1"># calculate metrics (if provided)</span>
+    <span class="n">metric_stats</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+        <span class="n">metric_stats</span><span class="p">[</span><span class="n">metric</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">metric</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">y_trues</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">y_preds</span><span class="p">))</span>
+
+    <span class="c1"># calculate loss values</span>
+    <span class="n">loss_stats</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;loss (mean)&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">loss_values</span><span class="p">),</span>
+        <span class="s1">&#39;loss (std)&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">loss_values</span><span class="p">)}</span>
+
+    <span class="k">return</span> <span class="n">loss_stats</span><span class="p">,</span> <span class="n">metric_stats</span></div>
+
+
+
+<div class="viewcode-block" id="fitNeuralNetwork">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.loops.fitNeuralNetwork">[docs]</a>
+<span class="k">def</span> <span class="nf">fitNeuralNetwork</span><span class="p">(</span>
+        <span class="n">iter_fn</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+        <span class="n">train_dl</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span>
+        <span class="n">valid_dl</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span>
+        <span class="n">n_epochs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">loss_fn</span><span class="p">:</span> <span class="nb">callable</span><span class="p">,</span>
+        <span class="n">optimizer_class</span><span class="p">,</span>
+        <span class="n">optimizer_params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">metrics</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">callbacks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Callback</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main function of the :func:`gojo.deepl` module. This function is used to fit a pytorch model using the</span>
+<span class="sd">    provided &quot;iteration function&quot; (parameter `iter_fn`) that defined how to run an epoch.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    iter_fn : callable</span>
+<span class="sd">        Function used to execute an epoch during model training. Currently available are:</span>
+
+<span class="sd">            - :func:`gojo.deepl.iterSupervisedEpoch`</span>
+<span class="sd">                Used for typical supervised approaches.</span>
+
+<span class="sd">    model : torch.nn.Module</span>
+<span class="sd">        Pytorch model to be trained.</span>
+
+<span class="sd">    train_dl : Iterable</span>
+<span class="sd">        Train dataloader (see `torch.utils.data.DataLoader</span>
+<span class="sd">        class &lt;https://pytorch.org/tutorials/beginner/basics/data_tutorial.html&gt;`_).</span>
+
+<span class="sd">    valid_dl : Iterable</span>
+<span class="sd">        Validation dataloader (see `torch.utils.data.DataLoader</span>
+<span class="sd">        class &lt;https://pytorch.org/tutorials/beginner/basics/data_tutorial.html&gt;`_).</span>
+
+<span class="sd">    n_epochs : int</span>
+<span class="sd">        Maximum number of epochs for training a model.</span>
+
+<span class="sd">    loss_fn : callable</span>
+<span class="sd">        Loss function used to fit the model. This loss function must follow the pytorch guideliness.</span>
+
+<span class="sd">        IMPORTANTE: be carreful with this function does not break the Pytorch gradient calculation.</span>
+
+<span class="sd">    optimizer_class : type</span>
+<span class="sd">        Optimizer class used to adjust model weights (see torch `module &lt;https://pytorch.org/docs/stable/optim.html&gt;`_).</span>
+
+<span class="sd">    optimizer_params : dict, default=None</span>
+<span class="sd">        Parameters used to initialize the optimizer provided using `optimizer_params`.</span>
+
+<span class="sd">    device : str, default=None</span>
+<span class="sd">        Device used to optimize the input model. Commonly devices are: &#39;cpu&#39;, &#39;cuda&#39;, &#39;mps&#39;.</span>
+
+<span class="sd">    verbose : int, default=1</span>
+<span class="sd">        Verbosity level.</span>
+
+<span class="sd">    metrics : list, defualt=None</span>
+<span class="sd">        Metrics to compute in each epoch during model training across the train and validation datasets.</span>
+
+<span class="sd">    callbacks : List[Callback], default=None</span>
+<span class="sd">        Callbacks used to modify the training loop (for more information see :py:mod:`gojo.deepl.callback`)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fitting_history : dict</span>
+<span class="sd">        History with the model metrics (if provided) and loss for each epoch for the training (&#39;train&#39; key)</span>
+<span class="sd">        and validation (&#39;validation&#39; key) datasets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_checkValidReturnedIteration</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="nb">callable</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># check that the returned objects correspond to a two-element tuple</span>
+        <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;Output from function &quot;</span><span class="si">%s</span><span class="s1">&quot; (step &quot;</span><span class="si">%s</span><span class="s1">&quot;)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">step</span><span class="p">),</span> <span class="n">output</span><span class="p">,</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span>
+                <span class="s1">&#39;Returned tuple from &quot;</span><span class="si">%s</span><span class="s1">&quot; (step &quot;</span><span class="si">%s</span><span class="s1">&quot;) must be a two-element tuple. Number of elements: </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                    <span class="n">func</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">output</span><span class="p">):</span>
+            <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;output[</span><span class="si">%d</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="p">[</span><span class="nb">dict</span><span class="p">])</span>
+
+    <span class="n">_AVAILABLE_DEVICES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> <span class="s1">&#39;mps&#39;</span><span class="p">,</span> <span class="s1">&#39;cpu&#39;</span><span class="p">]</span>
+    <span class="n">checkCallable</span><span class="p">(</span><span class="s1">&#39;gojo.deepl.loops.fitNeuralNetwork(loss_fn)&#39;</span><span class="p">,</span> <span class="n">loss_fn</span><span class="p">)</span>
+    <span class="n">checkIterable</span><span class="p">(</span><span class="s1">&#39;gojo.deepl.loops.fitNeuralNetwork(train_dl)&#39;</span><span class="p">,</span> <span class="n">train_dl</span><span class="p">)</span>
+    <span class="n">checkIterable</span><span class="p">(</span><span class="s1">&#39;gojo.deepl.loops.fitNeuralNetwork(valid_dl)&#39;</span><span class="p">,</span> <span class="n">valid_dl</span><span class="p">)</span>
+    <span class="n">checkMultiInputTypes</span><span class="p">(</span>
+        <span class="p">(</span><span class="s1">&#39;n_epochs&#39;</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;optimizer_params&#39;</span><span class="p">,</span> <span class="n">optimizer_params</span><span class="p">,</span> <span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;device&#39;</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;metrics&#39;</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;callbacks&#39;</span><span class="p">,</span> <span class="n">callbacks</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]))</span>
+
+    <span class="c1"># check input iteration function</span>
+    <span class="k">if</span> <span class="n">iter_fn</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">_AVAILABLE_ITERATION_FUNCTIONS</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s1">&#39;Unrecognized &quot;iter_fn&quot; argument. Available functions are: </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">getAvailableIterationFunctions</span><span class="p">())</span>
+
+    <span class="c1"># select default device (order: cuda, mps, cpu)</span>
+    <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;cuda&#39;</span>
+        <span class="k">elif</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_built</span><span class="p">():</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;mps&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;cpu&#39;</span>
+
+    <span class="c1"># check the selected device</span>
+    <span class="k">if</span> <span class="n">device</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_AVAILABLE_DEVICES</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Unrecognized device &quot;</span><span class="si">%s</span><span class="s1">&quot;. Available devices are: </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">_AVAILABLE_DEVICES</span><span class="p">))</span>
+
+    <span class="c1"># verbose parameters</span>
+    <span class="n">verbose</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span> <span class="k">if</span> <span class="n">verbose</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">verbose</span>   <span class="c1"># negative values indicate activate all</span>
+
+    <span class="n">show_pbar</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">verbose</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">show_pbar</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># process input parameters</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="n">_processInputParams</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">)</span>
+
+    <span class="c1"># initialize the optimizer</span>
+    <span class="n">optimizer_obj</span> <span class="o">=</span> <span class="n">optimizer_class</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="o">**</span><span class="n">optimizer_params</span><span class="p">)</span>
+
+    <span class="c1"># perform the training loop</span>
+    <span class="n">train_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">valid_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">train_loss</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">valid_loss</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Training model...&#39;</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">show_pbar</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Epoch (</span><span class="si">%d</span><span class="s1">) ============================================ &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="c1"># -- training step -&gt; (loss_stats: dict, metric_stats: dict)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+        <span class="n">train_out</span> <span class="o">=</span> <span class="n">iter_fn</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">dataloader</span><span class="o">=</span><span class="n">train_dl</span><span class="p">,</span>
+            <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer_obj</span><span class="p">,</span>
+            <span class="n">loss_fn</span><span class="o">=</span><span class="n">loss_fn</span><span class="p">,</span>
+            <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+            <span class="n">training</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># check returned function values</span>
+        <span class="n">_checkValidReturnedIteration</span><span class="p">(</span><span class="n">train_out</span><span class="p">,</span> <span class="n">iter_fn</span><span class="p">,</span> <span class="s1">&#39;training&#39;</span><span class="p">)</span>
+
+        <span class="c1"># separate loss/metric information</span>
+        <span class="n">epoch_train_loss</span><span class="p">,</span> <span class="n">epoch_train_metrics</span> <span class="o">=</span> <span class="n">train_out</span>
+
+        <span class="c1"># save epoch stats</span>
+        <span class="n">train_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">epoch_train_loss</span><span class="p">)</span>
+        <span class="n">train_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">epoch_train_metrics</span><span class="p">)</span>
+
+        <span class="c1"># display training statistics</span>
+        <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">info_dict</span> <span class="ow">in</span> <span class="n">train_out</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">info_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> (train) </span><span class="si">%s</span><span class="s1">: </span><span class="si">%.5f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
+            <span class="n">pprint</span><span class="p">()</span>
+
+        <span class="c1"># -- validation step -&gt; (loss_stats: dict, metric_stats: dict)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="n">valid_out</span> <span class="o">=</span> <span class="n">iter_fn</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">dataloader</span><span class="o">=</span><span class="n">valid_dl</span><span class="p">,</span>
+            <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer_obj</span><span class="p">,</span>
+            <span class="n">loss_fn</span><span class="o">=</span><span class="n">loss_fn</span><span class="p">,</span>
+            <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+            <span class="n">training</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># check returned function values</span>
+        <span class="n">_checkValidReturnedIteration</span><span class="p">(</span><span class="n">valid_out</span><span class="p">,</span> <span class="n">iter_fn</span><span class="p">,</span> <span class="s1">&#39;validation&#39;</span><span class="p">)</span>
+
+        <span class="c1"># separate loss/metric information</span>
+        <span class="n">epoch_valid_loss</span><span class="p">,</span> <span class="n">epoch_valid_metrics</span> <span class="o">=</span> <span class="n">valid_out</span>
+
+        <span class="c1"># save epoch stats</span>
+        <span class="n">valid_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">epoch_valid_loss</span><span class="p">)</span>
+        <span class="n">valid_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">epoch_valid_metrics</span><span class="p">)</span>
+
+        <span class="c1"># display validation statistics</span>
+        <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">info_dict</span> <span class="ow">in</span> <span class="n">valid_out</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">info_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> (valid) </span><span class="si">%s</span><span class="s1">: </span><span class="si">%.5f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
+            <span class="n">pprint</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">callbacks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">commands_to_exec</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">callback</span><span class="p">(</span>
+                    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+                    <span class="n">train_metrics</span><span class="o">=</span><span class="n">train_metrics</span><span class="p">,</span>
+                    <span class="n">valid_metrics</span><span class="o">=</span><span class="n">valid_metrics</span><span class="p">,</span>
+                    <span class="n">train_loss</span><span class="o">=</span><span class="n">train_loss</span><span class="p">,</span>
+                    <span class="n">valid_loss</span><span class="o">=</span><span class="n">valid_loss</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="n">callbacks</span><span class="p">]</span>
+
+            <span class="c1"># Early stopping directive</span>
+            <span class="k">if</span> <span class="n">EarlyStopping</span><span class="o">.</span><span class="n">DIRECTIVE</span> <span class="ow">in</span> <span class="n">commands_to_exec</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;!=!=!=!=!=!=!= Executing early stopping&#39;</span><span class="p">)</span>
+                <span class="k">break</span>
+
+    <span class="c1"># convert loss information to a pandas dataframe</span>
+    <span class="n">train_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">train_loss</span><span class="p">)</span>
+    <span class="n">valid_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">valid_loss</span><span class="p">)</span>
+
+    <span class="c1"># add metric information (if provided)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">train_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">train_info_df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">train_metrics</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">valid_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">valid_info_df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">valid_metrics</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># format output dataframes</span>
+    <span class="n">train_info_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;epoch&#39;</span><span class="p">]</span>
+    <span class="n">valid_info_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;epoch&#39;</span><span class="p">]</span>
+    <span class="n">train_info_df</span> <span class="o">=</span> <span class="n">train_info_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="n">valid_info_df</span> <span class="o">=</span> <span class="n">valid_info_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">train</span><span class="o">=</span><span class="n">train_info_df</span><span class="p">,</span>
+        <span class="n">valid</span><span class="o">=</span><span class="n">valid_info_df</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="getAvailableIterationFunctions">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.loops.getAvailableIterationFunctions">[docs]</a>
+<span class="k">def</span> <span class="nf">getAvailableIterationFunctions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Function that returns a list with all the available iteration functions used as `iter_fn` argument in</span>
+<span class="sd">    :func:`gojo.deepl.loops.fitNeuralNetwork` callings. &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">_AVAILABLE_ITERATION_FUNCTIONS</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
+
+
+<span class="n">_AVAILABLE_ITERATION_FUNCTIONS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;iterSupervisedEpoch&#39;</span><span class="p">:</span> <span class="n">iterSupervisedEpoch</span><span class="p">}</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Fernando García Gutiérrez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
