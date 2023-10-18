@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to gojo - Documentation's documentation!
+GoJo - Make Machine/Deep Learning pipelines simple
 ================================================
 
    Python library with a variety of pipeline implementations typically used to develop and evaluate Deep Learning and Machine Learning models.
