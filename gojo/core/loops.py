@@ -295,7 +295,7 @@ def evalCrossVal(
     y : np.ndarray or pd.DataFrame or pd.Series
         Target prediction variable.
 
-    model : gojo.base.Model
+    model : :class:`gojo.core.base.Model`
         Model to be trained. The input model must follow the :class:`gojo.base.Model` interfaz.
 
     cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut
@@ -514,7 +514,7 @@ def evalCrossValNestedHPO(
     y : np.ndarray or pd.DataFrame or pd.Series
         Target prediction variable.
 
-    model : gojo.base.Model
+    model : :class:`gojo.core.base.Model`
         Model to be trained. The input model must follow the :class:`gojo.base.Model` interfaz.
 
     search_space : dict

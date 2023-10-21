@@ -48,6 +48,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">gojo.plotting package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-gojo.plotting.basic">gojo.plotting.basic module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.plotting.basic.confusionMatrix"><code class="docutils literal notranslate"><span class="pre">confusionMatrix()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#gojo.plotting.basic.linePlot"><code class="docutils literal notranslate"><span class="pre">linePlot()</span></code></a></li>
 </ul>
 </li>
@@ -89,13 +90,130 @@
 <section id="module-gojo.plotting.basic">
 <span id="gojo-plotting-basic-module"></span><h2>gojo.plotting.basic module<a class="headerlink" href="#module-gojo.plotting.basic" title="Link to this heading"></a></h2>
 <dl class="py function">
+<dt class="sig sig-object py" id="gojo.plotting.basic.confusionMatrix">
+<span class="sig-prename descclassname"><span class="pre">gojo.plotting.basic.</span></span><span class="sig-name descname"><span class="pre">confusionMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average_folds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(5,</span> <span class="pre">4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Blues'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cm_font_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">14</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xaxis_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yaxis_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_label_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_label_pad</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_tick_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_pad</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/plotting/basic.html#confusionMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.plotting.basic.confusionMatrix" title="Link to this definition"></a></dt>
+<dd><p>Function used to represent a confusion matrix from a pandas DataFrame with predictions and true values (e.g.,
+returned by methods <a class="reference internal" href="gojo.core.html#gojo.core.report.CVReport.getTestPredictions" title="gojo.core.report.CVReport.getTestPredictions"><code class="xref py py-meth docutils literal notranslate"><span class="pre">gojo.core.report.CVReport.getTestPredictions()</span></code></a> and
+<a class="reference internal" href="gojo.core.html#gojo.core.report.CVReport.getTrainPredictions" title="gojo.core.report.CVReport.getTrainPredictions"><code class="xref py py-meth docutils literal notranslate"><span class="pre">gojo.core.report.CVReport.getTrainPredictions()</span></code></a>).</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<dl>
+<dt>df<span class="classifier">pd.DataFrame</span></dt><dd><p>Pandas DataFrame with the model predictions.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">    Out[0]</span>
+<span class="go">                            pred_labels  true_labels</span>
+<span class="go">    n_fold indices</span>
+<span class="go">    0      2                0.0          0.0</span>
+<span class="go">           6                0.0          0.0</span>
+<span class="go">           11               0.0          0.0</span>
+<span class="go">           12               0.0          0.0</span>
+<span class="go">           13               0.0          0.0</span>
+<span class="go">    ...                     ...          ...</span>
+<span class="go">    4      987              0.0          0.0</span>
+<span class="go">           992              0.0          0.0</span>
+<span class="go">           1011             0.0          0.0</span>
+<span class="go">           1016             0.0          0.0</span>
+<span class="go">           1018             0.0          0.0</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>[1020 rows x 2 columns]</p>
+</div></blockquote>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</dd>
+<dt>y_pred<span class="classifier">str</span></dt><dd><p>Variable indicating which values are predicted by the model.</p>
+</dd>
+<dt>y_true<span class="classifier">str</span></dt><dd><p>Variable indicating which values are the ground truth.</p>
+</dd>
+<dt>average_folds<span class="classifier">str, default=None</span></dt><dd><p>Variable that stratifies the predictions (e.g.n at the folds level) to represent the mean and standard deviation
+values of the confusion matrix.</p>
+</dd>
+<dt>y_pred_threshold<span class="classifier">float or None, default=0.5</span></dt><dd><p>Threshold to be used to binarize model predictions.</p>
+</dd>
+<dt>normalize<span class="classifier">bool, default=True</span></dt><dd><p>Parameter indicating whether to express the normalized confusion matrix (as a percentage).</p>
+</dd>
+<dt>labels<span class="classifier">list, default=None</span></dt><dd><p>Labels used to identify the classes. By default, they will be C0, C1, …, CX.</p>
+</dd>
+<dt>figsize<span class="classifier">tuple, default=(5, 4)</span></dt><dd><p>Figure size.</p>
+</dd>
+<dt>dpi<span class="classifier">int, default=100</span></dt><dd><p>Figure dpi.</p>
+</dd>
+<dt>cmap<span class="classifier">str, default=’Blues’</span></dt><dd><p>Colormap.</p>
+</dd>
+<dt>alpha<span class="classifier">float, default=0.7</span></dt><dd><p>Plot opacity.</p>
+</dd>
+<dt>cm_font_size<span class="classifier">int, default=14</span></dt><dd><p>Confusion matriz font size.</p>
+</dd>
+<dt>xaxis_label<span class="classifier">str, default=None</span></dt><dd><p>X-axis label.</p>
+</dd>
+<dt>yaxis_label<span class="classifier">str, default=None</span></dt><dd><p>Y-axis label.</p>
+</dd>
+<dt>axis_label_size<span class="classifier">int, default=15</span></dt><dd><p>XY-axis label size.</p>
+</dd>
+<dt>axis_label_pad<span class="classifier">int, default=15</span></dt><dd><p>XY-axis pad.</p>
+</dd>
+<dt>axis_tick_size<span class="classifier">int, default=12</span></dt><dd><p>XY-ticks size.</p>
+</dd>
+<dt>title<span class="classifier">str, default=’’</span></dt><dd><p>Title.</p>
+</dd>
+<dt>title_size<span class="classifier">int, default=15</span></dt><dd><p>Title size.</p>
+</dd>
+<dt>title_pad<span class="classifier">int, default=15</span></dt><dd><p>Title pad.</p>
+</dd>
+<dt>save<span class="classifier">str, default=None</span></dt><dd><p>Parameter indicating whether to save the generated plot. If None (default) the plot will not be
+saved.</p>
+</dd>
+<dt>save_kw<span class="classifier">dict, default=None</span></dt><dd><p>Optional parameters for saving the plot. This parameter will not have effect if the
+save parameter was set as None.</p>
+</dd>
+<dt>show<span class="classifier">bool, default=True</span></dt><dd><p>Parameter indicating whether to save the generated plot.</p>
+</dd>
+</dl>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">core</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">plotting</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># ... data loading and model definition</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># perform the cross validation</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cv_report</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">evalCrossVal</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">cv</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">getCrossValObj</span><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># get the model predictions on the test data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">predictions</span> <span class="o">=</span> <span class="n">cv_report</span><span class="o">.</span><span class="n">getTestPredictions</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># plot the confusion matrix</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plotting</span><span class="o">.</span><span class="n">confusionMatrix</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">df</span><span class="o">=</span><span class="n">predictions</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">y_pred</span><span class="o">=</span><span class="s1">&#39;pred_labels&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">y_true</span><span class="o">=</span><span class="s1">&#39;true_labels&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">average_folds</span><span class="o">=</span><span class="s1">&#39;n_fold&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Class 1&#39;</span><span class="p">,</span> <span class="s1">&#39;Class 2&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Confusion matrix&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="gojo.plotting.basic.linePlot">
 <span class="sig-prename descclassname"><span class="pre">gojo.plotting.basic.</span></span><span class="sig-name descname"><span class="pre">linePlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">dfs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err_alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'upper</span> <span class="pre">right'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">13</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">13</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(6,</span> <span class="pre">3.5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ggplot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/plotting/basic.html#linePlot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.plotting.basic.linePlot" title="Link to this definition"></a></dt>
 <dd><p>Line plot function.</p>
-<section id="parameters">
-<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<section id="id1">
+<h3>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt><a href="#id1"><span class="problematic" id="id2">*</span></a>dfs<span class="classifier">pd.DataFrame</span></dt><dd><p>Input dataframes with the data to be represented.</p>
+<dt><a href="#id2"><span class="problematic" id="id3">*</span></a>dfs<span class="classifier">pd.DataFrame</span></dt><dd><p>Input dataframes with the data to be represented.</p>
 </dd>
 <dt>x<span class="classifier">str</span></dt><dd><p>X-axis variable. Must be present in the input dataframes.</p>
 </dd>
@@ -144,8 +262,8 @@ save parameter was set as None.</p>
 </dd>
 </dl>
 </section>
-<section id="examples">
-<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h3>
+<section id="id4">
+<h3>Examples<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">plotting</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># train_info, test_info are pandas dataframes returned by gojo.deepl.fitNeuralNetwork</span>

@@ -1,1 +1,5 @@
-from .basic import linePlot
+from .basic import (
+    linePlot,
+    confusionMatrix
+)
+
