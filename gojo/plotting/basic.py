@@ -463,19 +463,19 @@ def confusionMatrix(
         for _, sub_df in df.groupby(average_folds):
             cms.append(confusion_matrix(
                 y_true=sub_df[y_true].values,
-                y_pred=sub_df[y_pred].values))
+                y_pred=sub_df[y_pred].values,
+                normalize='true' if normalize else None
+            ))
     else:
         # calculate a global confusion matrix
         cms.append(confusion_matrix(
             y_true=df[y_true].values,
-            y_pred=df[y_pred].values))
+            y_pred=df[y_pred].values,
+            normalize='true' if normalize else None
+        ))
 
     # stack confusion matrices
     cms = np.stack(cms)
-
-    # normalize to percentage
-    if normalize:
-        cms = (cms / cms.sum(axis=1)[:, np.newaxis] * 100)
 
     # format confusion matrix representation
     if average_folds is None:
