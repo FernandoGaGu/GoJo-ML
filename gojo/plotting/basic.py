@@ -477,6 +477,10 @@ def confusionMatrix(
     # stack confusion matrices
     cms = np.stack(cms)
 
+    # if the values were normalized represent it as percentages
+    if normalize:
+        cms = cms * 100
+
     # format confusion matrix representation
     if average_folds is None:
         assert cms.shape[0] == 1, 'Internal error (0)'
