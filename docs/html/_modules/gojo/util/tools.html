@@ -10,11 +10,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -95,9 +95,7 @@
     <span class="n">checkInputType</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="getCrossValObj">
-<a class="viewcode-back" href="../../../gojo.util.html#gojo.util.tools.getCrossValObj">[docs]</a>
-<span class="k">def</span> <span class="nf">getCrossValObj</span><span class="p">(</span><span class="n">cv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">repeats</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stratified</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">loocv</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<div class="viewcode-block" id="getCrossValObj"><a class="viewcode-back" href="../../../gojo.util.html#gojo.util.tools.getCrossValObj">[docs]</a><span class="k">def</span> <span class="nf">getCrossValObj</span><span class="p">(</span><span class="n">cv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">repeats</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stratified</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">loocv</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                    <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RepeatedKFold</span> <span class="ow">or</span> <span class="n">RepeatedStratifiedKFold</span> <span class="ow">or</span> <span class="n">LeaveOneOut</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Function used to obtain the sklearn class used to perform an evaluation of the models according</span>
 <span class="sd">    to the cross-validation or leave-one-out cross-validation (LOOCV) schemes.</span>
@@ -151,7 +149,6 @@
             <span class="k">return</span> <span class="n">RepeatedKFold</span><span class="p">(</span><span class="n">n_repeats</span><span class="o">=</span><span class="n">repeats</span><span class="p">,</span> <span class="n">n_splits</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span></div>
 
 
-
 <span class="k">def</span> <span class="nf">_applyScaling</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">scaler</span><span class="p">,</span> <span class="o">**</span><span class="n">scaler_args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; General subroutine for feature scaling. &quot;&quot;&quot;</span>
     <span class="n">col_names</span><span class="p">,</span> <span class="n">index_names</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
@@ -170,9 +167,7 @@
     <span class="k">return</span> <span class="n">scaled_data</span>
 
 
-<div class="viewcode-block" id="minMaxScaling">
-<a class="viewcode-back" href="../../../gojo.util.html#gojo.util.tools.minMaxScaling">[docs]</a>
-<span class="k">def</span> <span class="nf">minMaxScaling</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">feature_range</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="minMaxScaling"><a class="viewcode-back" href="../../../gojo.util.html#gojo.util.tools.minMaxScaling">[docs]</a><span class="k">def</span> <span class="nf">minMaxScaling</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">feature_range</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Apply a min-max scaling to the provided data range.</span>
 
 <span class="sd">    Parameters</span>
@@ -191,10 +186,7 @@
     <span class="k">return</span> <span class="n">_applyScaling</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">MinMaxScaler</span><span class="p">,</span> <span class="n">feature_range</span><span class="o">=</span><span class="n">feature_range</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="zscoresScaling">
-<a class="viewcode-back" href="../../../gojo.util.html#gojo.util.tools.zscoresScaling">[docs]</a>
-<span class="k">def</span> <span class="nf">zscoresScaling</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="zscoresScaling"><a class="viewcode-back" href="../../../gojo.util.html#gojo.util.tools.zscoresScaling">[docs]</a><span class="k">def</span> <span class="nf">zscoresScaling</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Apply a z-scores scaling to the provided data range.</span>
 
 <span class="sd">    Parameters</span>
@@ -210,19 +202,15 @@
     <span class="k">return</span> <span class="n">_applyScaling</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">)</span></div>
 
 
-
 <span class="k">def</span> <span class="nf">_none2dict</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">v</span>
 
 
-<div class="viewcode-block" id="getNumModelParams">
-<a class="viewcode-back" href="../../../gojo.util.html#gojo.util.tools.getNumModelParams">[docs]</a>
-<span class="k">def</span> <span class="nf">getNumModelParams</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="getNumModelParams"><a class="viewcode-back" href="../../../gojo.util.html#gojo.util.tools.getNumModelParams">[docs]</a><span class="k">def</span> <span class="nf">getNumModelParams</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Function that returns the number of trainable parameters from a :class:`torch.nn.Module` instance. &quot;&quot;&quot;</span>
     <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span></div>
-
 </pre></div>
 
            </div>

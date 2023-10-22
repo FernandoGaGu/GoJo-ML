@@ -10,11 +10,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -96,9 +96,7 @@
 <span class="kn">from</span> <span class="nn">..util.io</span> <span class="kn">import</span> <span class="n">pprint</span>
 
 
-<div class="viewcode-block" id="CVReport">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.report.CVReport">[docs]</a>
-<span class="k">class</span> <span class="nc">CVReport</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="CVReport"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.report.CVReport">[docs]</a><span class="k">class</span> <span class="nc">CVReport</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Object returned by the subroutines defined in :py:mod:`gojo.core.loops` functions with the results of the</span>
 <span class="sd">    cross validation. &quot;&quot;&quot;</span>
 
@@ -203,9 +201,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Return the report metadata. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span><span class="p">)</span>
 
-<div class="viewcode-block" id="CVReport.getTestPredictions">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.report.CVReport.getTestPredictions">[docs]</a>
-    <span class="k">def</span> <span class="nf">getTestPredictions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<div class="viewcode-block" id="CVReport.getTestPredictions"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.report.CVReport.getTestPredictions">[docs]</a>    <span class="k">def</span> <span class="nf">getTestPredictions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Function that returns a dataframe with the model predictions, indices, and true labels for the test set.</span>
 
 <span class="sd">        Returns</span>
@@ -215,10 +211,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convertPredDict2Df</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_preds</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="CVReport.getTrainPredictions">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.report.CVReport.getTrainPredictions">[docs]</a>
-    <span class="k">def</span> <span class="nf">getTrainPredictions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">supress_warnings</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="CVReport.getTrainPredictions"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.report.CVReport.getTrainPredictions">[docs]</a>    <span class="k">def</span> <span class="nf">getTrainPredictions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">supress_warnings</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Function that returns a dataframe with the model predictions, indices, and true labels for the train set.</span>
 
 <span class="sd">        Predictions will only be returned if they are available. In some subroutines of :py:mod:`gojo.core.loops` it</span>
@@ -237,10 +230,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convertPredDict2Df</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_preds</span><span class="p">,</span> <span class="n">supress_warnings</span><span class="o">=</span><span class="n">supress_warnings</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="CVReport.getTrainedModels">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.report.CVReport.getTrainedModels">[docs]</a>
-    <span class="k">def</span> <span class="nf">getTrainedModels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="CVReport.getTrainedModels"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.report.CVReport.getTrainedModels">[docs]</a>    <span class="k">def</span> <span class="nf">getTrainedModels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Function that returns the trained models if they have been saved in the :py:mod:`gojo.core.loops`</span>
 <span class="sd">        subroutine.</span>
 
@@ -264,10 +254,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trained_models</span></div>
 
-
-<div class="viewcode-block" id="CVReport.getFittedTransforms">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.report.CVReport.getFittedTransforms">[docs]</a>
-    <span class="k">def</span> <span class="nf">getFittedTransforms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="CVReport.getFittedTransforms"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.report.CVReport.getFittedTransforms">[docs]</a>    <span class="k">def</span> <span class="nf">getFittedTransforms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Function that returns the fitted transforms if they have been saved in the :py:mod:`gojo.core.loops`</span>
 <span class="sd">        subroutine.</span>
 
@@ -291,10 +278,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fitted_transforms</span></div>
 
-
-<div class="viewcode-block" id="CVReport.getScores">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.report.CVReport.getScores">[docs]</a>
-    <span class="k">def</span> <span class="nf">getScores</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">loocv</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">supress_warnings</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="CVReport.getScores"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.report.CVReport.getScores">[docs]</a>    <span class="k">def</span> <span class="nf">getScores</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">loocv</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">supress_warnings</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to calculate performance metrics for folds from a list of metrics (</span>
 <span class="sd">        :class:`gojo.core.evaluation.Metric` instances) provided. If the subroutine from :py:mod:`gojo.core.loops`</span>
 <span class="sd">        performed a leave-one-out cross-validation you must specify the parameter `loocv` as True.</span>
@@ -347,16 +331,12 @@
 
         <span class="k">return</span> <span class="n">scores</span></div>
 
-
-<div class="viewcode-block" id="CVReport.addMetadata">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.report.CVReport.addMetadata">[docs]</a>
-    <span class="k">def</span> <span class="nf">addMetadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="CVReport.addMetadata"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.report.CVReport.addMetadata">[docs]</a>    <span class="k">def</span> <span class="nf">addMetadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Function used to add metadata to the report. &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Overwriting metadata information for key &quot;</span><span class="si">%s</span><span class="s1">&quot;.&#39;</span> <span class="o">%</span> <span class="n">k</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span></div>
-
 
     <span class="k">def</span> <span class="nf">_calculatePerformanceMetrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predictions</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">loocv</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Subroutine used to calculate the performance metrics over a dataframe of predictions. &quot;&quot;&quot;</span>
@@ -500,7 +480,6 @@
                 <span class="s1">&#39;True labels contains a number of dimensions different from 1 o 2 (</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">true_labels</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">out_dict</span></div>
-
 </pre></div>
 
            </div>

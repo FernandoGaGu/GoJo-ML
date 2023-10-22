@@ -10,11 +10,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -106,9 +106,7 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="Dataset">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Dataset">[docs]</a>
-<span class="k">class</span> <span class="nc">Dataset</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Dataset"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Dataset">[docs]</a><span class="k">class</span> <span class="nc">Dataset</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Class representing a dataset. This class is used internally by the functions defined</span>
 <span class="sd">    in :py:mod:`gojo.core.loops`.</span>
 
@@ -168,10 +166,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index_values</span></div>
 
 
-
-<div class="viewcode-block" id="Model">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model">[docs]</a>
-<span class="k">class</span> <span class="nc">Model</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Model"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model">[docs]</a><span class="k">class</span> <span class="nc">Model</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class (interface) used to define a model that can interact with the :py:mod:`gojo` library.</span>
 
@@ -222,9 +217,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_fitted</span> <span class="o">=</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="Model.performInference">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.performInference">[docs]</a>
-    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Model.performInference"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.performInference">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">performInference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to perform the model predictions.</span>
 
@@ -235,10 +228,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-
-<div class="viewcode-block" id="Model.train">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.train">[docs]</a>
-    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Model.train"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.train">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to fit a model to a given input data.</span>
 
@@ -255,18 +245,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-
-<div class="viewcode-block" id="Model.reset">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.reset">[docs]</a>
-    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Model.reset"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.reset">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to reset the fitted model. &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-
-<div class="viewcode-block" id="Model.getParameters">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.getParameters">[docs]</a>
-    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Model.getParameters"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.getParameters">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">getParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method that must return the model parameters.</span>
 
@@ -277,22 +261,15 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-
-<div class="viewcode-block" id="Model.updateParameters">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.updateParameters">[docs]</a>
-    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Model.updateParameters"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.updateParameters">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">updateParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to update model parameters. &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-
-<div class="viewcode-block" id="Model.copy">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.copy">[docs]</a>
-    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Model.copy"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.copy">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to make a copy of the model. &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
@@ -320,34 +297,22 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_fitted</span>
 
-<div class="viewcode-block" id="Model.update">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.update">[docs]</a>
-    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Model.update"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to update model parameters. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">updateParameters</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resetFit</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="Model.fitted">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.fitted">[docs]</a>
-    <span class="k">def</span> <span class="nf">fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Model.fitted"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.fitted">[docs]</a>    <span class="k">def</span> <span class="nf">fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method called to indicate that a given model have been fitted. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_fitted</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="Model.resetFit">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.resetFit">[docs]</a>
-    <span class="k">def</span> <span class="nf">resetFit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Model.resetFit"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.Model.resetFit">[docs]</a>    <span class="k">def</span> <span class="nf">resetFit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to reset a fitted model. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_is_fitted</span> <span class="o">=</span> <span class="kc">False</span></div>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_fitted</span> <span class="o">=</span> <span class="kc">False</span></div></div>
 
 
-
-<div class="viewcode-block" id="SklearnModelWrapper">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.SklearnModelWrapper">[docs]</a>
-<span class="k">class</span> <span class="nc">SklearnModelWrapper</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="SklearnModelWrapper"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.SklearnModelWrapper">[docs]</a><span class="k">class</span> <span class="nc">SklearnModelWrapper</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Wrapper used for easy integration of models following the sklearn interface into the :py:mod:`gojo` library</span>
 <span class="sd">    and functionality.</span>
 
@@ -409,15 +374,10 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
-<div class="viewcode-block" id="SklearnModelWrapper.getParameters">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.SklearnModelWrapper.getParameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">getParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="SklearnModelWrapper.getParameters"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.SklearnModelWrapper.getParameters">[docs]</a>    <span class="k">def</span> <span class="nf">getParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_params</span></div>
 
-
-<div class="viewcode-block" id="SklearnModelWrapper.updateParameters">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.SklearnModelWrapper.updateParameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">updateParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="SklearnModelWrapper.updateParameters"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.SklearnModelWrapper.updateParameters">[docs]</a>    <span class="k">def</span> <span class="nf">updateParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to update the inner model parameters.</span>
 
 <span class="sd">        - NOTE: Model parameters should be updated by calling the :meth:`update` method from the model superclass.</span>
@@ -425,10 +385,7 @@
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_in_params</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
-
-<div class="viewcode-block" id="SklearnModelWrapper.train">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.SklearnModelWrapper.train">[docs]</a>
-    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="SklearnModelWrapper.train"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.SklearnModelWrapper.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to fit a model to a given input data.</span>
 
 <span class="sd">        Parameters</span>
@@ -443,16 +400,10 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="SklearnModelWrapper.reset">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.SklearnModelWrapper.reset">[docs]</a>
-    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SklearnModelWrapper.reset"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.SklearnModelWrapper.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_class</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_in_params</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="SklearnModelWrapper.performInference">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.SklearnModelWrapper.performInference">[docs]</a>
-    <span class="k">def</span> <span class="nf">performInference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="SklearnModelWrapper.performInference"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.SklearnModelWrapper.performInference">[docs]</a>    <span class="k">def</span> <span class="nf">performInference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to perform the model predictions.</span>
 
 <span class="sd">        Parameters</span>
@@ -479,18 +430,11 @@
 
         <span class="k">return</span> <span class="n">predictions</span></div>
 
-
-<div class="viewcode-block" id="SklearnModelWrapper.copy">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.SklearnModelWrapper.copy">[docs]</a>
-    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
-</div>
+<div class="viewcode-block" id="SklearnModelWrapper.copy"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.SklearnModelWrapper.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
 
 
-
-<div class="viewcode-block" id="TorchSKInterface">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.TorchSKInterface">[docs]</a>
-<span class="k">class</span> <span class="nc">TorchSKInterface</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="TorchSKInterface"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.TorchSKInterface">[docs]</a><span class="k">class</span> <span class="nc">TorchSKInterface</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Wrapper class designed to integrate pytorch models (&#39;torch.nn.Module&#39; instances) in the :py:mod:`gojo`.</span>
 <span class="sd">    library functionalities.</span>
 
@@ -642,7 +586,7 @@
 <span class="sd">    &gt;&gt;&gt; plotting.linePlot(</span>
 <span class="sd">    &gt;&gt;&gt;     model_history[&#39;train&#39;], model_history[&#39;valid&#39;],</span>
 <span class="sd">    &gt;&gt;&gt;     x=&#39;epoch&#39;, y=&#39;loss (mean)&#39;, err=&#39;loss (std)&#39;,</span>
-<span class="sd">    &gt;&gt;&gt;     legend_labels=[&#39;Train&#39;, &#39;Validation&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     labels=[&#39;Train&#39;, &#39;Validation&#39;],</span>
 <span class="sd">    &gt;&gt;&gt;     title=&#39;Model convergence&#39;,</span>
 <span class="sd">    &gt;&gt;&gt;     ls=[&#39;solid&#39;, &#39;dashed&#39;],</span>
 <span class="sd">    &gt;&gt;&gt;     legend_pos=&#39;center right&#39;)</span>
@@ -651,7 +595,7 @@
 <span class="sd">    &gt;&gt;&gt; plotting.linePlot(</span>
 <span class="sd">    &gt;&gt;&gt;     model_history[&#39;train&#39;], model_history[&#39;valid&#39;],</span>
 <span class="sd">    &gt;&gt;&gt;     x=&#39;epoch&#39;, y=&#39;f1_score&#39;,</span>
-<span class="sd">    &gt;&gt;&gt;     legend_labels=[&#39;Train&#39;, &#39;Validation&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     labels=[&#39;Train&#39;, &#39;Validation&#39;],</span>
 <span class="sd">    &gt;&gt;&gt;     title=&#39;Model F1-score&#39;,</span>
 <span class="sd">    &gt;&gt;&gt;     ls=[&#39;solid&#39;, &#39;dashed&#39;],</span>
 <span class="sd">    &gt;&gt;&gt;     legend_pos=&#39;center right&#39;)</span>
@@ -770,9 +714,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the number model trainable parameters. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">getNumModelParams</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
 
-<div class="viewcode-block" id="TorchSKInterface.getParameters">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.TorchSKInterface.getParameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">getParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="TorchSKInterface.getParameters"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.TorchSKInterface.getParameters">[docs]</a>    <span class="k">def</span> <span class="nf">getParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the model parameters. &quot;&quot;&quot;</span>
         <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
@@ -798,20 +740,14 @@
 
         <span class="k">return</span> <span class="n">params</span></div>
 
-
-<div class="viewcode-block" id="TorchSKInterface.updateParameters">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.TorchSKInterface.updateParameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">updateParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="TorchSKInterface.updateParameters"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.TorchSKInterface.updateParameters">[docs]</a>    <span class="k">def</span> <span class="nf">updateParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Function not available for this class objects. If you want to use a parametrized version see</span>
 <span class="sd">        :class:`gojo.core.base.ParametrizedTorchSKInterface`.&quot;&quot;&quot;</span>
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;This class not support parameter updates. See alternative classes such as: &#39;</span>
                                   <span class="s1">&#39;&quot;gojo.core.ParametrizedTorchSKInterface&quot;&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="TorchSKInterface.train">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.TorchSKInterface.train">[docs]</a>
-    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="TorchSKInterface.train"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.TorchSKInterface.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
         <span class="c1"># reset callbacks inner states</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -869,17 +805,11 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="TorchSKInterface.reset">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.TorchSKInterface.reset">[docs]</a>
-    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TorchSKInterface.reset"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.TorchSKInterface.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_in_model</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fitting_history</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-
-<div class="viewcode-block" id="TorchSKInterface.performInference">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.TorchSKInterface.performInference">[docs]</a>
-    <span class="k">def</span> <span class="nf">performInference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="TorchSKInterface.performInference"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.TorchSKInterface.performInference">[docs]</a>    <span class="k">def</span> <span class="nf">performInference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to perform the model predictions.</span>
 
 <span class="sd">        Parameters</span>
@@ -936,22 +866,15 @@
 
         <span class="k">return</span> <span class="n">y_pred</span></div>
 
-
-<div class="viewcode-block" id="TorchSKInterface.copy">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.TorchSKInterface.copy">[docs]</a>
-    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TorchSKInterface.copy"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.TorchSKInterface.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">self_copy</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">self_copy</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>  <span class="c1"># save in cpu</span>
         <span class="n">self_copy</span><span class="o">.</span><span class="n">_in_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>  <span class="c1"># save in cpu</span>
 
-        <span class="k">return</span> <span class="n">self_copy</span></div>
-</div>
+        <span class="k">return</span> <span class="n">self_copy</span></div></div>
 
 
-
-<div class="viewcode-block" id="ParametrizedTorchSKInterface">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.ParametrizedTorchSKInterface">[docs]</a>
-<span class="k">class</span> <span class="nc">ParametrizedTorchSKInterface</span><span class="p">(</span><span class="n">TorchSKInterface</span><span class="p">):</span>
+<div class="viewcode-block" id="ParametrizedTorchSKInterface"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.ParametrizedTorchSKInterface">[docs]</a><span class="k">class</span> <span class="nc">ParametrizedTorchSKInterface</span><span class="p">(</span><span class="n">TorchSKInterface</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Parameterized version of :class:`gojo.core.base.TorchSKInterface`. This implementation is useful for performing</span>
 <span class="sd">    a cross validation with hyperparameter optimization using the :func:`gojo.core.loops.evalCrossValNestedHPO`</span>
 <span class="sd">    function. This class provides an implementation of the :meth:`updateParameters` method.</span>
@@ -1107,7 +1030,7 @@
 <span class="sd">    &gt;&gt;&gt; plotting.linePlot(</span>
 <span class="sd">    &gt;&gt;&gt;     model_history[&#39;train&#39;], model_history[&#39;valid&#39;],</span>
 <span class="sd">    &gt;&gt;&gt;     x=&#39;epoch&#39;, y=&#39;loss (mean)&#39;, err=&#39;loss (std)&#39;,</span>
-<span class="sd">    &gt;&gt;&gt;     legend_labels=[&#39;Train&#39;, &#39;Validation&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     labels=[&#39;Train&#39;, &#39;Validation&#39;],</span>
 <span class="sd">    &gt;&gt;&gt;     title=&#39;Model convergence&#39;,</span>
 <span class="sd">    &gt;&gt;&gt;     ls=[&#39;solid&#39;, &#39;dashed&#39;],</span>
 <span class="sd">    &gt;&gt;&gt;     legend_pos=&#39;center right&#39;)</span>
@@ -1116,7 +1039,7 @@
 <span class="sd">    &gt;&gt;&gt; plotting.linePlot(</span>
 <span class="sd">    &gt;&gt;&gt;     model_history[&#39;train&#39;], model_history[&#39;valid&#39;],</span>
 <span class="sd">    &gt;&gt;&gt;     x=&#39;epoch&#39;, y=&#39;f1_score&#39;,</span>
-<span class="sd">    &gt;&gt;&gt;     legend_labels=[&#39;Train&#39;, &#39;Validation&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     labels=[&#39;Train&#39;, &#39;Validation&#39;],</span>
 <span class="sd">    &gt;&gt;&gt;     title=&#39;Model F1-score&#39;,</span>
 <span class="sd">    &gt;&gt;&gt;     ls=[&#39;solid&#39;, &#39;dashed&#39;],</span>
 <span class="sd">    &gt;&gt;&gt;     legend_pos=&#39;center right&#39;)</span>
@@ -1212,9 +1135,7 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
-<div class="viewcode-block" id="ParametrizedTorchSKInterface.updateParameters">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.ParametrizedTorchSKInterface.updateParameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">updateParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ParametrizedTorchSKInterface.updateParameters"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.ParametrizedTorchSKInterface.updateParameters">[docs]</a>    <span class="k">def</span> <span class="nf">updateParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method that allows updating the model parameters. If you want to update a parameter contained in a</span>
 <span class="sd">        dictionary, the name of the dictionary key must be specified together with the name of the parameter</span>
 <span class="sd">        separated by &quot;__&quot;.</span>
@@ -1388,27 +1309,19 @@
         <span class="c1"># regenerate the model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_in_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generating_fn</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">gf_params</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="ParametrizedTorchSKInterface.getParameters">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.ParametrizedTorchSKInterface.getParameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">getParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="ParametrizedTorchSKInterface.getParameters"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.ParametrizedTorchSKInterface.getParameters">[docs]</a>    <span class="k">def</span> <span class="nf">getParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">params</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">getParameters</span><span class="p">()</span>
         <span class="n">params</span><span class="p">[</span><span class="s1">&#39;generating_fn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generating_fn</span>
         <span class="n">params</span><span class="p">[</span><span class="s1">&#39;gf_params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gf_params</span>
 
         <span class="k">return</span> <span class="n">params</span></div>
 
-
-<div class="viewcode-block" id="ParametrizedTorchSKInterface.copy">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.ParametrizedTorchSKInterface.copy">[docs]</a>
-    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ParametrizedTorchSKInterface.copy"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.base.ParametrizedTorchSKInterface.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">self_copy</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">self_copy</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>  <span class="c1"># save in cpu</span>
         <span class="n">self_copy</span><span class="o">.</span><span class="n">_in_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>  <span class="c1"># save in cpu</span>
 
-        <span class="k">return</span> <span class="n">self_copy</span></div>
-</div>
-
+        <span class="k">return</span> <span class="n">self_copy</span></div></div>
 </pre></div>
 
            </div>

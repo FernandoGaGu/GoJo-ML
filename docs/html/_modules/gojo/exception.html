@@ -10,11 +10,11 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -76,9 +76,7 @@
 <span class="c1"># Author: Fernando García Gutiérrez</span>
 <span class="c1"># Email: fgarcia@fundacioace.org</span>
 <span class="c1">#</span>
-<div class="viewcode-block" id="IncorrectNumberOfClasses">
-<a class="viewcode-back" href="../../gojo.html#gojo.exception.IncorrectNumberOfClasses">[docs]</a>
-<span class="k">class</span> <span class="nc">IncorrectNumberOfClasses</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="IncorrectNumberOfClasses"><a class="viewcode-back" href="../../gojo.html#gojo.exception.IncorrectNumberOfClasses">[docs]</a><span class="k">class</span> <span class="nc">IncorrectNumberOfClasses</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Exception thrown when the input number of classes in an array is different from the predefined by the user. &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">detected_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">specified_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">in_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;The number of detected classes (</span><span class="si">{}</span><span class="s1">) does not match the number &#39;</span> \
@@ -90,10 +88,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="MissingArrayDimensions">
-<a class="viewcode-back" href="../../gojo.html#gojo.exception.MissingArrayDimensions">[docs]</a>
-<span class="k">class</span> <span class="nc">MissingArrayDimensions</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="MissingArrayDimensions"><a class="viewcode-back" href="../../gojo.html#gojo.exception.MissingArrayDimensions">[docs]</a><span class="k">class</span> <span class="nc">MissingArrayDimensions</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Exception thrown when the input array does not match the expected number of dimensions &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expected_n_dims</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">input_n_dims</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">in_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;The number of dimensions (</span><span class="si">{}</span><span class="s1">) does not match the expected number &#39;</span> \
@@ -105,10 +100,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="UnfittedEstimator">
-<a class="viewcode-back" href="../../gojo.html#gojo.exception.UnfittedEstimator">[docs]</a>
-<span class="k">class</span> <span class="nc">UnfittedEstimator</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="UnfittedEstimator"><a class="viewcode-back" href="../../gojo.html#gojo.exception.UnfittedEstimator">[docs]</a><span class="k">class</span> <span class="nc">UnfittedEstimator</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Exception thrown when trying to make predictions without performing a previous model fit. &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Before making inferences through a model by calling the &quot;performInferences()&quot; method, it &#39;</span> \
@@ -117,10 +109,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="UnfittedTransform">
-<a class="viewcode-back" href="../../gojo.html#gojo.exception.UnfittedTransform">[docs]</a>
-<span class="k">class</span> <span class="nc">UnfittedTransform</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="UnfittedTransform"><a class="viewcode-back" href="../../gojo.html#gojo.exception.UnfittedTransform">[docs]</a><span class="k">class</span> <span class="nc">UnfittedTransform</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Exception thrown when trying to apply transforms without performing a previous transform fit. &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Before applying transforms by calling the &quot;transform()&quot; method, it is necessary to &#39;</span>\
@@ -129,14 +118,10 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="DataLoaderError">
-<a class="viewcode-back" href="../../gojo.html#gojo.exception.DataLoaderError">[docs]</a>
-<span class="k">class</span> <span class="nc">DataLoaderError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="DataLoaderError"><a class="viewcode-back" href="../../gojo.html#gojo.exception.DataLoaderError">[docs]</a><span class="k">class</span> <span class="nc">DataLoaderError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Exception thrown when a data-loader operation failed. &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
-
 
 
 

@@ -10,11 +10,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -94,9 +94,7 @@
 <span class="kn">from</span> <span class="nn">..exception</span> <span class="kn">import</span> <span class="n">UnfittedTransform</span>
 
 
-<div class="viewcode-block" id="Transform">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform">[docs]</a>
-<span class="k">class</span> <span class="nc">Transform</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Transform"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform">[docs]</a><span class="k">class</span> <span class="nc">Transform</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Base interface for applying transformations to the input data in the :py:mod:`gojo.core.loops` subroutines.</span>
 <span class="sd">    Internally, the training data will be passed to the :meth:`fit` method for adjusting the transformation to the</span>
 <span class="sd">    training dataset statistics, and subsequently, the transformation will be applied to the training and test data</span>
@@ -144,9 +142,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_fitted</span> <span class="o">=</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="Transform.fit">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.fit">[docs]</a>
-    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Transform.fit"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.fit">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to fit a transform to a given input data.</span>
 
@@ -160,10 +156,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-
-<div class="viewcode-block" id="Transform.transform">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.transform">[docs]</a>
-    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Transform.transform"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.transform">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to perform the transformations to the input data.</span>
 
@@ -174,26 +167,17 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-
-<div class="viewcode-block" id="Transform.reset">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.reset">[docs]</a>
-    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Transform.reset"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.reset">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to reset the fitted transform. &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-
-<div class="viewcode-block" id="Transform.copy">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.copy">[docs]</a>
-    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Transform.copy"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.copy">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to make a copy of the transform. &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-
-<div class="viewcode-block" id="Transform.getParameters">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.getParameters">[docs]</a>
-    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Transform.getParameters"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.getParameters">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">getParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method that must return the transform parameters.</span>
 
@@ -204,14 +188,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-
-<div class="viewcode-block" id="Transform.updateParameters">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.updateParameters">[docs]</a>
-    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Transform.updateParameters"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.updateParameters">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">updateParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to update the transform parameters. &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -224,34 +204,22 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_fitted</span>
 
-<div class="viewcode-block" id="Transform.update">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.update">[docs]</a>
-    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Transform.update"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to update the transform parameters. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">updateParameters</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resetFit</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="Transform.fitted">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.fitted">[docs]</a>
-    <span class="k">def</span> <span class="nf">fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Transform.fitted"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.fitted">[docs]</a>    <span class="k">def</span> <span class="nf">fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method called to indicate that a given transformation have been fitted. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_fitted</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="Transform.resetFit">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.resetFit">[docs]</a>
-    <span class="k">def</span> <span class="nf">resetFit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Transform.resetFit"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.Transform.resetFit">[docs]</a>    <span class="k">def</span> <span class="nf">resetFit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to reset a fitted transformation. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_is_fitted</span> <span class="o">=</span> <span class="kc">False</span></div>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_fitted</span> <span class="o">=</span> <span class="kc">False</span></div></div>
 
 
-
-<div class="viewcode-block" id="SKLearnTransformWrapper">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.SKLearnTransformWrapper">[docs]</a>
-<span class="k">class</span> <span class="nc">SKLearnTransformWrapper</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+<div class="viewcode-block" id="SKLearnTransformWrapper"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.SKLearnTransformWrapper">[docs]</a><span class="k">class</span> <span class="nc">SKLearnTransformWrapper</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Wrapper used to easily incorporate the transformations implemented in the `sklearn` library.</span>
 
 <span class="sd">    Parameters</span>
@@ -312,15 +280,10 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
-<div class="viewcode-block" id="SKLearnTransformWrapper.getParameters">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.getParameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">getParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="SKLearnTransformWrapper.getParameters"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.getParameters">[docs]</a>    <span class="k">def</span> <span class="nf">getParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_params</span></div>
 
-
-<div class="viewcode-block" id="SKLearnTransformWrapper.updateParameters">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.updateParameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">updateParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="SKLearnTransformWrapper.updateParameters"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.updateParameters">[docs]</a>    <span class="k">def</span> <span class="nf">updateParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to update the inner transform parameters.</span>
 
 <span class="sd">        IMPORTANT NOTE: Transform parameters should be updated by calling the :meth:`update` method from the</span>
@@ -329,10 +292,7 @@
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_in_params</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
-
-<div class="viewcode-block" id="SKLearnTransformWrapper.fit">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.fit">[docs]</a>
-    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="SKLearnTransformWrapper.fit"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to fit a transform to a given input data.</span>
 
 <span class="sd">        Parameters</span>
@@ -347,17 +307,11 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="SKLearnTransformWrapper.reset">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.reset">[docs]</a>
-    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SKLearnTransformWrapper.reset"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Reset the model fit. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_transform_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform_class</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_in_params</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="SKLearnTransformWrapper.transform">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.transform">[docs]</a>
-    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="SKLearnTransformWrapper.transform"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Method used to apply the transformations.</span>
 
 <span class="sd">        Parameters</span>
@@ -375,14 +329,9 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform_obj</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="SKLearnTransformWrapper.copy">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.copy">[docs]</a>
-    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SKLearnTransformWrapper.copy"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Make a deepcopy of the instance. &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
-</div>
-
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

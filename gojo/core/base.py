@@ -513,7 +513,7 @@ class TorchSKInterface(Model):
     >>> plotting.linePlot(
     >>>     model_history['train'], model_history['valid'],
     >>>     x='epoch', y='loss (mean)', err='loss (std)',
-    >>>     legend_labels=['Train', 'Validation'],
+    >>>     labels=['Train', 'Validation'],
     >>>     title='Model convergence',
     >>>     ls=['solid', 'dashed'],
     >>>     legend_pos='center right')
@@ -522,7 +522,7 @@ class TorchSKInterface(Model):
     >>> plotting.linePlot(
     >>>     model_history['train'], model_history['valid'],
     >>>     x='epoch', y='f1_score',
-    >>>     legend_labels=['Train', 'Validation'],
+    >>>     labels=['Train', 'Validation'],
     >>>     title='Model F1-score',
     >>>     ls=['solid', 'dashed'],
     >>>     legend_pos='center right')
@@ -957,7 +957,7 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
     >>> plotting.linePlot(
     >>>     model_history['train'], model_history['valid'],
     >>>     x='epoch', y='loss (mean)', err='loss (std)',
-    >>>     legend_labels=['Train', 'Validation'],
+    >>>     labels=['Train', 'Validation'],
     >>>     title='Model convergence',
     >>>     ls=['solid', 'dashed'],
     >>>     legend_pos='center right')
@@ -966,7 +966,7 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
     >>> plotting.linePlot(
     >>>     model_history['train'], model_history['valid'],
     >>>     x='epoch', y='f1_score',
-    >>>     legend_labels=['Train', 'Validation'],
+    >>>     labels=['Train', 'Validation'],
     >>>     title='Model F1-score',
     >>>     ls=['solid', 'dashed'],
     >>>     legend_pos='center right')

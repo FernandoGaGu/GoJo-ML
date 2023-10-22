@@ -10,11 +10,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -94,9 +94,7 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="Metric">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.evaluation.Metric">[docs]</a>
-<span class="k">class</span> <span class="nc">Metric</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Metric"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.evaluation.Metric">[docs]</a><span class="k">class</span> <span class="nc">Metric</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Base class used to create any type of performance evaluation metric compatible with the :py:mod:`gojo` framework.</span>
 
 <span class="sd">    Parameters</span>
@@ -245,10 +243,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">function_kw</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="getScores">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.evaluation.getScores">[docs]</a>
-<span class="k">def</span> <span class="nf">getScores</span><span class="p">(</span><span class="n">y_true</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="getScores"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.evaluation.getScores">[docs]</a><span class="k">def</span> <span class="nf">getScores</span><span class="p">(</span><span class="n">y_true</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Function used to calculate the scores given by the metrics passed within the metrics parameter.</span>
 
 <span class="sd">    Parameters</span>
@@ -296,10 +291,7 @@
     <span class="k">return</span> <span class="n">results</span></div>
 
 
-
-<div class="viewcode-block" id="flatFunctionInput">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.evaluation.flatFunctionInput">[docs]</a>
-<span class="k">def</span> <span class="nf">flatFunctionInput</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">callable</span><span class="p">):</span>
+<div class="viewcode-block" id="flatFunctionInput"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.evaluation.flatFunctionInput">[docs]</a><span class="k">def</span> <span class="nf">flatFunctionInput</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">callable</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Function used to flatten the input predictions before the computation of the metric. Internally, the input</span>
 <span class="sd">    `y_pred` and `y_true` will be flattened before calling the provided function.</span>
 
@@ -322,10 +314,7 @@
     <span class="k">return</span> <span class="n">_wrappedFunction</span></div>
 
 
-
-<div class="viewcode-block" id="getDefaultMetrics">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.evaluation.getDefaultMetrics">[docs]</a>
-<span class="k">def</span> <span class="nf">getDefaultMetrics</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">select</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">multiclass</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<div class="viewcode-block" id="getDefaultMetrics"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.evaluation.getDefaultMetrics">[docs]</a><span class="k">def</span> <span class="nf">getDefaultMetrics</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">select</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">multiclass</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                       <span class="n">number_of_classes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">use_multiclass_sparse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Function used to get a series of pre-defined scores for evaluate the model performance.</span>
 
@@ -401,10 +390,7 @@
     <span class="k">return</span> <span class="n">selected_task_metrics</span></div>
 
 
-
-<div class="viewcode-block" id="getAvailableDefaultNetrics">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.evaluation.getAvailableDefaultNetrics">[docs]</a>
-<span class="k">def</span> <span class="nf">getAvailableDefaultNetrics</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="getAvailableDefaultNetrics"><a class="viewcode-back" href="../../../gojo.core.html#gojo.core.evaluation.getAvailableDefaultNetrics">[docs]</a><span class="k">def</span> <span class="nf">getAvailableDefaultNetrics</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Return to dictionary with task names and default metrics defined for those tasks. The selected problems for</span>
 <span class="sd">    which you want to see the metrics can be filtered by the task parameter indicating the task for which you want</span>
 <span class="sd">    to see the metrics.</span>
@@ -426,7 +412,6 @@
         <span class="n">key</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">task_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">task_dict</span> <span class="ow">in</span> <span class="n">DEFINED_METRICS</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">task</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">task</span> <span class="o">==</span> <span class="n">key</span><span class="p">}</span>
 
     <span class="k">return</span> <span class="n">task_metric_info</span></div>
-
 
 
 <span class="k">def</span> <span class="nf">_checkNumberOfClassesCategorical</span><span class="p">(</span><span class="n">arr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">var_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
