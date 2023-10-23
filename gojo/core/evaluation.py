@@ -242,7 +242,7 @@ def flatFunctionInput(fn: callable):
 
 
 def getDefaultMetrics(task: str, select: list = None, bin_threshold: float or int = None, multiclass: bool = False,
-                      number_of_classes: int = None, use_multiclass_sparse: bool = True) -> list:
+                      number_of_classes: int = None, use_multiclass_sparse: bool = False) -> list:
     """ Function used to get a series of pre-defined scores for evaluate the model performance.
 
     Parameters

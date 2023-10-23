@@ -13,6 +13,8 @@ __IMPORTANT NOTE__: Library still under development and subjected to changes (th
 
 This Python library offers a comprehensive suite of pipeline implementations, specifically designed to streamline the entire process of developing and evaluating Deep Learning and Machine Learning models. These pipelines serve as an invaluable resource for researchers, data scientists, and engineers by providing a structured and efficient framework for tasks such as data preprocessing, feature engineering, model training, and performance evaluation. Whether you're working on computer vision, natural language processing, recommendation systems, or any other machine learning domain, this library equips you with the tools and utilities necessary to expedite your project development. With a rich set of modules and customizable components, it caters to a wide range of use cases and simplifies the complex journey of model creation and fine-tuning, ultimately contributing to more robust and accurate predictive models.
 
+For more information, please visit the project's [documentation](https://fernandogagu.github.io/GoJo-ML/html/index.html) site (still under development).
+
 
 ## Installation
 
