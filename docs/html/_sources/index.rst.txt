@@ -90,7 +90,7 @@ Modules
 ==================
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 4
 
    gojo.core
    gojo.deepl

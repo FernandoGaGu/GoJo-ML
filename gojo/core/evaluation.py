@@ -8,6 +8,7 @@
 import numpy as np
 import warnings
 import sklearn.metrics as sk_metrics
+from copy import deepcopy
 
 from ..util.validation import (
     checkMultiInputTypes,
@@ -246,7 +247,7 @@ def getDefaultMetrics(task: str, select: list = None, bin_threshold: float or in
     """ Function used to get a series of pre-defined scores for evaluate the model performance.
 
     Parameters
-    ---------
+    ----------
     task : str
         Task-associated metrics. Currently available tasks are: `binary_classification` and `regression`.
 
@@ -283,7 +284,7 @@ def getDefaultMetrics(task: str, select: list = None, bin_threshold: float or in
         raise TypeError('Unknown task "%s". Available tasks are: %r' % (task, list(DEFINED_METRICS.keys())))
 
     # select task-metrics
-    task_metrics = DEFINED_METRICS[task]
+    task_metrics = deepcopy(DEFINED_METRICS[task])
     selected_task_metrics = []
     if select is not None:
         for _metric_name in select:

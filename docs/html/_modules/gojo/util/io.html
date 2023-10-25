@@ -10,11 +10,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -83,6 +83,7 @@
 <span class="kn">import</span> <span class="nn">gzip</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">login</span> <span class="k">as</span> <span class="n">base_login</span>
 <span class="kn">from</span> <span class="nn">..util.validation</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">checkMultiInputTypes</span><span class="p">,</span>
     <span class="n">checkInputType</span><span class="p">,</span>
@@ -96,7 +97,9 @@
 <span class="n">_DEFAULT_BACKEND</span> <span class="o">=</span> <span class="s1">&#39;joblib_gzip&#39;</span>
 
 
-<div class="viewcode-block" id="saveJson"><a class="viewcode-back" href="../../../gojo.util.html#gojo.util.io.saveJson">[docs]</a><span class="k">def</span> <span class="nf">saveJson</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="saveJson">
+<a class="viewcode-back" href="../../../gojo.util.html#gojo.util.io.saveJson">[docs]</a>
+<span class="k">def</span> <span class="nf">saveJson</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Saves the input dictionary into a json file.</span>
 
 <span class="sd">    Parameters</span>
@@ -118,7 +121,10 @@
         <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="loadJson"><a class="viewcode-back" href="../../../gojo.util.html#gojo.util.io.loadJson">[docs]</a><span class="k">def</span> <span class="nf">loadJson</span><span class="p">(</span><span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+
+<div class="viewcode-block" id="loadJson">
+<a class="viewcode-back" href="../../../gojo.util.html#gojo.util.io.loadJson">[docs]</a>
+<span class="k">def</span> <span class="nf">loadJson</span><span class="p">(</span><span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Load a json file.</span>
 
 <span class="sd">    Parameters</span>
@@ -140,7 +146,10 @@
     <span class="k">return</span> <span class="n">content</span></div>
 
 
-<div class="viewcode-block" id="serialize"><a class="viewcode-back" href="../../../gojo.util.html#gojo.util.io.serialize">[docs]</a><span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">time_prefix</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+
+<div class="viewcode-block" id="serialize">
+<a class="viewcode-back" href="../../../gojo.util.html#gojo.util.io.serialize">[docs]</a>
+<span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">time_prefix</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
               <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">_DEFAULT_BACKEND</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Function used to serialize Python objects.</span>
 
@@ -190,6 +199,7 @@
 
     <span class="c1"># export the object</span>
     <span class="k">return</span> <span class="n">_serialize</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">file_fp</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">_serialize</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -244,7 +254,9 @@
     <span class="k">return</span> <span class="n">in_path</span> <span class="o">+</span> <span class="s1">&#39;.gz&#39;</span>
 
 
-<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../../gojo.util.html#gojo.util.io.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">_DEFAULT_BACKEND</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+<div class="viewcode-block" id="load">
+<a class="viewcode-back" href="../../../gojo.util.html#gojo.util.io.load">[docs]</a>
+<span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">_DEFAULT_BACKEND</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Function used to load serialized Python objects (see :py:mod:`gojo.util.io.serialize`).</span>
 
 <span class="sd">    Parameters</span>
@@ -287,10 +299,25 @@
     <span class="k">return</span> <span class="n">obj</span></div>
 
 
-<div class="viewcode-block" id="pprint"><a class="viewcode-back" href="../../../gojo.util.html#gojo.util.io.pprint">[docs]</a><span class="k">def</span> <span class="nf">pprint</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="pprint">
+<a class="viewcode-back" href="../../../gojo.util.html#gojo.util.io.pprint">[docs]</a>
+<span class="k">def</span> <span class="nf">pprint</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">sep</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Print function for the :py:mod:`gojo` module. &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">base_login</span><span class="o">.</span><span class="n">isActive</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Login is active&#39;</span><span class="p">)</span>
+            <span class="n">level</span> <span class="o">=</span> <span class="n">level</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="n">level</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">level</span>
+            <span class="k">if</span> <span class="n">level</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">base_login</span><span class="o">.</span><span class="n">Login</span><span class="o">.</span><span class="n">logger_levels</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s1">&#39;Input level &quot;</span><span class="si">{}</span><span class="s1">&quot; not found. Available levels are: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">level</span><span class="p">,</span> <span class="n">base_login</span><span class="o">.</span><span class="n">Login</span><span class="o">.</span><span class="n">logger_levels</span><span class="p">))</span>
+            <span class="n">base_login</span><span class="o">.</span><span class="n">Login</span><span class="o">.</span><span class="n">logger_levels</span><span class="p">[</span><span class="n">level</span><span class="p">](</span><span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Login is not active&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Not verbose&#39;</span><span class="p">)</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">_loadJoblib</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>

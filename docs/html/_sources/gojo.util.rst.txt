@@ -28,6 +28,15 @@ gojo.util.validation module
    :undoc-members:
    :show-inheritance:
 
+gojo.util.login module
+---------------------------
+
+.. automodule:: gojo.util.login
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
 Module contents
 ---------------
 

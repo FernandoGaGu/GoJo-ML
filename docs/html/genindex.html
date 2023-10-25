@@ -10,11 +10,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -128,7 +128,9 @@
 </li>
       <li><a href="gojo.util.html#gojo.util.validation.checkMultiInputTypes">checkMultiInputTypes() (in module gojo.util.validation)</a>
 </li>
-      <li><a href="gojo.plotting.html#gojo.plotting.basic.confusionMatrix">confusionMatrix() (in module gojo.plotting.basic)</a>
+      <li><a href="gojo.util.html#gojo.util.login.configureLogger">configureLogger() (in module gojo.util.login)</a>
+</li>
+      <li><a href="gojo.plotting.html#gojo.plotting.classification.confusionMatrix">confusionMatrix() (in module gojo.plotting.classification)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -148,6 +150,8 @@
       </ul></li>
       <li><a href="gojo.deepl.html#gojo.deepl.ffn.createSimpleFFNModel">createSimpleFFNModel() (in module gojo.deepl.ffn)</a>
 </li>
+      <li><a href="gojo.deepl.html#gojo.deepl.ffn.createSimpleParametrizedFFNModel">createSimpleParametrizedFFNModel() (in module gojo.deepl.ffn)</a>
+</li>
       <li><a href="gojo.core.html#gojo.core.report.CVReport">CVReport (class in gojo.core.report)</a>
 </li>
   </ul></td>
@@ -160,6 +164,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gojo.util.html#gojo.util.login.deactivate">deactivate() (in module gojo.util.login)</a>
+</li>
       <li><a href="gojo.deepl.html#gojo.deepl.callback.EarlyStopping.DIRECTIVE">DIRECTIVE (gojo.deepl.callback.EarlyStopping attribute)</a>
 </li>
   </ul></td>
@@ -216,8 +222,6 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="gojo.deepl.html#gojo.deepl.ffn.generateParametrizedLayers">generateParametrizedLayers() (in module gojo.deepl.ffn)</a>
-</li>
       <li><a href="gojo.core.html#gojo.core.evaluation.getAvailableDefaultNetrics">getAvailableDefaultNetrics() (in module gojo.core.evaluation)</a>
 </li>
       <li><a href="gojo.deepl.html#gojo.deepl.loops.getAvailableIterationFunctions">getAvailableIterationFunctions() (in module gojo.deepl.loops)</a>
@@ -291,8 +295,6 @@
         <li><a href="gojo.core.html#module-gojo.core.loops">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     gojo.core.report
 
@@ -300,6 +302,8 @@
         <li><a href="gojo.core.html#module-gojo.core.report">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     gojo.core.transform
 
@@ -357,6 +361,13 @@
 </li>
       </ul></li>
       <li>
+    gojo.plotting.classification
+
+      <ul>
+        <li><a href="gojo.plotting.html#module-gojo.plotting.classification">module</a>
+</li>
+      </ul></li>
+      <li>
     gojo.util
 
       <ul>
@@ -368,6 +379,13 @@
 
       <ul>
         <li><a href="gojo.util.html#module-gojo.util.io">module</a>
+</li>
+      </ul></li>
+      <li>
+    gojo.util.login
+
+      <ul>
+        <li><a href="gojo.util.html#module-gojo.util.login">module</a>
 </li>
       </ul></li>
       <li>
@@ -400,6 +418,8 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gojo.util.html#gojo.util.login.isActive">isActive() (in module gojo.util.login)</a>
+</li>
       <li><a href="gojo.deepl.html#gojo.deepl.loops.iterSupervisedEpoch">iterSupervisedEpoch() (in module gojo.deepl.loops)</a>
 </li>
   </ul></td>
@@ -410,11 +430,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gojo.plotting.html#gojo.plotting.basic.linePlot">linePlot() (in module gojo.plotting.basic)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gojo.util.html#gojo.util.io.load">load() (in module gojo.util.io)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gojo.util.html#gojo.util.io.loadJson">loadJson() (in module gojo.util.io)</a>
+</li>
+      <li><a href="gojo.util.html#gojo.util.login.Login.logger_levels">logger_levels (gojo.util.login.Login attribute)</a>
+</li>
+      <li><a href="gojo.util.html#gojo.util.login.Login">Login (class in gojo.util.login)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -462,9 +486,13 @@
 </li>
         <li><a href="gojo.plotting.html#module-gojo.plotting.basic">gojo.plotting.basic</a>
 </li>
+        <li><a href="gojo.plotting.html#module-gojo.plotting.classification">gojo.plotting.classification</a>
+</li>
         <li><a href="gojo.util.html#module-gojo.util">gojo.util</a>
 </li>
         <li><a href="gojo.util.html#module-gojo.util.io">gojo.util.io</a>
+</li>
+        <li><a href="gojo.util.html#module-gojo.util.login">gojo.util.login</a>
 </li>
         <li><a href="gojo.util.html#module-gojo.util.tools">gojo.util.tools</a>
 </li>
@@ -535,6 +563,8 @@
         <li><a href="gojo.deepl.html#gojo.deepl.callback.EarlyStopping.resetState">(gojo.deepl.callback.EarlyStopping method)</a>
 </li>
       </ul></li>
+      <li><a href="gojo.plotting.html#gojo.plotting.classification.roc">roc() (in module gojo.plotting.classification)</a>
+</li>
   </ul></td>
 </tr></table>
 

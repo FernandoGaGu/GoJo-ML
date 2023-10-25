@@ -24,14 +24,14 @@ _DROPOUT_IDENTIFIER = 'dropout'
 _BATCHNORM_IDENTIFIER = 'batchnorm'
 
 
-def generateParametrizedLayers(
+def _generateParametrizedLayers(
         n_layers: int,
         init_layer_dim: int,
         scaffold: str,
         min_width: int,
         max_width: int,
-        beta: float or int,
-        alpha: float or int) -> list:
+        beta: float or int = None,
+        alpha: float or int = None) -> list:
     """ Function that allows to generate FFN-layer layout based on a set of hyperparameters.
 
     Parameters
@@ -62,10 +62,10 @@ def generateParametrizedLayers(
     max_width : int
         Maximum layer width.
 
-    beta : float or int
+    beta : float or int, default=None
         Applied for exponential scaffolds.
 
-    alpha : float or int
+    alpha : float or int, default=None
         Applied for lineal scaffolds.
 
     Returns
@@ -82,8 +82,8 @@ def generateParametrizedLayers(
         ('scaffold', scaffold, [str]),
         ('min_width', min_width, [int]),
         ('max_width', max_width, [int]),
-        ('beta', beta, [float, int]),
-        ('alpha', alpha, [float, int]))
+        ('beta', beta, [float, int, type(None)]),
+        ('alpha', alpha, [float, int, type(None)]))
 
     # check input parameters that must be greater than 0
     for name, val in [
@@ -103,21 +103,26 @@ def generateParametrizedLayers(
         raise TypeError('Unrecognized scaffold "%s". Valid scaffolds are: %r' % (scaffold, _VALID_SCAFFOLDS))
 
     # create layer dimensions
-    layers = np.array([])
     if scaffold == 'exponential':
+        if beta is None:
+            raise TypeError('Parameter "beta" cannot be None for scaffold="exponential"')
+
         layers = np.ceil(
             np.array([init_layer_dim] * n_layers) * ( (1/beta) ** np.arange(n_layers) ))
     elif scaffold == 'linear':
+        if beta is None:
+            raise TypeError('Parameter "alpha" cannot be None for scaffold="linear"')
+
         layers = np.ceil(
             np.array([init_layer_dim] * n_layers) - ( alpha * np.arange(n_layers) ))
     else:
-        assert False, 'Unhandled case in gojo.deepl.ffn.generateParametrizedLayers (scaffold)'
+        assert False, 'Unhandled case in gojo.deepl.ffn._generateParametrizedLayers (scaffold)'
 
     # adjust min_width and max_width
     layers[layers <= min_width] = min_width
     layers[layers >= max_width] = max_width
 
-    return list(layers.astype(int))
+    return [int(e) for e in layers]
 
 
 def _createFFN(
@@ -226,12 +231,10 @@ def createSimpleFFNModel(
         weights_init: callable or list = None,
         output_activation: str or torch.nn.Module or None or str = None) -> torch.nn.Module:
     """ Auxiliary function that allows to easily create a simple FFN architecture from the provided input parameters.
-
     See examples for a quick overview of the posibilities of this function.
 
-
     Parameters
-    ----------
+    -----------
     in_feats : int
         Number of the features in the input data.
 
@@ -261,7 +264,6 @@ def createSimpleFFNModel(
     -------
     model : torch.nn.Module
         Generated model.
-
 
     Example
     -------
@@ -393,3 +395,143 @@ def createSimpleFFNModel(
         config=config,
         weights_init=weights_init)
 
+
+def createSimpleParametrizedFFNModel(
+        in_feats: int,
+        out_feats: int,
+        n_layers: int,
+        init_layer_dim: int,
+        scaffold: str,
+        min_width: int,
+        max_width: int,
+        beta: float or int = None,
+        alpha: float or int = None,
+        layer_activation: torch.nn.Module or None or str = None,
+        layer_dropout: float = None,
+        batchnorm: bool = False,
+        weights_init: callable or list = None,
+        output_activation: str or torch.nn.Module or None or str = None) -> torch.nn.Module:
+    """ Function that allows the creation of a simple neural network (a feed forward network, FFN) by
+    parameterizing the number of layers and their width according to different scaffolds (selected
+    by the `scaffold` parameter), and hyperparameters (`alpha` and `beta`).
+
+    Parameters
+    ----------
+    in_feats : int
+        Number of the features in the input data.
+
+    out_feats : int
+        Number of features in the output data.
+
+    n_layers : int
+        Number of layers.
+
+    init_layer_dim : int
+        Dimensions of the first layer.
+
+    scaffold : str
+        Model scaffold to arrange the layers. Valid scaffolds are:
+
+            - 'exponential': exponential decay in the number of layers. Controlled by the `beta` parameter.
+
+            .. math::
+                n^{(l)} = (1 / beta)^{(l)} \cdot init
+
+            - 'linear': linear decay in the number of layers. Controlled by the `alpha` parameter.
+
+            .. math::
+                n^{(l)} = init - alpha \cdot (l)
+
+    min_width : int
+        Minimum layer width.
+
+    max_width : int
+        Maximum layer width.
+
+    beta : float or int
+        Applied for exponential scaffolds.
+
+    alpha : float or int
+        Applied for lineal scaffolds.
+
+    layer_activation : torch.nn.Module or None or str
+        Activation functions. If None is provided a simple affine transformation will take place. If a string
+        is provided, the name should match to the name of the torch.nn class (i.e., 'ReLU' for `torch.nn.ReLU`).
+
+    layer_dropout : float, default=None
+        Layer dropout. The same dropout rate will be applied for all the layers.
+
+    batchnorm : bool, default=False
+        Parameter indicating whether to add batch-normalization layers.
+
+    weights_init : callable, default=None
+        Function applied to the generated linear layers for initializing their weights.
+
+    output_activation : str or torch.nn.Module or None, default=None
+        Output activation function (similar to `layer_activation`).
+
+
+    Returns
+    -------
+    model : `torch.nn.Module`
+        Generated model.
+
+    Example
+    -------
+    >>> from gojo import deepl
+    >>>
+    >>> model = createSimpleParametrizedFFNModel(
+    >>>     in_feats=94,
+    >>>     out_feats=1,
+    >>>     n_layers=5,
+    >>>     init_layer_dim=500,
+    >>>     scaffold='exponential',
+    >>>     min_width=10,
+    >>>     max_width=500,
+    >>>     beta=1.5,
+    >>>     alpha=100,
+    >>>     layer_activation=None,
+    >>>     layer_dropout=None,
+    >>>     batchnorm=False,
+    >>>     output_activation='Sigmoid')
+    >>> model
+    Out [0]
+        Sequential(
+          (LinearLayer 0): Linear(in_features=94, out_features=500, bias=True)
+          (LinearLayer 1): Linear(in_features=500, out_features=334, bias=True)
+          (LinearLayer 2): Linear(in_features=334, out_features=223, bias=True)
+          (LinearLayer 3): Linear(in_features=223, out_features=149, bias=True)
+          (LinearLayer 4): Linear(in_features=149, out_features=99, bias=True)
+          (LinearLayer 5): Linear(in_features=99, out_features=1, bias=True)
+          (Activation 5): Sigmoid()
+        )
+    """
+    # check input parameter types for 'layer_activation' and 'layer_dropout'
+    checkMultiInputTypes(
+        ('layer_activation', layer_activation, [torch.nn.Module, type(None), str]),
+        ('layer_dropout', layer_dropout, [float, type(None)])
+    )
+
+    # generate FNN layers
+    fnn_layer_dims = _generateParametrizedLayers(
+        n_layers=n_layers,
+        init_layer_dim=init_layer_dim,
+        scaffold=scaffold,
+        min_width=min_width,
+        max_width=max_width,
+        beta=beta,
+        alpha=alpha)
+
+    # create the model
+    model = createSimpleFFNModel(
+        in_feats=in_feats,
+        out_feats=out_feats,
+        layer_dims=fnn_layer_dims,
+        layer_activation=layer_activation,
+        layer_dropout=layer_dropout,
+        batchnorm=batchnorm,
+        weights_init=weights_init,
+        output_activation=output_activation
+    )
+
+    return model

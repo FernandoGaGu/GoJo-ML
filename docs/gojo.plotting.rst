@@ -12,6 +12,14 @@ gojo.plotting.basic module
    :undoc-members:
    :show-inheritance:
 
+gojo.plotting.classification module
+--------------------------
+
+.. automodule:: gojo.plotting.classification
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

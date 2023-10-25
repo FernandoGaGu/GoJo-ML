@@ -288,7 +288,7 @@ def evalCrossVal(
     """ Subroutine used to evaluate a model according to a cross-validation scheme provided by the `cv` argument.
 
     Parameters
-    ----------
+    -----------
     X : np.ndarray or pd.DataFrame
         Variables used to fit the model.
 
@@ -326,8 +326,9 @@ def evalCrossVal(
         Parameter that indicates whether the fitted models will be saved in :class:`gojo.core.report.CVReport`. For
         larger models this may involve higher computational and storage costs.
 
+
     Returns
-    -------
+    --------
     cv_obj : :class:`gojo.core.report.CVReport`
         Cross validation report. For more information see :class:`gojo.core.report.CVReport`.
 
@@ -796,7 +797,7 @@ def evalCrossValNestedHPO(
         show_pbar = True
 
     # verbosity greater than 1
-    if verbose  > 1:
+    if verbose > 1:
         show_fold_number = True
         show_best_combinations = True
         show_hpo_best_values = True

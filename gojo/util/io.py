@@ -10,6 +10,7 @@ import pickle
 import gzip
 from datetime import datetime
 
+from . import login as base_login
 from ..util.validation import (
     checkMultiInputTypes,
     checkInputType,
@@ -214,10 +215,21 @@ def load(file: str, backend: str = _DEFAULT_BACKEND) -> object:
     return obj
 
 
-def pprint(*args, verbose: bool = True):
+def pprint(*args, verbose: bool = True, level: str = None, sep: str = ' '):
     """ Print function for the :py:mod:`gojo` module. """
     if verbose:
-        print(*args)
+        if base_login.isActive():
+            print('Login is active')
+            level = level.lower() if level is not None else level
+            if level not in base_login.Login.logger_levels:
+                raise TypeError(
+                    'Input level "{}" not found. Available levels are: {}'.format(
+                        level, base_login.Login.logger_levels))
+            base_login.Login.logger_levels[level](sep.join([str(arg) for arg in args]))
+        else:
+            print('Login is not active')
+            print(*args)
+    print('Not verbose')
 
 
 def _loadJoblib(path: str) -> object:
