@@ -219,7 +219,6 @@ def pprint(*args, verbose: bool = True, level: str = None, sep: str = ' '):
     """ Print function for the :py:mod:`gojo` module. """
     if verbose:
         if base_login.isActive():
-            print('Login is active')
             level = level.lower() if level is not None else level
             if level not in base_login.Login.logger_levels:
                 raise TypeError(
@@ -227,9 +226,7 @@ def pprint(*args, verbose: bool = True, level: str = None, sep: str = ' '):
                         level, base_login.Login.logger_levels))
             base_login.Login.logger_levels[level](sep.join([str(arg) for arg in args]))
         else:
-            print('Login is not active')
             print(*args)
-    print('Not verbose')
 
 
 def _loadJoblib(path: str) -> object:
