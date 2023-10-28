@@ -6,3 +6,4 @@ from .loops import (
 from . import callback
 from . import loading
 from . import ffn
+from . import models

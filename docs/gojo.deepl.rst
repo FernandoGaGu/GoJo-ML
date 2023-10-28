@@ -36,6 +36,14 @@ gojo.deepl.loops module
    :undoc-members:
    :show-inheritance:
 
+gojo.deepl.models module
+------------------------
+
+.. automodule:: gojo.deepl.models
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

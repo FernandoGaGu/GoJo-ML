@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gojo.deepl.models &mdash; gojo - Documentation 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            gojo - Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.core.html">gojo.core package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.deepl.html">gojo.deepl package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.plotting.html">gojo.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.util.html">gojo.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gojo - Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gojo.deepl.models</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gojo.deepl.models</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Module with common neural network architectures.</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Fernando García Gutiérrez</span>
+<span class="c1"># Email: fgarcia@fundacioace.org</span>
+<span class="c1">#</span>
+<span class="c1"># STATUS: completed, functional, and documented.</span>
+<span class="c1">#</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">from</span> <span class="nn">.ffn</span> <span class="kn">import</span> <span class="n">createSimpleFFNModel</span>
+<span class="kn">from</span> <span class="nn">..util.validation</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">checkMultiInputTypes</span><span class="p">,</span>
+    <span class="n">checkInputType</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="MultiTaskFFN"><a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.MultiTaskFFN">[docs]</a><span class="k">class</span> <span class="nc">MultiTaskFFN</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Model adapted to perform multi-task classification with a layer specialized in extracting features (accessible</span>
+<span class="sd">    through :meth:`feature_extractor`) and, as is typical in multi-task model training, layers specialized in</span>
+<span class="sd">    performing the different tasks. The model will return a tensor with the outputs of each of the layers</span>
+<span class="sd">    concatenated, where the first `n_clf_task` classification tasks will go first, followed by the `n_reg_task`</span>
+<span class="sd">    regression tasks.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    in_feats : int</span>
+<span class="sd">        (feature extractor) Number of input features.</span>
+
+<span class="sd">    emb_feats : int</span>
+<span class="sd">        (feature extractor) Number of output features for the feature extractor feed forward network (FFN).</span>
+
+<span class="sd">    layer_dims : list</span>
+<span class="sd">        (feature extractor) Layer dims for the feature extractor feed forward network (FFN).</span>
+
+<span class="sd">    n_clf_task : int</span>
+<span class="sd">        (feature extractor) Number of classification task. If `n_clf_task` = 0, then `n_reg_task` must be greater</span>
+<span class="sd">        than 1.</span>
+
+<span class="sd">    n_reg_task : int</span>
+<span class="sd">        (feature extractor) Number of regression task. If `n_reg_task` = 0, then `n_clf_task` must be greater than 1.</span>
+
+<span class="sd">    multt_layer_dims : list</span>
+<span class="sd">        (multi-task layers) Architecture used for the task&#39;s specialized layers.</span>
+
+<span class="sd">    multt_dropout : list or float, default=None</span>
+<span class="sd">        (multi-task layers) Dropout for the task&#39;s specialized layers.</span>
+
+<span class="sd">    multt_layer_activation : torch.nn.Module or str or None, default=&#39;ELU&#39;</span>
+<span class="sd">        (multi-task layers) Activation function for the task&#39;s specialized layers.</span>
+
+<span class="sd">    multt_batchnorm : bool, default=False</span>
+<span class="sd">        (multi-task layers) Indicates whether to used batch normalization in the task&#39;s specialized layers.</span>
+
+<span class="sd">    multt_clf_activation : str or torch.nn.Module or list or None, default=&#39;Sigmoid&#39;</span>
+<span class="sd">        (multi-task layers, classification) Output activation function for the classification task. If a list is</span>
+<span class="sd">        provided this must match the length of the parameter `n_clf_task`.</span>
+
+<span class="sd">    multt_reg_activation : str or torch.nn.Module or list or None, default=None</span>
+<span class="sd">        (multi-task layers, regression) Output activation function for the regression task. If a list is provided this</span>
+<span class="sd">        must match the length of the parameter `n_reg_task`.</span>
+
+<span class="sd">    layer_dropout : list or float or None, default=None</span>
+<span class="sd">        (feature extractor) Dropout rate for the feature extractor feed forward network (FFN).</span>
+
+<span class="sd">    layer_activation : torch.nn.Module or str or None, default=&#39;ELU&#39;</span>
+<span class="sd">        (feature extractor) Activation function for the feature extractor feed forward network (FFN).</span>
+
+<span class="sd">    batchnorm : bool, default=False</span>
+<span class="sd">        (feature extractor param)Indicates whether to used batch normalization in the feature extractor feed forward</span>
+<span class="sd">        network (FFN).</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import deepl</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; model = deepl.models.MultiTaskFFN(</span>
+<span class="sd">    &gt;&gt;&gt;     in_feats=100,</span>
+<span class="sd">    &gt;&gt;&gt;     emb_feats=20,</span>
+<span class="sd">    &gt;&gt;&gt;     layer_dims=[250, 50],</span>
+<span class="sd">    &gt;&gt;&gt;     n_clf_task=2,</span>
+<span class="sd">    &gt;&gt;&gt;     n_reg_task=3,</span>
+<span class="sd">    &gt;&gt;&gt;     multt_layer_dims=[20, 10],</span>
+<span class="sd">    &gt;&gt;&gt;     multt_dropout=0.2,</span>
+<span class="sd">    &gt;&gt;&gt;     multt_layer_activation=&#39;ELU&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     multt_batchnorm=False,</span>
+<span class="sd">    &gt;&gt;&gt;     multt_clf_activation=&#39;Sigmoid&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     multt_reg_activation=[&#39;TanU&#39;, None, None],</span>
+<span class="sd">    &gt;&gt;&gt;     layer_dropout=0.4,</span>
+<span class="sd">    &gt;&gt;&gt;     layer_activation=&#39;ELU&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     batchnorm=True</span>
+<span class="sd">    &gt;&gt;&gt; )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="c1"># feature extractor parameters</span>
+            <span class="n">in_feats</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">emb_feats</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">layer_dims</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+            <span class="n">n_clf_task</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">n_reg_task</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+
+            <span class="c1"># multi-task layers parameters</span>
+            <span class="n">multt_layer_dims</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+            <span class="n">multt_dropout</span><span class="p">:</span> <span class="nb">list</span> <span class="ow">or</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">multt_layer_activation</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="ow">or</span> <span class="nb">str</span> <span class="ow">or</span> <span class="kc">None</span> <span class="o">=</span> <span class="s1">&#39;ELU&#39;</span><span class="p">,</span>
+            <span class="n">multt_batchnorm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">multt_clf_activation</span><span class="p">:</span> <span class="nb">str</span> <span class="ow">or</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="ow">or</span> <span class="nb">list</span> <span class="ow">or</span> <span class="kc">None</span> <span class="o">=</span> <span class="s1">&#39;Sigmoid&#39;</span><span class="p">,</span>
+            <span class="n">multt_reg_activation</span><span class="p">:</span> <span class="nb">str</span> <span class="ow">or</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="ow">or</span> <span class="nb">list</span> <span class="ow">or</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+
+            <span class="c1"># other feature extractor parameters</span>
+            <span class="n">layer_dropout</span><span class="p">:</span> <span class="nb">list</span> <span class="ow">or</span> <span class="nb">float</span> <span class="ow">or</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">layer_activation</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="ow">or</span> <span class="nb">str</span> <span class="ow">or</span> <span class="kc">None</span> <span class="o">=</span> <span class="s1">&#39;ELU&#39;</span><span class="p">,</span>
+            <span class="n">batchnorm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MultiTaskFFN</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># save input parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_feats</span> <span class="o">=</span> <span class="n">in_feats</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emb_feats</span> <span class="o">=</span> <span class="n">emb_feats</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_clf_task</span> <span class="o">=</span> <span class="n">n_clf_task</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_reg_task</span> <span class="o">=</span> <span class="n">n_reg_task</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_dims</span> <span class="o">=</span> <span class="n">layer_dims</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multt_layer_dims</span> <span class="o">=</span> <span class="n">multt_layer_dims</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multt_dropout</span> <span class="o">=</span> <span class="n">multt_dropout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multt_layer_activation</span> <span class="o">=</span> <span class="n">multt_layer_activation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multt_batchnorm</span> <span class="o">=</span> <span class="n">multt_batchnorm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multt_clf_activation</span> <span class="o">=</span> <span class="n">multt_clf_activation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multt_reg_activation</span> <span class="o">=</span> <span class="n">multt_reg_activation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_dropout</span> <span class="o">=</span> <span class="n">layer_dropout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_activation</span> <span class="o">=</span> <span class="n">layer_activation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batchnorm</span> <span class="o">=</span> <span class="n">batchnorm</span>
+
+        <span class="c1"># check (and rearrange) input parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_checkModelParams</span><span class="p">()</span>
+
+        <span class="c1"># create common layers (aka feature extractor)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span> <span class="o">=</span> <span class="n">createSimpleFFNModel</span><span class="p">(</span>
+            <span class="n">in_feats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">in_feats</span><span class="p">,</span>
+            <span class="n">out_feats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emb_feats</span><span class="p">,</span>
+            <span class="n">layer_dims</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_dims</span><span class="p">,</span>
+            <span class="n">layer_dropout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_dropout</span><span class="p">,</span>
+            <span class="n">batchnorm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batchnorm</span><span class="p">,</span>
+            <span class="n">layer_activation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_activation</span><span class="p">,</span>
+            <span class="n">output_activation</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># create multitask layers</span>
+        <span class="c1"># -- classification layers</span>
+        <span class="n">clf_layers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_clf_task</span><span class="p">):</span>
+            <span class="n">clf_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">createSimpleFFNModel</span><span class="p">(</span>
+                    <span class="n">in_feats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emb_feats</span><span class="p">,</span>
+                    <span class="n">out_feats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">layer_dims</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_layer_dims</span><span class="p">,</span>
+                    <span class="n">layer_dropout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_dropout</span><span class="p">,</span>
+                    <span class="n">batchnorm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_batchnorm</span><span class="p">,</span>
+                    <span class="n">layer_activation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_layer_activation</span><span class="p">,</span>
+                    <span class="n">output_activation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_clf_activation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">clf_layers</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="n">clf_layers</span><span class="p">)</span>
+
+        <span class="c1"># -- regression layers</span>
+        <span class="n">reg_layers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_reg_task</span><span class="p">):</span>
+            <span class="n">reg_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">createSimpleFFNModel</span><span class="p">(</span>
+                    <span class="n">in_feats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emb_feats</span><span class="p">,</span>
+                    <span class="n">out_feats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">layer_dims</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_layer_dims</span><span class="p">,</span>
+                    <span class="n">layer_dropout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_dropout</span><span class="p">,</span>
+                    <span class="n">batchnorm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_batchnorm</span><span class="p">,</span>
+                    <span class="n">layer_activation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_layer_activation</span><span class="p">,</span>
+                    <span class="n">output_activation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_reg_activation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reg_layers</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="n">reg_layers</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_checkModelParams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Function used to check the input parameters. &quot;&quot;&quot;</span>
+        <span class="c1"># check number of task parameters</span>
+        <span class="n">checkMultiInputTypes</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;n_clf_task&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_clf_task</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;n_reg_task&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_reg_task</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_clf_task</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;The number of classification tasks (&quot;n_clf_task&quot;) cannot &#39;</span>
+                <span class="s1">&#39;be less than 0 (provided </span><span class="si">%d</span><span class="s1">).&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_clf_task</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_reg_task</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;The number of regression tasks (&quot;n_reg_task&quot;) cannot &#39;</span>
+                <span class="s1">&#39;be less than 0 (provided </span><span class="si">%d</span><span class="s1">).&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_reg_task</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_clf_task</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_reg_task</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;n_clf_task + n_reg_task cannot be less than 2 (provided </span><span class="si">%d</span><span class="s1">).&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_clf_task</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_reg_task</span><span class="p">))</span>
+
+        <span class="c1"># put activation functions into a list</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_clf_activation</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">multt_clf_activation</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_clf_activation</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_clf_task</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_reg_activation</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">multt_reg_activation</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_reg_activation</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_reg_task</span>
+
+        <span class="c1"># check activation functions shape</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_clf_activation</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_clf_task</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Missmatch between activation functions (</span><span class="si">%d</span><span class="s1">) and classification tasks (</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_clf_activation</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_clf_task</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_reg_activation</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_reg_task</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Missmatch between activation functions (</span><span class="si">%d</span><span class="s1">) and regression tasks (</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_reg_activation</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_reg_task</span><span class="p">))</span>
+
+        <span class="n">checkMultiInputTypes</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;in_feats&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_feats</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;emb_feats&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_feats</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;layer_dims&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dims</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;multt_layer_dims&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">multt_layer_dims</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;multt_dropout&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">multt_dropout</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+            <span class="p">(</span><span class="s1">&#39;multt_layer_activation&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">multt_layer_activation</span><span class="p">,</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+            <span class="p">(</span><span class="s1">&#39;multt_batchnorm&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">multt_batchnorm</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;multt_clf_activation&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">multt_clf_activation</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;multt_reg_activation&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">multt_reg_activation</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;layer_dropout&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dropout</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+            <span class="p">(</span><span class="s1">&#39;layer_activation&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_activation</span><span class="p">,</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+            <span class="p">(</span><span class="s1">&#39;batchnorm&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batchnorm</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">])</span>
+        <span class="p">)</span>
+
+        <span class="c1"># check number of feature parameters</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_feats</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;The number of input features (&quot;in_feats&quot;) cannot be less than 1 (provided </span><span class="si">%d</span><span class="s1">).&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_feats</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_feats</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;The number of embedding features (&quot;emb_feats&quot;) cannot be less than 1 (provided </span><span class="si">%d</span><span class="s1">).&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_feats</span><span class="p">)</span>
+
+        <span class="c1"># check activation functions for classification tasks</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_clf_activation</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_clf_activation</span><span class="p">):</span>
+                <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;multt_clf_activation[</span><span class="si">%d</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">])</span>
+
+        <span class="c1"># check activation functions for regression tasks</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_reg_activation</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_reg_activation</span><span class="p">):</span>
+                <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;multt_reg_activation[</span><span class="si">%d</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">])</span>
+
+<div class="viewcode-block" id="MultiTaskFFN.forward"><a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.MultiTaskFFN.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+
+        <span class="c1"># forward pass for the feature extractor</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="c1"># forward pass for the classification tasks</span>
+        <span class="n">clf_out</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">clf_layers</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">emb</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clf_layers</span><span class="p">))]</span>
+        <span class="c1"># forward pass for the regression tasks</span>
+        <span class="n">reg_out</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">reg_layers</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">emb</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reg_layers</span><span class="p">))]</span>
+
+        <span class="c1"># concat classification and regression predictions</span>
+        <span class="n">comb_preds</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">clf_out</span> <span class="o">+</span> <span class="n">reg_out</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">comb_preds</span></div></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Fernando García Gutiérrez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
