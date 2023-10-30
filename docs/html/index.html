@@ -11,11 +11,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -73,14 +73,14 @@
            <div itemprop="articleBody">
              
   <section id="gojo-make-machine-deep-learning-pipelines-simple">
-<h1>GoJo - Make Machine/Deep Learning pipelines simple<a class="headerlink" href="#gojo-make-machine-deep-learning-pipelines-simple" title="Permalink to this heading"></a></h1>
+<h1>GoJo - Make Machine/Deep Learning pipelines simple<a class="headerlink" href="#gojo-make-machine-deep-learning-pipelines-simple" title="Link to this heading"></a></h1>
 <blockquote>
 <div><p>Python library with a variety of pipeline implementations typically used to develop and evaluate Deep Learning and Machine Learning models.</p>
 </div></blockquote>
 <p><strong>IMPORTANT NOTE</strong>: Library still under development and subjected to changes (this is an alpha version). Check out the <a class="reference external" href="https://github.com/FernandoGaGu/GoJo-ML">github</a> page.</p>
 <p>This Python library offers a comprehensive suite of pipeline implementations, specifically designed to streamline the entire process of developing and evaluating Deep Learning and Machine Learning models. These pipelines serve as an invaluable resource for researchers, data scientists, and engineers by providing a structured and efficient framework for tasks such as data preprocessing, feature engineering, model training, and performance evaluation. Whether you’re working on computer vision, natural language processing, recommendation systems, or any other machine learning domain, this library equips you with the tools and utilities necessary to expedite your project development. With a rich set of modules and customizable components, it caters to a wide range of use cases and simplifies the complex journey of model creation and fine-tuning, ultimately contributing to more robust and accurate predictive models.</p>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
 <p>First clone the current repository:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:FernandoGaGu/Gojo-ML.git
 </pre></div>
@@ -92,7 +92,7 @@ python<span class="w"> </span>setup.py<span class="w"> </span>install
 </div>
 </section>
 <section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading"></a></h2>
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
 <p>Below is a basic example of use, for more examples see the notebooks located in the notebook folder. At the moment there are few examples and they are poorly documented, later, as the library stabilizes, more examples will be added.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># In this example, an SVM model (implemented in sklearn) is evaluated via cross-validation</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -130,47 +130,214 @@ python<span class="w"> </span>setup.py<span class="w"> </span>install
 </div>
 </section>
 <section id="warranties">
-<h2>Warranties<a class="headerlink" href="#warranties" title="Permalink to this heading"></a></h2>
+<h2>Warranties<a class="headerlink" href="#warranties" title="Link to this heading"></a></h2>
 <p>The code used, although it has been reviewed and tested with different test problems where it has been shown to lead to correct solutions, is still under development and it is possible to experience undetected bugs. If any errors appear, please report them to us via <a class="reference external" href="https://github.com/FernandoGaGu/GoJo-ML/issues">issues</a>.</p>
 </section>
 </section>
 <section id="modules">
-<h1>Modules<a class="headerlink" href="#modules" title="Permalink to this heading"></a></h1>
+<h1>Modules<a class="headerlink" href="#modules" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="gojo.core.html">gojo.core package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="gojo.core.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gojo.core.html#module-gojo.core.base">gojo.core.base module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gojo.core.html#module-gojo.core.evaluation">gojo.core.evaluation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gojo.core.html#module-gojo.core.loops">gojo.core.loops module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gojo.core.html#module-gojo.core.report">gojo.core.report module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gojo.core.html#module-gojo.core.transform">gojo.core.transform module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.core.html#module-gojo.core.base">gojo.core.base module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gojo.core.html#gojo.core.base.Dataset"><code class="docutils literal notranslate"><span class="pre">Dataset</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.Dataset.array_data"><code class="docutils literal notranslate"><span class="pre">Dataset.array_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.Dataset.index_values"><code class="docutils literal notranslate"><span class="pre">Dataset.index_values</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.Dataset.var_names"><code class="docutils literal notranslate"><span class="pre">Dataset.var_names</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.core.html#gojo.core.base.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.Model.copy"><code class="docutils literal notranslate"><span class="pre">Model.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.Model.fitted"><code class="docutils literal notranslate"><span class="pre">Model.fitted()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.Model.getParameters"><code class="docutils literal notranslate"><span class="pre">Model.getParameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.Model.is_fitted"><code class="docutils literal notranslate"><span class="pre">Model.is_fitted</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.Model.parameters"><code class="docutils literal notranslate"><span class="pre">Model.parameters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.Model.performInference"><code class="docutils literal notranslate"><span class="pre">Model.performInference()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.Model.reset"><code class="docutils literal notranslate"><span class="pre">Model.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.Model.resetFit"><code class="docutils literal notranslate"><span class="pre">Model.resetFit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.Model.train"><code class="docutils literal notranslate"><span class="pre">Model.train()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.Model.update"><code class="docutils literal notranslate"><span class="pre">Model.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.Model.updateParameters"><code class="docutils literal notranslate"><span class="pre">Model.updateParameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.core.html#gojo.core.base.ParametrizedTorchSKInterface"><code class="docutils literal notranslate"><span class="pre">ParametrizedTorchSKInterface</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.ParametrizedTorchSKInterface.copy"><code class="docutils literal notranslate"><span class="pre">ParametrizedTorchSKInterface.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.ParametrizedTorchSKInterface.getParameters"><code class="docutils literal notranslate"><span class="pre">ParametrizedTorchSKInterface.getParameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.ParametrizedTorchSKInterface.updateParameters"><code class="docutils literal notranslate"><span class="pre">ParametrizedTorchSKInterface.updateParameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.core.html#gojo.core.base.SklearnModelWrapper"><code class="docutils literal notranslate"><span class="pre">SklearnModelWrapper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.SklearnModelWrapper.copy"><code class="docutils literal notranslate"><span class="pre">SklearnModelWrapper.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.SklearnModelWrapper.getParameters"><code class="docutils literal notranslate"><span class="pre">SklearnModelWrapper.getParameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.SklearnModelWrapper.performInference"><code class="docutils literal notranslate"><span class="pre">SklearnModelWrapper.performInference()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.SklearnModelWrapper.reset"><code class="docutils literal notranslate"><span class="pre">SklearnModelWrapper.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.SklearnModelWrapper.train"><code class="docutils literal notranslate"><span class="pre">SklearnModelWrapper.train()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.SklearnModelWrapper.updateParameters"><code class="docutils literal notranslate"><span class="pre">SklearnModelWrapper.updateParameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.core.html#gojo.core.base.TorchSKInterface"><code class="docutils literal notranslate"><span class="pre">TorchSKInterface</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.TorchSKInterface.copy"><code class="docutils literal notranslate"><span class="pre">TorchSKInterface.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.TorchSKInterface.fitting_history"><code class="docutils literal notranslate"><span class="pre">TorchSKInterface.fitting_history</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.TorchSKInterface.getParameters"><code class="docutils literal notranslate"><span class="pre">TorchSKInterface.getParameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.TorchSKInterface.num_params"><code class="docutils literal notranslate"><span class="pre">TorchSKInterface.num_params</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.TorchSKInterface.performInference"><code class="docutils literal notranslate"><span class="pre">TorchSKInterface.performInference()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.TorchSKInterface.reset"><code class="docutils literal notranslate"><span class="pre">TorchSKInterface.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.TorchSKInterface.train"><code class="docutils literal notranslate"><span class="pre">TorchSKInterface.train()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.base.TorchSKInterface.updateParameters"><code class="docutils literal notranslate"><span class="pre">TorchSKInterface.updateParameters()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.core.html#module-gojo.core.evaluation">gojo.core.evaluation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gojo.core.html#gojo.core.evaluation.Metric"><code class="docutils literal notranslate"><span class="pre">Metric</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.core.html#gojo.core.evaluation.flatFunctionInput"><code class="docutils literal notranslate"><span class="pre">flatFunctionInput()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.core.html#gojo.core.evaluation.getAvailableDefaultNetrics"><code class="docutils literal notranslate"><span class="pre">getAvailableDefaultNetrics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.core.html#gojo.core.evaluation.getDefaultMetrics"><code class="docutils literal notranslate"><span class="pre">getDefaultMetrics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.core.html#gojo.core.evaluation.getScores"><code class="docutils literal notranslate"><span class="pre">getScores()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.core.html#module-gojo.core.loops">gojo.core.loops module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gojo.core.html#gojo.core.loops.evalCrossVal"><code class="docutils literal notranslate"><span class="pre">evalCrossVal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.core.html#gojo.core.loops.evalCrossValNestedHPO"><code class="docutils literal notranslate"><span class="pre">evalCrossValNestedHPO()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.core.html#module-gojo.core.report">gojo.core.report module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gojo.core.html#gojo.core.report.CVReport"><code class="docutils literal notranslate"><span class="pre">CVReport</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.report.CVReport.addMetadata"><code class="docutils literal notranslate"><span class="pre">CVReport.addMetadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.report.CVReport.getFittedTransforms"><code class="docutils literal notranslate"><span class="pre">CVReport.getFittedTransforms()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.report.CVReport.getScores"><code class="docutils literal notranslate"><span class="pre">CVReport.getScores()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.report.CVReport.getTestPredictions"><code class="docutils literal notranslate"><span class="pre">CVReport.getTestPredictions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.report.CVReport.getTrainPredictions"><code class="docutils literal notranslate"><span class="pre">CVReport.getTrainPredictions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.report.CVReport.getTrainedModels"><code class="docutils literal notranslate"><span class="pre">CVReport.getTrainedModels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.report.CVReport.metadata"><code class="docutils literal notranslate"><span class="pre">CVReport.metadata</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.core.html#module-gojo.core.transform">gojo.core.transform module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gojo.core.html#gojo.core.transform.SKLearnTransformWrapper"><code class="docutils literal notranslate"><span class="pre">SKLearnTransformWrapper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.copy"><code class="docutils literal notranslate"><span class="pre">SKLearnTransformWrapper.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.fit"><code class="docutils literal notranslate"><span class="pre">SKLearnTransformWrapper.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.getParameters"><code class="docutils literal notranslate"><span class="pre">SKLearnTransformWrapper.getParameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.reset"><code class="docutils literal notranslate"><span class="pre">SKLearnTransformWrapper.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.transform"><code class="docutils literal notranslate"><span class="pre">SKLearnTransformWrapper.transform()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.updateParameters"><code class="docutils literal notranslate"><span class="pre">SKLearnTransformWrapper.updateParameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.core.html#gojo.core.transform.Transform"><code class="docutils literal notranslate"><span class="pre">Transform</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.transform.Transform.copy"><code class="docutils literal notranslate"><span class="pre">Transform.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.transform.Transform.fit"><code class="docutils literal notranslate"><span class="pre">Transform.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.transform.Transform.fitted"><code class="docutils literal notranslate"><span class="pre">Transform.fitted()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.transform.Transform.getParameters"><code class="docutils literal notranslate"><span class="pre">Transform.getParameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.transform.Transform.is_fitted"><code class="docutils literal notranslate"><span class="pre">Transform.is_fitted</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.transform.Transform.reset"><code class="docutils literal notranslate"><span class="pre">Transform.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.transform.Transform.resetFit"><code class="docutils literal notranslate"><span class="pre">Transform.resetFit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.transform.Transform.transform"><code class="docutils literal notranslate"><span class="pre">Transform.transform()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.transform.Transform.update"><code class="docutils literal notranslate"><span class="pre">Transform.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.core.html#gojo.core.transform.Transform.updateParameters"><code class="docutils literal notranslate"><span class="pre">Transform.updateParameters()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="gojo.core.html#module-gojo.core">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gojo.deepl.html">gojo.deepl package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.callback">gojo.deepl.callback module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.ffn">gojo.deepl.ffn module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.loading">gojo.deepl.loading module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.loops">gojo.deepl.loops module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.models">gojo.deepl.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.callback">gojo.deepl.callback module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gojo.deepl.html#gojo.deepl.callback.Callback"><code class="docutils literal notranslate"><span class="pre">Callback</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gojo.deepl.html#gojo.deepl.callback.Callback.evaluate"><code class="docutils literal notranslate"><span class="pre">Callback.evaluate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.deepl.html#gojo.deepl.callback.Callback.resetState"><code class="docutils literal notranslate"><span class="pre">Callback.resetState()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.deepl.html#gojo.deepl.callback.EarlyStopping"><code class="docutils literal notranslate"><span class="pre">EarlyStopping</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gojo.deepl.html#gojo.deepl.callback.EarlyStopping.DIRECTIVE"><code class="docutils literal notranslate"><span class="pre">EarlyStopping.DIRECTIVE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.deepl.html#gojo.deepl.callback.EarlyStopping.VALID_TRACKING_OPTS"><code class="docutils literal notranslate"><span class="pre">EarlyStopping.VALID_TRACKING_OPTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.deepl.html#gojo.deepl.callback.EarlyStopping.evaluate"><code class="docutils literal notranslate"><span class="pre">EarlyStopping.evaluate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.deepl.html#gojo.deepl.callback.EarlyStopping.resetState"><code class="docutils literal notranslate"><span class="pre">EarlyStopping.resetState()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.ffn">gojo.deepl.ffn module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gojo.deepl.html#gojo.deepl.ffn.createSimpleFFNModel"><code class="docutils literal notranslate"><span class="pre">createSimpleFFNModel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.deepl.html#gojo.deepl.ffn.createSimpleParametrizedFFNModel"><code class="docutils literal notranslate"><span class="pre">createSimpleParametrizedFFNModel()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.loading">gojo.deepl.loading module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gojo.deepl.html#gojo.deepl.loading.TorchDataset"><code class="docutils literal notranslate"><span class="pre">TorchDataset</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.loops">gojo.deepl.loops module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gojo.deepl.html#gojo.deepl.loops.fitNeuralNetwork"><code class="docutils literal notranslate"><span class="pre">fitNeuralNetwork()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.deepl.html#gojo.deepl.loops.getAvailableIterationFunctions"><code class="docutils literal notranslate"><span class="pre">getAvailableIterationFunctions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.deepl.html#gojo.deepl.loops.iterSupervisedEpoch"><code class="docutils literal notranslate"><span class="pre">iterSupervisedEpoch()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.models">gojo.deepl.models module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gojo.deepl.html#gojo.deepl.models.MultiTaskFFN"><code class="docutils literal notranslate"><span class="pre">MultiTaskFFN</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gojo.deepl.html#gojo.deepl.models.MultiTaskFFN.forward"><code class="docutils literal notranslate"><span class="pre">MultiTaskFFN.forward()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gojo.deepl.html#gojo.deepl.models.MultiTaskFFN.training"><code class="docutils literal notranslate"><span class="pre">MultiTaskFFN.training</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gojo.plotting.html">gojo.plotting package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="gojo.plotting.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gojo.plotting.html#module-gojo.plotting.basic">gojo.plotting.basic module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gojo.plotting.html#gojo-plotting-classification-module">gojo.plotting.classification module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.plotting.html#module-gojo.plotting.basic">gojo.plotting.basic module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gojo.plotting.html#gojo.plotting.basic.barPlot"><code class="docutils literal notranslate"><span class="pre">barPlot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.plotting.html#gojo.plotting.basic.linePlot"><code class="docutils literal notranslate"><span class="pre">linePlot()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.plotting.html#gojo-plotting-classification-module">gojo.plotting.classification module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gojo.plotting.html#gojo.plotting.classification.confusionMatrix"><code class="docutils literal notranslate"><span class="pre">confusionMatrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.plotting.html#gojo.plotting.classification.roc"><code class="docutils literal notranslate"><span class="pre">roc()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="gojo.plotting.html#module-gojo.plotting">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gojo.util.html">gojo.util package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="gojo.util.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gojo.util.html#module-gojo.util.io">gojo.util.io module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gojo.util.html#module-gojo.util.tools">gojo.util.tools module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gojo.util.html#module-gojo.util.validation">gojo.util.validation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gojo.util.html#module-gojo.util.login">gojo.util.login module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.util.html#module-gojo.util.io">gojo.util.io module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.io.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.io.loadJson"><code class="docutils literal notranslate"><span class="pre">loadJson()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.io.pprint"><code class="docutils literal notranslate"><span class="pre">pprint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.io.saveJson"><code class="docutils literal notranslate"><span class="pre">saveJson()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.io.serialize"><code class="docutils literal notranslate"><span class="pre">serialize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.util.html#module-gojo.util.tools">gojo.util.tools module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.tools.getCrossValObj"><code class="docutils literal notranslate"><span class="pre">getCrossValObj()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.tools.getNumModelParams"><code class="docutils literal notranslate"><span class="pre">getNumModelParams()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.tools.minMaxScaling"><code class="docutils literal notranslate"><span class="pre">minMaxScaling()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.tools.zscoresScaling"><code class="docutils literal notranslate"><span class="pre">zscoresScaling()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.util.html#module-gojo.util.validation">gojo.util.validation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.validation.checkCallable"><code class="docutils literal notranslate"><span class="pre">checkCallable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.validation.checkClass"><code class="docutils literal notranslate"><span class="pre">checkClass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.validation.checkInputType"><code class="docutils literal notranslate"><span class="pre">checkInputType()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.validation.checkIterable"><code class="docutils literal notranslate"><span class="pre">checkIterable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.validation.checkMultiInputTypes"><code class="docutils literal notranslate"><span class="pre">checkMultiInputTypes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.validation.fileExists"><code class="docutils literal notranslate"><span class="pre">fileExists()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.validation.pathExists"><code class="docutils literal notranslate"><span class="pre">pathExists()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.util.html#module-gojo.util.login">gojo.util.login module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.login.Login"><code class="docutils literal notranslate"><span class="pre">Login</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gojo.util.html#gojo.util.login.Login.logger_levels"><code class="docutils literal notranslate"><span class="pre">Login.logger_levels</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.login.configureLogger"><code class="docutils literal notranslate"><span class="pre">configureLogger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.login.deactivate"><code class="docutils literal notranslate"><span class="pre">deactivate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gojo.util.html#gojo.util.login.isActive"><code class="docutils literal notranslate"><span class="pre">isActive()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="gojo.util.html#module-gojo.util">Module contents</a></li>
 </ul>
 </li>
@@ -178,7 +345,7 @@ python<span class="w"> </span>setup.py<span class="w"> </span>install
 </div>
 </section>
 <section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
