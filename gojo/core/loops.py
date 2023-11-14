@@ -45,15 +45,17 @@ from ..exception import (
 from ..util.io import pprint
 
 
-def _getModelPredictions(model: Model, X: np.ndarray) -> np.ndarray:
+def _getModelPredictions(model: Model, X: np.ndarray, op_instance_args: dict) -> np.ndarray:
     """ Subroutine that return the model predictions. Model prediction order resolution:
     The predictions will be returned as numpy.arrays.
     """
     checkMultiInputTypes(
         ('X', X, [np.ndarray]),
-        ('model', model, [Model]))
+        ('model', model, [Model]),
+        ('op_instance_args', op_instance_args, [dict])
+    )
 
-    predictions = model.performInference(X)
+    predictions = model.performInference(X, **op_instance_args)
 
     checkInputType('model.performInference() -> out', predictions, [np.ndarray])
 
@@ -61,13 +63,19 @@ def _getModelPredictions(model: Model, X: np.ndarray) -> np.ndarray:
 
 
 def _fitModelAndPredict(model: Model, X_train: np.ndarray, X_test: np.ndarray,
-                        y_train: np.ndarray = None) -> np.ndarray:
+                        y_train: np.ndarray = None, op_train_instance_args: dict = None,
+                        op_test_instance_args: dict = None) -> np.ndarray:
     """ Subroutine used to fit a model and make the predictions. """
     checkMultiInputTypes(
         ('X_train', X_train, [np.ndarray]),
         ('X_test', X_test, [np.ndarray]),
         ('y_train', y_train, [np.ndarray, type(None)]),
-        ('model', model, [Model]))
+        ('model', model, [Model]),
+        ('op_train_instance_args', op_train_instance_args, [dict, type(None)]),
+        ('op_test_instance_args', op_test_instance_args, [dict, type(None)]))
+
+    op_train_instance_args = {} if op_train_instance_args is None else op_train_instance_args
+    op_test_instance_args = {} if op_test_instance_args is None else op_test_instance_args
 
     if model.is_fitted:
         warnings.warn(
@@ -75,18 +83,23 @@ def _fitModelAndPredict(model: Model, X_train: np.ndarray, X_test: np.ndarray,
             'automatically reset using "model.resetFit()" and re-fitted.')
         model.resetFit()
 
-    model.train(X_train, y_train)
-    predictions = _getModelPredictions(model=model, X=X_test)
+    model.train(X_train, y_train, **op_train_instance_args)
+    predictions = _getModelPredictions(model=model, X=X_test, op_instance_args=op_test_instance_args)
 
     return predictions
 
 
-def _applyTransforms(transforms: List[Transform], X: np.ndarray, y: np.ndarray = None) -> np.ndarray:
+def _applyTransforms(transforms: List[Transform], X: np.ndarray, y: np.ndarray = None,
+                     op_instance_args: dict = None) -> np.ndarray:
     """ Subroutine that applies the provided transforms.  """
     checkMultiInputTypes(
         ('transforms', transforms, [list]),
         ('X', X, [np.ndarray]),
-        ('y', y, [np.ndarray, type(None)]))
+        ('y', y, [np.ndarray, type(None)]),
+        ('op_instance_args', op_instance_args, [dict, type(None)])
+    )
+
+    op_instance_args = {} if op_instance_args is None else op_instance_args
 
     if len(transforms) == 0:
         raise TypeError('Parameter "transformations" is an empty list.')
@@ -97,13 +110,14 @@ def _applyTransforms(transforms: List[Transform], X: np.ndarray, y: np.ndarray =
         if not transform.is_fitted:
             raise UnfittedTransform()
 
-        X = transform.transform(X=X, y=y)
+        X = transform.transform(X=X, y=y, **op_instance_args)
 
     return X
 
 
 def _fitAndApplyTransforms(transforms: List[Transform], X_train: np.ndarray, X_test: np.ndarray,
-                           y_train: np.ndarray = None, y_test: np.ndarray = None) -> tuple:
+                           y_train: np.ndarray = None, y_test: np.ndarray = None,
+                           op_train_instance_args: dict = None, op_test_instance_args: dict = None) -> tuple:
     """ Subroutine used to fit transforms and make predictions.
 
     NOTE: This functions performs inplace modification of the input transforms.
@@ -113,7 +127,13 @@ def _fitAndApplyTransforms(transforms: List[Transform], X_train: np.ndarray, X_t
         ('X_train', X_train, [np.ndarray]),
         ('X_test', X_test, [np.ndarray]),
         ('y_train', y_train, [np.ndarray, type(None)]),
-        ('y_test', y_test, [np.ndarray, type(None)]))
+        ('y_test', y_test, [np.ndarray, type(None)]),
+        ('op_train_instance_args', op_train_instance_args, [dict, type(None)]),
+        ('op_test_instance_args', op_test_instance_args, [dict, type(None)]),
+    )
+
+    op_train_instance_args = {} if op_train_instance_args is None else op_train_instance_args
+    op_test_instance_args = {} if op_test_instance_args is None else op_test_instance_args
 
     if len(transforms) == 0:
         raise TypeError('Parameter "transformations" is an empty list.')
@@ -130,9 +150,9 @@ def _fitAndApplyTransforms(transforms: List[Transform], X_train: np.ndarray, X_t
 
         # fit the transformations based on the training data, and apply the transformation
         # to the training/test data
-        transform.fit(X=X_train, y=y_train)
-        X_train = transform.transform(X=X_train, y=y_train)
-        X_test = transform.transform(X=X_test, y=y_test)
+        transform.fit(X=X_train, y=y_train, **op_train_instance_args)
+        X_train = transform.transform(X=X_train, y=y_train, **op_train_instance_args)
+        X_test = transform.transform(X=X_test, y=y_test, **op_test_instance_args)
 
     return X_train, X_test
 
@@ -151,7 +171,8 @@ def _evalCrossValFold(
         _reset_model_fit: bool,
         _transforms: list or None,
         _return_transforms: bool,
-        _reset_transforms: bool) -> tuple:
+        _reset_transforms: bool,
+        _op_instance_args: dict) -> tuple:
     """ Subroutine used internally to train and perform the predictions of a model in relation to a fold. This
     subroutine has been segmented to allow parallelization of training.
 
@@ -192,6 +213,9 @@ def _evalCrossValFold(
         Parameter indicating if the transforms should be reset by calling to the
         'resetFit()' method.
 
+    _op_instance_args : dict or None
+        Optional instance-level parameters.
+
     Returns
     -------
     (_n_fold, y_pred_test, y_pred_train, y_true_test, y_true_train, test_idx, train_idx, trained_model,
@@ -206,21 +230,40 @@ def _evalCrossValFold(
     parameter).
     """
 
+    # separate instance-level parameters if provided
+    _op_train_instance_args = {}
+    _op_test_instance_args = {}
+    if len(_op_instance_args) > 0:
+        for _var_name, _var_values in _op_instance_args.items():
+            _op_train_instance_args[_var_name] = [_var_values[_idx] for _idx in _train_idx]
+            _op_test_instance_args[_var_name] = [_var_values[_idx] for _idx in _test_idx]
+
     # fit transformations to the training data and apply to the test data
     if _transforms is not None:
         _X_train, _X_test = _fitAndApplyTransforms(
-            transforms=_transforms, X_train=_X_train, X_test=_X_test, y_train=_y_train, y_test=_y_test)
+            transforms=_transforms,
+            X_train=_X_train,
+            X_test=_X_test,
+            y_train=_y_train,
+            y_test=_y_test,
+            op_train_instance_args=_op_train_instance_args,
+            op_test_instance_args=_op_test_instance_args)
 
     # train the model and make the predictions on the test data
     y_pred_test = _fitModelAndPredict(
-        model=_model, X_train=_X_train, X_test=_X_test, y_train=_y_train)
+        model=_model,
+        X_train=_X_train,
+        X_test=_X_test,
+        y_train=_y_train,
+        op_train_instance_args=_op_train_instance_args,
+        op_test_instance_args=_op_test_instance_args)
 
     # make predictions on the training data and save training data information
     y_pred_train = None
     y_true_train = None
     train_idx = None
     if _predict_train:
-        y_pred_train = _getModelPredictions(model=_model, X=_X_train)
+        y_pred_train = _getModelPredictions(model=_model, X=_X_train, op_instance_args=_op_train_instance_args)
         y_true_train = _y_train
         train_idx = _train_idx
 
@@ -284,7 +327,8 @@ def evalCrossVal(
         n_jobs: int = 1,
         save_train_preds: bool = False,
         save_transforms: bool = False,
-        save_models: bool = False) -> CVReport:
+        save_models: bool = False,
+        op_instance_args: dict = None) -> CVReport:
     """ Subroutine used to evaluate a model according to a cross-validation scheme provided by the `cv` argument.
 
     Parameters
@@ -326,6 +370,9 @@ def evalCrossVal(
         Parameter that indicates whether the fitted models will be saved in :class:`gojo.core.report.CVReport`. For
         larger models this may involve higher computational and storage costs.
 
+    op_instance_args : dict, default=None
+        Instance-level optional arguments. This parameter should be a dictionary whose values must be list containing
+        the same number of elements as instances in `X` and `y`.
 
     Returns
     --------
@@ -402,11 +449,27 @@ def evalCrossVal(
         ('save_models', save_models, [bool]),
         ('save_transforms', save_transforms, [bool]),
         ('save_train_preds', save_train_preds, [bool]),
+        ('op_instance_args', op_instance_args, [dict, type(None)])
     )
 
     # create the model datasets
     X_dt = Dataset(X)
     y_dt = Dataset(y)
+
+    # check op_instance_args argument
+    if op_instance_args is not None:
+        for var_name, var_values in op_instance_args.items():
+            checkInputType('op_instance_args["%s"]' % var_name, var_values, [list])
+            if len(X_dt) != len(var_values):
+                raise TypeError(
+                    'Missmatch in X shape (%d) and op_instance_args["%s"] shape (%d).' % (
+                        len(X_dt), var_name, len(var_values)))
+    else:
+        op_instance_args = {}
+
+    # check data lengths
+    if len(X_dt) != len(y_dt):
+        raise TypeError('Missmatch in X shape (%d) and y shape (%d).' % (len(X_dt), len(y_dt)))
 
     # verbose parameters
     verbose = np.inf if verbose < 0 else verbose   # negative values indicate activate all
@@ -434,7 +497,8 @@ def evalCrossVal(
                 _reset_model_fit=True,     # inplace modifications take place inside this function
                 _transforms=transforms,
                 _return_transforms=save_transforms,
-                _reset_transforms=True     # inplace modifications take place inside this function
+                _reset_transforms=True,     # inplace modifications take place inside this function
+                _op_instance_args=op_instance_args
             ) for i, (train_idx, test_idx) in tqdm(
                 enumerate(cv.split(X_dt.array_data, y_dt.array_data)),
                 desc='Performing cross-validation...', disable=not show_pbar)
@@ -464,7 +528,8 @@ def evalCrossVal(
                 _reset_model_fit=True,     # inplace modifications take place inside this function
                 _transforms=transforms,
                 _return_transforms=save_transforms,
-                _reset_transforms=True     # inplace modifications take place inside this function
+                _reset_transforms=True,     # inplace modifications take place inside this function
+                _op_instance_args=op_instance_args
             ) for i, (train_idx, test_idx) in tqdm(
                 enumerate(cv.split(X_dt.array_data, y_dt.array_data)),
                 desc='Performing cross-validation...', disable=not show_pbar)
@@ -480,6 +545,10 @@ def evalCrossVal(
         X_dataset=X_dt,
         y_dataset=y_dt,
     )
+
+    # add instance-level parameters as metadata if not None
+    cv_report.addMetadata(
+        op_instance_args=op_instance_args)
 
     return cv_report
 
@@ -502,7 +571,8 @@ def evalCrossValNestedHPO(
         n_jobs: int = 1,
         save_train_preds: bool = False,
         save_transforms: bool = False,
-        save_models: bool = False):
+        save_models: bool = False,
+        op_instance_args: dict = None):
     """ Subroutine used to evaluate a model according to a cross-validation scheme provided by the `outer_cv` argument.
     This function also perform a nested cross-validation for hyperparameter optimization (HPO) based on the `optuna`
     library.
@@ -587,11 +657,16 @@ def evalCrossValNestedHPO(
         Parameter that indicates whether the fitted models will be saved in :class:`gojo.core.report.CVReport`. For
         larger models this may involve higher computational and storage costs.
 
+    op_instance_args : dict, default=None
+        Instance-level optional arguments. This parameter should be a dictionary whose values must be list containing
+        the same number of elements as instances in `X` and `y`.
+
     Returns
     -------
     cv_obj : :class:`gojo.core.report.CVReport`
         Cross validation report. For more information see :class:`gojo.core.report.CVReport`. The HPO history will be
         save in the report metadata (:attr:`gojo.core.report.CVReport.metadata`.
+
 
     Examples
     --------
@@ -674,8 +749,13 @@ def evalCrossValNestedHPO(
             _metrics: list,
             _minimize: bool,
             _objective_metric: str = None,
-            _customAggFunction: callable = None) -> float:
+            _customAggFunction: callable = None,
+            _op_instance_args: dict = None
+    ) -> float:
         """ Subroutine used to run a HPO trial. """
+
+        # default parameter
+        _op_instance_args = {} if _op_instance_args is None else _op_instance_args
 
         if _objective_metric is None and _customAggFunction is None:
             raise TypeError(
@@ -702,7 +782,8 @@ def evalCrossValNestedHPO(
             n_jobs=1,                # avoid using nested parallel executions
             save_train_preds=_customAggFunction is not None,  # save only if a costume aggregation function was provided
             save_models=False,        # does not save models
-            save_transforms=False
+            save_transforms=False,
+            op_instance_args=_op_instance_args
         )
 
         # compute performance metrics
@@ -757,6 +838,7 @@ def evalCrossValNestedHPO(
         ('save_models', save_models, [bool]),
         ('save_transforms', save_transforms, [bool]),
         ('save_train_preds', save_train_preds, [bool]),
+        ('op_instance_args', op_instance_args, [dict, type(None)])
     )
 
     # check consistency of the search space dictionary
@@ -782,6 +864,21 @@ def evalCrossValNestedHPO(
     # create the model datasets
     X_dt = Dataset(X)
     y_dt = Dataset(y)
+
+    # check op_instance_args argument
+    if op_instance_args is not None:
+        for var_name, var_values in op_instance_args.items():
+            checkInputType('op_instance_args["%s"]' % var_name, var_values, [list])
+            if len(X_dt) != len(var_values):
+                raise TypeError(
+                    'Missmatch in X shape (%d) and op_instance_args["%s"] shape (%d).' % (
+                        len(X_dt), var_name, len(var_values)))
+    else:
+        op_instance_args = {}
+
+    # check data lengths
+    if len(X_dt) != len(y_dt):
+        raise TypeError('Missmatch in X shape (%d) and y shape (%d).' % (len(X_dt), len(y_dt)))
 
     # verbose parameters
     verbose = np.inf if verbose < 0 else verbose   # negative values indicate activate all
@@ -824,6 +921,14 @@ def evalCrossValNestedHPO(
         X_test = X_dt.array_data[test_idx]
         y_test = y_dt.array_data[test_idx]
 
+        # extract instance-level parameters
+        op_train_instance_args = {}
+        op_test_instance_args = {}
+        if len(op_instance_args) > 0:
+            for var_name, var_values in op_instance_args.items():
+                op_train_instance_args[var_name] = [var_values[idx] for idx in train_idx]
+                op_test_instance_args[var_name] = [var_values[idx] for idx in test_idx]
+
         transforms_ = None
         if transforms is not None:
             # TODO. Another option is to apply the transforms inside the HPO, but
@@ -840,7 +945,9 @@ def evalCrossValNestedHPO(
 
             # fit and apply the input transformations based on the training data
             X_train, X_test = _fitAndApplyTransforms(
-                transforms=transforms_, X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test)
+                transforms=transforms_, X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test,
+                op_train_instance_args=op_train_instance_args, op_test_instance_args=op_test_instance_args
+            )
 
         # create a partial initialization of the function to optimize
         partial_trialHPO = partial(
@@ -853,7 +960,8 @@ def evalCrossValNestedHPO(
             _metrics=metrics,
             _minimize=minimization,
             _objective_metric=objective_metric,
-            _customAggFunction=agg_function
+            _customAggFunction=agg_function,
+            _op_instance_args=op_train_instance_args
         )
 
         # create the optuna study instance
@@ -894,7 +1002,8 @@ def evalCrossValNestedHPO(
             _reset_model_fit=True,
             _transforms=None,   # transforms were applied at the beginning of the loop
             _return_transforms=False,
-            _reset_transforms=False
+            _reset_transforms=False,
+            _op_instance_args=op_instance_args
         )
 
         # add transforms to the returned fold results
@@ -918,10 +1027,11 @@ def evalCrossValNestedHPO(
         X_dataset=X_dt,
         y_dataset=y_dt)
 
-    # add HPO metadata
+    # add HPO metadata and instance-level parameters
     cv_report.addMetadata(
         hpo_history=hpo_trials_history,
         hpo_best_params=hpo_trials_best_params,
+        op_instance_args=op_instance_args
     )
 
     return cv_report

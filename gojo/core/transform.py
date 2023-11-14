@@ -70,7 +70,7 @@ class Transform(object):
         self._is_fitted = False
 
     @abstractmethod
-    def fit(self, X: np.ndarray, y: np.ndarray or None):
+    def fit(self, X: np.ndarray, y: np.ndarray or None, **kwargs):
         """ Method used to fit a transform to a given input data.
 
         Parameters

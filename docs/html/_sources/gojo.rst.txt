@@ -11,6 +11,8 @@ Subpackages
    gojo.deepl
    gojo.plotting
    gojo.util
+   gojo.experimental
+
 
 Submodules
 ----------

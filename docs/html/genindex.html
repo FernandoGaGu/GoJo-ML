@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; gojo - Documentation 0.0.1 documentation</title>
+  <title>Index &mdash; gojo - Documentation 0.0.6 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -12,7 +12,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="_static/documentation_options.js?v=1fd71caa"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -44,6 +44,7 @@
 <li class="toctree-l1"><a class="reference internal" href="gojo.deepl.html">gojo.deepl package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gojo.plotting.html">gojo.plotting package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gojo.util.html">gojo.util package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gojo.experimental.html">gojo.experimental package</a></li>
 </ul>
 
         </div>
@@ -262,6 +263,8 @@
 </li>
       <li><a href="gojo.core.html#gojo.core.report.CVReport.getTrainPredictions">getTrainPredictions() (gojo.core.report.CVReport method)</a>
 </li>
+      <li><a href="gojo.experimental.html#gojo.experimental.core_base.GNNTorchSKInterfaz">GNNTorchSKInterfaz (class in gojo.experimental.core_base)</a>
+</li>
       <li>
     gojo
 
@@ -304,8 +307,6 @@
         <li><a href="gojo.core.html#module-gojo.core.report">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     gojo.core.transform
 
@@ -313,6 +314,8 @@
         <li><a href="gojo.core.html#module-gojo.core.transform">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     gojo.deepl
 
@@ -356,6 +359,20 @@
 </li>
       </ul></li>
       <li>
+    gojo.experimental.core_base
+
+      <ul>
+        <li><a href="gojo.experimental.html#module-gojo.experimental.core_base">module</a>
+</li>
+      </ul></li>
+      <li>
+    gojo.experimental.deepl_loading
+
+      <ul>
+        <li><a href="gojo.experimental.html#module-gojo.experimental.deepl_loading">module</a>
+</li>
+      </ul></li>
+      <li>
     gojo.plotting
 
       <ul>
@@ -380,7 +397,7 @@
     gojo.util
 
       <ul>
-        <li><a href="gojo.util.html#module-gojo.util">module</a>
+        <li><a href="gojo.experimental.html#module-gojo.util">module</a>, <a href="gojo.util.html#module-gojo.util">[1]</a>
 </li>
       </ul></li>
       <li>
@@ -411,6 +428,8 @@
         <li><a href="gojo.util.html#module-gojo.util.validation">module</a>
 </li>
       </ul></li>
+      <li><a href="gojo.experimental.html#gojo.experimental.deepl_loading.GraphDataset">GraphDataset (class in gojo.experimental.deepl_loading)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -493,13 +512,17 @@
 </li>
         <li><a href="gojo.deepl.html#module-gojo.deepl.models">gojo.deepl.models</a>
 </li>
+        <li><a href="gojo.experimental.html#module-gojo.experimental.core_base">gojo.experimental.core_base</a>
+</li>
+        <li><a href="gojo.experimental.html#module-gojo.experimental.deepl_loading">gojo.experimental.deepl_loading</a>
+</li>
         <li><a href="gojo.plotting.html#module-gojo.plotting">gojo.plotting</a>
 </li>
         <li><a href="gojo.plotting.html#module-gojo.plotting.basic">gojo.plotting.basic</a>
 </li>
         <li><a href="gojo.plotting.html#module-gojo.plotting.classification">gojo.plotting.classification</a>
 </li>
-        <li><a href="gojo.util.html#module-gojo.util">gojo.util</a>
+        <li><a href="gojo.experimental.html#module-gojo.util">gojo.util</a>, <a href="gojo.util.html#module-gojo.util">[1]</a>
 </li>
         <li><a href="gojo.util.html#module-gojo.util.io">gojo.util.io</a>
 </li>
@@ -534,8 +557,6 @@
 </li>
       <li><a href="gojo.util.html#gojo.util.validation.pathExists">pathExists() (in module gojo.util.validation)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gojo.core.html#gojo.core.base.Model.performInference">performInference() (gojo.core.base.Model method)</a>
 
       <ul>
@@ -543,7 +564,11 @@
 </li>
         <li><a href="gojo.core.html#gojo.core.base.TorchSKInterface.performInference">(gojo.core.base.TorchSKInterface method)</a>
 </li>
+        <li><a href="gojo.experimental.html#gojo.experimental.core_base.GNNTorchSKInterfaz.performInference">(gojo.experimental.core_base.GNNTorchSKInterfaz method)</a>
+</li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gojo.util.html#gojo.util.io.pprint">pprint() (in module gojo.util.io)</a>
 </li>
   </ul></td>
@@ -612,6 +637,8 @@
         <li><a href="gojo.core.html#gojo.core.base.SklearnModelWrapper.train">(gojo.core.base.SklearnModelWrapper method)</a>
 </li>
         <li><a href="gojo.core.html#gojo.core.base.TorchSKInterface.train">(gojo.core.base.TorchSKInterface method)</a>
+</li>
+        <li><a href="gojo.experimental.html#gojo.experimental.core_base.GNNTorchSKInterfaz.train">(gojo.experimental.core_base.GNNTorchSKInterfaz method)</a>
 </li>
       </ul></li>
   </ul></td>

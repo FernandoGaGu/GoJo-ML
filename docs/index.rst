@@ -96,6 +96,7 @@ Modules
    gojo.deepl
    gojo.plotting
    gojo.util
+   gojo.experimental
 
 
 Indices and tables

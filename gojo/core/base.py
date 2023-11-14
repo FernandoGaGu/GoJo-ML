@@ -77,6 +77,9 @@ class Dataset(object):
     def __str__(self):
         return self.__repr__()
 
+    def __len__(self):
+        return self._array_data.shape[0]
+
     @property
     def array_data(self) -> np.ndarray:
         """ Returns the input data as a numpy.array. """
