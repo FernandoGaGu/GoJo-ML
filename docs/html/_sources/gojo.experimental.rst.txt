@@ -1,5 +1,5 @@
 gojo.experimental package
-=================
+=========================
 
 Submodules
 ----------
@@ -20,11 +20,10 @@ gojo.experimental.deepl_loading module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 
-.. automodule:: gojo.util
+.. automodule:: gojo.experimental
    :members:
    :undoc-members:
    :show-inheritance:

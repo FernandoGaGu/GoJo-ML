@@ -4,11 +4,13 @@
    contain the root `toctree` directive.
 
 GoJo - Make Machine/Deep Learning pipelines simple
-================================================
+==================================================
 
    Python library with a variety of pipeline implementations typically used to develop and evaluate Deep Learning and Machine Learning models.
 
-**IMPORTANT NOTE**: Library still under development and subjected to changes (this is an alpha version). Check out the github_ page.
+.. important::
+
+   Library still under development and subjected to changes (this is an alpha version). Check out the github_ page.
 
 This Python library offers a comprehensive suite of pipeline implementations, specifically designed to streamline the entire process of developing and evaluating Deep Learning and Machine Learning models. These pipelines serve as an invaluable resource for researchers, data scientists, and engineers by providing a structured and efficient framework for tasks such as data preprocessing, feature engineering, model training, and performance evaluation. Whether you're working on computer vision, natural language processing, recommendation systems, or any other machine learning domain, this library equips you with the tools and utilities necessary to expedite your project development. With a rich set of modules and customizable components, it caters to a wide range of use cases and simplifies the complex journey of model creation and fine-tuning, ultimately contributing to more robust and accurate predictive models.
 
@@ -32,7 +34,6 @@ and after cloning the repository run the setup.py script
 
    cd Gojo-ML
    python setup.py install
-
 
 
 Usage
@@ -90,7 +91,7 @@ Modules
 ==================
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
 
    gojo.core
    gojo.deepl
