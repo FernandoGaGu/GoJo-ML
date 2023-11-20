@@ -49,6 +49,15 @@ class GraphDataset(Dataset):
 
         One of `adj_matrix` or `edge_index` must be provided.
 
+    tabular_x: np.ndarray or pd.DataFrame or List[np.ndarray], default=None
+        Tabular characteristics that will be stored in the `tabular_x` attribute of the instances (
+        `torch_geometric.data.DataBatch`) returned by this dataset.
+
+        .. important::
+            Internally a dimension will be added along axis 1 to prevent `torch_geometric` dataloaders from flattening
+            the data to a single dimension.
+
+
 
     Example
     -------
@@ -88,7 +97,8 @@ class GraphDataset(Dataset):
         X: np.ndarray or pd.DataFrame or List[np.ndarray],
         y: np.ndarray or pd.DataFrame or pd.Series = None,
         adj_matrix: np.ndarray or pd.DataFrame or List[np.ndarray, pd.DataFrame] = None,
-        edge_index: np.ndarray or pd.DataFrame or List[np.ndarray, pd.DataFrame] = None
+        edge_index: np.ndarray or pd.DataFrame or List[np.ndarray, pd.DataFrame] = None,
+        tabular_x: np.ndarray or pd.DataFrame or List[np.ndarray] = None
     ):
         super(GraphDataset, self).__init__()
 
@@ -202,18 +212,36 @@ class GraphDataset(Dataset):
                     'Different number of nodes in sample %d (edge_index=%d, feature_vector=%d)' % (
                     i, nodes_.max()+1, sample_.shape[0]))
 
+        # check tabular information
+        checkInputType('tabular_x', tabular_x, [pd.DataFrame, np.ndarray, List, type(None)])
+        if not (tabular_x is None or len(tabular_x) == len(X)):
+            raise TypeError(
+                '"tabular_x" shape along 0 axis missmatch (expected %d, input %d)' % (len(x_list_tensor), len(X)))
+        else:
+            if isinstance(tabular_x, list):
+                for i, e in enumerate(tabular_x):
+                    checkInputType('tabular_x[%d]' % i, e, [np.ndarray])
+                tabular_x = np.stack(tabular_x)
+
+            if tabular_x is None:
+                tabular_x = torch.from_numpy(np.array([np.nan] * len(X)).astype(np.float32))
+            else:
+                tabular_x = torch.from_numpy(core_base.Dataset(tabular_x).array_data.astype(np.float32))
+                tabular_x = tabular_x.unsqueeze(1)
+
         # TODO. Implement edge_attr
         # ...
 
         self.y_tensor = y_tensor
         self.x_list_tensor = x_list_tensor
         self.edge_index = edge_index_
+        self.tabular_x = tabular_x
 
         # create the torch_geometric.data.Data instances
         self.data_list = [
             geom.data.Data(
-                x=x, edge_index=ei, y=y
-            ) for x, ei, y in zip(x_list_tensor, edge_index_, y_tensor)
+                x=x, edge_index=ei, y=y, tabular_x=tab_x
+            ) for x, ei, y, tab_x in zip(x_list_tensor, edge_index_, y_tensor, tabular_x)
         ]
 
     def __getitem__(self, idx: int):
