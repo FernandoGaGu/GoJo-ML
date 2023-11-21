@@ -44,7 +44,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.deepl.html">gojo.deepl package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.plotting.html">gojo.plotting package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.util.html">gojo.util package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../gojo.experimental.html">gojo.util package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.experimental.html">gojo.experimental package</a></li>
 </ul>
 
         </div>
@@ -125,6 +125,14 @@
 
 <span class="sd">        One of `adj_matrix` or `edge_index` must be provided.</span>
 
+<span class="sd">    tabular_x: np.ndarray or pd.DataFrame or List[np.ndarray], default=None</span>
+<span class="sd">        Tabular characteristics that will be stored in the `tabular_x` attribute of the instances (</span>
+<span class="sd">        `torch_geometric.data.DataBatch`) returned by this dataset.</span>
+
+<span class="sd">        .. important::</span>
+<span class="sd">            Internally a dimension will be added along axis 1 to prevent `torch_geometric` dataloaders from flattening</span>
+<span class="sd">            the data to a single dimension.</span>
+
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -164,7 +172,8 @@
         <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
         <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">adj_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">edge_index</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">edge_index</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tabular_x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">GraphDataset</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
@@ -278,18 +287,36 @@
                     <span class="s1">&#39;Different number of nodes in sample </span><span class="si">%d</span><span class="s1"> (edge_index=</span><span class="si">%d</span><span class="s1">, feature_vector=</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span>
                     <span class="n">i</span><span class="p">,</span> <span class="n">nodes_</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">sample_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 
+        <span class="c1"># check tabular information</span>
+        <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;tabular_x&#39;</span><span class="p">,</span> <span class="n">tabular_x</span><span class="p">,</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">tabular_x</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">tabular_x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;&quot;tabular_x&quot; shape along 0 axis missmatch (expected </span><span class="si">%d</span><span class="s1">, input </span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_list_tensor</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tabular_x</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tabular_x</span><span class="p">):</span>
+                    <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;tabular_x[</span><span class="si">%d</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span>
+                <span class="n">tabular_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">tabular_x</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">tabular_x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">tabular_x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tabular_x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">core_base</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">tabular_x</span><span class="p">)</span><span class="o">.</span><span class="n">array_data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+                <span class="n">tabular_x</span> <span class="o">=</span> <span class="n">tabular_x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
         <span class="c1"># TODO. Implement edge_attr</span>
         <span class="c1"># ...</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">y_tensor</span> <span class="o">=</span> <span class="n">y_tensor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x_list_tensor</span> <span class="o">=</span> <span class="n">x_list_tensor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">edge_index</span> <span class="o">=</span> <span class="n">edge_index_</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabular_x</span> <span class="o">=</span> <span class="n">tabular_x</span>
 
         <span class="c1"># create the torch_geometric.data.Data instances</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_list</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">geom</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Data</span><span class="p">(</span>
-                <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="o">=</span><span class="n">ei</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span>
-            <span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">ei</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x_list_tensor</span><span class="p">,</span> <span class="n">edge_index_</span><span class="p">,</span> <span class="n">y_tensor</span><span class="p">)</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="o">=</span><span class="n">ei</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">tabular_x</span><span class="o">=</span><span class="n">tab_x</span>
+            <span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">ei</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tab_x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x_list_tensor</span><span class="p">,</span> <span class="n">edge_index_</span><span class="p">,</span> <span class="n">y_tensor</span><span class="p">,</span> <span class="n">tabular_x</span><span class="p">)</span>
         <span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>

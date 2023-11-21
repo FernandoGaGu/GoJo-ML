@@ -58,7 +58,6 @@ class GraphDataset(Dataset):
             the data to a single dimension.
 
 
-
     Example
     -------
     >>> import numpy as np
