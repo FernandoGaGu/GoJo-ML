@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gojo.deepl.models &mdash; gojo - Documentation 0.0.1 documentation</title>
+  <title>gojo.deepl.models &mdash; gojo - Documentation 0.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -44,6 +44,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.deepl.html">gojo.deepl package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.plotting.html">gojo.plotting package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.util.html">gojo.util package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.experimental.html">gojo.experimental package</a></li>
 </ul>
 
         </div>
@@ -87,9 +88,7 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="MultiTaskFFN">
-<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.MultiTaskFFN">[docs]</a>
-<span class="k">class</span> <span class="nc">MultiTaskFFN</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="MultiTaskFFN"><a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.MultiTaskFFN">[docs]</a><span class="k">class</span> <span class="nc">MultiTaskFFN</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Model adapted to perform multi-task classification with a layer specialized in extracting features (accessible</span>
 <span class="sd">    through :meth:`feature_extractor`) and, as is typical in multi-task model training, layers specialized in</span>
 <span class="sd">    performing the different tasks. The model will return a tensor with the outputs of each of the layers</span>
@@ -321,9 +320,7 @@
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multt_reg_activation</span><span class="p">):</span>
                 <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;multt_reg_activation[</span><span class="si">%d</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">])</span>
 
-<div class="viewcode-block" id="MultiTaskFFN.forward">
-<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.MultiTaskFFN.forward">[docs]</a>
-    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<div class="viewcode-block" id="MultiTaskFFN.forward"><a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.MultiTaskFFN.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 
         <span class="c1"># forward pass for the feature extractor</span>
         <span class="n">emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -336,9 +333,96 @@
         <span class="c1"># concat classification and regression predictions</span>
         <span class="n">comb_preds</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">clf_out</span> <span class="o">+</span> <span class="n">reg_out</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">comb_preds</span></div>
-</div>
+        <span class="k">return</span> <span class="n">comb_preds</span></div></div>
 
+
+
+<div class="viewcode-block" id="MultiTaskFFNv2"><a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.MultiTaskFFNv2">[docs]</a><span class="k">class</span> <span class="nc">MultiTaskFFNv2</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; (Simplified version of :class:`gojo.deepl.models.MultiTaskFFN`) Model adapted to perform multi-task</span>
+<span class="sd">    classification with a layer specialized in extracting features (accessible through :meth:`feature_extractor`) and,</span>
+<span class="sd">    as is typical in multi-task model training, layers specialized in performing the different tasks (accessible</span>
+<span class="sd">    through :meth:`multitask_projection`). The model will return a tensor with the outputs of each of the layers from</span>
+<span class="sd">    the input parameter `multitask_projection` concatenated in the same order as declared in the input parameter.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">     feature_extractor : torch.nn.Module</span>
+<span class="sd">        Layer that will take the input from the model and generate an embedded representation that will be subsequently</span>
+<span class="sd">        used by the layers defined in `multitask_projection`.</span>
+
+<span class="sd">     multitask_projection : torch.nn.ModuleList</span>
+<span class="sd">        Layers specialized in different tasks. Their outputs will be concatenated along dimension 1.</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import deepl</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; X = torch.rand(10, 40)    # (batch_size, n_feats)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; multitask_model = deepl.models.MultiTaskFFNv2(</span>
+<span class="sd">    &gt;&gt;&gt;     feature_extractor=torch.nn.Sequential(</span>
+<span class="sd">    &gt;&gt;&gt;         torch.nn.Linear(40, 20),</span>
+<span class="sd">    &gt;&gt;&gt;         torch.nn.ReLU()</span>
+<span class="sd">    &gt;&gt;&gt;     ),</span>
+<span class="sd">    &gt;&gt;&gt;     multitask_projection=torch.nn.ModuleList([</span>
+<span class="sd">    &gt;&gt;&gt;         torch.nn.Sequential(</span>
+<span class="sd">    &gt;&gt;&gt;             torch.nn.Linear(20, 2),</span>
+<span class="sd">    &gt;&gt;&gt;             torch.nn.Tanh()</span>
+<span class="sd">    &gt;&gt;&gt;         ),</span>
+<span class="sd">    &gt;&gt;&gt;         torch.nn.Sequential(</span>
+<span class="sd">    &gt;&gt;&gt;             torch.nn.Linear(20, 1),</span>
+<span class="sd">    &gt;&gt;&gt;             torch.nn.Sigmoid()</span>
+<span class="sd">    &gt;&gt;&gt;         ),</span>
+<span class="sd">    &gt;&gt;&gt;     ])</span>
+<span class="sd">    &gt;&gt;&gt; )</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; with torch.no_grad():</span>
+<span class="sd">    &gt;&gt;&gt;     mtt_out = multitask_model(X)</span>
+<span class="sd">    &gt;&gt;&gt;     emb = multitask_model.feature_extractor(X)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; mtt_out[:, :2].min(), mtt_out[:, :2].max()</span>
+<span class="sd">        Out[0]: (tensor(-0.2965), tensor(0.1321))</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; mtt_out[:, 2].min(), mtt_out[:, 2].max()</span>
+<span class="sd">        Out[1]: (tensor(0.3898), tensor(0.4343))</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; emb.shape</span>
+<span class="sd">        Out[2]: torch.Size([10, 20])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">feature_extractor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+            <span class="n">multitask_projection</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MultiTaskFFNv2</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span> <span class="o">=</span> <span class="n">feature_extractor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multitask_projection</span> <span class="o">=</span> <span class="n">multitask_projection</span>
+
+
+    <span class="k">def</span> <span class="nf">_checkModelParams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Function used to check the input parameters. &quot;&quot;&quot;</span>
+        <span class="n">checkMultiInputTypes</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;feature_extractor&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span><span class="p">,</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;multitask_projection&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">multitask_projection</span><span class="p">,</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">]))</span>
+
+
+<div class="viewcode-block" id="MultiTaskFFNv2.forward"><a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.MultiTaskFFNv2.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+
+        <span class="c1"># forward pass for the feature extractor</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="c1"># forward pass for the multitask FFNs</span>
+        <span class="n">mtt_out</span> <span class="o">=</span> <span class="p">[</span><span class="n">model</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span> <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">multitask_projection</span><span class="p">]</span>
+
+        <span class="c1"># concatenate the output across the batch dimension</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">mtt_out</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out</span></div></div>
 
 </pre></div>
 

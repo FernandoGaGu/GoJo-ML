@@ -261,3 +261,92 @@ class MultiTaskFFN(torch.nn.Module):
 
         return comb_preds
 
+
+
+class MultiTaskFFNv2(torch.nn.Module):
+    """ (Simplified version of :class:`gojo.deepl.models.MultiTaskFFN`) Model adapted to perform multi-task
+    classification with a layer specialized in extracting features (accessible through :meth:`feature_extractor`) and,
+    as is typical in multi-task model training, layers specialized in performing the different tasks (accessible
+    through :meth:`multitask_projection`). The model will return a tensor with the outputs of each of the layers from
+    the input parameter `multitask_projection` concatenated in the same order as declared in the input parameter.
+
+    Parameters
+    ----------
+     feature_extractor : torch.nn.Module
+        Layer that will take the input from the model and generate an embedded representation that will be subsequently
+        used by the layers defined in `multitask_projection`.
+
+     multitask_projection : torch.nn.ModuleList
+        Layers specialized in different tasks. Their outputs will be concatenated along dimension 1.
+
+
+    Examples
+    --------
+    >>> import torch
+    >>> from gojo import deepl
+    >>>
+    >>>
+    >>> X = torch.rand(10, 40)    # (batch_size, n_feats)
+    >>>
+    >>> multitask_model = deepl.models.MultiTaskFFNv2(
+    >>>     feature_extractor=torch.nn.Sequential(
+    >>>         torch.nn.Linear(40, 20),
+    >>>         torch.nn.ReLU()
+    >>>     ),
+    >>>     multitask_projection=torch.nn.ModuleList([
+    >>>         torch.nn.Sequential(
+    >>>             torch.nn.Linear(20, 2),
+    >>>             torch.nn.Tanh()
+    >>>         ),
+    >>>         torch.nn.Sequential(
+    >>>             torch.nn.Linear(20, 1),
+    >>>             torch.nn.Sigmoid()
+    >>>         ),
+    >>>     ])
+    >>> )
+    >>>
+    >>> with torch.no_grad():
+    >>>     mtt_out = multitask_model(X)
+    >>>     emb = multitask_model.feature_extractor(X)
+    >>>
+    >>>
+    >>> mtt_out[:, :2].min(), mtt_out[:, :2].max()
+        Out[0]: (tensor(-0.2965), tensor(0.1321))
+    >>>
+    >>> mtt_out[:, 2].min(), mtt_out[:, 2].max()
+        Out[1]: (tensor(0.3898), tensor(0.4343))
+    >>>
+    >>> emb.shape
+        Out[2]: torch.Size([10, 20])
+    """
+    def __init__(
+            self,
+            feature_extractor: torch.nn.Module,
+            multitask_projection: torch.nn.ModuleList
+    ):
+        super(MultiTaskFFNv2, self).__init__()
+
+        self.feature_extractor = feature_extractor
+        self.multitask_projection = multitask_projection
+
+
+    def _checkModelParams(self):
+        """ Function used to check the input parameters. """
+        checkMultiInputTypes(
+            ('feature_extractor', self.feature_extractor, [torch.nn.Module]),
+            ('multitask_projection', self.multitask_projection, [torch.nn.ModuleList]))
+
+
+    def forward(self, X, **_) -> torch.Tensor:
+
+        # forward pass for the feature extractor
+        emb = self.feature_extractor(X)
+
+        # forward pass for the multitask FFNs
+        mtt_out = [model(emb) for model in self.multitask_projection]
+
+        # concatenate the output across the batch dimension
+        out = torch.cat(mtt_out, dim=1)
+
+        return out
+
