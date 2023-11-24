@@ -9,6 +9,7 @@ import torch
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import (
+    train_test_split,
     RepeatedKFold,
     RepeatedStratifiedKFold,
     LeaveOneOut)
@@ -20,6 +21,79 @@ from sklearn.preprocessing import (
 from .validation import (
     checkMultiInputTypes,
     checkInputType)
+
+
+class SimpleSplitter(object):
+    """ Wrapper of the sklearn `sklearn.model_selection.train_test_split` function used to perform a simple partitioning
+    of the data into a training and a test set (optionally with stratification).
+
+
+    Parameters
+    ----------
+    test_size : float
+        If float, should be between 0.0 and 1.0 and represent the proportion of the dataset to include in the test
+        split. If int, represents the absolute number of test samples.
+
+    stratify : np.ndarray, default=None
+        If not None, data is split in a stratified fashion, using this as the class labels.
+
+    random_state : int, default=None
+        Controls the shuffling applied to the data before applying the split.
+
+    shuffle : bool, default=True
+        Whether to shuffle the data before splitting. If shuffle=False then stratify must be None.
+
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from gojo import util
+    >>>
+    >>> np.random.seed(1997)
+    >>>
+    >>> n_samples = 20
+    >>> n_feats = 10
+    >>> X = np.random.uniform(size=(n_samples, n_feats))
+    >>> y = np.random.randint(0, 2, size=n_samples)
+    >>>
+    >>> splitter = util.SimpleSplitter(
+    >>>     test_size=0.2,
+    >>>     stratify=y,
+    >>>     random_state=1997
+    >>> )
+    >>>
+    >>> for train_idx, test_idx in splitter.split(X, y):
+    >>>     print(len(train_idx), y[train_idx].mean())
+    >>>     print(len(test_idx), y[test_idx].mean())
+
+    """
+
+    def __init__(
+            self,
+            test_size: float,
+            stratify: np.ndarray = None,
+            random_state: int = None,
+            shuffle: bool = True):
+        self.test_size = test_size
+        self.stratify = stratify
+        self.random_state = random_state
+        self.shuffle = shuffle
+
+    def split(
+            self,
+            X: np.ndarray or pd.DataFrame,
+            y=None) -> np.ndarray:
+        """ Generates indices to split data into training and test set. """
+        indices = np.arange(len(X))
+
+        train_idx, test_idx = train_test_split(
+            indices,
+            test_size=self.test_size,
+            stratify=self.stratify,
+            random_state=self.random_state,
+            shuffle=self.shuffle)
+
+        yield train_idx, test_idx
 
 
 def getCrossValObj(cv: int = None, repeats: int = 1, stratified: bool = False, loocv: bool = False,

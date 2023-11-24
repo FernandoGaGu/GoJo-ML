@@ -83,6 +83,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">train_test_split</span><span class="p">,</span>
     <span class="n">RepeatedKFold</span><span class="p">,</span>
     <span class="n">RepeatedStratifiedKFold</span><span class="p">,</span>
     <span class="n">LeaveOneOut</span><span class="p">)</span>
@@ -94,6 +95,85 @@
 <span class="kn">from</span> <span class="nn">.validation</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">checkMultiInputTypes</span><span class="p">,</span>
     <span class="n">checkInputType</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SimpleSplitter">
+<a class="viewcode-back" href="../../../gojo.util.html#gojo.util.tools.SimpleSplitter">[docs]</a>
+<span class="k">class</span> <span class="nc">SimpleSplitter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Wrapper of the sklearn `sklearn.model_selection.train_test_split` function used to perform a simple partitioning</span>
+<span class="sd">    of the data into a training and a test set (optionally with stratification).</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    test_size : float</span>
+<span class="sd">        If float, should be between 0.0 and 1.0 and represent the proportion of the dataset to include in the test</span>
+<span class="sd">        split. If int, represents the absolute number of test samples.</span>
+
+<span class="sd">    stratify : np.ndarray, default=None</span>
+<span class="sd">        If not None, data is split in a stratified fashion, using this as the class labels.</span>
+
+<span class="sd">    random_state : int, default=None</span>
+<span class="sd">        Controls the shuffling applied to the data before applying the split.</span>
+
+<span class="sd">    shuffle : bool, default=True</span>
+<span class="sd">        Whether to shuffle the data before splitting. If shuffle=False then stratify must be None.</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import util</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; np.random.seed(1997)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; n_samples = 20</span>
+<span class="sd">    &gt;&gt;&gt; n_feats = 10</span>
+<span class="sd">    &gt;&gt;&gt; X = np.random.uniform(size=(n_samples, n_feats))</span>
+<span class="sd">    &gt;&gt;&gt; y = np.random.randint(0, 2, size=n_samples)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; splitter = util.SimpleSplitter(</span>
+<span class="sd">    &gt;&gt;&gt;     test_size=0.2,</span>
+<span class="sd">    &gt;&gt;&gt;     stratify=y,</span>
+<span class="sd">    &gt;&gt;&gt;     random_state=1997</span>
+<span class="sd">    &gt;&gt;&gt; )</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; for train_idx, test_idx in splitter.split(X, y):</span>
+<span class="sd">    &gt;&gt;&gt;     print(len(train_idx), y[train_idx].mean())</span>
+<span class="sd">    &gt;&gt;&gt;     print(len(test_idx), y[test_idx].mean())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">test_size</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="n">stratify</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_size</span> <span class="o">=</span> <span class="n">test_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stratify</span> <span class="o">=</span> <span class="n">stratify</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span> <span class="o">=</span> <span class="n">shuffle</span>
+
+<div class="viewcode-block" id="SimpleSplitter.split">
+<a class="viewcode-back" href="../../../gojo.util.html#gojo.util.tools.SimpleSplitter.split">[docs]</a>
+    <span class="k">def</span> <span class="nf">split</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Generates indices to split data into training and test set. &quot;&quot;&quot;</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+
+        <span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+            <span class="n">indices</span><span class="p">,</span>
+            <span class="n">test_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_size</span><span class="p">,</span>
+            <span class="n">stratify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stratify</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">,</span>
+            <span class="n">shuffle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span><span class="p">)</span>
+
+        <span class="k">yield</span> <span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span></div>
+</div>
+
 
 
 <div class="viewcode-block" id="getCrossValObj">

@@ -5,6 +5,7 @@ from .login import configureLogger
 from .tools import (
     getCrossValObj,
     minMaxScaling,
-    zscoresScaling
+    zscoresScaling,
+    SimpleSplitter
 )
 

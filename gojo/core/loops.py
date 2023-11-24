@@ -39,6 +39,7 @@ from ..util.validation import (
     checkInputType,
     checkCallable,
 )
+from ..util.tools import SimpleSplitter
 from ..exception import (
     UnfittedTransform
 )
@@ -321,7 +322,7 @@ def evalCrossVal(
         X: np.ndarray or pd.DataFrame,
         y: np.ndarray or pd.DataFrame or pd.Series,
         model: Model,
-        cv: RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut,
+        cv: RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or SimpleSplitter,
         transforms: List[Transform] or None = None,
         verbose: int = -1,
         n_jobs: int = 1,
@@ -342,7 +343,7 @@ def evalCrossVal(
     model : :class:`gojo.core.base.Model`
         Model to be trained. The input model must follow the :class:`gojo.base.Model` interfaz.
 
-    cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut
+    cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.SimpleSplitter`
         Cross-validation schema. For more information about cross validation see `sklearn.model_selection` module.
         The gojo module implements useful functions for easy loading of cross-validation objects (see
         :func:`gojo.util.getCrossValObj`).
@@ -442,7 +443,7 @@ def evalCrossVal(
         ('X', X, [np.ndarray, pd.DataFrame]),
         ('y', y, [np.ndarray, pd.DataFrame, pd.Series]),
         ('model', model, [Model]),
-        ('cv', cv, [RepeatedKFold, RepeatedStratifiedKFold, LeaveOneOut]),
+        ('cv', cv, [RepeatedKFold, RepeatedStratifiedKFold, LeaveOneOut, SimpleSplitter]),
         ('transforms', transforms, [list, type(None)]),
         ('verbose', verbose, [int]),
         ('n_jobs', n_jobs, [int]),
@@ -558,8 +559,8 @@ def evalCrossValNestedHPO(
         y: np.ndarray or pd.DataFrame or pd.Series,
         model: Model,
         search_space: dict,
-        outer_cv: RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut,
-        inner_cv: RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut,
+        outer_cv: RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or SimpleSplitter,
+        inner_cv: RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or SimpleSplitter,
         hpo_sampler: optuna.samplers.BaseSampler,
         hpo_n_trials: int,
         minimization: bool,
@@ -599,12 +600,12 @@ def evalCrossValNestedHPO(
         >>>     'max_samples': ('suggest_float', (0.5, 1.0) ),
         >>> }
 
-    outer_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut
+    outer_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.SimpleSplitter`
         Cross-validation schema. For more information about cross validation see `sklearn.model_selection` module.
         The gojo module implements useful functions for easy loading of cross-validation objects (see
         :func:`gojo.util.getCrossValObj`).
 
-    inner_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut
+    inner_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.SimpleSplitter`
         Inner cross-validation schema used for evaluating model performance in the nested cross-validation used for
         optimize the model hyperparameters. For more information about cross validation see `sklearn.model_selection`
         module. The gojo module implements useful functions for easy loading of cross-validation objects (see
@@ -745,7 +746,7 @@ def evalCrossValNestedHPO(
             _y: np.ndarray,
             _model: Model,
             _search_space: dict,
-            _cv: RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut,
+            _cv: RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or SimpleSplitter,
             _metrics: list,
             _minimize: bool,
             _objective_metric: str = None,
@@ -825,8 +826,8 @@ def evalCrossValNestedHPO(
         ('y', y, [np.ndarray, pd.DataFrame, pd.Series]),
         ('model', model, [Model]),
         ('search_space', search_space, [dict]),
-        ('outer_cv', outer_cv, [RepeatedKFold, RepeatedStratifiedKFold, LeaveOneOut]),
-        ('inner_cv', inner_cv, [RepeatedKFold, RepeatedStratifiedKFold, LeaveOneOut]),
+        ('outer_cv', outer_cv, [RepeatedKFold, RepeatedStratifiedKFold, LeaveOneOut, SimpleSplitter]),
+        ('inner_cv', inner_cv, [RepeatedKFold, RepeatedStratifiedKFold, LeaveOneOut, SimpleSplitter]),
         ('hpo_sampler', hpo_sampler, [optuna.samplers.BaseSampler]),
         ('metrics', metrics, [list]),
         ('objective_metric', objective_metric, [str, type(None)]),

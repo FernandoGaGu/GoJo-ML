@@ -57,6 +57,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-gojo.util.tools">gojo.util.tools module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.tools.SimpleSplitter"><code class="docutils literal notranslate"><span class="pre">SimpleSplitter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gojo.util.tools.SimpleSplitter.split"><code class="docutils literal notranslate"><span class="pre">SimpleSplitter.split()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#gojo.util.tools.getCrossValObj"><code class="docutils literal notranslate"><span class="pre">getCrossValObj()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#gojo.util.tools.getNumModelParams"><code class="docutils literal notranslate"><span class="pre">getNumModelParams()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#gojo.util.tools.minMaxScaling"><code class="docutils literal notranslate"><span class="pre">minMaxScaling()</span></code></a></li>
@@ -215,13 +219,65 @@
 </section>
 <section id="module-gojo.util.tools">
 <span id="gojo-util-tools-module"></span><h2>gojo.util.tools module<a class="headerlink" href="#module-gojo.util.tools" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gojo.util.tools.SimpleSplitter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.util.tools.</span></span><span class="sig-name descname"><span class="pre">SimpleSplitter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/tools.html#SimpleSplitter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.tools.SimpleSplitter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Wrapper of the sklearn <cite>sklearn.model_selection.train_test_split</cite> function used to perform a simple partitioning
+of the data into a training and a test set (optionally with stratification).</p>
+<section id="id6">
+<h3>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>test_size<span class="classifier">float</span></dt><dd><p>If float, should be between 0.0 and 1.0 and represent the proportion of the dataset to include in the test
+split. If int, represents the absolute number of test samples.</p>
+</dd>
+<dt>stratify<span class="classifier">np.ndarray, default=None</span></dt><dd><p>If not None, data is split in a stratified fashion, using this as the class labels.</p>
+</dd>
+<dt>random_state<span class="classifier">int, default=None</span></dt><dd><p>Controls the shuffling applied to the data before applying the split.</p>
+</dd>
+<dt>shuffle<span class="classifier">bool, default=True</span></dt><dd><p>Whether to shuffle the data before splitting. If shuffle=False then stratify must be None.</p>
+</dd>
+</dl>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">util</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1997</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n_samples</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n_feats</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_feats</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">splitter</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">SimpleSplitter</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">random_state</span><span class="o">=</span><span class="mi">1997</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span> <span class="ow">in</span> <span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">train_idx</span><span class="p">),</span> <span class="n">y</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test_idx</span><span class="p">),</span> <span class="n">y</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.util.tools.SimpleSplitter.split">
+<span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/gojo/util/tools.html#SimpleSplitter.split"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.tools.SimpleSplitter.split" title="Link to this definition"></a></dt>
+<dd><p>Generates indices to split data into training and test set.</p>
+</dd></dl>
+
+</section>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.tools.getCrossValObj">
 <span class="sig-prename descclassname"><span class="pre">gojo.util.tools.</span></span><span class="sig-name descname"><span class="pre">getCrossValObj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratified</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loocv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">RepeatedKFold</span></span></span><a class="reference internal" href="_modules/gojo/util/tools.html#getCrossValObj"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.tools.getCrossValObj" title="Link to this definition"></a></dt>
 <dd><p>Function used to obtain the sklearn class used to perform an evaluation of the models according
 to the cross-validation or leave-one-out cross-validation (LOOCV) schemes.</p>
-<section id="id6">
-<h3>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<section id="id7">
+<h3>Parameters<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>cv<span class="classifier">int, default=None</span></dt><dd><p>(cross-validation) This parameter is used to specify the number of folds. Ignored when loocv
 is set to True.</p>
@@ -239,8 +295,8 @@ True the rest of the parameters will be ignored.</p>
 </dd>
 </dl>
 </section>
-<section id="id7">
-<h3>Returns<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<section id="id8">
+<h3>Returns<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>cv_obj<span class="classifier">RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut</span></dt><dd><p>Cross-validation instance from the <a class="reference external" href="https://scikit-learn.org/stable/modules/cross_validation.html">sklearn</a>
 library.</p>
@@ -259,8 +315,8 @@ library.</p>
 <dt class="sig sig-object py" id="gojo.util.tools.minMaxScaling">
 <span class="sig-prename descclassname"><span class="pre">gojo.util.tools.</span></span><span class="sig-name descname"><span class="pre">minMaxScaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/gojo/util/tools.html#minMaxScaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.tools.minMaxScaling" title="Link to this definition"></a></dt>
 <dd><p>Apply a min-max scaling to the provided data range.</p>
-<section id="id8">
-<h3>Parameters<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<section id="id9">
+<h3>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>data<span class="classifier">pd.DataFrame or np.ndarray</span></dt><dd><p>Data to be scaled.</p>
 </dd>
@@ -268,8 +324,8 @@ library.</p>
 </dd>
 </dl>
 </section>
-<section id="id9">
-<h3>Returns<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<section id="id10">
+<h3>Returns<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>scaled_data<span class="classifier">pd.DataFrame or np.ndarray</span></dt><dd><p>Data scaled to the provided range.</p>
 </dd>
@@ -281,15 +337,15 @@ library.</p>
 <dt class="sig sig-object py" id="gojo.util.tools.zscoresScaling">
 <span class="sig-prename descclassname"><span class="pre">gojo.util.tools.</span></span><span class="sig-name descname"><span class="pre">zscoresScaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/gojo/util/tools.html#zscoresScaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.tools.zscoresScaling" title="Link to this definition"></a></dt>
 <dd><p>Apply a z-scores scaling to the provided data range.</p>
-<section id="id10">
-<h3>Parameters<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<section id="id11">
+<h3>Parameters<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>data<span class="classifier">pd.DataFrame or np.ndarray</span></dt><dd><p>Data to be scaled.</p>
 </dd>
 </dl>
 </section>
-<section id="id11">
-<h3>Returns<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<section id="id12">
+<h3>Returns<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>scaled_data<span class="classifier">pd.DataFrame or np.ndarray</span></dt><dd><p>Z-scores</p>
 </dd>
@@ -371,8 +427,8 @@ to that file.</p>
 - ‘warning’: Warning level.
 - ‘warn’: Warning level (same as ‘warn’).
 - ‘success’: Successful level.</p>
-<section id="id12">
-<h3>Parameters<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<section id="id13">
+<h3>Parameters<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>file<span class="classifier">str, default=None</span></dt><dd><p>Output file to redirect the output.</p>
 </dd>

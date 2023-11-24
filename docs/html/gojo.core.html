@@ -1214,7 +1214,7 @@ This parameter will not have any effect when <cite>multiclass=False</cite>.</p>
 </dd>
 <dt>model<span class="classifier"><a class="reference internal" href="#gojo.core.base.Model" title="gojo.core.base.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.core.base.Model</span></code></a></span></dt><dd><p>Model to be trained. The input model must follow the <code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.base.Model</span></code> interfaz.</p>
 </dd>
-<dt>cv<span class="classifier">RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut</span></dt><dd><p>Cross-validation schema. For more information about cross validation see <cite>sklearn.model_selection</cite> module.
+<dt>cv<span class="classifier">RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or <code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.util.SimpleSplitter</span></code></span></dt><dd><p>Cross-validation schema. For more information about cross validation see <cite>sklearn.model_selection</cite> module.
 The gojo module implements useful functions for easy loading of cross-validation objects (see
 <code class="xref py py-func docutils literal notranslate"><span class="pre">gojo.util.getCrossValObj()</span></code>).</p>
 </dd>
@@ -1335,11 +1335,11 @@ consult <cite>https://optuna.org/</cite>.</p>
 </pre></div>
 </div>
 </dd>
-<dt>outer_cv<span class="classifier">RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut</span></dt><dd><p>Cross-validation schema. For more information about cross validation see <cite>sklearn.model_selection</cite> module.
+<dt>outer_cv<span class="classifier">RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or <code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.util.SimpleSplitter</span></code></span></dt><dd><p>Cross-validation schema. For more information about cross validation see <cite>sklearn.model_selection</cite> module.
 The gojo module implements useful functions for easy loading of cross-validation objects (see
 <code class="xref py py-func docutils literal notranslate"><span class="pre">gojo.util.getCrossValObj()</span></code>).</p>
 </dd>
-<dt>inner_cv<span class="classifier">RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut</span></dt><dd><p>Inner cross-validation schema used for evaluating model performance in the nested cross-validation used for
+<dt>inner_cv<span class="classifier">RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or <code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.util.SimpleSplitter</span></code></span></dt><dd><p>Inner cross-validation schema used for evaluating model performance in the nested cross-validation used for
 optimize the model hyperparameters. For more information about cross validation see <cite>sklearn.model_selection</cite>
 module. The gojo module implements useful functions for easy loading of cross-validation objects (see
 <code class="xref py py-func docutils literal notranslate"><span class="pre">gojo.util.getCrossValObj()</span></code>).</p>
