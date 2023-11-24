@@ -34,8 +34,8 @@ class SimpleSplitter(object):
         If float, should be between 0.0 and 1.0 and represent the proportion of the dataset to include in the test
         split. If int, represents the absolute number of test samples.
 
-    stratify : np.ndarray, default=None
-        If not None, data is split in a stratified fashion, using this as the class labels.
+    stratify : bool, default=False
+        If not False, data is split in a stratified fashion, using this as the class labels.
 
     random_state : int, default=None
         Controls the shuffling applied to the data before applying the split.
@@ -58,7 +58,7 @@ class SimpleSplitter(object):
     >>>
     >>> splitter = util.SimpleSplitter(
     >>>     test_size=0.2,
-    >>>     stratify=y,
+    >>>     stratify=True,
     >>>     random_state=1997
     >>> )
     >>>
@@ -71,7 +71,7 @@ class SimpleSplitter(object):
     def __init__(
             self,
             test_size: float,
-            stratify: np.ndarray = None,
+            stratify: bool = False,
             random_state: int = None,
             shuffle: bool = True):
         self.test_size = test_size
@@ -89,7 +89,7 @@ class SimpleSplitter(object):
         train_idx, test_idx = train_test_split(
             indices,
             test_size=self.test_size,
-            stratify=self.stratify,
+            stratify=y if self.stratify else None,
             random_state=self.random_state,
             shuffle=self.shuffle)
 
