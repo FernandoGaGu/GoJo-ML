@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gojo.deepl.callback &mdash; gojo - Documentation 0.0.1 documentation</title>
+  <title>gojo.deepl.callback &mdash; gojo - Documentation 0.0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=1fd71caa"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -44,6 +44,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.deepl.html">gojo.deepl package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.plotting.html">gojo.plotting package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gojo.util.html">gojo.util package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.experimental.html">gojo.experimental package</a></li>
 </ul>
 
         </div>
@@ -89,7 +90,9 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="Callback"><a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.callback.Callback">[docs]</a><span class="k">class</span> <span class="nc">Callback</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Callback">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.callback.Callback">[docs]</a>
+<span class="k">class</span> <span class="nc">Callback</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Base class (interface) used to define the callbacks to be executed in each iteration of the training</span>
 <span class="sd">    loop of the neural networks defined in :func:`gojo.deepl.loop.fitNeuralNetwork`.</span>
 <span class="sd">    These callbacks provide directives to modify the training of the models. A classic example would be the</span>
@@ -139,16 +142,25 @@
 
         <span class="k">return</span> <span class="n">command</span>
 
-<div class="viewcode-block" id="Callback.evaluate"><a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.callback.Callback.evaluate">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Callback.evaluate">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.callback.Callback.evaluate">[docs]</a>
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="Callback.resetState"><a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.callback.Callback.resetState">[docs]</a>    <span class="nd">@abstractmethod</span>
+
+<div class="viewcode-block" id="Callback.resetState">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.callback.Callback.resetState">[docs]</a>
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">resetState</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+</div>
 
 
-<div class="viewcode-block" id="EarlyStopping"><a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.callback.EarlyStopping">[docs]</a><span class="k">class</span> <span class="nc">EarlyStopping</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
+
+<div class="viewcode-block" id="EarlyStopping">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.callback.EarlyStopping">[docs]</a>
+<span class="k">class</span> <span class="nc">EarlyStopping</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Callback used to perform an early stopping of the :func:`gojo.deepl.loop.fitNeuralNetwork` training loop.</span>
 
 <span class="sd">    Parameters</span>
@@ -191,7 +203,9 @@
 
         <span class="k">return</span> <span class="n">curr_loss</span>
 
-<div class="viewcode-block" id="EarlyStopping.evaluate"><a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.callback.EarlyStopping.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">valid_loss</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="EarlyStopping.evaluate">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.callback.EarlyStopping.evaluate">[docs]</a>
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">valid_loss</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Early stopping inner logic. &quot;&quot;&quot;</span>
         <span class="c1"># check input type</span>
         <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;gojo.deepl.callback.EarlyStopping.evaluate(valid_loss)&#39;</span><span class="p">,</span> <span class="n">valid_loss</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">])</span>
@@ -218,9 +232,14 @@
 
         <span class="k">return</span> <span class="n">command</span></div>
 
-<div class="viewcode-block" id="EarlyStopping.resetState"><a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.callback.EarlyStopping.resetState">[docs]</a>    <span class="k">def</span> <span class="nf">resetState</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="EarlyStopping.resetState">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.callback.EarlyStopping.resetState">[docs]</a>
+    <span class="k">def</span> <span class="nf">resetState</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Reset callback &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_saved_valid_loss</span> <span class="o">=</span> <span class="p">[]</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_saved_valid_loss</span> <span class="o">=</span> <span class="p">[]</span></div>
+</div>
+
 </pre></div>
 
            </div>

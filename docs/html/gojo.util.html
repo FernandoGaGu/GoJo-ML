@@ -11,11 +11,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=1fd71caa"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -48,10 +48,41 @@
 <li class="toctree-l1"><a class="reference internal" href="gojo.plotting.html">gojo.plotting package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">gojo.util package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-gojo.util.io">gojo.util.io module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-gojo.util.tools">gojo.util.tools module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-gojo.util.validation">gojo.util.validation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-gojo.util.login">gojo.util.login module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gojo.util.io">gojo.util.io module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.io.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.io.loadJson"><code class="docutils literal notranslate"><span class="pre">loadJson()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.io.pprint"><code class="docutils literal notranslate"><span class="pre">pprint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.io.saveJson"><code class="docutils literal notranslate"><span class="pre">saveJson()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.io.serialize"><code class="docutils literal notranslate"><span class="pre">serialize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gojo.util.tools">gojo.util.tools module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.tools.getCrossValObj"><code class="docutils literal notranslate"><span class="pre">getCrossValObj()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.tools.getNumModelParams"><code class="docutils literal notranslate"><span class="pre">getNumModelParams()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.tools.minMaxScaling"><code class="docutils literal notranslate"><span class="pre">minMaxScaling()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.tools.zscoresScaling"><code class="docutils literal notranslate"><span class="pre">zscoresScaling()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gojo.util.validation">gojo.util.validation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.validation.checkCallable"><code class="docutils literal notranslate"><span class="pre">checkCallable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.validation.checkClass"><code class="docutils literal notranslate"><span class="pre">checkClass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.validation.checkInputType"><code class="docutils literal notranslate"><span class="pre">checkInputType()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.validation.checkIterable"><code class="docutils literal notranslate"><span class="pre">checkIterable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.validation.checkMultiInputTypes"><code class="docutils literal notranslate"><span class="pre">checkMultiInputTypes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.validation.fileExists"><code class="docutils literal notranslate"><span class="pre">fileExists()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.validation.pathExists"><code class="docutils literal notranslate"><span class="pre">pathExists()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gojo.util.login">gojo.util.login module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.login.Login"><code class="docutils literal notranslate"><span class="pre">Login</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gojo.util.login.Login.logger_levels"><code class="docutils literal notranslate"><span class="pre">Login.logger_levels</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.login.configureLogger"><code class="docutils literal notranslate"><span class="pre">configureLogger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.login.deactivate"><code class="docutils literal notranslate"><span class="pre">deactivate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.util.login.isActive"><code class="docutils literal notranslate"><span class="pre">isActive()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-gojo.util">Module contents</a></li>
 </ul>
 </li>
@@ -83,52 +114,66 @@
            <div itemprop="articleBody">
              
   <section id="gojo-util-package">
-<h1>gojo.util package<a class="headerlink" href="#gojo-util-package" title="Permalink to this heading"></a></h1>
+<h1>gojo.util package<a class="headerlink" href="#gojo-util-package" title="Link to this heading"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
 <section id="module-gojo.util.io">
-<span id="gojo-util-io-module"></span><h2>gojo.util.io module<a class="headerlink" href="#module-gojo.util.io" title="Permalink to this heading"></a></h2>
+<span id="gojo-util-io-module"></span><h2>gojo.util.io module<a class="headerlink" href="#module-gojo.util.io" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.io.load">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.io.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'joblib_gzip'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="reference internal" href="_modules/gojo/util/io.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.io.load" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.io.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'joblib_gzip'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="reference internal" href="_modules/gojo/util/io.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.io.load" title="Link to this definition"></a></dt>
 <dd><p>Function used to load serialized Python objects (see <a class="reference internal" href="#gojo.util.io.serialize" title="gojo.util.io.serialize"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.util.io.serialize</span></code></a>).</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>file<span class="classifier">str</span></dt><dd><p>Object to be loaded.</p>
 </dd>
 <dt>backend<span class="classifier">str, default=’joblib’</span></dt><dd><p>Backend used for serialize the object.</p>
 </dd>
 </dl>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>obj<span class="classifier">object</span></dt><dd><p>Loaded object.</p>
 </dd>
 </dl>
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.io.loadJson">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.io.</span></span><span class="sig-name descname"><span class="pre">loadJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/util/io.html#loadJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.io.loadJson" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.io.</span></span><span class="sig-name descname"><span class="pre">loadJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/util/io.html#loadJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.io.loadJson" title="Link to this definition"></a></dt>
 <dd><p>Load a json file.</p>
+<section id="id1">
+<h3>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>file<span class="classifier">str</span></dt><dd><p>Json file to be loaded.</p>
 </dd>
 </dl>
+</section>
+<section id="id2">
+<h3>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>content<span class="classifier">dict</span></dt><dd><p>Json file content.</p>
 </dd>
 </dl>
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.io.pprint">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.io.</span></span><span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/io.html#pprint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.io.pprint" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.io.</span></span><span class="sig-name descname"><span class="pre">pprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/io.html#pprint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.io.pprint" title="Link to this definition"></a></dt>
 <dd><p>Print function for the <a class="reference internal" href="gojo.html#module-gojo" title="gojo"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo</span></code></a> module.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.io.saveJson">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.io.</span></span><span class="sig-name descname"><span class="pre">saveJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/io.html#saveJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.io.saveJson" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.io.</span></span><span class="sig-name descname"><span class="pre">saveJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/io.html#saveJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.io.saveJson" title="Link to this definition"></a></dt>
 <dd><p>Saves the input dictionary into a json file.</p>
+<section id="id3">
+<h3>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>data<span class="classifier">dict</span></dt><dd><p>Dictionary to be exported to a json file.</p>
 </dd>
@@ -136,12 +181,15 @@
 </dd>
 </dl>
 <p>IMPORTANT NOTE: numpy types must be previously converted to Python types.</p>
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.io.serialize">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.io.</span></span><span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'joblib_gzip'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/gojo/util/io.html#serialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.io.serialize" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.io.</span></span><span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'joblib_gzip'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/gojo/util/io.html#serialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.io.serialize" title="Link to this definition"></a></dt>
 <dd><p>Function used to serialize Python objects.</p>
+<section id="id4">
+<h3>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>obj<span class="classifier">object</span></dt><dd><p>Object to be saved.</p>
 </dd>
@@ -154,20 +202,26 @@
 <dt>backend<span class="classifier">str, default=’joblib’</span></dt><dd><p>Backend used for serialize the object.</p>
 </dd>
 </dl>
+</section>
+<section id="id5">
+<h3>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>path<span class="classifier">str</span></dt><dd><p>Serialized object.</p>
 </dd>
 </dl>
+</section>
 </dd></dl>
 
 </section>
 <section id="module-gojo.util.tools">
-<span id="gojo-util-tools-module"></span><h2>gojo.util.tools module<a class="headerlink" href="#module-gojo.util.tools" title="Permalink to this heading"></a></h2>
+<span id="gojo-util-tools-module"></span><h2>gojo.util.tools module<a class="headerlink" href="#module-gojo.util.tools" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.tools.getCrossValObj">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.tools.</span></span><span class="sig-name descname"><span class="pre">getCrossValObj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratified</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loocv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">RepeatedKFold</span></span></span><a class="reference internal" href="_modules/gojo/util/tools.html#getCrossValObj"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.tools.getCrossValObj" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.tools.</span></span><span class="sig-name descname"><span class="pre">getCrossValObj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratified</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loocv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">RepeatedKFold</span></span></span><a class="reference internal" href="_modules/gojo/util/tools.html#getCrossValObj"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.tools.getCrossValObj" title="Link to this definition"></a></dt>
 <dd><p>Function used to obtain the sklearn class used to perform an evaluation of the models according
 to the cross-validation or leave-one-out cross-validation (LOOCV) schemes.</p>
+<section id="id6">
+<h3>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>cv<span class="classifier">int, default=None</span></dt><dd><p>(cross-validation) This parameter is used to specify the number of folds. Ignored when loocv
 is set to True.</p>
@@ -184,112 +238,128 @@ True the rest of the parameters will be ignored.</p>
 <dt>random_state<span class="classifier">int, default=None</span></dt><dd><p>(cross-validation) Random state for study replication.</p>
 </dd>
 </dl>
+</section>
+<section id="id7">
+<h3>Returns<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>cv_obj<span class="classifier">RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut</span></dt><dd><p>Cross-validation instance from the <a class="reference external" href="https://scikit-learn.org/stable/modules/cross_validation.html">sklearn</a>
 library.</p>
 </dd>
 </dl>
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.tools.getNumModelParams">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.tools.</span></span><span class="sig-name descname"><span class="pre">getNumModelParams</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/gojo/util/tools.html#getNumModelParams"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.tools.getNumModelParams" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.tools.</span></span><span class="sig-name descname"><span class="pre">getNumModelParams</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/gojo/util/tools.html#getNumModelParams"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.tools.getNumModelParams" title="Link to this definition"></a></dt>
 <dd><p>Function that returns the number of trainable parameters from a <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code> instance.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.tools.minMaxScaling">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.tools.</span></span><span class="sig-name descname"><span class="pre">minMaxScaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/gojo/util/tools.html#minMaxScaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.tools.minMaxScaling" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.tools.</span></span><span class="sig-name descname"><span class="pre">minMaxScaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/gojo/util/tools.html#minMaxScaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.tools.minMaxScaling" title="Link to this definition"></a></dt>
 <dd><p>Apply a min-max scaling to the provided data range.</p>
+<section id="id8">
+<h3>Parameters<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>data<span class="classifier">pd.DataFrame or np.ndarray</span></dt><dd><p>Data to be scaled.</p>
 </dd>
 <dt>feature_range<span class="classifier">tuple, default=(0, 1)</span></dt><dd><p>Feature range to scale the input data</p>
 </dd>
 </dl>
+</section>
+<section id="id9">
+<h3>Returns<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>scaled_data<span class="classifier">pd.DataFrame or np.ndarray</span></dt><dd><p>Data scaled to the provided range.</p>
 </dd>
 </dl>
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.tools.zscoresScaling">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.tools.</span></span><span class="sig-name descname"><span class="pre">zscoresScaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/gojo/util/tools.html#zscoresScaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.tools.zscoresScaling" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.tools.</span></span><span class="sig-name descname"><span class="pre">zscoresScaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/gojo/util/tools.html#zscoresScaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.tools.zscoresScaling" title="Link to this definition"></a></dt>
 <dd><p>Apply a z-scores scaling to the provided data range.</p>
+<section id="id10">
+<h3>Parameters<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>data<span class="classifier">pd.DataFrame or np.ndarray</span></dt><dd><p>Data to be scaled.</p>
 </dd>
 </dl>
+</section>
+<section id="id11">
+<h3>Returns<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>scaled_data<span class="classifier">pd.DataFrame or np.ndarray</span></dt><dd><p>Z-scores</p>
 </dd>
 </dl>
+</section>
 </dd></dl>
 
 </section>
 <section id="module-gojo.util.validation">
-<span id="gojo-util-validation-module"></span><h2>gojo.util.validation module<a class="headerlink" href="#module-gojo.util.validation" title="Permalink to this heading"></a></h2>
+<span id="gojo-util-validation-module"></span><h2>gojo.util.validation module<a class="headerlink" href="#module-gojo.util.validation" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.validation.checkCallable">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.validation.</span></span><span class="sig-name descname"><span class="pre">checkCallable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_obj_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/validation.html#checkCallable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.validation.checkCallable" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.validation.</span></span><span class="sig-name descname"><span class="pre">checkCallable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_obj_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/validation.html#checkCallable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.validation.checkCallable" title="Link to this definition"></a></dt>
 <dd><p>Function used to check if a given object is callable.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.validation.checkClass">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.validation.</span></span><span class="sig-name descname"><span class="pre">checkClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_obj_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/validation.html#checkClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.validation.checkClass" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.validation.</span></span><span class="sig-name descname"><span class="pre">checkClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_obj_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/validation.html#checkClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.validation.checkClass" title="Link to this definition"></a></dt>
 <dd><p>Function used to check if a given object is a class.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.validation.checkInputType">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.validation.</span></span><span class="sig-name descname"><span class="pre">checkInputType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_var_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_var</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/validation.html#checkInputType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.validation.checkInputType" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.validation.</span></span><span class="sig-name descname"><span class="pre">checkInputType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_var_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_var</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/validation.html#checkInputType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.validation.checkInputType" title="Link to this definition"></a></dt>
 <dd><p>Function that checks that the type of the input variable <cite>input_var</cite> is within the valid types <cite>valid_types</cite>.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.validation.checkIterable">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.validation.</span></span><span class="sig-name descname"><span class="pre">checkIterable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_obj_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/validation.html#checkIterable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.validation.checkIterable" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.validation.</span></span><span class="sig-name descname"><span class="pre">checkIterable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_obj_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/validation.html#checkIterable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.validation.checkIterable" title="Link to this definition"></a></dt>
 <dd><p>Function used to check if a given object is an iterable.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.validation.checkMultiInputTypes">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.validation.</span></span><span class="sig-name descname"><span class="pre">checkMultiInputTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/validation.html#checkMultiInputTypes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.validation.checkMultiInputTypes" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.validation.</span></span><span class="sig-name descname"><span class="pre">checkMultiInputTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/validation.html#checkMultiInputTypes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.validation.checkMultiInputTypes" title="Link to this definition"></a></dt>
 <dd><p>Wrapper of function checkInputType to check multiple variables at the same time.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.validation.fileExists">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.validation.</span></span><span class="sig-name descname"><span class="pre">fileExists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">must_exists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/validation.html#fileExists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.validation.fileExists" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.validation.</span></span><span class="sig-name descname"><span class="pre">fileExists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">must_exists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/validation.html#fileExists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.validation.fileExists" title="Link to this definition"></a></dt>
 <dd><p>Function that checks if a given file exists or not exists</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.validation.pathExists">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.validation.</span></span><span class="sig-name descname"><span class="pre">pathExists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">must_exists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/validation.html#pathExists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.validation.pathExists" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.validation.</span></span><span class="sig-name descname"><span class="pre">pathExists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">must_exists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/validation.html#pathExists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.validation.pathExists" title="Link to this definition"></a></dt>
 <dd><p>Function that checks if a given path exists.</p>
 </dd></dl>
 
 </section>
 <section id="module-gojo.util.login">
-<span id="gojo-util-login-module"></span><h2>gojo.util.login module<a class="headerlink" href="#module-gojo.util.login" title="Permalink to this heading"></a></h2>
+<span id="gojo-util-login-module"></span><h2>gojo.util.login module<a class="headerlink" href="#module-gojo.util.login" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="gojo.util.login.Login">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.util.login.</span></span><span class="sig-name descname"><span class="pre">Login</span></span><a class="reference internal" href="_modules/gojo/util/login.html#Login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.login.Login" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.util.login.</span></span><span class="sig-name descname"><span class="pre">Login</span></span><a class="reference internal" href="_modules/gojo/util/login.html#Login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.login.Login" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Basic Login handler.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="gojo.util.login.Login.logger_levels">
-<span class="sig-name descname"><span class="pre">logger_levels</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{None:</span> <span class="pre">&lt;bound</span> <span class="pre">method</span> <span class="pre">Logger.info</span> <span class="pre">of</span> <span class="pre">&lt;loguru.logger</span> <span class="pre">handlers=[(id=0,</span> <span class="pre">level=10,</span> <span class="pre">sink=&lt;stderr&gt;)]&gt;&gt;,</span> <span class="pre">'info':</span> <span class="pre">&lt;bound</span> <span class="pre">method</span> <span class="pre">Logger.info</span> <span class="pre">of</span> <span class="pre">&lt;loguru.logger</span> <span class="pre">handlers=[(id=0,</span> <span class="pre">level=10,</span> <span class="pre">sink=&lt;stderr&gt;)]&gt;&gt;,</span> <span class="pre">'error':</span> <span class="pre">&lt;bound</span> <span class="pre">method</span> <span class="pre">Logger.error</span> <span class="pre">of</span> <span class="pre">&lt;loguru.logger</span> <span class="pre">handlers=[(id=0,</span> <span class="pre">level=10,</span> <span class="pre">sink=&lt;stderr&gt;)]&gt;&gt;,</span> <span class="pre">'err':</span> <span class="pre">&lt;bound</span> <span class="pre">method</span> <span class="pre">Logger.error</span> <span class="pre">of</span> <span class="pre">&lt;loguru.logger</span> <span class="pre">handlers=[(id=0,</span> <span class="pre">level=10,</span> <span class="pre">sink=&lt;stderr&gt;)]&gt;&gt;,</span> <span class="pre">'warn':</span> <span class="pre">&lt;bound</span> <span class="pre">method</span> <span class="pre">Logger.warning</span> <span class="pre">of</span> <span class="pre">&lt;loguru.logger</span> <span class="pre">handlers=[(id=0,</span> <span class="pre">level=10,</span> <span class="pre">sink=&lt;stderr&gt;)]&gt;&gt;,</span> <span class="pre">'warning':</span> <span class="pre">&lt;bound</span> <span class="pre">method</span> <span class="pre">Logger.warning</span> <span class="pre">of</span> <span class="pre">&lt;loguru.logger</span> <span class="pre">handlers=[(id=0,</span> <span class="pre">level=10,</span> <span class="pre">sink=&lt;stderr&gt;)]&gt;&gt;,</span> <span class="pre">'success':</span> <span class="pre">&lt;bound</span> <span class="pre">method</span> <span class="pre">Logger.success</span> <span class="pre">of</span> <span class="pre">&lt;loguru.logger</span> <span class="pre">handlers=[(id=0,</span> <span class="pre">level=10,</span> <span class="pre">sink=&lt;stderr&gt;)]&gt;&gt;}</span></em><a class="headerlink" href="#gojo.util.login.Login.logger_levels" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">logger_levels</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'err':</span> <span class="pre">&lt;bound</span> <span class="pre">method</span> <span class="pre">Logger.error</span> <span class="pre">of</span> <span class="pre">&lt;loguru.logger</span> <span class="pre">handlers=[(id=0,</span> <span class="pre">level=10,</span> <span class="pre">sink=&lt;stderr&gt;)]&gt;&gt;,</span> <span class="pre">'error':</span> <span class="pre">&lt;bound</span> <span class="pre">method</span> <span class="pre">Logger.error</span> <span class="pre">of</span> <span class="pre">&lt;loguru.logger</span> <span class="pre">handlers=[(id=0,</span> <span class="pre">level=10,</span> <span class="pre">sink=&lt;stderr&gt;)]&gt;&gt;,</span> <span class="pre">'info':</span> <span class="pre">&lt;bound</span> <span class="pre">method</span> <span class="pre">Logger.info</span> <span class="pre">of</span> <span class="pre">&lt;loguru.logger</span> <span class="pre">handlers=[(id=0,</span> <span class="pre">level=10,</span> <span class="pre">sink=&lt;stderr&gt;)]&gt;&gt;,</span> <span class="pre">'success':</span> <span class="pre">&lt;bound</span> <span class="pre">method</span> <span class="pre">Logger.success</span> <span class="pre">of</span> <span class="pre">&lt;loguru.logger</span> <span class="pre">handlers=[(id=0,</span> <span class="pre">level=10,</span> <span class="pre">sink=&lt;stderr&gt;)]&gt;&gt;,</span> <span class="pre">'warn':</span> <span class="pre">&lt;bound</span> <span class="pre">method</span> <span class="pre">Logger.warning</span> <span class="pre">of</span> <span class="pre">&lt;loguru.logger</span> <span class="pre">handlers=[(id=0,</span> <span class="pre">level=10,</span> <span class="pre">sink=&lt;stderr&gt;)]&gt;&gt;,</span> <span class="pre">'warning':</span> <span class="pre">&lt;bound</span> <span class="pre">method</span> <span class="pre">Logger.warning</span> <span class="pre">of</span> <span class="pre">&lt;loguru.logger</span> <span class="pre">handlers=[(id=0,</span> <span class="pre">level=10,</span> <span class="pre">sink=&lt;stderr&gt;)]&gt;&gt;,</span> <span class="pre">None:</span> <span class="pre">&lt;bound</span> <span class="pre">method</span> <span class="pre">Logger.info</span> <span class="pre">of</span> <span class="pre">&lt;loguru.logger</span> <span class="pre">handlers=[(id=0,</span> <span class="pre">level=10,</span> <span class="pre">sink=&lt;stderr&gt;)]&gt;&gt;}</span></em><a class="headerlink" href="#gojo.util.login.Login.logger_levels" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.login.configureLogger">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.login.</span></span><span class="sig-name descname"><span class="pre">configureLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_time_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/login.html#configureLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.login.configureLogger" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.login.</span></span><span class="sig-name descname"><span class="pre">configureLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_time_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/login.html#configureLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.login.configureLogger" title="Link to this definition"></a></dt>
 <dd><p>Function used to configure the login system. If no file is provided as input the output will be driven by
 the standard Python output. If an input file is provided it will be created and the output will be redirected
 to that file.</p>
@@ -301,31 +371,37 @@ to that file.</p>
 - ‘warning’: Warning level.
 - ‘warn’: Warning level (same as ‘warn’).
 - ‘success’: Successful level.</p>
+<section id="id12">
+<h3>Parameters<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>file<span class="classifier">str, default=None</span></dt><dd><p>Output file to redirect the output.</p>
 </dd>
 <dt>add_time_prefix<span class="classifier">bool, default=True</span></dt><dd><p>Indicate whether to add the time prefix to the login.</p>
 </dd>
 </dl>
+</section>
+<section id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h3>
 <p>The login status can be checked using <a class="reference internal" href="#gojo.util.login.isActive" title="gojo.util.login.isActive"><code class="xref py py-func docutils literal notranslate"><span class="pre">gojo.util.login.isActive()</span></code></a>, and can be disabled by using
 <a class="reference internal" href="#gojo.util.login.deactivate" title="gojo.util.login.deactivate"><code class="xref py py-func docutils literal notranslate"><span class="pre">gojo.util.login.deactivate()</span></code></a>.</p>
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.login.deactivate">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.login.</span></span><span class="sig-name descname"><span class="pre">deactivate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/login.html#deactivate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.login.deactivate" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.login.</span></span><span class="sig-name descname"><span class="pre">deactivate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/util/login.html#deactivate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.login.deactivate" title="Link to this definition"></a></dt>
 <dd><p>Deactivate the current login system.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.util.login.isActive">
-<span class="sig-prename descclassname"><span class="pre">gojo.util.login.</span></span><span class="sig-name descname"><span class="pre">isActive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gojo/util/login.html#isActive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.login.isActive" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.util.login.</span></span><span class="sig-name descname"><span class="pre">isActive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gojo/util/login.html#isActive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.util.login.isActive" title="Link to this definition"></a></dt>
 <dd><p>Indicates whether the login system is active.</p>
 </dd></dl>
 
 </section>
 <section id="module-gojo.util">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gojo.util" title="Permalink to this heading"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gojo.util" title="Link to this heading"></a></h2>
 </section>
 </section>
 
