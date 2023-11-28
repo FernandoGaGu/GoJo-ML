@@ -8,6 +8,7 @@
 import torch
 import numpy as np
 import pandas as pd
+from typing import Tuple
 from sklearn.model_selection import (
     train_test_split,
     RepeatedKFold,
@@ -82,8 +83,17 @@ class SimpleSplitter(object):
     def split(
             self,
             X: np.ndarray or pd.DataFrame,
-            y=None) -> np.ndarray:
-        """ Generates indices to split data into training and test set. """
+            y: np.ndarray or pd.Series = None) -> Tuple[np.ndarray, np.ndarray]:
+        """ Generates indices to split data into training and test set.
+
+        Parameters
+        ----------
+        X : np.ndarray or pd.DataFrame
+            Input data.
+
+        y : np.ndarray or pd.Series, default=None
+            If `stratify` was specified as `True` this variable will be used for performing a stratified split.
+        """
         indices = np.arange(len(X))
 
         train_idx, test_idx = train_test_split(
@@ -94,6 +104,169 @@ class SimpleSplitter(object):
             shuffle=self.shuffle)
 
         yield train_idx, test_idx
+
+
+class InstanceLevelKFoldSplitter(object):
+    """ Splitter that allows to make splits at instance level ignoring the observations associated to the instance.
+
+    .. important::
+        The observations of the input data of the :meth:`split` method will be associated with the identifiers provided
+        in `instance_id`.
+
+
+    Parameters
+    ----------
+    n_splits : int
+        Number of folds. Must be at least 2.
+
+    instance_id : np.ndarray
+        Array identifying the instances to perform the splits.
+
+    n_repeats : int, default=1
+        Number of times cross-validator needs to be repeated.
+
+    shuffle : bool, default=True
+        Indicates whether to shuffle the data before performing the split.
+
+    random_state : int, default=None
+        Controls the randomness of each repeated cross-validation instance.
+    """
+
+    def __init__(
+            self,
+            n_splits: int,
+            instance_id: np.ndarray,
+            n_repeats: int = 1,
+            shuffle: bool = True,
+            random_state: int = None):
+
+        checkMultiInputTypes(
+            ('n_splits', n_splits, [int]),
+            ('instance_id', instance_id, [np.ndarray]),
+            ('n_repeats', n_repeats, [int]),
+            ('shuffle', shuffle, [bool]),
+            ('random_state', random_state, [int, type(None)]),
+        )
+        # check input types
+        if n_splits <= 1:
+            raise TypeError('"n_splits" must be > 1')
+        if n_repeats <= 0:
+            raise TypeError('"n_repeats" must be > 0')
+        if len(instance_id) <= 2:
+            raise TypeError('"instance_id" cannot be <= 2')
+
+        self.n_splits = n_splits
+        self.instance_id = instance_id
+        self.n_repeats = n_repeats
+        self.shuffle = shuffle
+        self.random_state = random_state
+        self._indices = np.arange(len(instance_id))
+
+        # get the unique ids, and create an id-position(s) hash
+        self._unique_instance_id = np.unique(instance_id)
+        self._instance_id_hash = {
+            _id: np.where(instance_id == _id)[0]
+            for _id in self._unique_instance_id
+        }
+
+        # generate partitions
+        self._train_indices, self._test_indices = self._generateSplits()
+
+        # iterator-level states
+        self._current_iteration = 0
+
+    def _generateSplits(self):
+        """ Internal method needed to generate the internal splits. """
+
+        # calculate the size of the split
+        split_size = int(np.ceil(len(self._unique_instance_id) / self.n_splits))
+
+        # select the random state for reproducibility
+        if self.random_state is not None:
+            np.random.seed(self.random_state)
+
+        split_indices = []
+        for n_repeat in range(self.n_repeats):
+            repeat_split_indices = []
+
+            # transform unique ids to indices
+            indices = np.arange(len(self._unique_instance_id))
+
+            # random permutation of the indices
+            if self.shuffle:
+                indices = np.random.permutation(indices)
+
+            # add split indices
+            for n_split in range(self.n_splits):
+                repeat_split_indices.append(indices[n_split * split_size:n_split * split_size + split_size])
+
+            # inner checking
+            assert len(np.unique(np.concatenate(repeat_split_indices))) == len(
+                self._unique_instance_id), 'Inner checking fails (0)'
+
+            # save all folds
+            split_indices = split_indices + repeat_split_indices
+
+        # expand the indices to the positions
+        unfolded_split_indices = []
+        for indices in split_indices:
+            unfolded_split_indices.append(
+                np.concatenate([
+                    self._instance_id_hash[_id]
+                    for _id in self._unique_instance_id[indices]])
+            )
+
+        # create final train/test folds
+        train_indices = []
+        test_indices = []
+        for rep in range(self.n_repeats):
+            for split_i in range(self.n_splits):
+                train_indices_ = []
+                for split_j in range(self.n_splits):
+                    curr_idx = self.n_splits * rep + split_j
+                    if split_i == split_j:
+                        # select test data
+                        test_indices.append(unfolded_split_indices[curr_idx])
+                    else:
+                        # select train data
+                        train_indices_.append(unfolded_split_indices[curr_idx])
+                train_indices.append(np.concatenate(train_indices_))
+
+        return train_indices, test_indices
+
+    def split(
+            self,
+            X: np.ndarray or pd.DataFrame,
+            y=None) -> Tuple[np.ndarray, np.ndarray]:
+        """ Generate the splits. This function will return a tuple where the first element will correspond to
+        the training indices and the second element to the test indices.
+
+        .. important::
+            `X` must match with `instance_id`.
+
+        Parameters
+        ----------
+        X : np.ndarray or pd.DataFrame
+            Input data.
+
+        y : object, default=None
+            Ignored parameter. Implemented for `sklearn` compatibility.
+        """
+        indices = np.arange(len(X))
+
+        if len(self.instance_id) != len(indices):
+            raise TypeError(
+                'Input parameter "instance_id" must be of the same size as the input data.'
+                'Provided number of samples "%d", expected "%d"' % (len(indices), len(self.instance_id))
+            )
+
+        while self._current_iteration < len(self._train_indices):
+            train_indices = self._train_indices[self._current_iteration]
+            test_indices = self._test_indices[self._current_iteration]
+            self._current_iteration += 1
+            yield train_indices, test_indices
+
+        self._current_iteration = 0
 
 
 def getCrossValObj(cv: int = None, repeats: int = 1, stratified: bool = False, loocv: bool = False,

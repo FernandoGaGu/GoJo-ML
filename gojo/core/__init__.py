@@ -13,10 +13,12 @@ from .loops import (
 
 from .base import (
     Model,
+    Dataset,
     SklearnModelWrapper,
     TorchSKInterface,
     ParametrizedTorchSKInterface,
-    Dataset
+    GNNTorchSKInterface,
+    ParametrizedGNNTorchSKInterface,
 )
 
 from .report import (

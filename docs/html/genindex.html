@@ -195,6 +195,8 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gojo.deepl.html#gojo.deepl.models.GNN.ffnModel">ffnModel() (gojo.deepl.models.GNN method)</a>
+</li>
       <li><a href="gojo.util.html#gojo.util.validation.fileExists">fileExists() (in module gojo.util.validation)</a>
 </li>
       <li><a href="gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.fit">fit() (gojo.core.transform.SKLearnTransformWrapper method)</a>
@@ -217,12 +219,16 @@
 </li>
       <li><a href="gojo.core.html#gojo.core.evaluation.flatFunctionInput">flatFunctionInput() (in module gojo.core.evaluation)</a>
 </li>
-      <li><a href="gojo.deepl.html#gojo.deepl.models.MultiTaskFFN.forward">forward() (gojo.deepl.models.MultiTaskFFN method)</a>
+      <li><a href="gojo.deepl.html#gojo.deepl.models.GNN.forward">forward() (gojo.deepl.models.GNN method)</a>
 
       <ul>
+        <li><a href="gojo.deepl.html#gojo.deepl.models.MultiTaskFFN.forward">(gojo.deepl.models.MultiTaskFFN method)</a>
+</li>
         <li><a href="gojo.deepl.html#gojo.deepl.models.MultiTaskFFNv2.forward">(gojo.deepl.models.MultiTaskFFNv2 method)</a>
 </li>
       </ul></li>
+      <li><a href="gojo.deepl.html#gojo.deepl.models.GNN.fusionModel">fusionModel() (gojo.deepl.models.GNN method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -267,7 +273,11 @@
 </li>
       <li><a href="gojo.core.html#gojo.core.report.CVReport.getTrainPredictions">getTrainPredictions() (gojo.core.report.CVReport method)</a>
 </li>
-      <li><a href="gojo.experimental.html#gojo.experimental.core_base.GNNTorchSKInterface">GNNTorchSKInterface (class in gojo.experimental.core_base)</a>
+      <li><a href="gojo.deepl.html#gojo.deepl.models.GNN">GNN (class in gojo.deepl.models)</a>
+</li>
+      <li><a href="gojo.deepl.html#gojo.deepl.models.GNN.gnnForward">gnnForward() (gojo.deepl.models.GNN method)</a>
+</li>
+      <li><a href="gojo.core.html#gojo.core.base.GNNTorchSKInterface">GNNTorchSKInterface (class in gojo.core.base)</a>
 </li>
       <li>
     gojo
@@ -318,6 +328,8 @@
         <li><a href="gojo.core.html#module-gojo.core.transform">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     gojo.deepl
 
@@ -325,8 +337,6 @@
         <li><a href="gojo.deepl.html#module-gojo.deepl">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     gojo.deepl.callback
 
@@ -367,20 +377,6 @@
 
       <ul>
         <li><a href="gojo.experimental.html#module-gojo.experimental">module</a>
-</li>
-      </ul></li>
-      <li>
-    gojo.experimental.core_base
-
-      <ul>
-        <li><a href="gojo.experimental.html#module-gojo.experimental.core_base">module</a>
-</li>
-      </ul></li>
-      <li>
-    gojo.experimental.deepl_loading
-
-      <ul>
-        <li><a href="gojo.experimental.html#module-gojo.experimental.deepl_loading">module</a>
 </li>
       </ul></li>
       <li>
@@ -439,7 +435,9 @@
         <li><a href="gojo.util.html#module-gojo.util.validation">module</a>
 </li>
       </ul></li>
-      <li><a href="gojo.experimental.html#gojo.experimental.deepl_loading.GraphDataset">GraphDataset (class in gojo.experimental.deepl_loading)</a>
+      <li><a href="gojo.deepl.html#gojo.deepl.loading.GraphDataset">GraphDataset (class in gojo.deepl.loading)</a>
+</li>
+      <li><a href="gojo.deepl.html#gojo.deepl.models.GNN.graphPooling">graphPooling() (gojo.deepl.models.GNN method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -448,6 +446,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gojo.core.html#gojo.core.base.Dataset.index_values">index_values (gojo.core.base.Dataset property)</a>
+</li>
+      <li><a href="gojo.util.html#gojo.util.tools.InstanceLevelKFoldSplitter">InstanceLevelKFoldSplitter (class in gojo.util.tools)</a>
 </li>
       <li><a href="gojo.core.html#gojo.core.base.Model.is_fitted">is_fitted (gojo.core.base.Model property)</a>
 
@@ -525,10 +525,6 @@
 </li>
         <li><a href="gojo.experimental.html#module-gojo.experimental">gojo.experimental</a>
 </li>
-        <li><a href="gojo.experimental.html#module-gojo.experimental.core_base">gojo.experimental.core_base</a>
-</li>
-        <li><a href="gojo.experimental.html#module-gojo.experimental.deepl_loading">gojo.experimental.deepl_loading</a>
-</li>
         <li><a href="gojo.plotting.html#module-gojo.plotting">gojo.plotting</a>
 </li>
         <li><a href="gojo.plotting.html#module-gojo.plotting.basic">gojo.plotting.basic</a>
@@ -568,22 +564,22 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gojo.core.html#gojo.core.base.Model.parameters">parameters (gojo.core.base.Model property)</a>
 </li>
-      <li><a href="gojo.experimental.html#gojo.experimental.core_base.ParametrizedGNNTorchSKInterface">ParametrizedGNNTorchSKInterface (class in gojo.experimental.core_base)</a>
+      <li><a href="gojo.core.html#gojo.core.base.ParametrizedGNNTorchSKInterface">ParametrizedGNNTorchSKInterface (class in gojo.core.base)</a>
 </li>
       <li><a href="gojo.core.html#gojo.core.base.ParametrizedTorchSKInterface">ParametrizedTorchSKInterface (class in gojo.core.base)</a>
 </li>
       <li><a href="gojo.util.html#gojo.util.validation.pathExists">pathExists() (in module gojo.util.validation)</a>
 </li>
-      <li><a href="gojo.core.html#gojo.core.base.Model.performInference">performInference() (gojo.core.base.Model method)</a>
+      <li><a href="gojo.core.html#gojo.core.base.GNNTorchSKInterface.performInference">performInference() (gojo.core.base.GNNTorchSKInterface method)</a>
 
       <ul>
+        <li><a href="gojo.core.html#gojo.core.base.Model.performInference">(gojo.core.base.Model method)</a>
+</li>
+        <li><a href="gojo.core.html#gojo.core.base.ParametrizedGNNTorchSKInterface.performInference">(gojo.core.base.ParametrizedGNNTorchSKInterface method)</a>
+</li>
         <li><a href="gojo.core.html#gojo.core.base.SklearnModelWrapper.performInference">(gojo.core.base.SklearnModelWrapper method)</a>
 </li>
         <li><a href="gojo.core.html#gojo.core.base.TorchSKInterface.performInference">(gojo.core.base.TorchSKInterface method)</a>
-</li>
-        <li><a href="gojo.experimental.html#gojo.experimental.core_base.GNNTorchSKInterface.performInference">(gojo.experimental.core_base.GNNTorchSKInterface method)</a>
-</li>
-        <li><a href="gojo.experimental.html#gojo.experimental.core_base.ParametrizedGNNTorchSKInterface.performInference">(gojo.experimental.core_base.ParametrizedGNNTorchSKInterface method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -642,8 +638,12 @@
 </li>
       <li><a href="gojo.core.html#gojo.core.transform.SKLearnTransformWrapper">SKLearnTransformWrapper (class in gojo.core.transform)</a>
 </li>
-      <li><a href="gojo.util.html#gojo.util.tools.SimpleSplitter.split">split() (gojo.util.tools.SimpleSplitter method)</a>
+      <li><a href="gojo.util.html#gojo.util.tools.InstanceLevelKFoldSplitter.split">split() (gojo.util.tools.InstanceLevelKFoldSplitter method)</a>
+
+      <ul>
+        <li><a href="gojo.util.html#gojo.util.tools.SimpleSplitter.split">(gojo.util.tools.SimpleSplitter method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -654,23 +654,25 @@
 </li>
       <li><a href="gojo.core.html#gojo.core.base.TorchSKInterface">TorchSKInterface (class in gojo.core.base)</a>
 </li>
-      <li><a href="gojo.core.html#gojo.core.base.Model.train">train() (gojo.core.base.Model method)</a>
+      <li><a href="gojo.core.html#gojo.core.base.GNNTorchSKInterface.train">train() (gojo.core.base.GNNTorchSKInterface method)</a>
 
       <ul>
+        <li><a href="gojo.core.html#gojo.core.base.Model.train">(gojo.core.base.Model method)</a>
+</li>
+        <li><a href="gojo.core.html#gojo.core.base.ParametrizedGNNTorchSKInterface.train">(gojo.core.base.ParametrizedGNNTorchSKInterface method)</a>
+</li>
         <li><a href="gojo.core.html#gojo.core.base.SklearnModelWrapper.train">(gojo.core.base.SklearnModelWrapper method)</a>
 </li>
         <li><a href="gojo.core.html#gojo.core.base.TorchSKInterface.train">(gojo.core.base.TorchSKInterface method)</a>
 </li>
-        <li><a href="gojo.experimental.html#gojo.experimental.core_base.GNNTorchSKInterface.train">(gojo.experimental.core_base.GNNTorchSKInterface method)</a>
-</li>
-        <li><a href="gojo.experimental.html#gojo.experimental.core_base.ParametrizedGNNTorchSKInterface.train">(gojo.experimental.core_base.ParametrizedGNNTorchSKInterface method)</a>
-</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="gojo.deepl.html#gojo.deepl.models.MultiTaskFFN.training">training (gojo.deepl.models.MultiTaskFFN attribute)</a>
+      <li><a href="gojo.deepl.html#gojo.deepl.models.GNN.training">training (gojo.deepl.models.GNN attribute)</a>
 
       <ul>
+        <li><a href="gojo.deepl.html#gojo.deepl.models.MultiTaskFFN.training">(gojo.deepl.models.MultiTaskFFN attribute)</a>
+</li>
         <li><a href="gojo.deepl.html#gojo.deepl.models.MultiTaskFFNv2.training">(gojo.deepl.models.MultiTaskFFNv2 attribute)</a>
 </li>
       </ul></li>

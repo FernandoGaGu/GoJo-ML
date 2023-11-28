@@ -8,7 +8,28 @@ gojo.core.base module
 ---------------------
 
 .. automodule:: gojo.core.base
+
+.. autoclass:: Dataset
    :members:
+
+.. autoclass:: Model
+   :members:
+
+.. autoclass:: SklearnModelWrapper
+   :members:
+
+.. autoclass:: TorchSKInterface
+   :members:
+
+.. autoclass:: ParametrizedTorchSKInterface
+   :members:
+
+.. autoclass:: GNNTorchSKInterface
+   :members:
+
+.. autoclass:: ParametrizedGNNTorchSKInterface
+   :members:
+
    :undoc-members:
    :show-inheritance:
 
