@@ -18,7 +18,7 @@ from sklearn.preprocessing import (
     StandardScaler,
     MinMaxScaler)
 
-
+from .io import _createObjectRepresentation
 from .validation import (
     checkMultiInputTypes,
     checkInputType)
@@ -79,6 +79,18 @@ class SimpleSplitter(object):
         self.stratify = stratify
         self.random_state = random_state
         self.shuffle = shuffle
+
+    def __repr__(self):
+        return _createObjectRepresentation(
+            'SimpleSplitter',
+            test_size=self.test_size,
+            stratify=self.stratify,
+            random_state=self.random_state,
+            shuffle=self.shuffle
+        )
+
+    def __str__(self):
+        return self.__repr__()
 
     def split(
             self,
@@ -174,6 +186,20 @@ class InstanceLevelKFoldSplitter(object):
 
         # iterator-level states
         self._current_iteration = 0
+
+    def __repr__(self):
+        return _createObjectRepresentation(
+            'InstanceLevelKFoldSplitter',
+            n_splits=self.n_splits,
+            n_repeats=self.n_repeats,
+            shuffle=self.shuffle,
+            random_state=self.random_state,
+            observations=len(self.instance_id),
+            unique_instances=len(self._unique_instance_id),
+        )
+
+    def __str__(self):
+        return self.__repr__()
 
     def _generateSplits(self):
         """ Internal method needed to generate the internal splits. """
