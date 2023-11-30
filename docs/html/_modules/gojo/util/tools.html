@@ -92,7 +92,7 @@
     <span class="n">StandardScaler</span><span class="p">,</span>
     <span class="n">MinMaxScaler</span><span class="p">)</span>
 
-
+<span class="kn">from</span> <span class="nn">.io</span> <span class="kn">import</span> <span class="n">_createObjectRepresentation</span>
 <span class="kn">from</span> <span class="nn">.validation</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">checkMultiInputTypes</span><span class="p">,</span>
     <span class="n">checkInputType</span><span class="p">)</span>
@@ -155,6 +155,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">stratify</span> <span class="o">=</span> <span class="n">stratify</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span> <span class="o">=</span> <span class="n">shuffle</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_createObjectRepresentation</span><span class="p">(</span>
+            <span class="s1">&#39;SimpleSplitter&#39;</span><span class="p">,</span>
+            <span class="n">test_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_size</span><span class="p">,</span>
+            <span class="n">stratify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stratify</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">,</span>
+            <span class="n">shuffle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
 <div class="viewcode-block" id="SimpleSplitter.split">
 <a class="viewcode-back" href="../../../gojo.util.html#gojo.util.tools.SimpleSplitter.split">[docs]</a>
@@ -256,6 +268,20 @@
 
         <span class="c1"># iterator-level states</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_iteration</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_createObjectRepresentation</span><span class="p">(</span>
+            <span class="s1">&#39;InstanceLevelKFoldSplitter&#39;</span><span class="p">,</span>
+            <span class="n">n_splits</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_splits</span><span class="p">,</span>
+            <span class="n">n_repeats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_repeats</span><span class="p">,</span>
+            <span class="n">shuffle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">,</span>
+            <span class="n">observations</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance_id</span><span class="p">),</span>
+            <span class="n">unique_instances</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_unique_instance_id</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_generateSplits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Internal method needed to generate the internal splits. &quot;&quot;&quot;</span>

@@ -113,7 +113,9 @@
     <span class="n">checkInputType</span><span class="p">,</span>
     <span class="n">checkCallable</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">..util.tools</span> <span class="kn">import</span> <span class="n">SimpleSplitter</span>
+<span class="kn">from</span> <span class="nn">..util.tools</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SimpleSplitter</span><span class="p">,</span>
+    <span class="n">InstanceLevelKFoldSplitter</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..exception</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">UnfittedTransform</span>
 <span class="p">)</span>
@@ -419,7 +421,8 @@
 <span class="sd">    model : :class:`gojo.core.base.Model`</span>
 <span class="sd">        Model to be trained. The input model must follow the :class:`gojo.base.Model` interfaz.</span>
 
-<span class="sd">    cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.SimpleSplitter`</span>
+<span class="sd">    cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.SimpleSplitter` or</span>
+<span class="sd">    :class:`gojo.util.InstanceLevelKFoldSplitter`</span>
 <span class="sd">        Cross-validation schema. For more information about cross validation see `sklearn.model_selection` module.</span>
 <span class="sd">        The gojo module implements useful functions for easy loading of cross-validation objects (see</span>
 <span class="sd">        :func:`gojo.util.getCrossValObj`).</span>
@@ -519,7 +522,7 @@
         <span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]),</span>
         <span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">]),</span>
         <span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="n">Model</span><span class="p">]),</span>
-        <span class="p">(</span><span class="s1">&#39;cv&#39;</span><span class="p">,</span> <span class="n">cv</span><span class="p">,</span> <span class="p">[</span><span class="n">RepeatedKFold</span><span class="p">,</span> <span class="n">RepeatedStratifiedKFold</span><span class="p">,</span> <span class="n">LeaveOneOut</span><span class="p">,</span> <span class="n">SimpleSplitter</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;cv&#39;</span><span class="p">,</span> <span class="n">cv</span><span class="p">,</span> <span class="p">[</span><span class="n">RepeatedKFold</span><span class="p">,</span> <span class="n">RepeatedStratifiedKFold</span><span class="p">,</span> <span class="n">LeaveOneOut</span><span class="p">,</span> <span class="n">SimpleSplitter</span><span class="p">,</span> <span class="n">InstanceLevelKFoldSplitter</span><span class="p">]),</span>
         <span class="p">(</span><span class="s1">&#39;transforms&#39;</span><span class="p">,</span> <span class="n">transforms</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
         <span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
         <span class="p">(</span><span class="s1">&#39;n_jobs&#39;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
@@ -679,12 +682,14 @@
 <span class="sd">        &gt;&gt;&gt;     &#39;max_samples&#39;: (&#39;suggest_float&#39;, (0.5, 1.0) ),</span>
 <span class="sd">        &gt;&gt;&gt; }</span>
 
-<span class="sd">    outer_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.SimpleSplitter`</span>
+<span class="sd">    outer_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.SimpleSplitter` or</span>
+<span class="sd">    :class:`gojo.util.InstanceLevelKFoldSplitter`</span>
 <span class="sd">        Cross-validation schema. For more information about cross validation see `sklearn.model_selection` module.</span>
 <span class="sd">        The gojo module implements useful functions for easy loading of cross-validation objects (see</span>
 <span class="sd">        :func:`gojo.util.getCrossValObj`).</span>
 
-<span class="sd">    inner_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.SimpleSplitter`</span>
+<span class="sd">    inner_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.SimpleSplitter` or</span>
+<span class="sd">    :class:`gojo.util.InstanceLevelKFoldSplitter`</span>
 <span class="sd">        Inner cross-validation schema used for evaluating model performance in the nested cross-validation used for</span>
 <span class="sd">        optimize the model hyperparameters. For more information about cross validation see `sklearn.model_selection`</span>
 <span class="sd">        module. The gojo module implements useful functions for easy loading of cross-validation objects (see</span>
@@ -905,8 +910,10 @@
         <span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">]),</span>
         <span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="n">Model</span><span class="p">]),</span>
         <span class="p">(</span><span class="s1">&#39;search_space&#39;</span><span class="p">,</span> <span class="n">search_space</span><span class="p">,</span> <span class="p">[</span><span class="nb">dict</span><span class="p">]),</span>
-        <span class="p">(</span><span class="s1">&#39;outer_cv&#39;</span><span class="p">,</span> <span class="n">outer_cv</span><span class="p">,</span> <span class="p">[</span><span class="n">RepeatedKFold</span><span class="p">,</span> <span class="n">RepeatedStratifiedKFold</span><span class="p">,</span> <span class="n">LeaveOneOut</span><span class="p">,</span> <span class="n">SimpleSplitter</span><span class="p">]),</span>
-        <span class="p">(</span><span class="s1">&#39;inner_cv&#39;</span><span class="p">,</span> <span class="n">inner_cv</span><span class="p">,</span> <span class="p">[</span><span class="n">RepeatedKFold</span><span class="p">,</span> <span class="n">RepeatedStratifiedKFold</span><span class="p">,</span> <span class="n">LeaveOneOut</span><span class="p">,</span> <span class="n">SimpleSplitter</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;outer_cv&#39;</span><span class="p">,</span> <span class="n">outer_cv</span><span class="p">,</span> <span class="p">[</span>
+            <span class="n">RepeatedKFold</span><span class="p">,</span> <span class="n">RepeatedStratifiedKFold</span><span class="p">,</span> <span class="n">LeaveOneOut</span><span class="p">,</span> <span class="n">SimpleSplitter</span><span class="p">,</span> <span class="n">InstanceLevelKFoldSplitter</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;inner_cv&#39;</span><span class="p">,</span> <span class="n">inner_cv</span><span class="p">,</span> <span class="p">[</span>
+            <span class="n">RepeatedKFold</span><span class="p">,</span> <span class="n">RepeatedStratifiedKFold</span><span class="p">,</span> <span class="n">LeaveOneOut</span><span class="p">,</span> <span class="n">SimpleSplitter</span><span class="p">,</span> <span class="n">InstanceLevelKFoldSplitter</span><span class="p">]),</span>
         <span class="p">(</span><span class="s1">&#39;hpo_sampler&#39;</span><span class="p">,</span> <span class="n">hpo_sampler</span><span class="p">,</span> <span class="p">[</span><span class="n">optuna</span><span class="o">.</span><span class="n">samplers</span><span class="o">.</span><span class="n">BaseSampler</span><span class="p">]),</span>
         <span class="p">(</span><span class="s1">&#39;metrics&#39;</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">]),</span>
         <span class="p">(</span><span class="s1">&#39;objective_metric&#39;</span><span class="p">,</span> <span class="n">objective_metric</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
