@@ -8,8 +8,10 @@
 import torch
 import numpy as np
 import pandas as pd
-from typing import List, Iterable
+import warnings
+from typing import List, Iterable, Tuple
 from tqdm import tqdm
+from collections import defaultdict
 
 from .callback import (
     Callback,
@@ -149,6 +151,136 @@ def iterSupervisedEpoch(
             np.concatenate(y_trues), np.concatenate(y_preds))
 
     # calculate loss values
+    loss_stats = {
+        'loss (mean)': np.mean(loss_values),
+        'loss (std)': np.std(loss_values)}
+
+    return loss_stats, metric_stats
+
+
+def iterUnsupervisedEpoch(
+        model: torch.nn.Module,
+        dataloader: Iterable,
+        optimizer,
+        loss_fn: callable,
+        device: str,
+        training: bool,
+        metrics: list,
+        **kwargs) -> tuple:
+    """ Basic function applied to supervised problems that executes the code necessary to perform an epoch.
+
+    This function will return a tuple where the first element correspond to dictionary with the loss-related
+    parameters, and the second element to a dictionary with the calculated metrics.
+    """
+    def _processOutput(out: tuple or torch.Tensor) -> Tuple[torch.Tensor, dict]:
+        """ Function used to check and separate the arguments returned by the model and the loss function. """
+
+        # the model/loss function can return optional arguments. These optional arguments must be packed
+        # into a dictionary
+        if isinstance(out, tuple):
+            if len(out) != 2:
+                raise TypeError(
+                    'If the model/loss_fn returns the values as a tuple, it must correspond to a '
+                    'two-element tuple where the first item will correspond to the predicted '
+                    'values and the second item must be a dictionary.')
+
+            out, out_opargs = out[0], out[1]
+            if not isinstance(out_opargs, dict):
+                raise TypeError(
+                    'If the model/loss_fn returns optional values in addition to the predicted or loss'
+                    ' values, these must be packed in a dictionary')
+
+        else:
+            out_opargs = {}
+
+        return out, out_opargs
+
+    # check input dataloader
+    checkIterable('dataloader', dataloader)
+
+    # iterate over batches
+    loss_values = []
+    loss_values_op = defaultdict(list)
+    x_preds = []
+    x_trues = []
+    for batch, dlargs in enumerate(dataloader):
+        if len(dlargs) < 1:
+            raise DataLoaderError(
+                'The minimum number of arguments returned by a dataloader must be 1 where the first element will '
+                'correspond to the input data (the Xs). The rest of the returned arguments will be passed in the '
+                'der returned to the model.')
+
+        if isinstance(dlargs, tuple):
+            X = dlargs[0].to(device=device)
+            var_args = dlargs[1:]
+        else:
+            X = dlargs.to(device=device)
+            var_args = []
+
+        # perform model inference (training/testing)
+        if training:
+            # training loop (calculate gradients and apply backpropagation)
+            model_out = model(X, *var_args)
+
+            # process model output
+            model_out, model_out_opargs = _processOutput(model_out)
+
+            # evaluate the loss function considering an unsupervised problem
+            loss = loss_fn(model_out, X, **model_out_opargs)
+
+            # process loss function output
+            loss, loss_opargs = _processOutput(loss)
+
+            # apply backpropagation
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+        else:
+            # inference model (no gradients will be computed)
+            with torch.no_grad():
+                model_out = model(X, *var_args)
+
+                # process model output
+                model_out, model_out_opargs = _processOutput(model_out)
+
+                # evaluate the loss function considering an unsupervised problem
+                loss = loss_fn(model_out, X, **model_out_opargs)
+
+                # process loss function output
+                loss, loss_opargs = _processOutput(loss)
+
+        # gather model predictions and true values
+        x_hat_np = model_out.detach().cpu().numpy().astype(float)
+        x_true_np = X.detach().cpu().numpy().astype(float)
+
+        # save model predictions and true values
+        x_preds.append(x_hat_np)
+        x_trues.append(x_true_np)
+
+        # save loss value
+        loss_values.append(loss.detach().cpu().item())
+        if len(loss_opargs) > 0:
+            for k, v in loss_opargs.items():
+                if not isinstance(v, float):
+                    raise TypeError('Optional arguments returned by the loss function must be scalars.')
+                loss_values_op[k].append(v)
+
+    # calculate metrics (if provided)
+    metric_stats = {}
+    for metric in metrics:
+        metric_stats[metric.name] = metric(
+            np.concatenate(x_trues), np.concatenate(x_preds))
+
+    # add optional arguments returned by the loss function to the metric_stats
+    if len(loss_values_op) > 0:
+        for k, v in loss_values_op.items():
+            if k in metric_stats.keys():
+                warnings.warn(
+                    'Metric "%s" is being overwritten by an optional argument returned by the loss function.' % k)
+            metric_stats[k] = np.mean(v)
+
+            # calculate loss values
     loss_stats = {
         'loss (mean)': np.mean(loss_values),
         'loss (std)': np.std(loss_values)}
@@ -369,7 +501,7 @@ def fitNeuralNetwork(
     valid_info_df = pd.DataFrame(valid_loss)
 
     # add metric information (if provided)
-    if len(metrics) > 0:
+    if len(metrics) > 0 or (len(train_metrics[0]) > 0 and len(valid_metrics[0]) > 0):
         train_info_df = pd.concat([train_info_df, pd.DataFrame(train_metrics)], axis=1)
         valid_info_df = pd.concat([valid_info_df, pd.DataFrame(valid_metrics)], axis=1)
 
@@ -391,4 +523,6 @@ def getAvailableIterationFunctions() -> list:
 
 
 _AVAILABLE_ITERATION_FUNCTIONS = {
-    'iterSupervisedEpoch': iterSupervisedEpoch}
+    'iterSupervisedEpoch': iterSupervisedEpoch,
+    'iterUnsupervisedEpoch': iterUnsupervisedEpoch
+}

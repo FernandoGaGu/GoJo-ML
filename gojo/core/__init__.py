@@ -3,7 +3,7 @@ from .evaluation import (
     getScores,
     getDefaultMetrics,
     flatFunctionInput,
-    getAvailableDefaultNetrics
+    getAvailableDefaultMetrics
 )
 
 from .loops import (

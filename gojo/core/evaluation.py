@@ -318,7 +318,7 @@ def getDefaultMetrics(task: str, select: list = None, bin_threshold: float or in
     return selected_task_metrics
 
 
-def getAvailableDefaultNetrics(task: str = None) -> dict:
+def getAvailableDefaultMetrics(task: str = None) -> dict:
     """ Return to dictionary with task names and default metrics defined for those tasks. The selected problems for
     which you want to see the metrics can be filtered by the task parameter indicating the task for which you want
     to see the metrics.
