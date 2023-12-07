@@ -437,8 +437,28 @@ class GNN(torch.nn.Module):
         return out
 
 
-class VAE(torch.nn.Module):
-    """ Description """
+class VanillaVAE(torch.nn.Module):
+    """ Basic variational autoencoder model as presented in (https://arxiv.org/abs/1312.6114).
+
+
+    Parameters
+    ----------
+    encoder : torch.nn.Module
+        Encoder model. The encoder will model P(Z|X) during training.
+
+    encoder_out_dim : int
+        Output shape of the encoder.
+
+    decoder : torch.nn.Module
+        Decoder model. The decoder will model P(X|Z) where P(Z) is assumed to follow a multivariate Gaussian
+        distribution.
+
+    decoder_in_dim : int
+        Expected input shape for the decoder.
+
+    latent_dim : int
+        Latent dimensions of Z.
+    """
     def __init__(
             self,
             encoder: torch.nn.Module,
@@ -447,7 +467,7 @@ class VAE(torch.nn.Module):
             decoder_in_dim: int,
             latent_dim: int
     ):
-        super(VAE, self).__init__()
+        super(VanillaVAE, self).__init__()
 
         checkMultiInputTypes(
             ('encoder', encoder, [torch.nn.Module]),
@@ -520,7 +540,7 @@ class VAE(torch.nn.Module):
 
         return eps * std + mu
 
-    def forward(self, X: torch.Tensor, **_) -> Tuple[torch.Tensor, dict]:
+    def forward(self, X: torch.Tensor, *args, **kwargs) -> Tuple[torch.Tensor, dict]:
         """ Forward function. This function will do the following operations:
 
             X -> encoder -> projection -> [mu, std] -> reparametrization -> decoder
@@ -544,5 +564,24 @@ class VAE(torch.nn.Module):
 
         return x_hat, {'mu': mu, 'logvar': logvar}
 
+    def sample(self, n_samples: int, current_device: str = 'cpu') -> torch.Tensor:
+        """ Sample from the latent space.
 
+        Parameters
+        ----------
+        n_samples : int
+            Number of samples
 
+        current_device : str, default='cpu'
+            Device to run the model
+
+        Returns
+        -------
+        samples : torch.Tensor
+            Tensor of shape (n_samples, *)
+        """
+        with torch.no_grad():
+            z = torch.randn(n_samples, self.latent_dim).to(current_device)
+            samples = self.decode(z)
+
+        return samples

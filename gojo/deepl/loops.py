@@ -210,7 +210,7 @@ def iterUnsupervisedEpoch(
                 'correspond to the input data (the Xs). The rest of the returned arguments will be passed in the '
                 'der returned to the model.')
 
-        if isinstance(dlargs, tuple):
+        if isinstance(dlargs, (tuple, list)):
             X = dlargs[0].to(device=device)
             var_args = dlargs[1:]
         else:
