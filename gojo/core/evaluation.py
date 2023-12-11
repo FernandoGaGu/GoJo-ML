@@ -9,6 +9,7 @@ import numpy as np
 import warnings
 import sklearn.metrics as sk_metrics
 from copy import deepcopy
+from scipy.stats import spearmanr
 
 from ..util.validation import (
     checkMultiInputTypes,
@@ -399,6 +400,11 @@ def _correlation(y_true: np.ndarray, y_pred: np.ndarray):
     return np.corrcoef(y_true, y_pred)[0, 1]
 
 
+def _spearmanCorrelation(y_true: np.ndarray, y_pred: np.ndarray):
+    """ Calculate the Spearman correlation between y_true and y_pred (not defined in sklearn.metrics)."""
+    return spearmanr(y_true, y_pred).correlation
+
+
 # hash containing pre-defined metrics for different tasks
 DEFINED_METRICS = {
     'binary_classification': dict(
@@ -417,7 +423,9 @@ DEFINED_METRICS = {
         mse=Metric('mse', sk_metrics.mean_squared_error),
         mae=Metric('mae', sk_metrics.mean_absolute_error),
         r2_score=Metric('r2', sk_metrics.r2_score),
-        correlation_metric=Metric('correlation', _correlation)
+        pearson_correlation=Metric('pearson_correlation', _correlation),
+        spearman_correlation=Metric('spearman_correlation', _spearmanCorrelation),
+
     )
 }
 
