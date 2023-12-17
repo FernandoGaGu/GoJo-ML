@@ -20,6 +20,16 @@ gojo.deepl.ffn module
    :undoc-members:
    :show-inheritance:
 
+
+gojo.deepl.cnn module
+---------------------
+
+.. automodule:: gojo.deepl.cnn
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
 gojo.deepl.loading module
 -------------------------
 

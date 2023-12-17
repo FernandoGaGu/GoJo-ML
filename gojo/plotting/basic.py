@@ -556,3 +556,246 @@ def barPlot(
         if show:
             plt.show()
 
+
+def scatterPlot(
+        df: pd.DataFrame,
+        x: str,
+        y: str,
+        hue: str = None,
+        hue_mapping: dict = None,
+        ax: mpl.axes.Axes = None,
+        figsize: tuple = (6, 4.5),
+        style: str = 'ggplot',
+        dpi: int = 100,
+        maker_size: float or int = None,
+        colors: list or str = None,
+        title: str = '',
+        title_size: int or float = 15,
+        title_pad: int = 15,
+        hide_legend: bool = False,
+        legend_pos: str = None,
+        legend_size: int or float = 12,
+        xlabel_size: float or int = 13,
+        ylabel_size: float or int = 13,
+        grid_alpha: float = 0.5,
+        yvmin: float = None,
+        yvmax: float = None,
+        xvmin: float = None,
+        xvmax: float = None,
+        save: str = None,
+        save_kw: dict = None,
+        show: bool = True):
+    """ Scatter plot function.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Input dataframes with the data to be represented.
+
+    x : str
+        X-axis variable. Must be present in the input dataframes.
+
+    y : str
+        Y-axis variable. Must be present in the input dataframes.
+
+    hue : str ,default=None
+        Hue variable for plotting groups.
+
+    hue_mapping : dict ,default=None
+        Hash to map group names from the hue variable in the df to user-defined names.
+
+    ax : mpl.axes.Axes ,default=None
+        Axes used to represent the figure.
+
+    figsize : tuple ,default=(6, 4.5)
+        Figure size.
+
+    style : str ,default='ggplot'
+        Plot styling. (see 'matplotlib.pyplot.styles')
+
+    dpi : int ,default=100
+        Figure dpi.
+
+    maker_size : float or int ,default=None
+        Marker size.
+
+    colors : list or str ,default=None
+        Colors used for identifying the dataframe information. A string colormap can be provided.
+
+    title : str ,default=''
+        Plot title.
+
+    title_size : int or float ,default=15
+        Title font size.
+
+    title_pad : int ,default=15
+        Title pad.
+
+    hide_legend : bool ,default=False
+        Parameter indicating whether to hide the legend.
+
+    legend_pos : str ,default=None
+        Legend position.
+
+    legend_size : int or float ,default=12
+        Legend size.
+
+    xlabel_size : float or int ,default=13
+        X-label size.
+
+    ylabel_size : float or int ,default=13
+        Y-label size.
+
+    grid_alpha : float ,default=0.5
+        Opcaity of the grid lines.
+
+    yvmin : float ,default=None
+        Minimum value in the y-axis.
+
+    yvmax : float ,default=None
+        Maximum value in the y-axis.
+
+    xvmin : float ,default=None
+        Minimum value in the x-axis.
+
+    xvmax : float ,default=None
+        Maximum value in the x-axis.
+
+    save : str ,default=None
+        Parameter indicating whether to save the generated plot. If None (default) the plot will not be
+        saved.
+
+    save_kw : dict ,default=None
+        Optional parameters for saving the plot. This parameter will not have effect if the
+        save parameter was set as None.
+
+    show : bool ,default=True
+        Parameter indicating whether to save the generated plot.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from sklearn import datasets
+    >>> from sklearn.preprocessing import StandardScaler
+    >>> from sklearn.decomposition import PCA
+    >>> from gojo import plotting
+    >>>
+    >>> # load test dataset (Wine)
+    >>> wine_dt = datasets.load_wine()
+    >>> data = StandardScaler().fit_transform(wine_dt['data'])
+    >>> PCs = PCA(n_components=2).fit_transform(data)
+    >>> PCs = pd.DataFrame(PCs, columns=['PC1', 'PC2'])
+    >>> PCs['target'] = wine_dt['target']
+    >>>
+    >>> plotting.scatterPlot(
+    >>>     df=PCs,
+    >>>     x='PC1',
+    >>>     y='PC2',
+    >>>     hue='target',
+    >>>     hue_mapping={0: 'C0', 1: 'C1', 2: 'C2'})
+    >>>
+    """
+    checkMultiInputTypes(
+        ('df', df, [pd.DataFrame]),
+        ('x', x, [str]),
+        ('y', y, [str]),
+        ('hue', hue, [str, type(None)]),
+        ('hue_mapping', hue_mapping, [dict, type(None)]),
+        ('ax', ax, [mpl.axes.Axes, type(None)]),
+        ('figsize', figsize, [tuple]),
+        ('style', style, [str]),
+        ('dpi', dpi, [int]),
+        ('maker_size', maker_size, [int, float, type(None)]),
+        ('colors', colors, [list, str, type(None)]),
+        ('title', title, [str]),
+        ('title_size', title_size, [int, float]),
+        ('title_pad', title_pad, [int, float]),
+        ('hide_legend', hide_legend, [bool]),
+        ('legend_pos', legend_pos, [str, type(None)]),
+        ('legend_size', legend_size, [int, float]),
+        ('xlabel_size', xlabel_size, [int, float]),
+        ('ylabel_size', ylabel_size, [int, float]),
+        ('grid_alpha', grid_alpha, [float]),
+        ('yvmin', yvmin, [float, type(None)]),
+        ('yvmax', yvmax, [float, type(None)]),
+        ('xvmin', xvmin, [float, type(None)]),
+        ('xvmax', xvmax, [float, type(None)]),
+        ('save', save, [str, type(None)]),
+        ('save_kw', save_kw, [dict, type(None)]),
+        ('show', show, [bool]))
+
+    # check x, y and (optionally) hue variables
+    if x not in df.columns:
+        raise TypeError('Missing "x" variable "%s". Available variables are: %r' % (x, list(df.columns)))
+
+    if y not in df.columns:
+        raise TypeError('Missing "y" variable "%s". Available variables are: %r' % (y, list(df.columns)))
+
+    if hue is not None:
+        if hue not in df.columns:
+            raise TypeError('Missing "hue" variable "%s". Available variables are: %r' % (hue, list(df.columns)))
+
+    # avoid inplace modifications
+    df = df.copy()
+
+    # rename hue if hue_mapping is provided
+    if not (hue is None or hue_mapping is None):
+        df[hue] = df[hue].apply(lambda v: hue_mapping.get(v, v))
+
+    # get the number of levels
+    n_labels = 1
+    hue_levels = [None]
+    if hue is not None:
+        n_labels = len(df[hue].unique())
+        hue_levels = df[hue].unique()
+
+    if isinstance(colors, str):
+        cmap = plt.get_cmap(colors, n_labels + 1)
+        colors = [mpl.colors.to_hex(cmap(i)) for i in range(n_labels)]
+
+    with plt.style.context(style):
+        if ax is None:
+            fig, ax = plt.subplots(figsize=figsize)
+            fig.set_dpi(dpi)
+
+        for i in range(n_labels):
+            # select color (if specified)
+            color = None if colors is None else colors[i]
+
+            # separate the data to represent
+            if hue is not None:
+                df_i = df.loc[df[hue] == hue_levels[i]]
+            else:
+                df_i = df
+
+            ax.scatter(
+                df_i[x].values,
+                df_i[y].values,
+                label=hue_levels[i],
+                s=maker_size,
+                color=color)
+
+        # set legend
+        if not hide_legend and hue is not None:
+            ax.legend(loc=legend_pos, prop=dict(size=legend_size))
+
+        # set axis limits
+        ax.set_ylim(bottom=yvmin, top=yvmax)
+        ax.set_xlim(left=xvmin, right=xvmax)
+
+        # figure layout
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.grid(alpha=grid_alpha)
+        ax.set_xlabel(x, size=xlabel_size)
+        ax.set_ylabel(y, size=ylabel_size)
+        ax.set_title(title, size=title_size, pad=title_pad)
+
+        # save figure if specified
+        if save:
+            save_kw = {} if save_kw is None else save_kw
+            plt.savefig(save, **save_kw)
+
+        if show:
+            plt.show()
+

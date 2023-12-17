@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Index &mdash; gojo - Documentation 0.0.6 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=eafc0fe6" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -163,9 +166,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gojo.core.html#gojo.core.base.Dataset">Dataset (class in gojo.core.base)</a>
 </li>
+      <li><a href="gojo.util.html#gojo.util.login.deactivate">deactivate() (in module gojo.util.login)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="gojo.util.html#gojo.util.login.deactivate">deactivate() (in module gojo.util.login)</a>
+      <li><a href="gojo.deepl.html#gojo.deepl.models.VanillaVAE.decode">decode() (gojo.deepl.models.VanillaVAE method)</a>
 </li>
       <li><a href="gojo.deepl.html#gojo.deepl.callback.EarlyStopping.DIRECTIVE">DIRECTIVE (gojo.deepl.callback.EarlyStopping attribute)</a>
 </li>
@@ -176,6 +181,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gojo.deepl.html#gojo.deepl.callback.EarlyStopping">EarlyStopping (class in gojo.deepl.callback)</a>
+</li>
+      <li><a href="gojo.deepl.html#gojo.deepl.models.VanillaVAE.encode">encode() (gojo.deepl.models.VanillaVAE method)</a>
 </li>
       <li><a href="gojo.core.html#gojo.core.loops.evalCrossVal">evalCrossVal() (in module gojo.core.loops)</a>
 </li>
@@ -219,12 +226,16 @@
 </li>
       <li><a href="gojo.core.html#gojo.core.evaluation.flatFunctionInput">flatFunctionInput() (in module gojo.core.evaluation)</a>
 </li>
-      <li><a href="gojo.deepl.html#gojo.deepl.models.GNN.forward">forward() (gojo.deepl.models.GNN method)</a>
+      <li><a href="gojo.deepl.html#gojo.deepl.cnn.ResNetBlock.forward">forward() (gojo.deepl.cnn.ResNetBlock method)</a>
 
       <ul>
+        <li><a href="gojo.deepl.html#gojo.deepl.models.GNN.forward">(gojo.deepl.models.GNN method)</a>
+</li>
         <li><a href="gojo.deepl.html#gojo.deepl.models.MultiTaskFFN.forward">(gojo.deepl.models.MultiTaskFFN method)</a>
 </li>
         <li><a href="gojo.deepl.html#gojo.deepl.models.MultiTaskFFNv2.forward">(gojo.deepl.models.MultiTaskFFNv2 method)</a>
+</li>
+        <li><a href="gojo.deepl.html#gojo.deepl.models.VanillaVAE.forward">(gojo.deepl.models.VanillaVAE method)</a>
 </li>
       </ul></li>
       <li><a href="gojo.deepl.html#gojo.deepl.models.GNN.fusionModel">fusionModel() (gojo.deepl.models.GNN method)</a>
@@ -235,7 +246,7 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="gojo.core.html#gojo.core.evaluation.getAvailableDefaultNetrics">getAvailableDefaultNetrics() (in module gojo.core.evaluation)</a>
+      <li><a href="gojo.core.html#gojo.core.evaluation.getAvailableDefaultMetrics">getAvailableDefaultMetrics() (in module gojo.core.evaluation)</a>
 </li>
       <li><a href="gojo.deepl.html#gojo.deepl.loops.getAvailableIterationFunctions">getAvailableIterationFunctions() (in module gojo.deepl.loops)</a>
 </li>
@@ -342,6 +353,13 @@
 
       <ul>
         <li><a href="gojo.deepl.html#module-gojo.deepl.callback">module</a>
+</li>
+      </ul></li>
+      <li>
+    gojo.deepl.cnn
+
+      <ul>
+        <li><a href="gojo.deepl.html#module-gojo.deepl.cnn">module</a>
 </li>
       </ul></li>
       <li>
@@ -461,6 +479,8 @@
 </li>
       <li><a href="gojo.deepl.html#gojo.deepl.loops.iterSupervisedEpoch">iterSupervisedEpoch() (in module gojo.deepl.loops)</a>
 </li>
+      <li><a href="gojo.deepl.html#gojo.deepl.loops.iterUnsupervisedEpoch">iterUnsupervisedEpoch() (in module gojo.deepl.loops)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -514,6 +534,8 @@
         <li><a href="gojo.deepl.html#module-gojo.deepl">gojo.deepl</a>
 </li>
         <li><a href="gojo.deepl.html#module-gojo.deepl.callback">gojo.deepl.callback</a>
+</li>
+        <li><a href="gojo.deepl.html#module-gojo.deepl.cnn">gojo.deepl.cnn</a>
 </li>
         <li><a href="gojo.deepl.html#module-gojo.deepl.ffn">gojo.deepl.ffn</a>
 </li>
@@ -592,6 +614,8 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gojo.deepl.html#gojo.deepl.models.VanillaVAE.reparametrize">reparametrize() (gojo.deepl.models.VanillaVAE method)</a>
+</li>
       <li><a href="gojo.core.html#gojo.core.base.Model.reset">reset() (gojo.core.base.Model method)</a>
 
       <ul>
@@ -618,6 +642,8 @@
         <li><a href="gojo.deepl.html#gojo.deepl.callback.EarlyStopping.resetState">(gojo.deepl.callback.EarlyStopping method)</a>
 </li>
       </ul></li>
+      <li><a href="gojo.deepl.html#gojo.deepl.cnn.ResNetBlock">ResNetBlock (class in gojo.deepl.cnn)</a>
+</li>
       <li><a href="gojo.plotting.html#gojo.plotting.classification.roc">roc() (in module gojo.plotting.classification)</a>
 </li>
   </ul></td>
@@ -626,7 +652,11 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gojo.deepl.html#gojo.deepl.models.VanillaVAE.sample">sample() (gojo.deepl.models.VanillaVAE method)</a>
+</li>
       <li><a href="gojo.util.html#gojo.util.io.saveJson">saveJson() (in module gojo.util.io)</a>
+</li>
+      <li><a href="gojo.plotting.html#gojo.plotting.basic.scatterPlot">scatterPlot() (in module gojo.plotting.basic)</a>
 </li>
       <li><a href="gojo.util.html#gojo.util.io.serialize">serialize() (in module gojo.util.io)</a>
 </li>
@@ -644,6 +674,8 @@
         <li><a href="gojo.util.html#gojo.util.tools.SimpleSplitter.split">(gojo.util.tools.SimpleSplitter method)</a>
 </li>
       </ul></li>
+      <li><a href="gojo.deepl.html#gojo.deepl.loading.StreamTorchDataset">StreamTorchDataset (class in gojo.deepl.loading)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -668,14 +700,6 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="gojo.deepl.html#gojo.deepl.models.GNN.training">training (gojo.deepl.models.GNN attribute)</a>
-
-      <ul>
-        <li><a href="gojo.deepl.html#gojo.deepl.models.MultiTaskFFN.training">(gojo.deepl.models.MultiTaskFFN attribute)</a>
-</li>
-        <li><a href="gojo.deepl.html#gojo.deepl.models.MultiTaskFFNv2.training">(gojo.deepl.models.MultiTaskFFNv2 attribute)</a>
-</li>
-      </ul></li>
       <li><a href="gojo.core.html#gojo.core.transform.Transform">Transform (class in gojo.core.transform)</a>
 </li>
       <li><a href="gojo.core.html#gojo.core.transform.SKLearnTransformWrapper.transform">transform() (gojo.core.transform.SKLearnTransformWrapper method)</a>
@@ -720,6 +744,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gojo.deepl.html#gojo.deepl.models.VanillaVAE">VanillaVAE (class in gojo.deepl.models)</a>
+</li>
       <li><a href="gojo.core.html#gojo.core.base.Dataset.var_names">var_names (gojo.core.base.Dataset property)</a>
 </li>
   </ul></td>

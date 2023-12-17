@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>gojo.core.evaluation &mdash; gojo - Documentation 0.0.6 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -83,6 +85,7 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">sklearn.metrics</span> <span class="k">as</span> <span class="nn">sk_metrics</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">spearmanr</span>
 
 <span class="kn">from</span> <span class="nn">..util.validation</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">checkMultiInputTypes</span><span class="p">,</span>
@@ -404,9 +407,9 @@
 
 
 
-<div class="viewcode-block" id="getAvailableDefaultNetrics">
-<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.evaluation.getAvailableDefaultNetrics">[docs]</a>
-<span class="k">def</span> <span class="nf">getAvailableDefaultNetrics</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="getAvailableDefaultMetrics">
+<a class="viewcode-back" href="../../../gojo.core.html#gojo.core.evaluation.getAvailableDefaultMetrics">[docs]</a>
+<span class="k">def</span> <span class="nf">getAvailableDefaultMetrics</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Return to dictionary with task names and default metrics defined for those tasks. The selected problems for</span>
 <span class="sd">    which you want to see the metrics can be filtered by the task parameter indicating the task for which you want</span>
 <span class="sd">    to see the metrics.</span>
@@ -488,6 +491,11 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 
 
+<span class="k">def</span> <span class="nf">_spearmanCorrelation</span><span class="p">(</span><span class="n">y_true</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Calculate the Spearman correlation between y_true and y_pred (not defined in sklearn.metrics).&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">spearmanr</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span><span class="o">.</span><span class="n">correlation</span>
+
+
 <span class="c1"># hash containing pre-defined metrics for different tasks</span>
 <span class="n">DEFINED_METRICS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;binary_classification&#39;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
@@ -506,7 +514,9 @@
         <span class="n">mse</span><span class="o">=</span><span class="n">Metric</span><span class="p">(</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">sk_metrics</span><span class="o">.</span><span class="n">mean_squared_error</span><span class="p">),</span>
         <span class="n">mae</span><span class="o">=</span><span class="n">Metric</span><span class="p">(</span><span class="s1">&#39;mae&#39;</span><span class="p">,</span> <span class="n">sk_metrics</span><span class="o">.</span><span class="n">mean_absolute_error</span><span class="p">),</span>
         <span class="n">r2_score</span><span class="o">=</span><span class="n">Metric</span><span class="p">(</span><span class="s1">&#39;r2&#39;</span><span class="p">,</span> <span class="n">sk_metrics</span><span class="o">.</span><span class="n">r2_score</span><span class="p">),</span>
-        <span class="n">correlation_metric</span><span class="o">=</span><span class="n">Metric</span><span class="p">(</span><span class="s1">&#39;correlation&#39;</span><span class="p">,</span> <span class="n">_correlation</span><span class="p">)</span>
+        <span class="n">pearson_correlation</span><span class="o">=</span><span class="n">Metric</span><span class="p">(</span><span class="s1">&#39;pearson_correlation&#39;</span><span class="p">,</span> <span class="n">_correlation</span><span class="p">),</span>
+        <span class="c1">#spearman_correlation=Metric(&#39;spearman_correlation&#39;, _spearmanCorrelation),</span>
+
     <span class="p">)</span>
 <span class="p">}</span>
 

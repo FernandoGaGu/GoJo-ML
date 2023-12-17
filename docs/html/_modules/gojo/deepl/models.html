@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>gojo.deepl.models &mdash; gojo - Documentation 0.0.6 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -81,6 +83,7 @@
 <span class="c1">#</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">torch_geometric</span> <span class="k">as</span> <span class="nn">geom</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
 
 <span class="kn">from</span> <span class="nn">.ffn</span> <span class="kn">import</span> <span class="n">createSimpleFFNModel</span>
 <span class="kn">from</span> <span class="nn">..util.validation</span> <span class="kn">import</span> <span class="p">(</span>
@@ -505,7 +508,7 @@
 
 <div class="viewcode-block" id="GNN.forward">
 <a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.GNN.forward">[docs]</a>
-    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Parameters</span>
@@ -539,6 +542,172 @@
 </div>
 
 
+
+<div class="viewcode-block" id="VanillaVAE">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.VanillaVAE">[docs]</a>
+<span class="k">class</span> <span class="nc">VanillaVAE</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Basic variational autoencoder model as presented in (https://arxiv.org/abs/1312.6114).</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    encoder : torch.nn.Module</span>
+<span class="sd">        Encoder model. The encoder will model P(Z|X) during training.</span>
+
+<span class="sd">    encoder_out_dim : int</span>
+<span class="sd">        Output shape of the encoder.</span>
+
+<span class="sd">    decoder : torch.nn.Module</span>
+<span class="sd">        Decoder model. The decoder will model P(X|Z) where P(Z) is assumed to follow a multivariate Gaussian</span>
+<span class="sd">        distribution.</span>
+
+<span class="sd">    decoder_in_dim : int</span>
+<span class="sd">        Expected input shape for the decoder.</span>
+
+<span class="sd">    latent_dim : int</span>
+<span class="sd">        Latent dimensions of Z.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">encoder</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+            <span class="n">encoder_out_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">decoder</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+            <span class="n">decoder_in_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">latent_dim</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">VanillaVAE</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="n">checkMultiInputTypes</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;encoder&#39;</span><span class="p">,</span> <span class="n">encoder</span><span class="p">,</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;decoder&#39;</span><span class="p">,</span> <span class="n">decoder</span><span class="p">,</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;latent_dim&#39;</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">encoder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">decoder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latent_dim</span> <span class="o">=</span> <span class="n">latent_dim</span>
+
+        <span class="c1"># create the projection layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ffn_mu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">encoder_out_dim</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ffn_var</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">encoder_out_dim</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ffn_latent_to_decoder</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">decoder_in_dim</span><span class="p">)</span>
+
+<div class="viewcode-block" id="VanillaVAE.encode">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.VanillaVAE.encode">[docs]</a>
+    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Generate the latent representation</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : torch.Tensor</span>
+<span class="sd">            Input data</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        mu_std : Tuple[torch.Tensor, torch.Tensor]</span>
+<span class="sd">            Mean and standard deviation of the latent dimensions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">enc_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">mu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ffn_mu</span><span class="p">(</span><span class="n">enc_out</span><span class="p">)</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ffn_var</span><span class="p">(</span><span class="n">enc_out</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">mu</span><span class="p">,</span> <span class="n">std</span></div>
+
+
+<div class="viewcode-block" id="VanillaVAE.decode">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.VanillaVAE.decode">[docs]</a>
+    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Z</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Decode the latent representation</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Z : torch.Tensor</span>
+<span class="sd">            Latent representation generated by the :meth`reparametrize` function.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        decoder_out : torch.Tensor</span>
+<span class="sd">            Decoder output.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">z_projection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ffn_latent_to_decoder</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">z_projection</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VanillaVAE.reparametrize">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.VanillaVAE.reparametrize">[docs]</a>
+    <span class="k">def</span> <span class="nf">reparametrize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">logvar</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Reparametrization trick as described in &quot;Auto-Encoding Variational Bayes&quot; from Kigma and Welling.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mu : torch.Tensor</span>
+<span class="sd">            Mean of the distribution of the latent variables.</span>
+
+<span class="sd">        logvar : torch.Tensor</span>
+<span class="sd">            Logarithm of the standard deviation of the latent variables.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        sample : torch.Tensor</span>
+<span class="sd">            Sample from the latent variable distribution.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">logvar</span><span class="p">)</span>
+        <span class="n">eps</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">std</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">eps</span> <span class="o">*</span> <span class="n">std</span> <span class="o">+</span> <span class="n">mu</span></div>
+
+
+<div class="viewcode-block" id="VanillaVAE.forward">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.VanillaVAE.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Forward function. This function will do the following operations:</span>
+
+<span class="sd">            X -&gt; encoder -&gt; projection -&gt; [mu, std] -&gt; reparametrization -&gt; decoder</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : torch.Tensor</span>
+<span class="sd">            Input data to be codified.</span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        output : Tuple[torch.Tensor, dict]</span>
+<span class="sd">            This function will return a two element tuple where the first element will correspond to the reconstructed</span>
+<span class="sd">            input and the second element to a dictionary with the mean and logvar vectors of the latent representations</span>
+<span class="sd">            generated by the encoder.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mu</span><span class="p">,</span> <span class="n">logvar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reparametrize</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">logvar</span><span class="p">)</span>
+        <span class="n">x_hat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">x_hat</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;mu&#39;</span><span class="p">:</span> <span class="n">mu</span><span class="p">,</span> <span class="s1">&#39;logvar&#39;</span><span class="p">:</span> <span class="n">logvar</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="VanillaVAE.sample">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.VanillaVAE.sample">[docs]</a>
+    <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">current_device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Sample from the latent space.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_samples : int</span>
+<span class="sd">            Number of samples</span>
+
+<span class="sd">        current_device : str, default=&#39;cpu&#39;</span>
+<span class="sd">            Device to run the model</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        samples : torch.Tensor</span>
+<span class="sd">            Tensor of shape (n_samples, *)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">latent_dim</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">current_device</span><span class="p">)</span>
+            <span class="n">samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">samples</span></div>
+</div>
 
 </pre></div>
 

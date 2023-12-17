@@ -15,7 +15,11 @@ from torch.utils.data import Dataset
 import torch_geometric as geom
 
 from ..core import base as core_base
-from ..util.validation import checkInputType
+from ..util.validation import (
+    checkInputType,
+    checkMultiInputTypes,
+    checkCallable,
+    pathExists)
 
 
 class TorchDataset(Dataset):
@@ -49,7 +53,7 @@ class TorchDataset(Dataset):
             self,
             X: np.ndarray or pd.DataFrame,
             y: np.ndarray or pd.DataFrame or pd.Series = None):
-        super().__init__()
+        super(TorchDataset, self).__init__()
 
         # process X-related parameters
         X_dt = core_base.Dataset(X)
@@ -86,6 +90,131 @@ class TorchDataset(Dataset):
 
     def __len__(self):
         return self.X.shape[0]
+
+
+class StreamTorchDataset(Dataset):
+    """ Dataset that loads streaming data when :meth:`__getitem__` method is called from the specified path.
+
+    .. important::
+        It is important to note that either by means of the loading function or the transformations, each of the paths
+        must be returned as a `torch.Tensor`.
+
+    Parameters
+    ----------
+    X : list or np.ndarray or pd.Series
+       Iterable with the paths containing the elements to be loaded in streaming.
+
+    loading_fn : callable
+        Function to load the elements located in the paths specified in `X`.
+
+    y : np.ndarray or pd.Series or pd.DataFrame
+        Target variables to fit the models (or None).
+
+    op_instance_args : dict, default=None
+        Instance-level optional arguments. This parameter should be a dictionary whose values must be `np.ndarray`
+        containing the same number of elements as instances in `X` and `y`.
+
+    transforms : list, default=None
+        Transforms to be applied to the result of `loading_fn` before returning the associated item.
+    """
+    def __init__(
+            self,
+            X: list or np.ndarray or pd.Series,
+            loading_fn: callable,
+            y: np.ndarray or pd.Series or pd.DataFrame = None,
+            op_instance_args: dict = None,
+            transforms: List[callable] = None
+    ):
+        super(StreamTorchDataset, self).__init__()
+
+        # check the input arguments
+        checkMultiInputTypes(
+            ('X', X, [list, np.ndarray, pd.Series]),
+            ('y', y, [np.ndarray, pd.Series, pd.DataFrame, type(None)]),
+            ('op_instance_args', op_instance_args, [dict, type(None)]),
+            ('transforms', transforms, [list, type(None)]))
+
+        # convert paths to numpy array
+        X = X if isinstance(X, np.ndarray) else np.array(X)
+
+        # check input paths
+        for path in X:
+            pathExists(path, must_exists=True)
+
+        # check transforms
+        if transforms is not None:
+            for i, transform in enumerate(transforms):
+                checkCallable('transform[%d]' % i, transform)
+
+        # check the loading function
+        checkCallable('loading_fn', loading_fn)
+
+        # check op_instance_args
+        if op_instance_args is not None:
+            for var_name, var_values in op_instance_args.items():
+                checkInputType('op_instance_args["%s"]' % var_name, var_values, [np.ndarray])
+                if len(X) != len(var_values):
+                    raise TypeError(
+                        'Missmatch in X shape (%d) and op_instance_args["%s"] shape (%d).' % (
+                            len(X), var_name, len(var_values)))
+
+                # convert op_instance_args to torch tensor
+                op_instance_args[var_name] = torch.from_numpy(var_values.astype(np.float32))
+
+        self.X = X
+        self.loading_fn = loading_fn
+        self.y = None     # y information will be initialized to None
+        self.op_instance_args = op_instance_args
+        self.transforms = transforms
+
+        # set the y information
+        if y is not None:
+            y_dt = core_base.Dataset(y)
+            np_y = y_dt.array_data
+
+            # add extra dimension to y
+            if len(np_y.shape) == 1:
+                np_y = np_y[:, np.newaxis]
+
+            if len(X) != np_y.shape[0]:
+                raise TypeError(
+                    'Input "X" (length = %d) and "y" (shape[0] = %d) must contain the same number of entries in the'
+                    ' first dimension.' % (len(X), np_y.shape[0]))
+
+            self.y = torch.from_numpy(np_y.astype(np.float32))
+            self.y_dataset = y_dt
+
+    def __getitem__(self, idx: int):
+
+        elements_to_return = []
+
+        X = self.loading_fn(self.X[idx])
+
+        # apply transforms (optionally)
+        if self.transforms is not None:
+            for transform in self.transforms:
+                X = transform(X)
+
+        # check that X is a torch Tensor
+        if not isinstance(X, torch.Tensor):
+            raise TypeError('The load function must return tensors. The returned type is {}. To solve it you can '
+                            'provide transformations or reformulate the load function.'.format(type(X)))
+
+        # add X to the elements that will be returned
+        elements_to_return.append(X)
+
+        # add y to the elements that will be returned
+        if self.y is not None:
+            elements_to_return.append(self.y[idx])
+
+        if self.op_instance_args is not None:
+            for values in self.op_instance_args.values():
+                elements_to_return.append(values[idx])
+
+        return tuple(elements_to_return)
+
+    def __len__(self):
+        return len(self.X)
 
 
 class GraphDataset(Dataset):

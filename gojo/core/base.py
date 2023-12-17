@@ -425,6 +425,9 @@ class TorchSKInterface(Model):
         Metrics used to evaluate the model performance during training. Fore more information see
         :py:mod:`gojo.core.evaluation.Metric`.
 
+    batch_size : int, default=None
+        Batch size used when calling to :meth:`gojo.core.base.performInference`.
+
     seed : int, default=None
         Random seed used for controlling the randomness.
 
@@ -561,6 +564,7 @@ class TorchSKInterface(Model):
             metrics: list = None,
             seed: int = None,
             device: str = 'cpu',
+            batch_size: int = None,
             verbose: int = 1
 
     ):
@@ -592,6 +596,7 @@ class TorchSKInterface(Model):
         self.seed = seed
         self.device = device
         self.verbose = verbose
+        self.batch_size = batch_size
 
         # save a copy of the input model for resetting the inner state
         self._in_model = deepcopy(model)
@@ -622,6 +627,7 @@ class TorchSKInterface(Model):
             ('metrics', self.metrics, [list, type(None)]),
             ('seed', self.seed, [int, type(None)]),
             ('device', self.device, [str]),
+            ('batch_size', self.batch_size, [int, type(None)]),
             ('verbose', self.verbose, [int]))
 
     def __repr__(self):
@@ -763,9 +769,12 @@ class TorchSKInterface(Model):
         self.model = self.model.eval()
         self.model = self.model.to(device=self.device)
 
-        if batch_size is None:
+        if batch_size is None and self.batch_size is None:
             batch_size = X.shape[0]
         else:
+            if batch_size is None:
+                batch_size = self.batch_size
+
             if batch_size < 0:
                 warnings.warn('Batch size cannot be less than 0. Selecting batch size to 1.')
                 batch_size = 1

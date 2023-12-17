@@ -424,7 +424,7 @@ DEFINED_METRICS = {
         mae=Metric('mae', sk_metrics.mean_absolute_error),
         r2_score=Metric('r2', sk_metrics.r2_score),
         pearson_correlation=Metric('pearson_correlation', _correlation),
-        spearman_correlation=Metric('spearman_correlation', _spearmanCorrelation),
+        #spearman_correlation=Metric('spearman_correlation', _spearmanCorrelation),
 
     )
 }

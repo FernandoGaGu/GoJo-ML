@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>gojo.deepl package &mdash; gojo - Documentation 0.0.6 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=eafc0fe6" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -67,8 +70,16 @@
 <li class="toctree-l3"><a class="reference internal" href="#gojo.deepl.ffn.createSimpleParametrizedFFNModel"><code class="docutils literal notranslate"><span class="pre">createSimpleParametrizedFFNModel()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gojo.deepl.cnn">gojo.deepl.cnn module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.deepl.cnn.ResNetBlock"><code class="docutils literal notranslate"><span class="pre">ResNetBlock</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gojo.deepl.cnn.ResNetBlock.forward"><code class="docutils literal notranslate"><span class="pre">ResNetBlock.forward()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-gojo.deepl.loading">gojo.deepl.loading module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#gojo.deepl.loading.GraphDataset"><code class="docutils literal notranslate"><span class="pre">GraphDataset</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.deepl.loading.StreamTorchDataset"><code class="docutils literal notranslate"><span class="pre">StreamTorchDataset</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#gojo.deepl.loading.TorchDataset"><code class="docutils literal notranslate"><span class="pre">TorchDataset</span></code></a></li>
 </ul>
 </li>
@@ -76,6 +87,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#gojo.deepl.loops.fitNeuralNetwork"><code class="docutils literal notranslate"><span class="pre">fitNeuralNetwork()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#gojo.deepl.loops.getAvailableIterationFunctions"><code class="docutils literal notranslate"><span class="pre">getAvailableIterationFunctions()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#gojo.deepl.loops.iterSupervisedEpoch"><code class="docutils literal notranslate"><span class="pre">iterSupervisedEpoch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.deepl.loops.iterUnsupervisedEpoch"><code class="docutils literal notranslate"><span class="pre">iterUnsupervisedEpoch()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-gojo.deepl.models">gojo.deepl.models module</a><ul>
@@ -85,17 +97,22 @@
 <li class="toctree-l4"><a class="reference internal" href="#gojo.deepl.models.GNN.fusionModel"><code class="docutils literal notranslate"><span class="pre">GNN.fusionModel()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#gojo.deepl.models.GNN.gnnForward"><code class="docutils literal notranslate"><span class="pre">GNN.gnnForward()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#gojo.deepl.models.GNN.graphPooling"><code class="docutils literal notranslate"><span class="pre">GNN.graphPooling()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#gojo.deepl.models.GNN.training"><code class="docutils literal notranslate"><span class="pre">GNN.training</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#gojo.deepl.models.MultiTaskFFN"><code class="docutils literal notranslate"><span class="pre">MultiTaskFFN</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#gojo.deepl.models.MultiTaskFFN.forward"><code class="docutils literal notranslate"><span class="pre">MultiTaskFFN.forward()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#gojo.deepl.models.MultiTaskFFN.training"><code class="docutils literal notranslate"><span class="pre">MultiTaskFFN.training</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#gojo.deepl.models.MultiTaskFFNv2"><code class="docutils literal notranslate"><span class="pre">MultiTaskFFNv2</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#gojo.deepl.models.MultiTaskFFNv2.forward"><code class="docutils literal notranslate"><span class="pre">MultiTaskFFNv2.forward()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#gojo.deepl.models.MultiTaskFFNv2.training"><code class="docutils literal notranslate"><span class="pre">MultiTaskFFNv2.training</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#gojo.deepl.models.VanillaVAE"><code class="docutils literal notranslate"><span class="pre">VanillaVAE</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gojo.deepl.models.VanillaVAE.decode"><code class="docutils literal notranslate"><span class="pre">VanillaVAE.decode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gojo.deepl.models.VanillaVAE.encode"><code class="docutils literal notranslate"><span class="pre">VanillaVAE.encode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gojo.deepl.models.VanillaVAE.forward"><code class="docutils literal notranslate"><span class="pre">VanillaVAE.forward()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gojo.deepl.models.VanillaVAE.reparametrize"><code class="docutils literal notranslate"><span class="pre">VanillaVAE.reparametrize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gojo.deepl.models.VanillaVAE.sample"><code class="docutils literal notranslate"><span class="pre">VanillaVAE.sample()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -243,7 +260,7 @@ historical value. Methods currently available:</p>
 <span id="gojo-deepl-ffn-module"></span><h2>gojo.deepl.ffn module<a class="headerlink" href="#module-gojo.deepl.ffn" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.deepl.ffn.createSimpleFFNModel">
-<span class="sig-prename descclassname"><span class="pre">gojo.deepl.ffn.</span></span><span class="sig-name descname"><span class="pre">createSimpleFFNModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_feats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_feats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_dims</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batchnorm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights_init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Module</span></span></span><a class="reference internal" href="_modules/gojo/deepl/ffn.html#createSimpleFFNModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.ffn.createSimpleFFNModel" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.deepl.ffn.</span></span><span class="sig-name descname"><span class="pre">createSimpleFFNModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_feats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_feats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_dims</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batchnorm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights_init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Module</span></span></span><a class="reference internal" href="_modules/gojo/deepl/ffn.html#createSimpleFFNModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.ffn.createSimpleFFNModel" title="Link to this definition"></a></dt>
 <dd><p>Auxiliary function that allows to easily create a simple FFN architecture from the provided input parameters.
 See examples for a quick overview of the posibilities of this function.</p>
 <section id="id1">
@@ -342,7 +359,7 @@ is provided, the name should match to the name of the torch.nn class (i.e., ‘R
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.deepl.ffn.createSimpleParametrizedFFNModel">
-<span class="sig-prename descclassname"><span class="pre">gojo.deepl.ffn.</span></span><span class="sig-name descname"><span class="pre">createSimpleParametrizedFFNModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_feats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_feats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_layers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_layer_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaffold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batchnorm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights_init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Module</span></span></span><a class="reference internal" href="_modules/gojo/deepl/ffn.html#createSimpleParametrizedFFNModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.ffn.createSimpleParametrizedFFNModel" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.deepl.ffn.</span></span><span class="sig-name descname"><span class="pre">createSimpleParametrizedFFNModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_feats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_feats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_layers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_layer_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaffold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batchnorm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights_init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Module</span></span></span><a class="reference internal" href="_modules/gojo/deepl/ffn.html#createSimpleParametrizedFFNModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.ffn.createSimpleParametrizedFFNModel" title="Link to this definition"></a></dt>
 <dd><p>Function that allows the creation of a simple neural network (a feed forward network, FFN) by
 parameterizing the number of layers and their width according to different scaffolds (selected
 by the <cite>scaffold</cite> parameter), and hyperparameters (<cite>alpha</cite> and <cite>beta</cite>).</p>
@@ -434,16 +451,126 @@ is provided, the name should match to the name of the torch.nn class (i.e., ‘R
 </dd></dl>
 
 </section>
+<section id="module-gojo.deepl.cnn">
+<span id="gojo-deepl-cnn-module"></span><h2>gojo.deepl.cnn module<a class="headerlink" href="#module-gojo.deepl.cnn" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gojo.deepl.cnn.ResNetBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.deepl.cnn.</span></span><span class="sig-name descname"><span class="pre">ResNetBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalization</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'batch'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'2d'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">ReLU()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride_conv1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding_conv1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride_conv2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding_conv2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/deepl/cnn.html#ResNetBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.cnn.ResNetBlock" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Block with residual connections to build convolutional networks. Based on:</p>
+<blockquote>
+<div><p>He, K., Zhang, X., Ren, S., &amp; Sun, J. (2016). Deep residual learning for image recognition. In Proceedings of
+the IEEE conference on computer vision and pattern recognition (pp. 770-778).</p>
+</div></blockquote>
+<p>This block will perform the following operations:</p>
+<div class="graphviz"><img src="_images/graphviz-7ac7a03befc7df098ec7165054fe9735e5033060.png" alt="digraph convolutional_block {
+    node [style=&quot;filled&quot; shape=&quot;box&quot; color=&quot;lightblue&quot; fontsize=&quot;10&quot; fontname=&quot;Arial&quot;]
+
+    subgraph cluster_input {
+        label=&quot;Input (1/2/3d)&quot;
+        A [label=&quot;Input (1/2/3d)&quot;]
+        B [label=&quot;Conv1&quot; fillcolor=&quot;#4CAF50&quot;]
+        C [label=&quot;Conv2&quot; fillcolor=&quot;#4CAF50&quot;]
+        D [label=&quot;Output&quot;]
+        H [label=&quot;Act. f.&quot; fillcolor=&quot;#9B59B6&quot;]
+        E [label=&quot;Output&quot;]
+    }
+
+    subgraph cluster_residual {
+        label=&quot;Conexión Residual&quot;
+        G [label=&quot;Projection&quot;]
+    }
+
+    A -&gt; B
+    B -&gt; C
+    C -&gt; D
+    D -&gt; H
+    H -&gt; E
+
+    A -&gt; G [label=&quot;  Residual block&quot; fontsize=&quot;9&quot;]
+    G -&gt; D [label=&quot;  Add&quot; fontsize=&quot;9&quot;]
+
+    {rank=same; A; B; C; D; H; E;}
+    {rank=same; G;}
+}" class="graphviz" /></div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>where <cite>Conv1</cite> and <cite>Conv2</cite> will consist of:</p>
+<div class="graphviz"><img src="_images/graphviz-147297835e80f53ec98f4425c5c5a1c24959eb50.png" alt="digraph convolutional_block {
+    node [style=&quot;filled&quot; shape=&quot;box&quot; color=&quot;lightblue&quot; fontsize=&quot;10&quot; fontname=&quot;Arial&quot;]
+
+    subgraph cluster_input {
+        label=&quot;Input (1/2/3d)&quot;
+        A [label=&quot;Input (1/2/3d)&quot;]
+        B [label=&quot;Convolution&quot; fillcolor=&quot;#4CAF50&quot;]
+        C [label=&quot;Normalization&quot; fillcolor=&quot;#FAD7A0&quot;]
+        D [label=&quot;Act. f.&quot; fillcolor=&quot;#9B59B6&quot;]
+    }
+
+    A -&gt; B
+    B -&gt; C
+    C -&gt; D
+
+    {rank=same; A; B; C; D;}
+}" class="graphviz" /></div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<section id="id5">
+<h3>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>in_channels<span class="classifier">int</span></dt><dd><p>Number of input channels.</p>
+</dd>
+<dt>out_channels<span class="classifier">int</span></dt><dd><p>Number of output channels.</p>
+</dd>
+<dt>kernel_size<span class="classifier">int</span></dt><dd><p>Kernel size of the convolutional layers. Only squared kernels are supported.</p>
+</dd>
+<dt>normalization<span class="classifier">str, default=’batch’</span></dt><dd><p>Normalization applied after convolutions. Available values are: ‘batch’ for batch normalization and ‘instance’
+for instance normalization.</p>
+</dd>
+<dt>dim<span class="classifier">str, default=’2d’</span></dt><dd><p>Type of input data (‘1d’ for one-dimensional data, ‘2d’ for two-dimensional data, and ‘3d’ for tridimensional
+data).</p>
+</dd>
+<dt>activation_fn<span class="classifier">callable, default=torch.nn.ReLU()</span></dt><dd><p>Activation function.</p>
+</dd>
+<dt>stride_conv1<span class="classifier">int, default=1</span></dt><dd><p>Stride applied to the first convolutional layer.</p>
+</dd>
+<dt>padding_conv1<span class="classifier">int, default=1</span></dt><dd><p>Padding applied to the first convolutional layer.</p>
+</dd>
+<dt>stride_conv2<span class="classifier">int, default=1</span></dt><dd><p>Stride applied to the second convolutional layer.</p>
+</dd>
+<dt>padding_conv2<span class="classifier">int ,default=1</span></dt><dd><p>Padding applied to the second convolutional layer.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.deepl.cnn.ResNetBlock.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="reference internal" href="_modules/gojo/deepl/cnn.html#ResNetBlock.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.cnn.ResNetBlock.forward" title="Link to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
 <section id="module-gojo.deepl.loading">
 <span id="gojo-deepl-loading-module"></span><h2>gojo.deepl.loading module<a class="headerlink" href="#module-gojo.deepl.loading" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="gojo.deepl.loading.GraphDataset">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.deepl.loading.</span></span><span class="sig-name descname"><span class="pre">GraphDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adj_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabular_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/deepl/loading.html#GraphDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.loading.GraphDataset" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.deepl.loading.</span></span><span class="sig-name descname"><span class="pre">GraphDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adj_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabular_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/deepl/loading.html#GraphDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.loading.GraphDataset" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></p>
 <p>Class used to generate a dataset adapted to operate with Graph Neural Networks. This class can be passed
 to <cite>torch.utils.data.DataLoader</cite> and subsequently used by the <a class="reference internal" href="#gojo.deepl.loops.fitNeuralNetwork" title="gojo.deepl.loops.fitNeuralNetwork"><code class="xref py py-func docutils literal notranslate"><span class="pre">gojo.deepl.loops.fitNeuralNetwork()</span></code></a> function.</p>
-<section id="id5">
-<h3>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<section id="id6">
+<h3>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
 <dl>
 <dt>X<span class="classifier">np.ndarray or pd.DataFrame or List[np.ndarray]</span></dt><dd><p>Input predictor variables used to adjust the models. If a numpy array or a pandas DataFrame is provided,
 entries along dimension 0 will be interpreted as instances, and the 1-axis will be interpreted as the
@@ -473,8 +600,8 @@ the data to a single dimension.</p>
 </dd>
 </dl>
 </section>
-<section id="id6">
-<h3>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<section id="id7">
+<h3>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gojo</span>
 <span class="gp">&gt;&gt;&gt;</span>
@@ -510,13 +637,41 @@ the data to a single dimension.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="gojo.deepl.loading.StreamTorchDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.deepl.loading.</span></span><span class="sig-name descname"><span class="pre">StreamTorchDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loading_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op_instance_args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transforms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">callable</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/deepl/loading.html#StreamTorchDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.loading.StreamTorchDataset" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></p>
+<p>Dataset that loads streaming data when <code class="xref py py-meth docutils literal notranslate"><span class="pre">__getitem__()</span></code> method is called from the specified path.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>It is important to note that either by means of the loading function or the transformations, each of the paths
+must be returned as a <cite>torch.Tensor</cite>.</p>
+</div>
+<section id="id8">
+<h3>Parameters<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>X<span class="classifier">list or np.ndarray or pd.Series</span></dt><dd><p>Iterable with the paths containing the elements to be loaded in streaming.</p>
+</dd>
+<dt>loading_fn<span class="classifier">callable</span></dt><dd><p>Function to load the elements located in the paths specified in <cite>X</cite>.</p>
+</dd>
+<dt>y<span class="classifier">np.ndarray or pd.Series or pd.DataFrame</span></dt><dd><p>Target variables to fit the models (or None).</p>
+</dd>
+<dt>op_instance_args<span class="classifier">dict, default=None</span></dt><dd><p>Instance-level optional arguments. This parameter should be a dictionary whose values must be <cite>np.ndarray</cite>
+containing the same number of elements as instances in <cite>X</cite> and <cite>y</cite>.</p>
+</dd>
+<dt>transforms<span class="classifier">list, default=None</span></dt><dd><p>Transforms to be applied to the result of <cite>loading_fn</cite> before returning the associated item.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="gojo.deepl.loading.TorchDataset">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.deepl.loading.</span></span><span class="sig-name descname"><span class="pre">TorchDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/deepl/loading.html#TorchDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.loading.TorchDataset" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.deepl.loading.</span></span><span class="sig-name descname"><span class="pre">TorchDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/deepl/loading.html#TorchDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.loading.TorchDataset" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></p>
 <p>Basic Dataset class for typical tabular data. This class can be passed to <cite>torch.DataLoaders</cite>
 and subsequently used by the <a class="reference internal" href="#gojo.deepl.loops.fitNeuralNetwork" title="gojo.deepl.loops.fitNeuralNetwork"><code class="xref py py-func docutils literal notranslate"><span class="pre">gojo.deepl.loops.fitNeuralNetwork()</span></code></a> function.</p>
-<section id="id7">
-<h3>Parameters<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<section id="id9">
+<h3>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>X<span class="classifier">np.ndarray or pd.DataFrame</span></dt><dd><p>Input predictor variables used to fit the models.</p>
 </dd>
@@ -524,8 +679,8 @@ and subsequently used by the <a class="reference internal" href="#gojo.deepl.loo
 </dd>
 </dl>
 </section>
-<section id="id8">
-<h3>Example<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<section id="id10">
+<h3>Example<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">deepl</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
 <span class="gp">&gt;&gt;&gt;</span>
@@ -548,11 +703,11 @@ and subsequently used by the <a class="reference internal" href="#gojo.deepl.loo
 <span id="gojo-deepl-loops-module"></span><h2>gojo.deepl.loops module<a class="headerlink" href="#module-gojo.deepl.loops" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="gojo.deepl.loops.fitNeuralNetwork">
-<span class="sig-prename descclassname"><span class="pre">gojo.deepl.loops.</span></span><span class="sig-name descname"><span class="pre">fitNeuralNetwork</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iter_fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_dl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gojo.deepl.callback.Callback" title="gojo.deepl.callback.Callback"><span class="pre">Callback</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/deepl/loops.html#fitNeuralNetwork"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.loops.fitNeuralNetwork" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">gojo.deepl.loops.</span></span><span class="sig-name descname"><span class="pre">fitNeuralNetwork</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iter_fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_dl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gojo.deepl.callback.Callback" title="gojo.deepl.callback.Callback"><span class="pre">Callback</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/deepl/loops.html#fitNeuralNetwork"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.loops.fitNeuralNetwork" title="Link to this definition"></a></dt>
 <dd><p>Main function of the <a class="reference internal" href="#module-gojo.deepl" title="gojo.deepl"><code class="xref py py-func docutils literal notranslate"><span class="pre">gojo.deepl()</span></code></a> module. This function is used to fit a pytorch model using the
 provided “iteration function” (parameter <cite>iter_fn</cite>) that defined how to run an epoch.</p>
-<section id="id9">
-<h3>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<section id="id11">
+<h3>Parameters<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
 <dl>
 <dt>iter_fn<span class="classifier">callable</span></dt><dd><p>Function used to execute an epoch during model training. Currently available are:</p>
 <blockquote>
@@ -592,8 +747,8 @@ class</a>).</p>
 </dd>
 </dl>
 </section>
-<section id="id11">
-<h3>Returns<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<section id="id13">
+<h3>Returns<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>fitting_history<span class="classifier">dict</span></dt><dd><p>History with the model metrics (if provided) and loss for each epoch for the training (‘train’ key)
 and validation (‘validation’ key) datasets.</p>
@@ -615,8 +770,8 @@ and validation (‘validation’ key) datasets.</p>
 <dd><p>Basic function applied to supervised problems that executes the code necessary to perform an epoch.</p>
 <p>This function will return a tuple where the first element correspond to dictionary with the loss-related
 parameters, and the second element to a dictionary with the calculated metrics.</p>
-<section id="id12">
-<h3>Example<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<section id="id14">
+<h3>Example<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">deepl</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">core</span>
@@ -642,12 +797,20 @@ must correspond to the predictor variables and the second parameter to the targe
 </section>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="gojo.deepl.loops.iterUnsupervisedEpoch">
+<span class="sig-prename descclassname"><span class="pre">gojo.deepl.loops.</span></span><span class="sig-name descname"><span class="pre">iterUnsupervisedEpoch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataloader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/gojo/deepl/loops.html#iterUnsupervisedEpoch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.loops.iterUnsupervisedEpoch" title="Link to this definition"></a></dt>
+<dd><p>Basic function applied to supervised problems that executes the code necessary to perform an epoch.</p>
+<p>This function will return a tuple where the first element correspond to dictionary with the loss-related
+parameters, and the second element to a dictionary with the calculated metrics.</p>
+</dd></dl>
+
 </section>
 <section id="module-gojo.deepl.models">
 <span id="gojo-deepl-models-module"></span><h2>gojo.deepl.models module<a class="headerlink" href="#module-gojo.deepl.models" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="gojo.deepl.models.GNN">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.deepl.models.</span></span><span class="sig-name descname"><span class="pre">GNN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gnn_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ffn_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fusion_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_tabular_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gp_agg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sum'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/deepl/models.html#GNN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.models.GNN" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.deepl.models.</span></span><span class="sig-name descname"><span class="pre">GNN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gnn_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ffn_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fusion_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_tabular_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gp_agg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sum'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/deepl/models.html#GNN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.models.GNN" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
 <p>Graph Neural Network wrapper for graph classification. This model allows integrating data in the form of a
 graph through a model defined <cite>gnn_model</cite> parameter, and  tabular data through a model defined in <cite>ffn_model</cite> and
@@ -656,8 +819,8 @@ the resulting information will be fused using the defined <cite>fusion_model</ci
 will be passed to the fusion layer (<cite>fusion_model</cite>). If the fusion_model parameter is not given, the embeddings
 resulting from the <cite>gnn_model</cite> model will be returned directly or, if the <cite>ffn_model</cite> parameter is given, the
 embeddings generated by both models concatenated.</p>
-<section id="id13">
-<h3>Parameters<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<section id="id15">
+<h3>Parameters<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>gnn_model<span class="classifier">torch.nn.Module</span></dt><dd><p>Graph neural network model. See <cite>torch_geometric</cite> for model implementations.</p>
 </dd>
@@ -675,9 +838,9 @@ embeddings generated by both models concatenated.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gojo.deepl.models.GNN.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/deepl/models.html#GNN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.models.GNN.forward" title="Link to this definition"></a></dt>
-<dd><section id="id14">
-<h4>Parameters<a class="headerlink" href="#id14" title="Link to this heading"></a></h4>
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/deepl/models.html#GNN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.models.GNN.forward" title="Link to this definition"></a></dt>
+<dd><section id="id16">
+<h4>Parameters<a class="headerlink" href="#id16" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>batch<span class="classifier">torch_geometric.data.Batch</span></dt><dd><p><cite>torch_geometric</cite> batch dadta.</p>
 </dd>
@@ -700,25 +863,20 @@ embeddings generated by both models concatenated.</p>
 <span class="sig-name descname"><span class="pre">graphPooling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/deepl/models.html#GNN.graphPooling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.models.GNN.graphPooling" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="gojo.deepl.models.GNN.training">
-<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#gojo.deepl.models.GNN.training" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
 </section>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="gojo.deepl.models.MultiTaskFFN">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.deepl.models.</span></span><span class="sig-name descname"><span class="pre">MultiTaskFFN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_feats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_feats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_dims</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clf_task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_reg_task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multt_layer_dims</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multt_dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multt_layer_activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ELU'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multt_batchnorm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multt_clf_activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Sigmoid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multt_reg_activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ELU'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batchnorm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/deepl/models.html#MultiTaskFFN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.models.MultiTaskFFN" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.deepl.models.</span></span><span class="sig-name descname"><span class="pre">MultiTaskFFN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_feats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_feats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_dims</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clf_task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_reg_task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multt_layer_dims</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multt_dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multt_layer_activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ELU'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multt_batchnorm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multt_clf_activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Sigmoid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multt_reg_activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ELU'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batchnorm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/deepl/models.html#MultiTaskFFN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.models.MultiTaskFFN" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
 <p>Model adapted to perform multi-task classification with a layer specialized in extracting features (accessible
 through <code class="xref py py-meth docutils literal notranslate"><span class="pre">feature_extractor()</span></code>) and, as is typical in multi-task model training, layers specialized in
 performing the different tasks. The model will return a tensor with the outputs of each of the layers
 concatenated, where the first <cite>n_clf_task</cite> classification tasks will go first, followed by the <cite>n_reg_task</cite>
 regression tasks.</p>
-<section id="id15">
-<h3>Parameters<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<section id="id17">
+<h3>Parameters<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>in_feats<span class="classifier">int</span></dt><dd><p>(feature extractor) Number of input features.</p>
 </dd>
@@ -791,11 +949,6 @@ registered hooks while the latter silently ignores them.</p>
 </div>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="gojo.deepl.models.MultiTaskFFN.training">
-<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#gojo.deepl.models.MultiTaskFFN.training" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
 </section>
 </dd></dl>
 
@@ -808,8 +961,8 @@ classification with a layer specialized in extracting features (accessible throu
 as is typical in multi-task model training, layers specialized in performing the different tasks (accessible
 through <code class="xref py py-meth docutils literal notranslate"><span class="pre">multitask_projection()</span></code>). The model will return a tensor with the outputs of each of the layers from
 the input parameter <cite>multitask_projection</cite> concatenated in the same order as declared in the input parameter.</p>
-<section id="id16">
-<h3>Parameters<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
+<section id="id18">
+<h3>Parameters<a class="headerlink" href="#id18" title="Link to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>feature_extractor<span class="classifier">torch.nn.Module</span></dt><dd><p>Layer that will take the input from the model and generate an embedded representation that will be subsequently
@@ -820,8 +973,8 @@ used by the layers defined in <cite>multitask_projection</cite>.</p>
 </dl>
 </div></blockquote>
 </section>
-<section id="id17">
-<h3>Examples<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
+<section id="id19">
+<h3>Examples<a class="headerlink" href="#id19" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">deepl</span>
 <span class="gp">&gt;&gt;&gt;</span>
@@ -874,10 +1027,137 @@ registered hooks while the latter silently ignores them.</p>
 </div>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="gojo.deepl.models.MultiTaskFFNv2.training">
-<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#gojo.deepl.models.MultiTaskFFNv2.training" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gojo.deepl.models.VanillaVAE">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.deepl.models.</span></span><span class="sig-name descname"><span class="pre">VanillaVAE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder_out_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoder_in_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latent_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/deepl/models.html#VanillaVAE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.models.VanillaVAE" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Basic variational autoencoder model as presented in (<a class="reference external" href="https://arxiv.org/abs/1312.6114">https://arxiv.org/abs/1312.6114</a>).</p>
+<section id="id20">
+<h3>Parameters<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>encoder<span class="classifier">torch.nn.Module</span></dt><dd><p>Encoder model. The encoder will model P(Z|X) during training.</p>
+</dd>
+<dt>encoder_out_dim<span class="classifier">int</span></dt><dd><p>Output shape of the encoder.</p>
+</dd>
+<dt>decoder<span class="classifier">torch.nn.Module</span></dt><dd><p>Decoder model. The decoder will model P(X|Z) where P(Z) is assumed to follow a multivariate Gaussian
+distribution.</p>
+</dd>
+<dt>decoder_in_dim<span class="classifier">int</span></dt><dd><p>Expected input shape for the decoder.</p>
+</dd>
+<dt>latent_dim<span class="classifier">int</span></dt><dd><p>Latent dimensions of Z.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.deepl.models.VanillaVAE.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="reference internal" href="_modules/gojo/deepl/models.html#VanillaVAE.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.models.VanillaVAE.decode" title="Link to this definition"></a></dt>
+<dd><p>Decode the latent representation</p>
+<section id="id21">
+<h4>Parameters<a class="headerlink" href="#id21" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>Z<span class="classifier">torch.Tensor</span></dt><dd><p>Latent representation generated by the :meth`reparametrize` function.</p>
+</dd>
+</dl>
+</section>
+<section id="id22">
+<h4>Returns<a class="headerlink" href="#id22" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>decoder_out<span class="classifier">torch.Tensor</span></dt><dd><p>Decoder output.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.deepl.models.VanillaVAE.encode">
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gojo/deepl/models.html#VanillaVAE.encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.models.VanillaVAE.encode" title="Link to this definition"></a></dt>
+<dd><p>Generate the latent representation</p>
+<section id="id23">
+<h4>Parameters<a class="headerlink" href="#id23" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>X<span class="classifier">torch.Tensor</span></dt><dd><p>Input data</p>
+</dd>
+</dl>
+</section>
+<section id="id24">
+<h4>Returns<a class="headerlink" href="#id24" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>mu_std<span class="classifier">Tuple[torch.Tensor, torch.Tensor]</span></dt><dd><p>Mean and standard deviation of the latent dimensions.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.deepl.models.VanillaVAE.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gojo/deepl/models.html#VanillaVAE.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.models.VanillaVAE.forward" title="Link to this definition"></a></dt>
+<dd><p>Forward function. This function will do the following operations:</p>
+<blockquote>
+<div><p>X -&gt; encoder -&gt; projection -&gt; [mu, std] -&gt; reparametrization -&gt; decoder</p>
+</div></blockquote>
+<section id="id25">
+<h4>Parameters<a class="headerlink" href="#id25" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>X<span class="classifier">torch.Tensor</span></dt><dd><p>Input data to be codified.</p>
+</dd>
+</dl>
+</section>
+<section id="id26">
+<h4>Returns<a class="headerlink" href="#id26" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>output<span class="classifier">Tuple[torch.Tensor, dict]</span></dt><dd><p>This function will return a two element tuple where the first element will correspond to the reconstructed
+input and the second element to a dictionary with the mean and logvar vectors of the latent representations
+generated by the encoder.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.deepl.models.VanillaVAE.reparametrize">
+<span class="sig-name descname"><span class="pre">reparametrize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logvar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="reference internal" href="_modules/gojo/deepl/models.html#VanillaVAE.reparametrize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.models.VanillaVAE.reparametrize" title="Link to this definition"></a></dt>
+<dd><p>Reparametrization trick as described in “Auto-Encoding Variational Bayes” from Kigma and Welling.</p>
+<section id="id27">
+<h4>Parameters<a class="headerlink" href="#id27" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>mu<span class="classifier">torch.Tensor</span></dt><dd><p>Mean of the distribution of the latent variables.</p>
+</dd>
+<dt>logvar<span class="classifier">torch.Tensor</span></dt><dd><p>Logarithm of the standard deviation of the latent variables.</p>
+</dd>
+</dl>
+</section>
+<section id="id28">
+<h4>Returns<a class="headerlink" href="#id28" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>sample<span class="classifier">torch.Tensor</span></dt><dd><p>Sample from the latent variable distribution.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.deepl.models.VanillaVAE.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="reference internal" href="_modules/gojo/deepl/models.html#VanillaVAE.sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.deepl.models.VanillaVAE.sample" title="Link to this definition"></a></dt>
+<dd><p>Sample from the latent space.</p>
+<section id="id29">
+<h4>Parameters<a class="headerlink" href="#id29" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>n_samples<span class="classifier">int</span></dt><dd><p>Number of samples</p>
+</dd>
+<dt>current_device<span class="classifier">str, default=’cpu’</span></dt><dd><p>Device to run the model</p>
+</dd>
+</dl>
+</section>
+<section id="id30">
+<h4>Returns<a class="headerlink" href="#id30" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>samples<span class="classifier">torch.Tensor</span></dt><dd><p>Tensor of shape (n_samples, <a href="#id31"><span class="problematic" id="id32">*</span></a>)</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
 
 </section>
 </dd></dl>

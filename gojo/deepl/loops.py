@@ -104,6 +104,7 @@ def iterSupervisedEpoch(
     loss_values = []
     y_preds = []
     y_trues = []
+    X, y = None, None
     for batch, dlargs in enumerate(dataloader):
         if len(dlargs) < 2:
             raise DataLoaderError(
@@ -154,6 +155,10 @@ def iterSupervisedEpoch(
     loss_stats = {
         'loss (mean)': np.mean(loss_values),
         'loss (std)': np.std(loss_values)}
+
+    # clear cuda cache
+    if kwargs.get('clear_cuda_cache', False):
+        torch.cuda.empty_cache()
 
     return loss_stats, metric_stats
 
@@ -284,6 +289,10 @@ def iterUnsupervisedEpoch(
     loss_stats = {
         'loss (mean)': np.mean(loss_values),
         'loss (std)': np.std(loss_values)}
+
+    # clear cuda cache
+    if kwargs.get('clear_cuda_cache', False):
+        torch.cuda.empty_cache()
 
     return loss_stats, metric_stats
 

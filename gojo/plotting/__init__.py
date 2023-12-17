@@ -1,6 +1,7 @@
 from .basic import (
     linePlot,
-    barPlot
+    barPlot,
+    scatterPlot
 )
 from .classification import (
     confusionMatrix,
