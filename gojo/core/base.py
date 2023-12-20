@@ -829,10 +829,10 @@ class TorchSKInterface(Model):
                         ' to the model as optional arguments.')
 
                 if isinstance(dlargs, (tuple, list)):
-                    X = dlargs[0].to(device=self.device)
+                    X_batch = dlargs[0].to(device=self.device)
                     var_args = dlargs[1:]
                 else:
-                    X = dlargs.to(device=self.device)
+                    X_batch = dlargs.to(device=self.device)
                     var_args = []
 
                 # make model predictions
