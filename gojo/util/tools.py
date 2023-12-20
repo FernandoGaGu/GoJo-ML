@@ -411,3 +411,42 @@ def getNumModelParams(model: torch.nn.Module) -> int:
     checkInputType('model', model, [torch.nn.Module])
 
     return sum(param.numel() for param in model.parameters())
+
+
+def _splitOpArgsDicts(op_args: dict, indices: list) -> Tuple[dict] or dict:
+    """ This function splits the values of each of the variables defined in the input directory based on the different 
+    indices provided. The splits will be returned in the same order in which the indices were provided. """
+    assert isinstance(op_args, (type(None), dict))
+    assert isinstance(indices, list)
+    assert len(indices) >= 1
+
+    # return an empty list of dictionaries of the same length as indices
+    if op_args is None or len(op_args) == 0:
+        if len(indices) == 1:
+            return {}
+        return tuple([{} for _ in range(len(indices))])
+
+    # select the indices 
+    split_info = []
+    for indice_vals in indices:
+        indice_level_dict = {}    # stores all the values associated with the current split
+        for var_name, var_values in op_args.items():
+            checkInputType('op_args["%s"]' % var_name, var_values, [list, np.ndarray])
+
+            indice_level_dict[var_name] = [var_values[idx] for idx in indice_vals]
+
+        split_info.append(indice_level_dict)
+
+    if len(split_info) == 1:
+        return split_info
+
+    return tuple(split_info)
+
+
+
+
+
+
+
+
+

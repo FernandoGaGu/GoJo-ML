@@ -26,10 +26,12 @@ from ..util.io import (
 )
 from ..util.tools import (
     _none2dict,
+    _splitOpArgsDicts,
     getNumModelParams
 )
 from ..exception import (
-    UnfittedEstimator
+    UnfittedEstimator,
+    DataLoaderError
 )
 
 
@@ -426,7 +428,8 @@ class TorchSKInterface(Model):
         :py:mod:`gojo.core.evaluation.Metric`.
 
     batch_size : int, default=None
-        Batch size used when calling to :meth:`gojo.core.base.performInference`.
+        Batch size used when calling to :meth:`gojo.core.base.TorchSKInterface.performInference`. This parameter can 
+        also be set during the function calling.
 
     seed : int, default=None
         Random seed used for controlling the randomness.
@@ -562,9 +565,9 @@ class TorchSKInterface(Model):
             train_split_stratify: bool = False,
             callbacks: list = None,
             metrics: list = None,
+            batch_size: int = None,
             seed: int = None,
             device: str = 'cpu',
-            batch_size: int = None,
             verbose: int = 1
 
     ):
@@ -670,6 +673,7 @@ class TorchSKInterface(Model):
             iter_fn_kw=self.iter_fn_kw,
             callbacks=self.callbacks,
             metrics=self.metrics,
+            batch_size=self.batch_size,
             seed=self.seed,
             device=self.device,
             verbose=self.verbose)
@@ -684,7 +688,19 @@ class TorchSKInterface(Model):
                                   '"gojo.core.ParametrizedTorchSKInterface"')
 
     def train(self, X: np.ndarray, y: np.ndarray or None = None, **kwargs):
+        """ Train the model using the input data.
 
+        Parameters
+        ----------
+        X : np.ndarray
+            Predictor variables.
+
+        y : np.ndarray or None, default=None
+            Target variable.
+
+        **kwargs
+            Optional instance-level arguments.
+        """
         # reset callbacks inner states
         if self.callbacks is not None:
             for callback in self.callbacks:
@@ -705,11 +721,15 @@ class TorchSKInterface(Model):
         train_idx, valid_idx = train_test_split(
             indices, train_size=self.train_split, random_state=self.seed, shuffle=True, stratify=stratify)
 
+        # train/validation split of the optional arguments
+        train_kwargs, valid_kwargs = _splitOpArgsDicts(kwargs, [train_idx, valid_idx])
+
         # create dataloaders
         train_dl = self.dataloader_class(
             self.dataset_class(
                 X=X[train_idx],
                 y=y[train_idx] if y is not None else y,
+                **train_kwargs,
                 **self.train_dataset_kw),
             **self.train_dataloader_kw)
 
@@ -717,6 +737,7 @@ class TorchSKInterface(Model):
             self.dataset_class(
                 X=X[valid_idx],
                 y=y[valid_idx] if y is not None else y,
+                **valid_kwargs,
                 **self.valid_dataset_kw),
             **self.valid_dataloader_kw)
 
@@ -754,8 +775,11 @@ class TorchSKInterface(Model):
             Input data used to perform inference.
 
         batch_size : int, default=None
-            Parameter indicating whether to perform the inference using batches instead of
-            all input data at once. By default, all input data will by used.
+            Parameter indicating whether to perform the inference using batches instead of all input data at once. By 
+            default, all input data will by used.
+
+        **kwargs
+            Optional arguments for instance-level data.
 
         Returns
         -------
@@ -769,6 +793,10 @@ class TorchSKInterface(Model):
         self.model = self.model.eval()
         self.model = self.model.to(device=self.device)
 
+        # HACK. Avoid sorting the predictions
+        dataloader_op_args = deepcopy(self.valid_dataloader_kw)
+        dataloader_op_args['shuffle'] = False
+
         if batch_size is None and self.batch_size is None:
             batch_size = X.shape[0]
         else:
@@ -781,21 +809,35 @@ class TorchSKInterface(Model):
             if batch_size > X.shape[0]:   # maximum batch size will be cast to the input data shape
                 batch_size = X.shape[0]
 
+        # HACK. Change the batch size
+        dataloader_op_args['batch_size'] = batch_size
+
+        # create the dataloader
+        test_dl = self.dataloader_class(
+            self.dataset_class(X=X, y=None, **kwargs, **self.valid_dataset_kw), 
+            **dataloader_op_args)
+
         with torch.no_grad():
             y_pred = []
 
             # iterate over the input data in batches
-            curr_batch_split = 0
-            while curr_batch_split < X.shape[0]:
-                # select batch predictions
-                inX = X[curr_batch_split:(curr_batch_split + batch_size), ...]
-                # convert predictions to torch Tensor
-                inX = torch.from_numpy(inX).type(torch.float).to(device=self.device)
-                # make predictions
-                y_hat = self.model(inX).detach().cpu().numpy()
-                y_pred.append(y_hat)
+            for dlargs in test_dl:
+                if len(dlargs) < 1:
+                    raise DataLoaderError(
+                        'The minimum number of arguments returned by a dataloader must be 1 where the first element'
+                        ' will correspond to the input data (the Xs). The rest of the returned arguments will be passed'
+                        ' to the model as optional arguments.')
 
-                curr_batch_split += batch_size
+                if isinstance(dlargs, (tuple, list)):
+                    X = dlargs[0].to(device=self.device)
+                    var_args = dlargs[1:]
+                else:
+                    X = dlargs.to(device=self.device)
+                    var_args = []
+
+                # make model predictions
+                y_hat = self.model(X_batch, *var_args).detach().cpu().numpy()
+                y_pred.append(y_hat)
 
         y_pred = np.concatenate(y_pred)
 
@@ -809,6 +851,8 @@ class TorchSKInterface(Model):
         self_copy = deepcopy(self)
         self_copy.model.to('cpu')  # save in cpu
         self_copy._in_model.to('cpu')  # save in cpu
+
+        torch.cuda.empty_cache()
 
         return self_copy
 
@@ -879,6 +923,9 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
     metrics : List[:class:`gojo.core.evaluation.Metric`], default=None
         Metrics used to evaluate the model performance during training. Fore more information see
         :py:mod:`gojo.core.evaluation.Metric`.
+
+    batch_size : int, default=None
+        Batch size used when calling to :meth:`gojo.core.base.ParametrizedTorchSKInterface.performInference`.
 
     seed : int, default=None
         Random seed used for controlling the randomness.
@@ -1028,6 +1075,7 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
             train_split_stratify: bool = False,
             callbacks: list = None,
             metrics: list = None,
+            batch_size: int = None,
             seed: int = None,
             device: str = 'cpu',
             verbose: int = 1
@@ -1058,6 +1106,7 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
             train_split_stratify=train_split_stratify,
             callbacks=callbacks,
             metrics=metrics,
+            batch_size=batch_size,
             seed=seed,
             device=device,
             verbose=verbose)
@@ -1327,6 +1376,9 @@ class GNNTorchSKInterface(TorchSKInterface):
         Metrics used to evaluate the model performance during training. Fore more information see
         :py:mod:`gojo.core.evaluation.Metric`.
 
+    batch_size: int, default=None
+        Batch size used when calling to :meth:`gojo.core.base.GNNTorchSKInterface.performInference`.
+
     seed : int, default=None
         Random seed used for controlling the randomness.
 
@@ -1363,18 +1415,20 @@ class GNNTorchSKInterface(TorchSKInterface):
             train_split_stratify: bool = False,
             callbacks: list = None,
             metrics: list = None,
+            batch_size: int = None,
             seed: int = None,
             device: str = 'cpu',
             verbose: int = 1
 
     ):
+        warnings.warn('gojo.core.base.GNNTorchSKInterface is deprecated. Use gojo.core.base.TorchSKInterface instead.')
         super().__init__(
             model=model, iter_fn=iter_fn,  loss_function=loss_function, n_epochs=n_epochs, train_split=train_split,
             optimizer_class=optimizer_class, dataset_class=dataset_class, dataloader_class=dataloader_class,
             optimizer_kw=optimizer_kw, train_dataset_kw=train_dataset_kw, valid_dataset_kw=valid_dataset_kw,
             train_dataloader_kw=train_dataloader_kw, valid_dataloader_kw=valid_dataloader_kw, iter_fn_kw=iter_fn_kw,
-            train_split_stratify=train_split_stratify, callbacks=callbacks, metrics=metrics, seed=seed, device=device,
-            verbose=verbose)
+            train_split_stratify=train_split_stratify, callbacks=callbacks, metrics=metrics, batch_size=batch_size, 
+            seed=seed, device=device, verbose=verbose)
 
     def __repr__(self):
         return _createObjectRepresentation(
@@ -1418,19 +1472,7 @@ class GNNTorchSKInterface(TorchSKInterface):
             indices, train_size=self.train_split, random_state=self.seed, shuffle=True, stratify=stratify)
 
         # train/validation split of the optional arguments
-        train_kwargs = {}
-        valid_kwargs = {}
-        if len(kwargs) > 0:
-            for var_name, var_values in kwargs.items():
-                # check optional arguments
-                checkInputType('kwargs["%s"]' % var_name, var_values, [list])
-                if len(var_values) != len(indices):
-                    raise TypeError(
-                        'Missmatch in X shape (%d) and **kwargs["%s"] shape (%d).' % (
-                            len(indices), var_name, len(var_values)))
-
-                train_kwargs[var_name] = [var_values[idx] for idx in train_idx]
-                valid_kwargs[var_name] = [var_values[idx] for idx in valid_idx]
+        train_kwargs, valid_kwargs = _splitOpArgsDicts(kwargs, [train_idx, valid_idx])
 
         # create dataloaders
         train_dl = self.dataloader_class(
@@ -1470,13 +1512,17 @@ class GNNTorchSKInterface(TorchSKInterface):
 
         self.fitted()
 
-    def performInference(self, X: np.ndarray, **kwargs) -> np.ndarray:
+    def performInference(self, X: np.ndarray,  batch_size: int = None, **kwargs) -> np.ndarray:
         """ Method used to perform the model predictions.
 
         Parameters
         ----------
         X : np.ndarray
             Input data used to perform inference.
+
+        batch_size : int, default=None
+            Parameter indicating whether to perform the inference using batches instead of all input data at once. By 
+            default, all input data will by used.
 
         **kwargs
             Optional arguments. Importantly, for models based on GNNs, an adjacency matrix or edge list associated
@@ -1494,6 +1540,8 @@ class GNNTorchSKInterface(TorchSKInterface):
         This function will internally create an internal dataloader using the template specified for the validation
         data and setting the `shuffle` parameter to False.
         """
+        checkMultiInputTypes(
+            ('batch_size', batch_size, (int, type(None))))
 
         # select the model in inference mode
         self.model = self.model.eval()
@@ -1503,17 +1551,46 @@ class GNNTorchSKInterface(TorchSKInterface):
         dataloader_op_args = deepcopy(self.valid_dataloader_kw)
         dataloader_op_args['shuffle'] = False
 
+        if batch_size is None and self.batch_size is None:
+            batch_size = X.shape[0]
+        else:
+            if batch_size is None:
+                batch_size = self.batch_size
+
+            if batch_size < 0:
+                warnings.warn('Batch size cannot be less than 0. Selecting batch size to 1.')
+                batch_size = 1
+            if batch_size > X.shape[0]:   # maximum batch size will be cast to the input data shape
+                batch_size = X.shape[0]
+
+        # HACK. Change the batch size
+        dataloader_op_args['batch_size'] = batch_size
+
         # create the dataloader
         test_dl = self.dataloader_class(
-            self.dataset_class(X=X, y=None, **kwargs, **self.valid_dataset_kw), **dataloader_op_args)
+            self.dataset_class(X=X, y=None, **kwargs, **self.valid_dataset_kw), 
+            **dataloader_op_args)
 
         with torch.no_grad():
             y_pred = []
 
             # iterate over the input data in batches
-            for X_batch, _ in test_dl:
-                X_batch = X_batch.to(device=self.device)
-                y_hat = self.model(X_batch).detach().cpu().numpy()
+            for dlargs in test_dl:
+                if len(dlargs) < 1:
+                    raise DataLoaderError(
+                        'The minimum number of arguments returned by a dataloader must be 1 where the first element'
+                        ' will correspond to the input data (the Xs). The rest of the returned arguments will be passed'
+                        ' to the model as optional arguments.')
+
+                if isinstance(dlargs, (tuple, list)):
+                    X = dlargs[0].to(device=self.device)
+                    var_args = dlargs[1:]
+                else:
+                    X = dlargs.to(device=self.device)
+                    var_args = []
+
+                # make model predictions
+                y_hat = self.model(X_batch, *var_args).detach().cpu().numpy()
                 y_pred.append(y_hat)
 
         y_pred = np.concatenate(y_pred)
@@ -1568,6 +1645,8 @@ class ParametrizedGNNTorchSKInterface(ParametrizedTorchSKInterface):
             device: str = 'cpu',
             verbose: int = 1
     ):
+        warnings.warn(
+            'gojo.core.base.ParametrizedGNNTorchSKInterface is deprecated. Use gojo.core.base.ParametrizedTorchSKInterface instead.')
         super().__init__(
             generating_fn=generating_fn, gf_params=gf_params, iter_fn=iter_fn, loss_function=loss_function,
             n_epochs=n_epochs, train_split=train_split, optimizer_class=optimizer_class, dataset_class=dataset_class,
@@ -1618,19 +1697,7 @@ class ParametrizedGNNTorchSKInterface(ParametrizedTorchSKInterface):
             indices, train_size=self.train_split, random_state=self.seed, shuffle=True, stratify=stratify)
 
         # train/validation split of the optional arguments
-        train_kwargs = {}
-        valid_kwargs = {}
-        if len(kwargs) > 0:
-            for var_name, var_values in kwargs.items():
-                # check optional arguments
-                checkInputType('kwargs["%s"]' % var_name, var_values, [list])
-                if len(var_values) != len(indices):
-                    raise TypeError(
-                        'Missmatch in X shape (%d) and **kwargs["%s"] shape (%d).' % (
-                            len(indices), var_name, len(var_values)))
-
-                train_kwargs[var_name] = [var_values[idx] for idx in train_idx]
-                valid_kwargs[var_name] = [var_values[idx] for idx in valid_idx]
+        train_kwargs, valid_kwargs = _splitOpArgsDicts(kwargs, [train_idx, valid_idx])
 
         # create dataloaders
         train_dl = self.dataloader_class(
@@ -1723,4 +1790,5 @@ class ParametrizedGNNTorchSKInterface(ParametrizedTorchSKInterface):
             y_pred = y_pred.reshape(-1)
 
         return y_pred
+
 

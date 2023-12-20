@@ -375,8 +375,9 @@ def evalCrossVal(
         larger models this may involve higher computational and storage costs.
 
     op_instance_args : dict, default=None
-        Instance-level optional arguments. This parameter should be a dictionary whose values must be list containing
-        the same number of elements as instances in `X` and `y`.
+        Instance-level optional arguments. This parameter should be a dictionary whose values must be list on an 
+        array-like iterable containing the same number of elements as instances in `X` and `y`.
+
 
     Returns
     --------
@@ -463,7 +464,7 @@ def evalCrossVal(
     # check op_instance_args argument
     if op_instance_args is not None:
         for var_name, var_values in op_instance_args.items():
-            checkInputType('op_instance_args["%s"]' % var_name, var_values, [list])
+            checkInputType('op_instance_args["%s"]' % var_name, var_values, [list, np.ndarray])
             if len(X_dt) != len(var_values):
                 raise TypeError(
                     'Missmatch in X shape (%d) and op_instance_args["%s"] shape (%d).' % (
@@ -664,8 +665,9 @@ def evalCrossValNestedHPO(
         larger models this may involve higher computational and storage costs.
 
     op_instance_args : dict, default=None
-        Instance-level optional arguments. This parameter should be a dictionary whose values must be list containing
-        the same number of elements as instances in `X` and `y`.
+        Instance-level optional arguments. This parameter should be a dictionary whose values must be list on an 
+        array-like iterable containing the same number of elements as instances in `X` and `y`.
+
 
     Returns
     -------
@@ -876,7 +878,7 @@ def evalCrossValNestedHPO(
     # check op_instance_args argument
     if op_instance_args is not None:
         for var_name, var_values in op_instance_args.items():
-            checkInputType('op_instance_args["%s"]' % var_name, var_values, [list])
+            checkInputType('op_instance_args["%s"]' % var_name, var_values, [list, np.ndarray])
             if len(X_dt) != len(var_values):
                 raise TypeError(
                     'Missmatch in X shape (%d) and op_instance_args["%s"] shape (%d).' % (
