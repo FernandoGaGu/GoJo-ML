@@ -116,6 +116,9 @@ class ResNetBlock(torch.nn.Module):
 
     padding_conv2 : int ,default=1
         Padding applied to the second convolutional layer.
+
+    debugging : bool, default=False
+        Parameter that indicates whether to print the dimensions of the inputs/outputs of each of the layers.
     """
     def __init__(
             self,
@@ -129,6 +132,7 @@ class ResNetBlock(torch.nn.Module):
             padding_conv1: int = 1,
             stride_conv2: int = 1,
             padding_conv2: int = 1,
+            debugging: bool = False
     ):
         super(ResNetBlock, self).__init__()
 
@@ -142,7 +146,9 @@ class ResNetBlock(torch.nn.Module):
             ('stride_conv1', stride_conv1, [int]),
             ('padding_conv1', padding_conv1, [int]),
             ('stride_conv2', stride_conv2, [int]),
-            ('padding_conv2', padding_conv2, [int]))
+            ('padding_conv2', padding_conv2, [int]),
+            ('debugging', debugging, [bool])
+        )
 
         if normalization not in ['batch', 'instance']:
             raise TypeError('Supported arguments for parameter "normalization" are "batch" for batch normalization or'
@@ -179,13 +185,30 @@ class ResNetBlock(torch.nn.Module):
         else:
             self.residual_connection = torch.nn.Identity()
 
+        # set debugging mode
+        self.debugging = debugging
+
     def forward(self, x) -> torch.Tensor:
         # pass the input thought the convolutional layers
+        if self.debugging:
+            print('\n=====')
+            print('input', x.shape)
+        
         out = self.conv1(x)
+        
+        if self.debugging:
+            print('output c1', out.shape)
+        
         out = self.conv2(out)
+        
+        if self.debugging:
+            print('output c2', out.shape)
 
         # project the residual connection
         residual = self.residual_connection(x)
+        
+        if self.debugging:
+            print('residual', residual.shape)
 
         # add the residual connection
         out += residual
