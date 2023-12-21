@@ -6,6 +6,7 @@
   <title>gojo.core.loops &mdash; gojo - Documentation 0.0.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=eafc0fe6" />
 
   
   <!--[if lt IE 9]>
@@ -453,8 +454,9 @@
 <span class="sd">        larger models this may involve higher computational and storage costs.</span>
 
 <span class="sd">    op_instance_args : dict, default=None</span>
-<span class="sd">        Instance-level optional arguments. This parameter should be a dictionary whose values must be list containing</span>
-<span class="sd">        the same number of elements as instances in `X` and `y`.</span>
+<span class="sd">        Instance-level optional arguments. This parameter should be a dictionary whose values must be list on an </span>
+<span class="sd">        array-like iterable containing the same number of elements as instances in `X` and `y`.</span>
+
 
 <span class="sd">    Returns</span>
 <span class="sd">    --------</span>
@@ -541,7 +543,7 @@
     <span class="c1"># check op_instance_args argument</span>
     <span class="k">if</span> <span class="n">op_instance_args</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">var_values</span> <span class="ow">in</span> <span class="n">op_instance_args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;op_instance_args[&quot;</span><span class="si">%s</span><span class="s1">&quot;]&#39;</span> <span class="o">%</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">var_values</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">])</span>
+            <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;op_instance_args[&quot;</span><span class="si">%s</span><span class="s1">&quot;]&#39;</span> <span class="o">%</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">var_values</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_dt</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_values</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                     <span class="s1">&#39;Missmatch in X shape (</span><span class="si">%d</span><span class="s1">) and op_instance_args[&quot;</span><span class="si">%s</span><span class="s1">&quot;] shape (</span><span class="si">%d</span><span class="s1">).&#39;</span> <span class="o">%</span> <span class="p">(</span>
@@ -745,8 +747,9 @@
 <span class="sd">        larger models this may involve higher computational and storage costs.</span>
 
 <span class="sd">    op_instance_args : dict, default=None</span>
-<span class="sd">        Instance-level optional arguments. This parameter should be a dictionary whose values must be list containing</span>
-<span class="sd">        the same number of elements as instances in `X` and `y`.</span>
+<span class="sd">        Instance-level optional arguments. This parameter should be a dictionary whose values must be list on an </span>
+<span class="sd">        array-like iterable containing the same number of elements as instances in `X` and `y`.</span>
+
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -957,7 +960,7 @@
     <span class="c1"># check op_instance_args argument</span>
     <span class="k">if</span> <span class="n">op_instance_args</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">var_values</span> <span class="ow">in</span> <span class="n">op_instance_args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;op_instance_args[&quot;</span><span class="si">%s</span><span class="s1">&quot;]&#39;</span> <span class="o">%</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">var_values</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">])</span>
+            <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;op_instance_args[&quot;</span><span class="si">%s</span><span class="s1">&quot;]&#39;</span> <span class="o">%</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">var_values</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_dt</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_values</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                     <span class="s1">&#39;Missmatch in X shape (</span><span class="si">%d</span><span class="s1">) and op_instance_args[&quot;</span><span class="si">%s</span><span class="s1">&quot;] shape (</span><span class="si">%d</span><span class="s1">).&#39;</span> <span class="o">%</span> <span class="p">(</span>

@@ -6,6 +6,7 @@
   <title>gojo.deepl.models &mdash; gojo - Documentation 0.0.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=eafc0fe6" />
 
   
   <!--[if lt IE 9]>
@@ -88,7 +89,8 @@
 <span class="kn">from</span> <span class="nn">.ffn</span> <span class="kn">import</span> <span class="n">createSimpleFFNModel</span>
 <span class="kn">from</span> <span class="nn">..util.validation</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">checkMultiInputTypes</span><span class="p">,</span>
-    <span class="n">checkInputType</span>
+    <span class="n">checkInputType</span><span class="p">,</span>
+    <span class="n">checkCallable</span>
 <span class="p">)</span>
 
 
@@ -413,6 +415,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span> <span class="o">=</span> <span class="n">feature_extractor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">multitask_projection</span> <span class="o">=</span> <span class="n">multitask_projection</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_checkModelParams</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_checkModelParams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Function used to check the input parameters. &quot;&quot;&quot;</span>
@@ -708,6 +712,120 @@
 
         <span class="k">return</span> <span class="n">samples</span></div>
 </div>
+
+
+
+
+<div class="viewcode-block" id="FusionModel">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.FusionModel">[docs]</a>
+<span class="k">class</span> <span class="nc">FusionModel</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Model designed to allow the merging of information from several models that receive different input values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_models : torch.nn.ModuleList</span>
+<span class="sd">        Models associated with each of the inputs. The models will be executed in order by receiving as argument the </span>
+<span class="sd">        input parameters of the model after eliminating the entries defined in the indexes of parameter `ignore_inputs`. </span>
+
+<span class="sd">    fusion_model : torch.nn.Module</span>
+<span class="sd">        Fusion model that will receive all the merged data internally (either by the function defined in `concat_fn` or </span>
+<span class="sd">        concatenated along dimension 1 by default) and will generate the final model output.</span>
+
+<span class="sd">    concat_fn : callable, default=None</span>
+<span class="sd">        Function used to concatenate the outpus of the input models. This function will receive as input a list of </span>
+<span class="sd">        tensors and must return a unified tensor. By default, function `torch.cat` will be called by concatenating the </span>
+<span class="sd">        outputs along dimension 1.</span>
+
+<span class="sd">    ignore_inputs : list, default=None</span>
+<span class="sd">        List specifying the input items to be ignored. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> 
+            <span class="n">input_models</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">,</span>
+            <span class="n">fusion_model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+            <span class="n">concat_fn</span><span class="p">:</span> <span class="nb">callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">ignore_inputs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FusionModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_models</span> <span class="o">=</span> <span class="n">input_models</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fusion_model</span> <span class="o">=</span> <span class="n">fusion_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">concat_fn</span> <span class="o">=</span> <span class="n">concat_fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignore_inputs</span> <span class="o">=</span> <span class="n">ignore_inputs</span> <span class="k">if</span> <span class="n">ignore_inputs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_checkModelParams</span><span class="p">()</span>
+
+
+    <span class="k">def</span> <span class="nf">_checkModelParams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Function used to check the input parameters. &quot;&quot;&quot;</span>
+        <span class="n">checkMultiInputTypes</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;input_models&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_models</span><span class="p">,</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;fusion_model&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fusion_model</span><span class="p">,</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;ignore_inputs&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_inputs</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]))</span>
+
+<div class="viewcode-block" id="FusionModel.individualForwardAndCat">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.FusionModel.individualForwardAndCat">[docs]</a>
+    <span class="k">def</span> <span class="nf">individualForwardAndCat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Processes the input elements through the models defined in parameter `input_models` and returns a unified </span>
+<span class="sd">        vector as specified by argument `concat_fn`. &quot;&quot;&quot;</span>
+
+        <span class="c1"># get the model device </span>
+        <span class="n">devices</span> <span class="o">=</span> <span class="p">{</span><span class="n">param</span><span class="o">.</span><span class="n">device</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">()}</span>
+
+        <span class="c1"># convert the input tensors to the same device</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">devices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">devices</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Models have been detected in different devices, in the current implementation all&#39;</span>
+                            <span class="s1">&#39; models must be in the same device.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># check input sizes</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ignore_inputs</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_models</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;Inconsistent number of inputs (</span><span class="si">%d</span><span class="s1">) and models (</span><span class="si">%d</span><span class="s1">) considering that </span><span class="si">%d</span><span class="s1"> entries will be ignored.&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_models</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ignore_inputs</span><span class="p">)))</span>
+
+        <span class="c1"># select inputs </span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ignore_inputs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">input_</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">input_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_inputs</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+
+        <span class="c1"># check remaining input sizes</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_models</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;Missmatch in input size (inputs </span><span class="si">%d</span><span class="s1">, models </span><span class="si">%d</span><span class="s1">) after ignoring inputs </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_models</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_inputs</span><span class="p">))</span>
+
+        <span class="c1"># perform the forward pass of the input models</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">input_models</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_models</span><span class="p">))]</span>
+
+        <span class="c1"># apply the concatenation function if provided</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">concat_fn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">checkCallable</span><span class="p">(</span><span class="s1">&#39;concat_fn&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">concat_fn</span><span class="p">)</span>
+            <span class="n">fused_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">concat_fn</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fused_output</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">fused_output</span></div>
+
+
+
+<div class="viewcode-block" id="FusionModel.forward">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.FusionModel.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+
+        <span class="c1"># perform the forward pass of the individual models and concatenate the output</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">individualForwardAndCat</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">)</span>
+
+        <span class="c1"># fuse the output models information</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fusion_model</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out</span></div>
+</div>
+
+
 
 </pre></div>
 
