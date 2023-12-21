@@ -12,7 +12,8 @@ from typing import Tuple
 from .ffn import createSimpleFFNModel
 from ..util.validation import (
     checkMultiInputTypes,
-    checkInputType
+    checkInputType,
+    checkCallable
 )
 
 
@@ -329,6 +330,8 @@ class MultiTaskFFNv2(torch.nn.Module):
 
         self.feature_extractor = feature_extractor
         self.multitask_projection = multitask_projection
+        
+        self._checkModelParams()
 
     def _checkModelParams(self):
         """ Function used to check the input parameters. """
@@ -585,3 +588,108 @@ class VanillaVAE(torch.nn.Module):
             samples = self.decode(z)
 
         return samples
+
+
+
+class FusionModel(torch.nn.Module):
+    """ Model designed to allow the merging of information from several models that receive different input values.
+
+    Parameters
+    ----------
+    input_models : torch.nn.ModuleList
+        Models associated with each of the inputs. The models will be executed in order by receiving as argument the 
+        input parameters of the model after eliminating the entries defined in the indexes of parameter `ignore_inputs`. 
+
+    fusion_model : torch.nn.Module
+        Fusion model that will receive all the merged data internally (either by the function defined in `concat_fn` or 
+        concatenated along dimension 1 by default) and will generate the final model output.
+
+    concat_fn : callable, default=None
+        Function used to concatenate the outpus of the input models. This function will receive as input a list of 
+        tensors and must return a unified tensor. By default, function `torch.cat` will be called by concatenating the 
+        outputs along dimension 1.
+
+    ignore_inputs : list, default=None
+        List specifying the input items to be ignored. 
+    """
+    def __init__(
+            self, 
+            input_models: torch.nn.ModuleList,
+            fusion_model: torch.nn.Module,
+            concat_fn: callable = None,
+            ignore_inputs: list = None
+        ):
+        super(FusionModel, self).__init__()
+
+        self.input_models = input_models
+        self.fusion_model = fusion_model
+        self.concat_fn = concat_fn
+        self.ignore_inputs = ignore_inputs if ignore_inputs is not None else []
+
+        self._checkModelParams()
+
+
+    def _checkModelParams(self):
+        """ Function used to check the input parameters. """
+        checkMultiInputTypes(
+            ('input_models', self.input_models, [torch.nn.ModuleList]),
+            ('fusion_model', self.fusion_model, [torch.nn.Module]),
+            ('ignore_inputs', self.ignore_inputs, [list, type(None)]))
+
+    def individualForwardAndCat(self, *inputs) -> torch.Tensor:
+        """ Processes the input elements through the models defined in parameter `input_models` and returns a unified 
+        vector as specified by argument `concat_fn`. """
+
+        # get the model device 
+        devices = {param.device for param in self.parameters()}
+
+        # convert the input tensors to the same device
+        device = None
+        if len(devices) == 1:
+            device = list(devices)[0]
+        else:
+            raise TypeError('Models have been detected in different devices, in the current implementation all'
+                            ' models must be in the same device.')
+
+        # check input sizes
+        if (len(inputs) - len(self.ignore_inputs)) != len(self.input_models):
+            raise TypeError(
+                'Inconsistent number of inputs (%d) and models (%d) considering that %d entries will be ignored.' % (
+                len(inputs), len(self.input_models), len(self.ignore_inputs)))
+
+        # select inputs 
+        if len(self.ignore_inputs) > 0:
+            inputs = [input_ for i, input_ in enumerate(inputs) if i not in self.ignore_inputs]
+        else:
+            inputs = list(inputs)
+
+        # check remaining input sizes
+        if len(inputs) != len(self.input_models):
+            raise TypeError(
+                'Missmatch in input size (inputs %d, models %d) after ignoring inputs %r' % (
+                len(inputs), len(self.input_models), self.ignore_inputs))
+
+        # perform the forward pass of the input models
+        outputs = [self.input_models[i](inputs[i].to(device=device)) for i in range(len(self.input_models))]
+
+        # apply the concatenation function if provided
+        if self.concat_fn is not None:
+            checkCallable('concat_fn', self.concat_fn)
+            fused_output = self.concat_fn(outputs)
+        else:
+            fused_output = torch.cat(outputs, dim=1)
+
+        return fused_output
+
+
+    def forward(self, *inputs) -> torch.Tensor:
+
+        # perform the forward pass of the individual models and concatenate the output
+        out = self.individualForwardAndCat(*inputs)
+
+        # fuse the output models information
+        out = self.fusion_model(out)
+
+        return out
+
+
