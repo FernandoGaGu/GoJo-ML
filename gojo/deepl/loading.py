@@ -10,9 +10,10 @@ import torch
 import numpy as np
 import pandas as pd
 import warnings
+import torch_geometric as geom
+from copy import deepcopy
 from typing import List
 from torch.utils.data import Dataset
-import torch_geometric as geom
 
 from ..core import base as core_base
 from ..util.validation import (
@@ -28,11 +29,18 @@ class TorchDataset(Dataset):
 
     Parameters
     ----------
-    X : np.ndarray or pd.DataFrame
+    X : np.ndarray or pd.DataFrame or pd.Series
         Input predictor variables used to fit the models.
 
     y : np.ndarray or pd.DataFrame or pd.Series, default=None
         Target variables to fit the models (or None).
+
+    transforms : list, default=None
+        Transforms to be applied to the input X data before returning the associated item.
+
+    **op_instance_args
+        Instance-level optional arguments. This parameter should be a dictionary whose values must be `np.ndarray`
+        containing the same number of elements as instances in `X` and `y`.
 
     Example
     -------
@@ -51,19 +59,49 @@ class TorchDataset(Dataset):
     """
     def __init__(
             self,
-            X: np.ndarray or pd.DataFrame,
-            y: np.ndarray or pd.DataFrame or pd.Series = None):
+            X: np.ndarray or pd.DataFrame or pd.Series,
+            y: np.ndarray or pd.DataFrame or pd.Series = None,
+            transforms: List[callable] = None,
+            **op_instance_args):
         super(TorchDataset, self).__init__()
+
+        # check the input arguments
+        checkMultiInputTypes(
+            ('X', X, [np.ndarray, pd.Series, pd.DataFrame]),
+            ('y', y, [np.ndarray, pd.Series, pd.DataFrame, type(None)]),
+            ('op_instance_args', op_instance_args, [dict, type(None)]),
+            ('transforms', transforms, [list, type(None)]))
+
+        # check transforms
+        if transforms is not None:
+            for i, transform in enumerate(transforms):
+                checkCallable('transform[%d]' % i, transform)
+
+        # check op_instance_args
+        op_instance_args = deepcopy(op_instance_args)   # avoid inplace modifications
+        if op_instance_args is not None:
+            for var_name, var_values in op_instance_args.items():
+                checkInputType('op_instance_args["%s"]' % var_name, var_values, [np.ndarray, list])
+                if len(X) != len(var_values):
+                    raise TypeError(
+                        'Missmatch in X shape (%d) and op_instance_args["%s"] shape (%d).' % (
+                            len(X), var_name, len(var_values)))
+
+                # convert op_instance_args to torch tensor
+                op_instance_args[var_name] = torch.from_numpy(np.array(var_values).astype(np.float32))
 
         # process X-related parameters
         X_dt = core_base.Dataset(X)
-        np_X = X_dt.array_data
-        self.X = torch.from_numpy(np_X.astype(np.float32))
+        self.X = torch.from_numpy(X_dt.array_data.astype(np.float32))
         self.X_dataset = X_dt
 
         # initialize y information (default None)
         self.y = None
         self.y_dataset = None
+
+        # save the rest of the parameters
+        self.transforms = transforms
+        self.op_instance_args = op_instance_args
 
         # y parameter is optional
         if y is not None:
@@ -82,14 +120,39 @@ class TorchDataset(Dataset):
             self.y = torch.from_numpy(np_y.astype(np.float32))
             self.y_dataset = y_dt
 
-    def __getitem__(self, idx: int):
-        if self.y is None:
-            return self.X[idx]
 
-        return self.X[idx], self.y[idx]
+    def __getitem__(self, idx: int):
+
+        elements_to_return = []
+
+        X = self.X[idx]
+
+        # apply transforms (optionally)
+        if self.transforms is not None:
+            for transform in self.transforms:
+                X = transform(X)
+
+        # check that X is a torch Tensor
+        if not isinstance(X, torch.Tensor):
+            raise TypeError('The load function must return tensors. The returned type is {}. To solve it you can '
+                            'provide transformations or reformulate the load function.'.format(type(X)))
+
+        # add X to the elements that will be returned
+        elements_to_return.append(X)
+
+        # add y to the elements that will be returned
+        if self.y is not None:
+            elements_to_return.append(self.y[idx])
+
+        if self.op_instance_args is not None:
+            for values in self.op_instance_args.values():
+                elements_to_return.append(values[idx])
+
+        return tuple(elements_to_return)
+
 
     def __len__(self):
-        return self.X.shape[0]
+        return len(self.X)
 
 
 class StreamTorchDataset(Dataset):
@@ -110,21 +173,20 @@ class StreamTorchDataset(Dataset):
     y : np.ndarray or pd.Series or pd.DataFrame
         Target variables to fit the models (or None).
 
-    op_instance_args : dict, default=None
-        Instance-level optional arguments. This parameter should be a dictionary whose values must be `np.ndarray`
-        containing the same number of elements as instances in `X` and `y`.
-
     transforms : list, default=None
         Transforms to be applied to the result of `loading_fn` before returning the associated item.
+
+    **op_instance_args
+        Instance-level optional arguments. This parameter should be a dictionary whose values must be `np.ndarray`
+        containing the same number of elements as instances in `X` and `y`.
     """
     def __init__(
             self,
             X: list or np.ndarray or pd.Series,
             loading_fn: callable,
             y: np.ndarray or pd.Series or pd.DataFrame = None,
-            op_instance_args: dict = None,
-            transforms: List[callable] = None
-    ):
+            transforms: List[callable] = None,
+            **op_instance_args):
         super(StreamTorchDataset, self).__init__()
 
         # check the input arguments
@@ -150,16 +212,17 @@ class StreamTorchDataset(Dataset):
         checkCallable('loading_fn', loading_fn)
 
         # check op_instance_args
+        op_instance_args = deepcopy(op_instance_args)   # avoid inplace modifications
         if op_instance_args is not None:
             for var_name, var_values in op_instance_args.items():
-                checkInputType('op_instance_args["%s"]' % var_name, var_values, [np.ndarray])
+                checkInputType('op_instance_args["%s"]' % var_name, var_values, [np.ndarray, list])
                 if len(X) != len(var_values):
                     raise TypeError(
                         'Missmatch in X shape (%d) and op_instance_args["%s"] shape (%d).' % (
                             len(X), var_name, len(var_values)))
 
                 # convert op_instance_args to torch tensor
-                op_instance_args[var_name] = torch.from_numpy(var_values.astype(np.float32))
+                op_instance_args[var_name] = torch.from_numpy(np.array(var_values).astype(np.float32))
 
         self.X = X
         self.loading_fn = loading_fn
