@@ -92,7 +92,8 @@ class TorchDataset(Dataset):
 
         # process X-related parameters
         X_dt = core_base.Dataset(X)
-        self.X = torch.from_numpy(X_dt.array_data.astype(np.float32))
+        np_X = X_dt.array_data
+        self.X = torch.from_numpy(np_X.astype(np.float32))
         self.X_dataset = X_dt
 
         # initialize y information (default None)
