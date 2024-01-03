@@ -723,7 +723,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    input_models : torch.nn.ModuleList</span>
+<span class="sd">    encoders : torch.nn.ModuleList</span>
 <span class="sd">        Models associated with each of the inputs. The models will be executed in order by receiving as argument the </span>
 <span class="sd">        input parameters of the model after eliminating the entries defined in the indexes of parameter `ignore_inputs`. </span>
 
@@ -741,14 +741,14 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> 
-            <span class="n">input_models</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">,</span>
+            <span class="n">encoders</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">,</span>
             <span class="n">fusion_model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
             <span class="n">concat_fn</span><span class="p">:</span> <span class="nb">callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">ignore_inputs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">FusionModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">input_models</span> <span class="o">=</span> <span class="n">input_models</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoders</span> <span class="o">=</span> <span class="n">encoders</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fusion_model</span> <span class="o">=</span> <span class="n">fusion_model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">concat_fn</span> <span class="o">=</span> <span class="n">concat_fn</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ignore_inputs</span> <span class="o">=</span> <span class="n">ignore_inputs</span> <span class="k">if</span> <span class="n">ignore_inputs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
@@ -759,14 +759,14 @@
     <span class="k">def</span> <span class="nf">_checkModelParams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Function used to check the input parameters. &quot;&quot;&quot;</span>
         <span class="n">checkMultiInputTypes</span><span class="p">(</span>
-            <span class="p">(</span><span class="s1">&#39;input_models&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_models</span><span class="p">,</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;encoders&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoders</span><span class="p">,</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">]),</span>
             <span class="p">(</span><span class="s1">&#39;fusion_model&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fusion_model</span><span class="p">,</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">]),</span>
             <span class="p">(</span><span class="s1">&#39;ignore_inputs&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_inputs</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]))</span>
 
-<div class="viewcode-block" id="FusionModel.individualForwardAndCat">
-<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.FusionModel.individualForwardAndCat">[docs]</a>
-    <span class="k">def</span> <span class="nf">individualForwardAndCat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Processes the input elements through the models defined in parameter `input_models` and returns a unified </span>
+<div class="viewcode-block" id="FusionModel.encode">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.models.FusionModel.encode">[docs]</a>
+    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Processes the input elements through the models defined in parameter `encoders` and returns a unified </span>
 <span class="sd">        vector as specified by argument `concat_fn`. &quot;&quot;&quot;</span>
 
         <span class="c1"># get the model device </span>
@@ -781,10 +781,10 @@
                             <span class="s1">&#39; models must be in the same device.&#39;</span><span class="p">)</span>
 
         <span class="c1"># check input sizes</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ignore_inputs</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_models</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ignore_inputs</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoders</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                 <span class="s1">&#39;Inconsistent number of inputs (</span><span class="si">%d</span><span class="s1">) and models (</span><span class="si">%d</span><span class="s1">) considering that </span><span class="si">%d</span><span class="s1"> entries will be ignored.&#39;</span> <span class="o">%</span> <span class="p">(</span>
-                <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_models</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ignore_inputs</span><span class="p">)))</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoders</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ignore_inputs</span><span class="p">)))</span>
 
         <span class="c1"># select inputs </span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ignore_inputs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -793,13 +793,13 @@
             <span class="n">inputs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
 
         <span class="c1"># check remaining input sizes</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_models</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoders</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                 <span class="s1">&#39;Missmatch in input size (inputs </span><span class="si">%d</span><span class="s1">, models </span><span class="si">%d</span><span class="s1">) after ignoring inputs </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
-                <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_models</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_inputs</span><span class="p">))</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoders</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_inputs</span><span class="p">))</span>
 
         <span class="c1"># perform the forward pass of the input models</span>
-        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">input_models</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_models</span><span class="p">))]</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">encoders</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoders</span><span class="p">))]</span>
 
         <span class="c1"># apply the concatenation function if provided</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">concat_fn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -817,7 +817,7 @@
     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 
         <span class="c1"># perform the forward pass of the individual models and concatenate the output</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">individualForwardAndCat</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">)</span>
 
         <span class="c1"># fuse the output models information</span>
         <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fusion_model</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>

@@ -386,11 +386,11 @@
         <span class="n">iter_fn</span><span class="p">,</span>
         <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
         <span class="n">train_dl</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span>
-        <span class="n">valid_dl</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span>
         <span class="n">n_epochs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">loss_fn</span><span class="p">:</span> <span class="nb">callable</span><span class="p">,</span>
         <span class="n">optimizer_class</span><span class="p">,</span>
         <span class="n">optimizer_params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">valid_dl</span><span class="p">:</span> <span class="n">Iterable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">metrics</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -415,10 +415,6 @@
 <span class="sd">        Train dataloader (see `torch.utils.data.DataLoader</span>
 <span class="sd">        class &lt;https://pytorch.org/tutorials/beginner/basics/data_tutorial.html&gt;`_).</span>
 
-<span class="sd">    valid_dl : Iterable</span>
-<span class="sd">        Validation dataloader (see `torch.utils.data.DataLoader</span>
-<span class="sd">        class &lt;https://pytorch.org/tutorials/beginner/basics/data_tutorial.html&gt;`_).</span>
-
 <span class="sd">    n_epochs : int</span>
 <span class="sd">        Maximum number of epochs for training a model.</span>
 
@@ -432,6 +428,10 @@
 
 <span class="sd">    optimizer_params : dict, default=None</span>
 <span class="sd">        Parameters used to initialize the optimizer provided using `optimizer_params`.</span>
+
+<span class="sd">    valid_dl : Iterable, default=None</span>
+<span class="sd">        Validation dataloader (see `torch.utils.data.DataLoader</span>
+<span class="sd">        class &lt;https://pytorch.org/tutorials/beginner/basics/data_tutorial.html&gt;`_).</span>
 
 <span class="sd">    device : str, default=None</span>
 <span class="sd">        Device used to optimize the input model. Commonly devices are: &#39;cpu&#39;, &#39;cuda&#39;, &#39;mps&#39;.</span>
@@ -466,7 +466,10 @@
     <span class="n">_AVAILABLE_DEVICES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> <span class="s1">&#39;mps&#39;</span><span class="p">,</span> <span class="s1">&#39;cpu&#39;</span><span class="p">]</span>
     <span class="n">checkCallable</span><span class="p">(</span><span class="s1">&#39;gojo.deepl.loops.fitNeuralNetwork(loss_fn)&#39;</span><span class="p">,</span> <span class="n">loss_fn</span><span class="p">)</span>
     <span class="n">checkIterable</span><span class="p">(</span><span class="s1">&#39;gojo.deepl.loops.fitNeuralNetwork(train_dl)&#39;</span><span class="p">,</span> <span class="n">train_dl</span><span class="p">)</span>
-    <span class="n">checkIterable</span><span class="p">(</span><span class="s1">&#39;gojo.deepl.loops.fitNeuralNetwork(valid_dl)&#39;</span><span class="p">,</span> <span class="n">valid_dl</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">valid_dl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">checkIterable</span><span class="p">(</span><span class="s1">&#39;gojo.deepl.loops.fitNeuralNetwork(valid_dl)&#39;</span><span class="p">,</span> <span class="n">valid_dl</span><span class="p">)</span>
+    
     <span class="n">checkMultiInputTypes</span><span class="p">(</span>
         <span class="p">(</span><span class="s1">&#39;n_epochs&#39;</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
         <span class="p">(</span><span class="s1">&#39;optimizer_params&#39;</span><span class="p">,</span> <span class="n">optimizer_params</span><span class="p">,</span> <span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
@@ -545,34 +548,38 @@
                     <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> (train) </span><span class="si">%s</span><span class="s1">: </span><span class="si">%.5f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
             <span class="n">pprint</span><span class="p">()</span>
 
-        <span class="c1"># -- validation step -&gt; (loss_stats: dict, metric_stats: dict)</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-        <span class="n">valid_out</span> <span class="o">=</span> <span class="n">iter_fn</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-            <span class="n">dataloader</span><span class="o">=</span><span class="n">valid_dl</span><span class="p">,</span>
-            <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer_obj</span><span class="p">,</span>
-            <span class="n">loss_fn</span><span class="o">=</span><span class="n">loss_fn</span><span class="p">,</span>
-            <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
-            <span class="n">training</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">valid_dl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># -- validation step -&gt; (loss_stats: dict, metric_stats: dict)</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+            <span class="n">valid_out</span> <span class="o">=</span> <span class="n">iter_fn</span><span class="p">(</span>
+                <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+                <span class="n">dataloader</span><span class="o">=</span><span class="n">valid_dl</span><span class="p">,</span>
+                <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer_obj</span><span class="p">,</span>
+                <span class="n">loss_fn</span><span class="o">=</span><span class="n">loss_fn</span><span class="p">,</span>
+                <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+                <span class="n">training</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="c1"># check returned function values</span>
-        <span class="n">_checkValidReturnedIteration</span><span class="p">(</span><span class="n">valid_out</span><span class="p">,</span> <span class="n">iter_fn</span><span class="p">,</span> <span class="s1">&#39;validation&#39;</span><span class="p">)</span>
+            <span class="c1"># check returned function values</span>
+            <span class="n">_checkValidReturnedIteration</span><span class="p">(</span><span class="n">valid_out</span><span class="p">,</span> <span class="n">iter_fn</span><span class="p">,</span> <span class="s1">&#39;validation&#39;</span><span class="p">)</span>
 
-        <span class="c1"># separate loss/metric information</span>
-        <span class="n">epoch_valid_loss</span><span class="p">,</span> <span class="n">epoch_valid_metrics</span> <span class="o">=</span> <span class="n">valid_out</span>
+            <span class="c1"># separate loss/metric information</span>
+            <span class="n">epoch_valid_loss</span><span class="p">,</span> <span class="n">epoch_valid_metrics</span> <span class="o">=</span> <span class="n">valid_out</span>
 
-        <span class="c1"># save epoch stats</span>
-        <span class="n">valid_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">epoch_valid_loss</span><span class="p">)</span>
-        <span class="n">valid_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">epoch_valid_metrics</span><span class="p">)</span>
+            <span class="c1"># save epoch stats</span>
+            <span class="n">valid_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">epoch_valid_loss</span><span class="p">)</span>
+            <span class="n">valid_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">epoch_valid_metrics</span><span class="p">)</span>
 
-        <span class="c1"># display validation statistics</span>
-        <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">info_dict</span> <span class="ow">in</span> <span class="n">valid_out</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">info_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                    <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> (valid) </span><span class="si">%s</span><span class="s1">: </span><span class="si">%.5f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
-            <span class="n">pprint</span><span class="p">()</span>
+            <span class="c1"># display validation statistics</span>
+            <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">info_dict</span> <span class="ow">in</span> <span class="n">valid_out</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">info_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> (valid) </span><span class="si">%s</span><span class="s1">: </span><span class="si">%.5f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
+                <span class="n">pprint</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">valid_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            <span class="n">valid_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">callbacks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">commands_to_exec</span> <span class="o">=</span> <span class="p">[</span>

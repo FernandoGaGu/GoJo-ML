@@ -94,6 +94,7 @@
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
  | <a href="#Z"><strong>Z</strong></a>
  
 </div>
@@ -182,12 +183,18 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gojo.deepl.html#gojo.deepl.callback.EarlyStopping">EarlyStopping (class in gojo.deepl.callback)</a>
 </li>
-      <li><a href="gojo.deepl.html#gojo.deepl.models.VanillaVAE.encode">encode() (gojo.deepl.models.VanillaVAE method)</a>
+      <li><a href="gojo.deepl.html#gojo.deepl.loss.ELBO">ELBO (class in gojo.deepl.loss)</a>
 </li>
-      <li><a href="gojo.core.html#gojo.core.loops.evalCrossVal">evalCrossVal() (in module gojo.core.loops)</a>
+      <li><a href="gojo.deepl.html#gojo.deepl.models.FusionModel.encode">encode() (gojo.deepl.models.FusionModel method)</a>
+
+      <ul>
+        <li><a href="gojo.deepl.html#gojo.deepl.models.VanillaVAE.encode">(gojo.deepl.models.VanillaVAE method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gojo.core.html#gojo.core.loops.evalCrossVal">evalCrossVal() (in module gojo.core.loops)</a>
+</li>
       <li><a href="gojo.core.html#gojo.core.loops.evalCrossValNestedHPO">evalCrossValNestedHPO() (in module gojo.core.loops)</a>
 </li>
       <li><a href="gojo.deepl.html#gojo.deepl.callback.Callback.evaluate">evaluate() (gojo.deepl.callback.Callback method)</a>
@@ -222,13 +229,17 @@
       </ul></li>
       <li><a href="gojo.core.html#gojo.core.base.TorchSKInterface.fitting_history">fitting_history (gojo.core.base.TorchSKInterface property)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gojo.core.html#gojo.core.evaluation.flatFunctionInput">flatFunctionInput() (in module gojo.core.evaluation)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gojo.deepl.html#gojo.deepl.cnn.ResNetBlock.forward">forward() (gojo.deepl.cnn.ResNetBlock method)</a>
 
       <ul>
+        <li><a href="gojo.deepl.html#gojo.deepl.loss.ELBO.forward">(gojo.deepl.loss.ELBO method)</a>
+</li>
+        <li><a href="gojo.deepl.html#gojo.deepl.loss.WBCELoss.forward">(gojo.deepl.loss.WBCELoss method)</a>
+</li>
         <li><a href="gojo.deepl.html#gojo.deepl.models.FusionModel.forward">(gojo.deepl.models.FusionModel method)</a>
 </li>
         <li><a href="gojo.deepl.html#gojo.deepl.models.GNN.forward">(gojo.deepl.models.GNN method)</a>
@@ -343,8 +354,6 @@
         <li><a href="gojo.core.html#module-gojo.core.transform">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     gojo.deepl
 
@@ -352,6 +361,8 @@
         <li><a href="gojo.deepl.html#module-gojo.deepl">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     gojo.deepl.callback
 
@@ -385,6 +396,13 @@
 
       <ul>
         <li><a href="gojo.deepl.html#module-gojo.deepl.loops">module</a>
+</li>
+      </ul></li>
+      <li>
+    gojo.deepl.loss
+
+      <ul>
+        <li><a href="gojo.deepl.html#module-gojo.deepl.loss">module</a>
 </li>
       </ul></li>
       <li>
@@ -469,8 +487,6 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gojo.core.html#gojo.core.base.Dataset.index_values">index_values (gojo.core.base.Dataset property)</a>
 </li>
-      <li><a href="gojo.deepl.html#gojo.deepl.models.FusionModel.individualForwardAndCat">individualForwardAndCat() (gojo.deepl.models.FusionModel method)</a>
-</li>
       <li><a href="gojo.util.html#gojo.util.tools.InstanceLevelKFoldSplitter">InstanceLevelKFoldSplitter (class in gojo.util.tools)</a>
 </li>
       <li><a href="gojo.core.html#gojo.core.base.Model.is_fitted">is_fitted (gojo.core.base.Model property)</a>
@@ -548,6 +564,8 @@
         <li><a href="gojo.deepl.html#module-gojo.deepl.loading">gojo.deepl.loading</a>
 </li>
         <li><a href="gojo.deepl.html#module-gojo.deepl.loops">gojo.deepl.loops</a>
+</li>
+        <li><a href="gojo.deepl.html#module-gojo.deepl.loss">gojo.deepl.loss</a>
 </li>
         <li><a href="gojo.deepl.html#module-gojo.deepl.models">gojo.deepl.models</a>
 </li>
@@ -753,6 +771,14 @@
       <li><a href="gojo.deepl.html#gojo.deepl.models.VanillaVAE">VanillaVAE (class in gojo.deepl.models)</a>
 </li>
       <li><a href="gojo.core.html#gojo.core.base.Dataset.var_names">var_names (gojo.core.base.Dataset property)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gojo.deepl.html#gojo.deepl.loss.WBCELoss">WBCELoss (class in gojo.deepl.loss)</a>
 </li>
   </ul></td>
 </tr></table>

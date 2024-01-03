@@ -54,6 +54,14 @@ gojo.deepl.models module
    :undoc-members:
    :show-inheritance:
 
+gojo.deepl.loss module
+------------------------
+
+.. automodule:: gojo.deepl.loss
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 
