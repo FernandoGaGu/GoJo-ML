@@ -596,7 +596,7 @@ class FusionModel(torch.nn.Module):
 
     Parameters
     ----------
-    input_models : torch.nn.ModuleList
+    encoders : torch.nn.ModuleList
         Models associated with each of the inputs. The models will be executed in order by receiving as argument the 
         input parameters of the model after eliminating the entries defined in the indexes of parameter `ignore_inputs`. 
 
@@ -614,14 +614,14 @@ class FusionModel(torch.nn.Module):
     """
     def __init__(
             self, 
-            input_models: torch.nn.ModuleList,
+            encoders: torch.nn.ModuleList,
             fusion_model: torch.nn.Module,
             concat_fn: callable = None,
             ignore_inputs: list = None
         ):
         super(FusionModel, self).__init__()
 
-        self.input_models = input_models
+        self.encoders = encoders
         self.fusion_model = fusion_model
         self.concat_fn = concat_fn
         self.ignore_inputs = ignore_inputs if ignore_inputs is not None else []
@@ -632,12 +632,12 @@ class FusionModel(torch.nn.Module):
     def _checkModelParams(self):
         """ Function used to check the input parameters. """
         checkMultiInputTypes(
-            ('input_models', self.input_models, [torch.nn.ModuleList]),
+            ('encoders', self.encoders, [torch.nn.ModuleList]),
             ('fusion_model', self.fusion_model, [torch.nn.Module]),
             ('ignore_inputs', self.ignore_inputs, [list, type(None)]))
 
-    def individualForwardAndCat(self, *inputs) -> torch.Tensor:
-        """ Processes the input elements through the models defined in parameter `input_models` and returns a unified 
+    def encode(self, *inputs) -> torch.Tensor:
+        """ Processes the input elements through the models defined in parameter `encoders` and returns a unified 
         vector as specified by argument `concat_fn`. """
 
         # get the model device 
@@ -652,10 +652,10 @@ class FusionModel(torch.nn.Module):
                             ' models must be in the same device.')
 
         # check input sizes
-        if (len(inputs) - len(self.ignore_inputs)) != len(self.input_models):
+        if (len(inputs) - len(self.ignore_inputs)) != len(self.encoders):
             raise TypeError(
                 'Inconsistent number of inputs (%d) and models (%d) considering that %d entries will be ignored.' % (
-                len(inputs), len(self.input_models), len(self.ignore_inputs)))
+                len(inputs), len(self.encoders), len(self.ignore_inputs)))
 
         # select inputs 
         if len(self.ignore_inputs) > 0:
@@ -664,13 +664,13 @@ class FusionModel(torch.nn.Module):
             inputs = list(inputs)
 
         # check remaining input sizes
-        if len(inputs) != len(self.input_models):
+        if len(inputs) != len(self.encoders):
             raise TypeError(
                 'Missmatch in input size (inputs %d, models %d) after ignoring inputs %r' % (
-                len(inputs), len(self.input_models), self.ignore_inputs))
+                len(inputs), len(self.encoders), self.ignore_inputs))
 
         # perform the forward pass of the input models
-        outputs = [self.input_models[i](inputs[i].to(device=device)) for i in range(len(self.input_models))]
+        outputs = [self.encoders[i](inputs[i].to(device=device)) for i in range(len(self.encoders))]
 
         # apply the concatenation function if provided
         if self.concat_fn is not None:
@@ -685,7 +685,7 @@ class FusionModel(torch.nn.Module):
     def forward(self, *inputs) -> torch.Tensor:
 
         # perform the forward pass of the individual models and concatenate the output
-        out = self.individualForwardAndCat(*inputs)
+        out = self.encode(*inputs)
 
         # fuse the output models information
         out = self.fusion_model(out)

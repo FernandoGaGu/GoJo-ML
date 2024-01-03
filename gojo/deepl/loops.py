@@ -301,11 +301,11 @@ def fitNeuralNetwork(
         iter_fn,
         model: torch.nn.Module,
         train_dl: Iterable,
-        valid_dl: Iterable,
         n_epochs: int,
         loss_fn: callable,
         optimizer_class,
         optimizer_params: dict = None,
+        valid_dl: Iterable = None,
         device: str = None,
         verbose: int = 1,
         metrics: list = None,
@@ -330,10 +330,6 @@ def fitNeuralNetwork(
         Train dataloader (see `torch.utils.data.DataLoader
         class <https://pytorch.org/tutorials/beginner/basics/data_tutorial.html>`_).
 
-    valid_dl : Iterable
-        Validation dataloader (see `torch.utils.data.DataLoader
-        class <https://pytorch.org/tutorials/beginner/basics/data_tutorial.html>`_).
-
     n_epochs : int
         Maximum number of epochs for training a model.
 
@@ -347,6 +343,10 @@ def fitNeuralNetwork(
 
     optimizer_params : dict, default=None
         Parameters used to initialize the optimizer provided using `optimizer_params`.
+
+    valid_dl : Iterable, default=None
+        Validation dataloader (see `torch.utils.data.DataLoader
+        class <https://pytorch.org/tutorials/beginner/basics/data_tutorial.html>`_).
 
     device : str, default=None
         Device used to optimize the input model. Commonly devices are: 'cpu', 'cuda', 'mps'.
@@ -381,7 +381,10 @@ def fitNeuralNetwork(
     _AVAILABLE_DEVICES = ['cuda', 'mps', 'cpu']
     checkCallable('gojo.deepl.loops.fitNeuralNetwork(loss_fn)', loss_fn)
     checkIterable('gojo.deepl.loops.fitNeuralNetwork(train_dl)', train_dl)
-    checkIterable('gojo.deepl.loops.fitNeuralNetwork(valid_dl)', valid_dl)
+
+    if valid_dl is not None:
+        checkIterable('gojo.deepl.loops.fitNeuralNetwork(valid_dl)', valid_dl)
+    
     checkMultiInputTypes(
         ('n_epochs', n_epochs, [int]),
         ('optimizer_params', optimizer_params, [dict, type(None)]),
@@ -460,34 +463,38 @@ def fitNeuralNetwork(
                     pprint('\t (train) %s: %.5f' % (name, val))
             pprint()
 
-        # -- validation step -> (loss_stats: dict, metric_stats: dict)
-        model = model.eval()
-        valid_out = iter_fn(
-            model=model,
-            dataloader=valid_dl,
-            optimizer=optimizer_obj,
-            loss_fn=loss_fn,
-            device=device,
-            training=False,
-            metrics=metrics,
-            **kwargs)
+        if valid_dl is not None:
+            # -- validation step -> (loss_stats: dict, metric_stats: dict)
+            model = model.eval()
+            valid_out = iter_fn(
+                model=model,
+                dataloader=valid_dl,
+                optimizer=optimizer_obj,
+                loss_fn=loss_fn,
+                device=device,
+                training=False,
+                metrics=metrics,
+                **kwargs)
 
-        # check returned function values
-        _checkValidReturnedIteration(valid_out, iter_fn, 'validation')
+            # check returned function values
+            _checkValidReturnedIteration(valid_out, iter_fn, 'validation')
 
-        # separate loss/metric information
-        epoch_valid_loss, epoch_valid_metrics = valid_out
+            # separate loss/metric information
+            epoch_valid_loss, epoch_valid_metrics = valid_out
 
-        # save epoch stats
-        valid_loss.append(epoch_valid_loss)
-        valid_metrics.append(epoch_valid_metrics)
+            # save epoch stats
+            valid_loss.append(epoch_valid_loss)
+            valid_metrics.append(epoch_valid_metrics)
 
-        # display validation statistics
-        if verbose >= 2:
-            for info_dict in valid_out:
-                for name, val in info_dict.items():
-                    pprint('\t (valid) %s: %.5f' % (name, val))
-            pprint()
+            # display validation statistics
+            if verbose >= 2:
+                for info_dict in valid_out:
+                    for name, val in info_dict.items():
+                        pprint('\t (valid) %s: %.5f' % (name, val))
+                pprint()
+        else:
+            valid_loss.append(np.nan)
+            valid_metrics.append(np.nan)
 
         if callbacks is not None:
             commands_to_exec = [
