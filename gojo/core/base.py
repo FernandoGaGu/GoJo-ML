@@ -797,6 +797,9 @@ class TorchSKInterface(Model):
         dataloader_op_args = deepcopy(self.valid_dataloader_kw)
         dataloader_op_args['shuffle'] = False
 
+        # HACK. Avoid removing the last batch
+        dataloader_op_args['drop_last'] = False
+
         if batch_size is None and self.batch_size is None:
             batch_size = X.shape[0]
         else:
