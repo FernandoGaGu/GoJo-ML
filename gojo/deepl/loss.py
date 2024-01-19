@@ -7,9 +7,78 @@
 #
 import torch
 from typing import Tuple
+from copy import deepcopy
 
 
-class WBCELoss(torch.nn.Module):
+def weightedBCEwithNaNs(y_hat: torch.Tensor, y_true: torch.Tensor, weight: float) -> torch.Tensor:
+    """ Similar to :func:`gojo.deepl.loss.weightedBCE` but allowing the incorporation of missing values in `y_true`.
+
+    Parameters
+    ----------
+    y_hat : torch.Tensor
+        Model predictions.
+
+    y_true : torch.Tensor
+        Ground true values.
+
+    weight : float
+        Weight applied to the positive class.
+    """
+    na_mask = torch.isnan(y_true)  # create the nan mask
+    y_true_ = deepcopy(y_true)  # avoid inplace modifications of the input values
+    y_true_[na_mask] = 0.0  # fill missing values
+    y_true_bin_mask = (1 - na_mask.int())  # create a binary mask for masking the unreduced loss (NaNs represented as 0)
+
+    # calculate the unreduced loss
+    unreduced_loss = torch.nn.functional.binary_cross_entropy(
+        input=y_hat,
+        target=y_true_,
+        reduction='none'
+    )
+
+    # ignore entries with missing values
+    unreduced_loss_masked = unreduced_loss * y_true_bin_mask
+
+    # apply weights to the positive class
+    w_unreduced_loss_masked = unreduced_loss_masked * (y_true_ * weight + (1 - y_true_))
+
+    # reduce the weighted loss
+    w_loss_masked = (w_unreduced_loss_masked.sum(dim=0) / (
+                y_true_bin_mask.sum(dim=0) + 1e-06)).mean()  # add constant to avoid zero division
+
+    return w_loss_masked
+
+
+def weightedBCE(y_hat: torch.Tensor, y_true: torch.Tensor, weight: float) -> torch.Tensor:
+    """ Calculate the binary cross-entropy by weighting the positive class.
+
+    Parameters
+    ----------
+    y_hat : torch.Tensor
+        Model predictions.
+
+    y_true : torch.Tensor
+        Ground true values.
+
+    weight : float
+        Weight applied to the positive class.
+
+    """
+
+    # calculate the unreduced loss
+    unreduced_loss = torch.nn.functional.binary_cross_entropy(
+        input=y_hat, target=y_true, reduction='none')
+
+    # apply weights to the positive class
+    w_unreduced_loss = unreduced_loss * (y_true * weight + (1 - y_true))
+
+    # reduce the weighted loss
+    w_loss = torch.mean(w_unreduced_loss)
+
+    return w_loss
+
+
+class BCELoss(torch.nn.Module):
     """ Weighted binary cross-entropy.
 
     Parameters
@@ -17,19 +86,25 @@ class WBCELoss(torch.nn.Module):
     weight : float, default = 1.0
         Weight applied to the positive class.
 
+    allow_nans : bool, default = False
+        Boolean parameter indicating whether the true values contain missing values. If the value is indicated as
+        `False` this class will use :func:`gojo.deepl.loss.weightedBCE` as internal function, if the value is indicated
+        as `True`, the class will use :func:`gojo.deepl.loss.weightedBCEwithNaNs` as internal function.
     """
-    def __init__(self, weight: float or int = 1.0):
-        super(WBCELoss, self).__init__()
+    def __init__(self, weight: float or int = 1.0, allow_nans: bool = False):
+        super(BCELoss, self).__init__()
 
         self.weight = weight
+        self.allow_nans = allow_nans
 
-    def forward(self, y_hat: torch.Tensor, y_true: torch.Tensor):
-        clf_loss = torch.nn.functional.binary_cross_entropy(
-            input=y_hat, target=y_true, reduction='none')
+    def forward(self, y_hat: torch.Tensor, y_true: torch.Tensor) -> torch.Tensor:
 
-        clf_loss = clf_loss + clf_loss * y_true * self.weight
+        if self.allow_nans:
+            w_loss = weightedBCEwithNaNs(y_hat=y_hat, y_true=y_true, weight=self.weight)
+        else:
+            w_loss = weightedBCE(y_hat=y_hat, y_true=y_true, weight=self.weight)
 
-        return torch.mean(clf_loss)
+        return w_loss
 
 
 class ELBO(torch.nn.Module):
