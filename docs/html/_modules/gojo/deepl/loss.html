@@ -84,11 +84,86 @@
 <span class="c1">#</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 
 
-<div class="viewcode-block" id="WBCELoss">
-<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.loss.WBCELoss">[docs]</a>
-<span class="k">class</span> <span class="nc">WBCELoss</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="weightedBCEwithNaNs">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.loss.weightedBCEwithNaNs">[docs]</a>
+<span class="k">def</span> <span class="nf">weightedBCEwithNaNs</span><span class="p">(</span><span class="n">y_hat</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Similar to :func:`gojo.deepl.loss.weightedBCE` but allowing the incorporation of missing values in `y_true`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y_hat : torch.Tensor</span>
+<span class="sd">        Model predictions.</span>
+
+<span class="sd">    y_true : torch.Tensor</span>
+<span class="sd">        Ground true values.</span>
+
+<span class="sd">    weight : float</span>
+<span class="sd">        Weight applied to the positive class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">na_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>  <span class="c1"># create the nan mask</span>
+    <span class="n">y_true_</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>  <span class="c1"># avoid inplace modifications of the input values</span>
+    <span class="n">y_true_</span><span class="p">[</span><span class="n">na_mask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># fill missing values</span>
+    <span class="n">y_true_bin_mask</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">na_mask</span><span class="o">.</span><span class="n">int</span><span class="p">())</span>  <span class="c1"># create a binary mask for masking the unreduced loss (NaNs represented as 0)</span>
+
+    <span class="c1"># calculate the unreduced loss</span>
+    <span class="n">unreduced_loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">binary_cross_entropy</span><span class="p">(</span>
+        <span class="nb">input</span><span class="o">=</span><span class="n">y_hat</span><span class="p">,</span>
+        <span class="n">target</span><span class="o">=</span><span class="n">y_true_</span><span class="p">,</span>
+        <span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;none&#39;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># ignore entries with missing values</span>
+    <span class="n">unreduced_loss_masked</span> <span class="o">=</span> <span class="n">unreduced_loss</span> <span class="o">*</span> <span class="n">y_true_bin_mask</span>
+
+    <span class="c1"># apply weights to the positive class</span>
+    <span class="n">w_unreduced_loss_masked</span> <span class="o">=</span> <span class="n">unreduced_loss_masked</span> <span class="o">*</span> <span class="p">(</span><span class="n">y_true_</span> <span class="o">*</span> <span class="n">weight</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y_true_</span><span class="p">))</span>
+
+    <span class="c1"># reduce the weighted loss</span>
+    <span class="n">w_loss_masked</span> <span class="o">=</span> <span class="p">(</span><span class="n">w_unreduced_loss_masked</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+                <span class="n">y_true_bin_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-06</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>  <span class="c1"># add constant to avoid zero division</span>
+
+    <span class="k">return</span> <span class="n">w_loss_masked</span></div>
+
+
+
+<div class="viewcode-block" id="weightedBCE">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.loss.weightedBCE">[docs]</a>
+<span class="k">def</span> <span class="nf">weightedBCE</span><span class="p">(</span><span class="n">y_hat</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Calculate the binary cross-entropy by weighting the positive class.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y_hat : torch.Tensor</span>
+<span class="sd">        Model predictions.</span>
+
+<span class="sd">    y_true : torch.Tensor</span>
+<span class="sd">        Ground true values.</span>
+
+<span class="sd">    weight : float</span>
+<span class="sd">        Weight applied to the positive class.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># calculate the unreduced loss</span>
+    <span class="n">unreduced_loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">binary_cross_entropy</span><span class="p">(</span>
+        <span class="nb">input</span><span class="o">=</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y_true</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+
+    <span class="c1"># apply weights to the positive class</span>
+    <span class="n">w_unreduced_loss</span> <span class="o">=</span> <span class="n">unreduced_loss</span> <span class="o">*</span> <span class="p">(</span><span class="n">y_true</span> <span class="o">*</span> <span class="n">weight</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y_true</span><span class="p">))</span>
+
+    <span class="c1"># reduce the weighted loss</span>
+    <span class="n">w_loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">w_unreduced_loss</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">w_loss</span></div>
+
+
+
+<div class="viewcode-block" id="BCELoss">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.loss.BCELoss">[docs]</a>
+<span class="k">class</span> <span class="nc">BCELoss</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Weighted binary cross-entropy.</span>
 
 <span class="sd">    Parameters</span>
@@ -96,21 +171,27 @@
 <span class="sd">    weight : float, default = 1.0</span>
 <span class="sd">        Weight applied to the positive class.</span>
 
+<span class="sd">    allow_nans : bool, default = False</span>
+<span class="sd">        Boolean parameter indicating whether the true values contain missing values. If the value is indicated as</span>
+<span class="sd">        `False` this class will use :func:`gojo.deepl.loss.weightedBCE` as internal function, if the value is indicated</span>
+<span class="sd">        as `True`, the class will use :func:`gojo.deepl.loss.weightedBCEwithNaNs` as internal function.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">int</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">WBCELoss</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">int</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">allow_nans</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BCELoss</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allow_nans</span> <span class="o">=</span> <span class="n">allow_nans</span>
 
-<div class="viewcode-block" id="WBCELoss.forward">
-<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.loss.WBCELoss.forward">[docs]</a>
-    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
-        <span class="n">clf_loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">binary_cross_entropy</span><span class="p">(</span>
-            <span class="nb">input</span><span class="o">=</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y_true</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="BCELoss.forward">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.loss.BCELoss.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 
-        <span class="n">clf_loss</span> <span class="o">=</span> <span class="n">clf_loss</span> <span class="o">+</span> <span class="n">clf_loss</span> <span class="o">*</span> <span class="n">y_true</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_nans</span><span class="p">:</span>
+            <span class="n">w_loss</span> <span class="o">=</span> <span class="n">weightedBCEwithNaNs</span><span class="p">(</span><span class="n">y_hat</span><span class="o">=</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">y_true</span><span class="o">=</span><span class="n">y_true</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">w_loss</span> <span class="o">=</span> <span class="n">weightedBCE</span><span class="p">(</span><span class="n">y_hat</span><span class="o">=</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">y_true</span><span class="o">=</span><span class="n">y_true</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">clf_loss</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">w_loss</span></div>
 </div>
 
 
