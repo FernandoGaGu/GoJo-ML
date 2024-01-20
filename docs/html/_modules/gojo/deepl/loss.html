@@ -87,6 +87,35 @@
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 
 
+<span class="k">def</span> <span class="nf">_createNaNMask</span><span class="p">(</span><span class="n">vals</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">fill_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Function used to fill missing values in the input tensor and create a NaN binary mask. &quot;&quot;&quot;</span>
+    <span class="n">na_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span>     <span class="c1"># create the nan mask</span>
+    <span class="n">vals_</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span>          <span class="c1"># avoid inplace modifications of the input values</span>
+    <span class="n">vals_</span><span class="p">[</span><span class="n">na_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">fill_value</span>     <span class="c1"># fill missing values</span>
+    <span class="n">bin_mask</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">na_mask</span><span class="o">.</span><span class="n">int</span><span class="p">())</span>  <span class="c1"># create a binary mask for masking the unreduced loss (NaNs represented as 0)</span>
+
+    <span class="k">return</span> <span class="n">vals_</span><span class="p">,</span> <span class="n">bin_mask</span>
+
+
+<span class="k">def</span> <span class="nf">_regressionLossWithNaNs</span><span class="p">(</span><span class="n">y_hat</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">loss_fn</span><span class="p">:</span> <span class="nb">callable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; General function for computing regression `loss_fn` allowing for missing values. The loss argument is expected</span>
+<span class="sd">    to belong to `torch.functional` module. &quot;&quot;&quot;</span>
+    <span class="n">y_true_</span><span class="p">,</span> <span class="n">y_true_bin_mask</span> <span class="o">=</span> <span class="n">_createNaNMask</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
+
+    <span class="c1"># calculate the unreduced loss</span>
+    <span class="n">unreduced_loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span>
+        <span class="nb">input</span><span class="o">=</span><span class="n">y_hat</span><span class="p">,</span>
+        <span class="n">target</span><span class="o">=</span><span class="n">y_true</span><span class="p">,</span>
+        <span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># reduce the regression loss ignoring missing values</span>
+    <span class="n">loss_masked</span> <span class="o">=</span> <span class="p">(</span><span class="n">unreduced_loss</span> <span class="o">*</span> <span class="n">y_true_bin_mask</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">loss_masked</span> <span class="o">=</span> <span class="p">(</span><span class="n">loss_masked</span> <span class="o">/</span> <span class="p">(</span><span class="n">y_true_bin_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-06</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>  <span class="c1"># add constant to avoid zero division</span>
+
+    <span class="k">return</span> <span class="n">loss_masked</span>
+
+
 <div class="viewcode-block" id="weightedBCEwithNaNs">
 <a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.loss.weightedBCEwithNaNs">[docs]</a>
 <span class="k">def</span> <span class="nf">weightedBCEwithNaNs</span><span class="p">(</span><span class="n">y_hat</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
@@ -102,18 +131,20 @@
 
 <span class="sd">    weight : float</span>
 <span class="sd">        Weight applied to the positive class.</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    --------</span>
+<span class="sd">    loss : torch.Tensor</span>
+<span class="sd">        Averaged loss value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">na_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>  <span class="c1"># create the nan mask</span>
-    <span class="n">y_true_</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>  <span class="c1"># avoid inplace modifications of the input values</span>
-    <span class="n">y_true_</span><span class="p">[</span><span class="n">na_mask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># fill missing values</span>
-    <span class="n">y_true_bin_mask</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">na_mask</span><span class="o">.</span><span class="n">int</span><span class="p">())</span>  <span class="c1"># create a binary mask for masking the unreduced loss (NaNs represented as 0)</span>
+    <span class="n">y_true_</span><span class="p">,</span> <span class="n">y_true_bin_mask</span> <span class="o">=</span> <span class="n">_createNaNMask</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
 
     <span class="c1"># calculate the unreduced loss</span>
     <span class="n">unreduced_loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">binary_cross_entropy</span><span class="p">(</span>
         <span class="nb">input</span><span class="o">=</span><span class="n">y_hat</span><span class="p">,</span>
         <span class="n">target</span><span class="o">=</span><span class="n">y_true_</span><span class="p">,</span>
-        <span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;none&#39;</span>
-    <span class="p">)</span>
+        <span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
 
     <span class="c1"># ignore entries with missing values</span>
     <span class="n">unreduced_loss_masked</span> <span class="o">=</span> <span class="n">unreduced_loss</span> <span class="o">*</span> <span class="n">y_true_bin_mask</span>
@@ -145,6 +176,10 @@
 <span class="sd">    weight : float</span>
 <span class="sd">        Weight applied to the positive class.</span>
 
+<span class="sd">    Returns</span>
+<span class="sd">    --------</span>
+<span class="sd">    loss : torch.Tensor</span>
+<span class="sd">        Averaged loss value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># calculate the unreduced loss</span>
@@ -158,6 +193,53 @@
     <span class="n">w_loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">w_unreduced_loss</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">w_loss</span></div>
+
+
+
+<div class="viewcode-block" id="huberLossWithNaNs">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.loss.huberLossWithNaNs">[docs]</a>
+<span class="k">def</span> <span class="nf">huberLossWithNaNs</span><span class="p">(</span><span class="n">y_hat</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Calculate the Huber loss allowing for missing values in the `y_true` argument.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y_hat : torch.Tensor</span>
+<span class="sd">        Model predictions.</span>
+
+<span class="sd">    y_true : torch.Tensor</span>
+<span class="sd">        Ground true values.</span>
+
+<span class="sd">    delta : float</span>
+<span class="sd">        Specifies the threshold at which to change between delta-scaled L1 and L2 loss. The value must be positive.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    --------</span>
+<span class="sd">    loss : torch.Tensor</span>
+<span class="sd">        Averaged loss value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_regressionLossWithNaNs</span><span class="p">(</span><span class="n">y_hat</span><span class="o">=</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">y_true</span><span class="o">=</span><span class="n">y_true</span><span class="p">,</span> <span class="n">loss_fn</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">huber_loss</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="n">delta</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="mseLossWithNaNs">
+<a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.loss.mseLossWithNaNs">[docs]</a>
+<span class="k">def</span> <span class="nf">mseLossWithNaNs</span><span class="p">(</span><span class="n">y_hat</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Calculate the mean squared loss error (MSE) allowing for missing values in the `y_true` argument.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y_hat : torch.Tensor</span>
+<span class="sd">        Model predictions.</span>
+
+<span class="sd">    y_true : torch.Tensor</span>
+<span class="sd">        Ground true values.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    --------</span>
+<span class="sd">    loss : torch.Tensor</span>
+<span class="sd">        Averaged loss value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_regressionLossWithNaNs</span><span class="p">(</span><span class="n">y_hat</span><span class="o">=</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">y_true</span><span class="o">=</span><span class="n">y_true</span><span class="p">,</span> <span class="n">loss_fn</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">)</span></div>
 
 
 

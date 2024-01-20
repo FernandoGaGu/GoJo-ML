@@ -590,7 +590,6 @@ class VanillaVAE(torch.nn.Module):
         return samples
 
 
-
 class FusionModel(torch.nn.Module):
     """ Model designed to allow the merging of information from several models that receive different input values.
 

@@ -9,7 +9,6 @@ import torch
 
 from ..util.validation import (
     checkMultiInputTypes,
-    checkInputType,
     checkCallable
 )
 

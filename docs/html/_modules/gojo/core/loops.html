@@ -116,7 +116,7 @@
     <span class="n">checkInputType</span><span class="p">,</span>
     <span class="n">checkCallable</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">..util.tools</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">..util.splitter</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">SimpleSplitter</span><span class="p">,</span>
     <span class="n">InstanceLevelKFoldSplitter</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..exception</span> <span class="kn">import</span> <span class="p">(</span>
@@ -504,7 +504,7 @@
 <span class="sd">    &gt;&gt;&gt; cv_report = core.evalCrossVal(</span>
 <span class="sd">    &gt;&gt;&gt;     X=X, y=y,</span>
 <span class="sd">    &gt;&gt;&gt;     model=model,</span>
-<span class="sd">    &gt;&gt;&gt;     cv=gojo.util.getCrossValObj(cv=5, repeats=1, stratified=True, loocv=False, random_state=1997),</span>
+<span class="sd">    &gt;&gt;&gt;     cv=gojo.util.splitter.getCrossValObj(cv=5, repeats=1, stratified=True, loocv=False, random_state=1997),</span>
 <span class="sd">    &gt;&gt;&gt;     transforms=transforms,</span>
 <span class="sd">    &gt;&gt;&gt;     verbose=True,</span>
 <span class="sd">    &gt;&gt;&gt;     save_train_preds=True,</span>
@@ -806,8 +806,8 @@
 <span class="sd">    &gt;&gt;&gt;     y=y,</span>
 <span class="sd">    &gt;&gt;&gt;     model=model,</span>
 <span class="sd">    &gt;&gt;&gt;     search_space=search_space,</span>
-<span class="sd">    &gt;&gt;&gt;     outer_cv=gojo.util.getCrossValObj(cv=5, repeats=1, stratified=True, loocv=False, random_state=1997),</span>
-<span class="sd">    &gt;&gt;&gt;     inner_cv=gojo.util.getCrossValObj(cv=5, repeats=1, stratified=True, loocv=False, random_state=1997),</span>
+<span class="sd">    &gt;&gt;&gt;     outer_cv=gojo.util.splitter.getCrossValObj(cv=5, repeats=1, stratified=True, loocv=False, random_state=1997),</span>
+<span class="sd">    &gt;&gt;&gt;     inner_cv=gojo.util.splitter.getCrossValObj(cv=5, repeats=1, stratified=True, loocv=False, random_state=1997),</span>
 <span class="sd">    &gt;&gt;&gt;     hpo_sampler=optuna.samplers.TPESampler(n_startup_trials=40),</span>
 <span class="sd">    &gt;&gt;&gt;     hpo_n_trials=80,</span>
 <span class="sd">    &gt;&gt;&gt;     minimization=False,</span>

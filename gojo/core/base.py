@@ -26,8 +26,10 @@ from ..util.io import (
 )
 from ..util.tools import (
     _none2dict,
-    _splitOpArgsDicts,
     getNumModelParams
+)
+from ..util.splitter import (
+    _splitOpArgsDicts
 )
 from ..exception import (
     UnfittedEstimator,
@@ -1554,6 +1556,9 @@ class GNNTorchSKInterface(TorchSKInterface):
         dataloader_op_args = deepcopy(self.valid_dataloader_kw)
         dataloader_op_args['shuffle'] = False
 
+        # HACK. Avoid removing the last batch
+        dataloader_op_args['drop_last'] = False
+
         if batch_size is None and self.batch_size is None:
             batch_size = X.shape[0]
         else:
@@ -1586,10 +1591,10 @@ class GNNTorchSKInterface(TorchSKInterface):
                         ' to the model as optional arguments.')
 
                 if isinstance(dlargs, (tuple, list)):
-                    X = dlargs[0].to(device=self.device)
+                    X_batch = dlargs[0].to(device=self.device)
                     var_args = dlargs[1:]
                 else:
-                    X = dlargs.to(device=self.device)
+                    X_batch = dlargs.to(device=self.device)
                     var_args = []
 
                 # make model predictions

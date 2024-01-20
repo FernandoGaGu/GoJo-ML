@@ -10,6 +10,35 @@ from typing import Tuple
 from copy import deepcopy
 
 
+def _createNaNMask(vals: torch.Tensor, fill_value: float = 0.0) -> Tuple[torch.Tensor, torch.Tensor]:
+    """ Function used to fill missing values in the input tensor and create a NaN binary mask. """
+    na_mask = torch.isnan(vals)     # create the nan mask
+    vals_ = deepcopy(vals)          # avoid inplace modifications of the input values
+    vals_[na_mask] = fill_value     # fill missing values
+    bin_mask = (1 - na_mask.int())  # create a binary mask for masking the unreduced loss (NaNs represented as 0)
+
+    return vals_, bin_mask
+
+
+def _regressionLossWithNaNs(y_hat: torch.Tensor, y_true: torch.Tensor, loss_fn: callable, **kwargs) -> torch.Tensor:
+    """ General function for computing regression `loss_fn` allowing for missing values. The loss argument is expected
+    to belong to `torch.functional` module. """
+    y_true_, y_true_bin_mask = _createNaNMask(y_true)
+
+    # calculate the unreduced loss
+    unreduced_loss = loss_fn(
+        input=y_hat,
+        target=y_true,
+        reduction='none',
+        **kwargs)
+
+    # reduce the regression loss ignoring missing values
+    loss_masked = (unreduced_loss * y_true_bin_mask).sum(dim=0)
+    loss_masked = (loss_masked / (y_true_bin_mask.sum(dim=0) + 1e-06)).mean()  # add constant to avoid zero division
+
+    return loss_masked
+
+
 def weightedBCEwithNaNs(y_hat: torch.Tensor, y_true: torch.Tensor, weight: float) -> torch.Tensor:
     """ Similar to :func:`gojo.deepl.loss.weightedBCE` but allowing the incorporation of missing values in `y_true`.
 
@@ -23,18 +52,20 @@ def weightedBCEwithNaNs(y_hat: torch.Tensor, y_true: torch.Tensor, weight: float
 
     weight : float
         Weight applied to the positive class.
+
+
+    Returns
+    --------
+    loss : torch.Tensor
+        Averaged loss value.
     """
-    na_mask = torch.isnan(y_true)  # create the nan mask
-    y_true_ = deepcopy(y_true)  # avoid inplace modifications of the input values
-    y_true_[na_mask] = 0.0  # fill missing values
-    y_true_bin_mask = (1 - na_mask.int())  # create a binary mask for masking the unreduced loss (NaNs represented as 0)
+    y_true_, y_true_bin_mask = _createNaNMask(y_true)
 
     # calculate the unreduced loss
     unreduced_loss = torch.nn.functional.binary_cross_entropy(
         input=y_hat,
         target=y_true_,
-        reduction='none'
-    )
+        reduction='none')
 
     # ignore entries with missing values
     unreduced_loss_masked = unreduced_loss * y_true_bin_mask
@@ -63,6 +94,10 @@ def weightedBCE(y_hat: torch.Tensor, y_true: torch.Tensor, weight: float) -> tor
     weight : float
         Weight applied to the positive class.
 
+    Returns
+    --------
+    loss : torch.Tensor
+        Averaged loss value.
     """
 
     # calculate the unreduced loss
@@ -76,6 +111,47 @@ def weightedBCE(y_hat: torch.Tensor, y_true: torch.Tensor, weight: float) -> tor
     w_loss = torch.mean(w_unreduced_loss)
 
     return w_loss
+
+
+def huberLossWithNaNs(y_hat: torch.Tensor, y_true: torch.Tensor, delta: float) -> torch.Tensor:
+    """ Calculate the Huber loss allowing for missing values in the `y_true` argument.
+
+    Parameters
+    ----------
+    y_hat : torch.Tensor
+        Model predictions.
+
+    y_true : torch.Tensor
+        Ground true values.
+
+    delta : float
+        Specifies the threshold at which to change between delta-scaled L1 and L2 loss. The value must be positive.
+
+    Returns
+    --------
+    loss : torch.Tensor
+        Averaged loss value.
+    """
+    return _regressionLossWithNaNs(y_hat=y_hat, y_true=y_true, loss_fn=torch.nn.functional.huber_loss, delta=delta)
+
+
+def mseLossWithNaNs(y_hat: torch.Tensor, y_true: torch.Tensor) -> torch.Tensor:
+    """ Calculate the mean squared loss error (MSE) allowing for missing values in the `y_true` argument.
+
+    Parameters
+    ----------
+    y_hat : torch.Tensor
+        Model predictions.
+
+    y_true : torch.Tensor
+        Ground true values.
+
+    Returns
+    --------
+    loss : torch.Tensor
+        Averaged loss value.
+    """
+    return _regressionLossWithNaNs(y_hat=y_hat, y_true=y_true, loss_fn=torch.nn.functional.mse_loss)
 
 
 class BCELoss(torch.nn.Module):

@@ -39,7 +39,7 @@ from ..util.validation import (
     checkInputType,
     checkCallable,
 )
-from ..util.tools import (
+from ..util.splitter import (
     SimpleSplitter,
     InstanceLevelKFoldSplitter)
 from ..exception import (
@@ -425,7 +425,7 @@ def evalCrossVal(
     >>> cv_report = core.evalCrossVal(
     >>>     X=X, y=y,
     >>>     model=model,
-    >>>     cv=gojo.util.getCrossValObj(cv=5, repeats=1, stratified=True, loocv=False, random_state=1997),
+    >>>     cv=gojo.util.splitter.getCrossValObj(cv=5, repeats=1, stratified=True, loocv=False, random_state=1997),
     >>>     transforms=transforms,
     >>>     verbose=True,
     >>>     save_train_preds=True,
@@ -724,8 +724,8 @@ def evalCrossValNestedHPO(
     >>>     y=y,
     >>>     model=model,
     >>>     search_space=search_space,
-    >>>     outer_cv=gojo.util.getCrossValObj(cv=5, repeats=1, stratified=True, loocv=False, random_state=1997),
-    >>>     inner_cv=gojo.util.getCrossValObj(cv=5, repeats=1, stratified=True, loocv=False, random_state=1997),
+    >>>     outer_cv=gojo.util.splitter.getCrossValObj(cv=5, repeats=1, stratified=True, loocv=False, random_state=1997),
+    >>>     inner_cv=gojo.util.splitter.getCrossValObj(cv=5, repeats=1, stratified=True, loocv=False, random_state=1997),
     >>>     hpo_sampler=optuna.samplers.TPESampler(n_startup_trials=40),
     >>>     hpo_n_trials=80,
     >>>     minimization=False,

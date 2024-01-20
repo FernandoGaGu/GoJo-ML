@@ -10,7 +10,6 @@ import warnings
 import sklearn.metrics as sk_metrics
 from copy import deepcopy
 from scipy.stats import spearmanr
-
 from ..util.validation import (
     checkMultiInputTypes,
     checkInputType,
