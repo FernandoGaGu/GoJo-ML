@@ -28,7 +28,7 @@ def _regressionLossWithNaNs(y_hat: torch.Tensor, y_true: torch.Tensor, loss_fn: 
     # calculate the unreduced loss
     unreduced_loss = loss_fn(
         input=y_hat,
-        target=y_true,
+        target=y_true_,
         reduction='none',
         **kwargs)
 
