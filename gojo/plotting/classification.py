@@ -25,7 +25,7 @@ def confusionMatrix(
         y_pred: str,
         y_true: str,
         average: str = None,
-        y_pred_threshold: float or None = 0.5,
+        y_pred_threshold: float or None = None,
         normalize: bool = True,
         labels: list = None,
         ax: mpl.axes.Axes = None,
@@ -82,7 +82,7 @@ def confusionMatrix(
         Variable that stratifies the predictions (e.g.n at the folds level) to represent the mean and standard deviation
         values of the confusion matrix.
 
-    y_pred_threshold : float or None, default=0.5
+    y_pred_threshold : float or None, default=None
         Threshold to be used to binarize model predictions.
 
     normalize : bool, default=True
@@ -730,8 +730,6 @@ def roc(
 
         # figure layout
         ax.set(xlim=[-0.05, 1.05], ylim=[-0.05, 1.05])
-        ax.spines['top'].set_visible(False)
-        ax.spines['right'].set_visible(False)
         ax.grid(alpha=grid_alpha)
         ax.set_xlabel(xaxis_label, size=xlabel_size)
         ax.set_ylabel(yaxis_label, size=ylabel_size)
