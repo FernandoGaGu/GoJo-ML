@@ -38,7 +38,7 @@ def _processInputParams(model: torch.nn.Module, device: str, metrics: list = Non
         ('metrics', metrics, [list, type(None)]))
 
     # convert model to the input device
-    model = model.to(device=device)
+    model = model.to(device=torch.device(device))
 
     # check provided metrics for 'loss' or 'loss_std' functions
     if metrics is None:  # if not metrics were provided create the default metric (avg/std loss function)
@@ -112,8 +112,8 @@ def iterSupervisedEpoch(
                 'correspond to the input data (the Xs) and the second to the target to be approximated (the Ys). '
                 'The rest of the returned arguments will be passed in the order returned to the model.')
 
-        X = dlargs[0].to(device=device)
-        y = dlargs[1].to(device=device)
+        X = dlargs[0].to(device=torch.device(device))
+        y = dlargs[1].to(device=torch.device(device))
         var_args = dlargs[2:]
 
         # TODO. Loss function calculation can be generalized through a Loss interface.
@@ -216,10 +216,10 @@ def iterUnsupervisedEpoch(
                 'der returned to the model.')
 
         if isinstance(dlargs, (tuple, list)):
-            X = dlargs[0].to(device=device)
+            X = dlargs[0].to(device=torch.device(device))
             var_args = dlargs[1:]
         else:
-            X = dlargs.to(device=device)
+            X = dlargs.to(device=torch.device(device))
             var_args = []
 
         # perform model inference (training/testing)

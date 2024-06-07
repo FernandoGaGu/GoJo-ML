@@ -359,14 +359,14 @@ def _splitOpArgsDicts(op_args: dict, indices: list) -> Tuple[dict] or dict:
 
     # select the indices
     split_info = []
-    for indice_vals in indices:
-        indice_level_dict = {}    # stores all the values associated with the current split
+    for index_vals in indices:
+        index_level_dict = {}    # stores all the values associated with the current split
         for var_name, var_values in op_args.items():
             checkInputType('op_args["%s"]' % var_name, var_values, [list, np.ndarray])
 
-            indice_level_dict[var_name] = [var_values[idx] for idx in indice_vals]
+            index_level_dict[var_name] = [var_values[idx] for idx in index_vals]
 
-        split_info.append(indice_level_dict)
+        split_info.append(index_level_dict)
 
     if len(split_info) == 1:
         return split_info

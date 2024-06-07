@@ -21,18 +21,16 @@ from sklearn.model_selection import (
     RepeatedStratifiedKFold,
     LeaveOneOut)
 
-from .base import (
+from ..interfaces import (
     Model,
     Dataset,
+    Transform
 )
 from .evaluation import (
     Metric
 )
 from .report import (
     CVReport
-)
-from .transform import (
-    Transform
 )
 from ..util.validation import (
     checkMultiInputTypes,
@@ -181,7 +179,7 @@ def _evalCrossValFold(
 
     Parameters
     ----------
-    _model : gojo.core.base.Model
+    _model : gojo.interfaces.Model
         Model to be trained and used to make the predictions on '_X_test'.
 
     _X_train : np.ndarray
@@ -342,7 +340,7 @@ def evalCrossVal(
     y : np.ndarray or pd.DataFrame or pd.Series
         Target prediction variable.
 
-    model : :class:`gojo.core.base.Model`
+    model : :class:`gojo.interfaces.Model`
         Model to be trained. The input model must follow the :class:`gojo.base.Model` interfaz.
 
     cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.SimpleSplitter` or
@@ -387,7 +385,6 @@ def evalCrossVal(
 
     Examples
     --------
-    >>> import optuna
     >>> import pandas as pd
     >>> from sklearn import datasets
     >>> from sklearn.svm import SVC
@@ -395,8 +392,8 @@ def evalCrossVal(
     >>> from sklearn.decomposition import PCA
     >>>
     >>> # GOJO libraries
-    >>> import gojo
     >>> from gojo import core
+    >>> from gojo import interfaces
     >>>
     >>> N_JOBS = 8
     >>>
@@ -410,12 +407,12 @@ def evalCrossVal(
     >>>
     >>> # previous model transforms
     >>> transforms = [
-    >>>     core.SKLearnTransformWrapper(StandardScaler),
-    >>>     core.SKLearnTransformWrapper(PCA, n_components=5)
+    >>>     interfaces.SKLearnTransformWrapper(StandardScaler),
+    >>>     interfaces.SKLearnTransformWrapper(PCA, n_components=5)
     >>> ]
     >>>
     >>> # default model
-    >>> model = core.SklearnModelWrapper(
+    >>> model = interfaces.SklearnModelWrapper(
     >>>     SVC, kernel='poly', degree=1, coef0=0.0,
     >>>     cache_size=1000, class_weight=None
     >>> )
@@ -590,7 +587,7 @@ def evalCrossValNestedHPO(
     y : np.ndarray or pd.DataFrame or pd.Series
         Target prediction variable.
 
-    model : :class:`gojo.core.base.Model`
+    model : :class:`gojo.interfaces.Model`
         Model to be trained. The input model must follow the :class:`gojo.base.Model` interfaz.
 
     search_space : dict

@@ -1,0 +1,6 @@
+Cosas pendientes:
+
+
+- Refactor the rest of the core.base models and replace all the code that uses these models
+- Refactoring transform wrappers
+- Refactor Dataset

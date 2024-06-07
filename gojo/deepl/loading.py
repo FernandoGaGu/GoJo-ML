@@ -15,7 +15,7 @@ from copy import deepcopy
 from typing import List
 from torch.utils.data import Dataset
 
-from ..core import base as core_base
+from ..interfaces import data as data_interface
 from ..util.validation import (
     checkInputType,
     checkMultiInputTypes,
@@ -91,7 +91,7 @@ class TorchDataset(Dataset):
                 op_instance_args[var_name] = torch.from_numpy(np.array(var_values).astype(np.float32))
 
         # process X-related parameters
-        X_dt = core_base.Dataset(X)
+        X_dt = data_interface.Dataset(X)
         np_X = X_dt.array_data
         self.X = torch.from_numpy(np_X.astype(np.float32))
         self.X_dataset = X_dt
@@ -106,7 +106,7 @@ class TorchDataset(Dataset):
 
         # y parameter is optional
         if y is not None:
-            y_dt = core_base.Dataset(y)
+            y_dt = data_interface.Dataset(y)
             np_y = y_dt.array_data
 
             # add extra dimension to y
@@ -233,7 +233,7 @@ class StreamTorchDataset(Dataset):
 
         # set the y information
         if y is not None:
-            y_dt = core_base.Dataset(y)
+            y_dt = data_interface.Dataset(y)
             np_y = y_dt.array_data
 
             # add extra dimension to y
@@ -376,7 +376,7 @@ class GraphDataset(Dataset):
         y_tensor = torch.from_numpy(np.array([np.nan] * len(X)).astype(np.float32))
         if y is not None:
             # get the y data as a numpy array
-            np_y = core_base.Dataset(y).array_data
+            np_y = data_interface.Dataset(y).array_data
 
             # add extra dimension to y (n_samples, n_targets)
             if len(np_y.shape) == 1:
@@ -403,7 +403,7 @@ class GraphDataset(Dataset):
                     x_list_tensor[i] = x_list_tensor[i].unsqueeze(-1)
         else:
             # get the X data as a numpy array
-            np_X = core_base.Dataset(X).array_data.astype(np.float32)
+            np_X = data_interface.Dataset(X).array_data.astype(np.float32)
 
             # add extra dimension to X (n_samples, n_nodes, n_node_features)
             if len(np_X.shape) == 2:
@@ -434,7 +434,7 @@ class GraphDataset(Dataset):
 
             else:
                 # create copies of the adjacency matrix as edge index
-                adj_matrix_np = core_base.Dataset(adj_matrix).array_data.astype(int)
+                adj_matrix_np = data_interface.Dataset(adj_matrix).array_data.astype(int)
                 edge_index_ = [
                     torch.nonzero(torch.from_numpy(adj_matrix_np)).t()
                     for _ in range(len(x_list_tensor))]
@@ -449,7 +449,7 @@ class GraphDataset(Dataset):
                 edge_index_ = edge_index
             else:
                 # create copies of the edge index
-                np_edge_index = core_base.Dataset(edge_index).array_data.astype(int)
+                np_edge_index = data_interface.Dataset(edge_index).array_data.astype(int)
                 edge_index_ = [
                     torch.from_numpy(np_edge_index) for _ in range(len(x_list_tensor))]
 
@@ -488,7 +488,7 @@ class GraphDataset(Dataset):
             if tabular_x is None:
                 tabular_x = torch.from_numpy(np.array([np.nan] * len(X)).astype(np.float32))
             else:
-                tabular_x = torch.from_numpy(core_base.Dataset(tabular_x).array_data.astype(np.float32))
+                tabular_x = torch.from_numpy(data_interface.Dataset(tabular_x).array_data.astype(np.float32))
                 tabular_x = tabular_x.unsqueeze(1)
 
         # TODO. Implement edge_attr

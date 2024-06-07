@@ -1,5 +1,4 @@
-# Module with the wrappers used to make the models compatible with the library (also internal interfaces
-# are included here).
+# Module with the interfaces that encapsulate the behavior of the models inside the library.
 #
 # Author: Fernando García Gutiérrez
 # Email: fgarcia@fundacioace.org
@@ -7,7 +6,6 @@
 # STATUS: completed, functional, and documented.
 #
 import torch
-import pandas as pd
 import numpy as np
 import warnings
 from copy import deepcopy
@@ -35,69 +33,6 @@ from ..exception import (
     UnfittedEstimator,
     DataLoaderError
 )
-
-
-class Dataset(object):
-    """ Class representing a dataset. This class is used internally by the functions defined
-    in :py:mod:`gojo.core.loops`.
-
-    Parameters
-    ----------
-    data : np.ndarray or pd.DataFrame or pd.Series
-        Data to be homogenized as a dataset.
-    """
-    def __init__(self, data: np.ndarray or pd.DataFrame or pd.Series):
-        checkInputType('data', data, [np.ndarray, pd.DataFrame, pd.Series])
-
-        var_names = None
-        index_values = None
-        array_data = None
-        in_type = ''
-        if isinstance(data, pd.DataFrame):
-            array_data = data.values
-            var_names = list(data.columns)
-            index_values = np.array(data.index.values)
-            in_type = 'pandas.DataFrame'
-        elif isinstance(data, pd.Series):
-            array_data = data.values
-            var_names = [data.name]
-            index_values = np.array(data.index.values)
-            in_type = 'pandas.Series'
-        elif isinstance(data, np.ndarray):
-            # numpy arrays will not contain var_names
-            array_data = data
-            index_values = np.array(np.arange(data.shape[0]))
-            in_type = 'numpy.array'
-
-        self._array_data = array_data
-        self._var_names = var_names
-        self._index_values = index_values
-        self._in_type = in_type
-
-    def __repr__(self):
-        return _createObjectRepresentation(
-            'Dataset', shape=self._array_data.shape, in_type=self._in_type)
-
-    def __str__(self):
-        return self.__repr__()
-
-    def __len__(self):
-        return self._array_data.shape[0]
-
-    @property
-    def array_data(self) -> np.ndarray:
-        """ Returns the input data as a numpy.array. """
-        return self._array_data
-
-    @property
-    def var_names(self) -> list:
-        """ Returns the name of the variables. """
-        return self._var_names
-
-    @property
-    def index_values(self) -> np.array:
-        """ Returns the input data index values. """
-        return self._index_values
 
 
 class Model(object):
@@ -253,8 +188,8 @@ class SklearnModelWrapper(Model):
     Parameters
     ----------
     model_class : type
-        Model following the 'sklearn.base.BaseEstimator' interface. The class provided need not be a subclass
-        of the sklearn interface but should provide the basic :meth:`fit` and :meth:`predict` (or
+        Model following the 'sklearn.base.BaseEstimator' interface. The class provided does not have to be a subclass
+        of the sklearn interfacebut should provide the basic :meth:`fit` and :meth:`predict` (or
         :meth:`predict_proba`) methods.
 
     predict_proba : bool, default=False
@@ -264,16 +199,19 @@ class SklearnModelWrapper(Model):
          will be called and a warning will inform that an attempt has been made to call the :meth:`predict_proba`
          method.
 
+    supress_warnings : bool, default=False
+        Parameter indicating whether to suppress the warnings issued by the class.
+
     **kwargs
         Additional model hyparameters. This parameters will be passed to the `model_class` constructor.
 
     Example
     -------
-    >>> from gojo import core
+    >>> from gojo import interfaces
     >>> from sklearn.naive_bayes import GaussianNB
     >>>
     >>> # create model
-    >>> model = core.SklearnModelWrapper(
+    >>> model = interfaces.SklearnModelWrapper(
     >>>     GaussianNB, predict_proba=True, priors=[0.25, 0.75])
     >>>
     >>> # train model
@@ -286,7 +224,7 @@ class SklearnModelWrapper(Model):
     >>> model.resetFit()
     >>> model.is_fitted    # must return False
     """
-    def __init__(self, model_class, predict_proba: bool = False, **kwargs):
+    def __init__(self, model_class, predict_proba: bool = False, supress_warnings: bool = False, **kwargs):
         super(SklearnModelWrapper, self).__init__()
 
         checkClass('model_class', model_class)
@@ -295,6 +233,7 @@ class SklearnModelWrapper(Model):
         self._model_class = model_class
         self._in_params = kwargs
         self.predict_proba = predict_proba
+        self.supress_warnings = supress_warnings
         self._model_obj = model_class(**kwargs)
 
     def __repr__(self):
@@ -302,11 +241,17 @@ class SklearnModelWrapper(Model):
             'SklearnModelWrapper',
             base_model=str(self._model_class).replace('<class ', '').replace('>', ''),
             model_params=self._in_params,
-            predict_proba=self.predict_proba
+            predict_proba=self.predict_proba,
+            supress_warnings=self.supress_warnings
         )
 
     def __str__(self):
         return self.__repr__()
+
+    @property
+    def model(self):
+        """ Returns the internal model provided by the constructor and adjusted if the train method has been called. """
+        return self._model_obj
 
     def getParameters(self) -> dict:
         return self._in_params
@@ -355,7 +300,8 @@ class SklearnModelWrapper(Model):
 
         if self.predict_proba:
             if not getattr(self._model_obj, 'predict_proba'):
-                warnings.warn('Input model hasn\'t the predict_proba method implemented')
+                if not self.supress_warnings:
+                    warnings.warn('Input model hasn\'t the predict_proba method implemented')
                 predictions = self._model_obj.predict(X)
             else:
                 predictions = self._model_obj.predict_proba(X)
@@ -387,10 +333,6 @@ class TorchSKInterface(Model):
     n_epochs : int
         Number of epochs used to train the model.
 
-    train_split : float
-        Percentage of the training data received in :meth:`train` that will be used to train the model. The rest of
-        the data will be used as validation set.
-
     optimizer_class : type
         Pytorch optimizer used to train the model (see `torch.optim` module.)
 
@@ -407,20 +349,39 @@ class TorchSKInterface(Model):
     train_dataset_kw : dict, default=None
         Parameters used to initialize the provided dataset class for the data used for training.
 
-    valid_dataset_kw : dict, default= None
-        Parameters used to initialize the provided dataset class for the data used for validation.
-
     train_dataloader_kw : dict, default=None
         Parameters used to initialize the provided dataloader class for the data used for training.
 
+    train_split : float, default=1.0
+        Percentage of the training data received in :meth:`train` that will be used to train the model. The rest of
+        the data will be used as validation set.
+
+    valid_dataset_kw : dict, default=None
+        Parameters used to initialize the provided dataset class for the data used for validation. Parameter ignored
+        if `train_split` == 1.0.
+
     valid_dataloader_kw : dict, default=None
-        Parameters used to initialize the provided dataloader class for the data used for validation.
+        Parameters used to initialize the provided dataloader class for the data used for validation. Parameter ignored
+        if `train_split` == 1.0.
+
+    inference_dataset_kw : dict, default=None
+        Parameters used to initialize the provided dataset class for the data used for inference when calling
+        :meth:`gojo.interfaces.TorchSKInterface.performInference`. If no parameters are provided, the arguments provided
+        for the training will be used.
+
+    inference_dataloader_kw : dict, default=None
+        Parameters used to initialize the provided dataloader class for the data used for inference when calling
+        :meth:`gojo.interfaces.TorchSKInterface.performInference`. If no parameters are provided, the arguments provided
+        for the training will be used changing the dataloader parameters: `shuffle` = False, `drop_last` = False,
+        `batch_size` = `batch_size` (`batch_size` provided in the constructor or when calling the method
+        :meth:`gojo.interfaces.TorchSKInterface.performInference`)
 
     iter_fn_kw : dict, default=None
         Optional arguments of the parameter `iter_fn`.
 
     train_split_stratify : bool, default=False
-        Parameter indicating whether to perform the train/validation split with class stratification.
+        Parameter indicating whether to perform the train/validation split with class stratification. Parameter ignored
+        if `train_split` == 1.0.
 
     callbacks : List[:class:`gojo.deepl.callback.Callback`], default=None
         Callbacks during model training. For more information see :py:mod:`gojo.deepl.callback`.
@@ -430,7 +391,7 @@ class TorchSKInterface(Model):
         :py:mod:`gojo.core.evaluation.Metric`.
 
     batch_size : int, default=None
-        Batch size used when calling to :meth:`gojo.core.base.TorchSKInterface.performInference`. This parameter can 
+        Batch size used when calling to :meth:`gojo.interfaces.TorchSKInterface.performInference`. This parameter can
         also be set during the function calling.
 
     seed : int, default=None
@@ -445,16 +406,13 @@ class TorchSKInterface(Model):
 
     Example
     -------
-    >>> import sys
-    >>>
-    >>> sys.path.append('..')
-    >>>
     >>> import torch
     >>> import pandas as pd
     >>> from sklearn import datasets
     >>> from sklearn.model_selection import train_test_split
     >>>
-    >>> # DEID libraries
+    >>> # Gojo libraries
+    >>> from gojo import interfaces
     >>> from gojo import core
     >>> from gojo import deepl
     >>> from gojo import util
@@ -479,7 +437,7 @@ class TorchSKInterface(Model):
     >>> X_train, X_valid, y_train, y_valid = train_test_split(
     >>>     std_X, y, train_size=0.8, random_state=1997, shuffle=True, stratify=y)
     >>>
-    >>> model = core.TorchSKInterface(
+    >>> model = interfaces.TorchSKInterface(
     >>>     model=deepl.ffn.createSimpleFFNModel(
     >>>         in_feats=X_train.shape[1],
     >>>         out_feats=1,
@@ -548,7 +506,6 @@ class TorchSKInterface(Model):
             # training parameters
             loss_function,
             n_epochs: int,
-            train_split: float,
 
             # classes
             optimizer_class,
@@ -559,11 +516,14 @@ class TorchSKInterface(Model):
             optimizer_kw: dict = None,
             train_dataset_kw: dict = None,
             valid_dataset_kw: dict = None,
+            inference_dataset_kw: dict = None,
             train_dataloader_kw: dict = None,
             valid_dataloader_kw: dict = None,
+            inference_dataloader_kw: dict = None,
             iter_fn_kw: dict = None,
 
             # other parameters
+            train_split: float = 1.0,
             train_split_stratify: bool = False,
             callbacks: list = None,
             metrics: list = None,
@@ -571,11 +531,10 @@ class TorchSKInterface(Model):
             seed: int = None,
             device: str = 'cpu',
             verbose: int = 1
-
     ):
         super(TorchSKInterface, self).__init__()
 
-        self.model = model
+        self._model = model
         self.iter_fn = iter_fn
         self.loss_function = loss_function
 
@@ -588,8 +547,10 @@ class TorchSKInterface(Model):
         self.optimizer_kw = _none2dict(optimizer_kw)
         self.train_dataset_kw = _none2dict(train_dataset_kw)
         self.valid_dataset_kw = _none2dict(valid_dataset_kw)
+        self.inference_dataset_kw = inference_dataset_kw    # let as None if provided
         self.train_dataloader_kw = _none2dict(train_dataloader_kw)
         self.valid_dataloader_kw = _none2dict(valid_dataloader_kw)
+        self.inference_dataloader_kw = inference_dataloader_kw     # let as None if provided
         self.iter_fn_kw = _none2dict(iter_fn_kw)
 
         # other parameters
@@ -618,14 +579,16 @@ class TorchSKInterface(Model):
         checkClass('dataset_class', self.dataset_class)
         checkClass('dataloader_class', self.dataloader_class)
         checkMultiInputTypes(
-            ('model', self.model, [torch.nn.Module]),
+            ('model', self._model, [torch.nn.Module]),
             ('n_epochs', self.n_epochs, [int]),
             ('train_split', self.train_split, [float]),
             ('optimizer_kw', self.optimizer_kw, [dict, type(None)]),
             ('train_dataset_kw', self.train_dataset_kw, [dict, type(None)]),
             ('valid_dataset_kw', self.valid_dataset_kw, [dict, type(None)]),
+            ('inference_dataset_kw', self.inference_dataset_kw, [dict, type(None)]),
             ('train_dataloader_kw', self.train_dataloader_kw, [dict, type(None)]),
             ('valid_dataloader_kw', self.valid_dataloader_kw, [dict, type(None)]),
+            ('inference_dataloader_kw', self.inference_dataloader_kw, [dict, type(None)]),
             ('iter_fn_kw', self.iter_fn_kw, [dict, type(None)]),
             ('train_split_stratify', self.train_split_stratify, [bool]),
             ('callbacks', self.callbacks, [list, type(None)]),
@@ -634,6 +597,11 @@ class TorchSKInterface(Model):
             ('device', self.device, [str]),
             ('batch_size', self.batch_size, [int, type(None)]),
             ('verbose', self.verbose, [int]))
+
+        if self.train_split > 1.0 or self.train_split <= 0.0:
+            raise TypeError(
+                'Parameter `train_split` must be in the range (0.0, 1.0]. Provided value: {:.2f}'.format(
+                    self.train_split))
 
     def __repr__(self):
         return _createObjectRepresentation(
@@ -653,12 +621,17 @@ class TorchSKInterface(Model):
     @property
     def num_params(self) -> int:
         """ Returns the number model trainable parameters. """
-        return getNumModelParams(self.model)
+        return getNumModelParams(self._model)
+
+    @property
+    def model(self) -> torch.nn.Module:
+        """ Returns the internal model provided by the constructor and adjusted if the train method has been called. """
+        return self._model
 
     def getParameters(self) -> dict:
         """ Returns the model parameters. """
         params = dict(
-            model=self.model,
+            model=self._model,
             iter_fn=self.iter_fn,
             loss_function=self.loss_function,
             n_epochs=self.n_epochs,
@@ -670,8 +643,10 @@ class TorchSKInterface(Model):
             optimizer_kw=self.optimizer_kw,
             train_dataset_kw=self.train_dataset_kw,
             valid_dataset_kw=self.valid_dataset_kw,
+            inference_dataset_kw=self.inference_dataset_kw,
             train_dataloader_kw=self.train_dataloader_kw,
             valid_dataloader_kw=self.valid_dataloader_kw,
+            inference_dataloader_kw=self.inference_dataloader_kw,
             iter_fn_kw=self.iter_fn_kw,
             callbacks=self.callbacks,
             metrics=self.metrics,
@@ -687,7 +662,7 @@ class TorchSKInterface(Model):
         :class:`gojo.core.base.ParametrizedTorchSKInterface`."""
 
         raise NotImplementedError('This class not support parameter updates. See alternative classes such as: '
-                                  '"gojo.core.ParametrizedTorchSKInterface"')
+                                  '"gojo.interfaces.ParametrizedTorchSKInterface"')
 
     def train(self, X: np.ndarray, y: np.ndarray or None = None, **kwargs):
         """ Train the model using the input data.
@@ -708,23 +683,31 @@ class TorchSKInterface(Model):
             for callback in self.callbacks:
                 callback.resetState()
 
-        # separate train/validation data
-        stratify = None
-        if self.train_split_stratify:
-            stratify = y
-            if y is None:
-                warnings.warn(
-                    'target indices have been specified to be stratified by class but a value of "y" has not been '
-                    'provided as input. Ignoring "train_split_stratify"')
-                stratify = None
+        if self.train_split == 1.0:
+            # no validation set used
+            train_idx = np.arange(X.shape[0])
+            np.random.shuffle(train_idx)   # shuffle train indices
+            valid_idx = None
+            train_kwargs = _splitOpArgsDicts(kwargs, [train_idx])
+            valid_kwargs = {}
+        else:
+            # separate train/validation data
+            stratify = None
+            if self.train_split_stratify:
+                stratify = y
+                if y is None:
+                    warnings.warn(
+                        'target indices have been specified to be stratified by class but a value of "y" has not been '
+                        'provided as input. Ignoring "train_split_stratify"')
+                    stratify = None
 
-        # train/validation split based on indices
-        indices = np.arange(X.shape[0])
-        train_idx, valid_idx = train_test_split(
-            indices, train_size=self.train_split, random_state=self.seed, shuffle=True, stratify=stratify)
+            # train/validation split based on indices
+            indices = np.arange(X.shape[0])
+            train_idx, valid_idx = train_test_split(
+                indices, train_size=self.train_split, random_state=self.seed, shuffle=True, stratify=stratify)
 
-        # train/validation split of the optional arguments
-        train_kwargs, valid_kwargs = _splitOpArgsDicts(kwargs, [train_idx, valid_idx])
+            # train/validation split of the optional arguments
+            train_kwargs, valid_kwargs = _splitOpArgsDicts(kwargs, [train_idx, valid_idx])
 
         # create dataloaders
         train_dl = self.dataloader_class(
@@ -735,18 +718,20 @@ class TorchSKInterface(Model):
                 **self.train_dataset_kw),
             **self.train_dataloader_kw)
 
-        valid_dl = self.dataloader_class(
-            self.dataset_class(
-                X=X[valid_idx],
-                y=y[valid_idx] if y is not None else y,
-                **valid_kwargs,
-                **self.valid_dataset_kw),
-            **self.valid_dataloader_kw)
+        valid_dl = None
+        if valid_idx is not None:
+            valid_dl = self.dataloader_class(
+                self.dataset_class(
+                    X=X[valid_idx],
+                    y=y[valid_idx] if y is not None else y,
+                    **valid_kwargs,
+                    **self.valid_dataset_kw),
+                **self.valid_dataloader_kw)
 
         # train the model
         history = fitNeuralNetwork(
             iter_fn=self.iter_fn,
-            model=self.model,
+            model=self._model,
             train_dl=train_dl,
             valid_dl=valid_dl,
             n_epochs=self.n_epochs,
@@ -765,7 +750,7 @@ class TorchSKInterface(Model):
         self.fitted()
 
     def reset(self):
-        self.model = deepcopy(self._in_model)
+        self._model = deepcopy(self._in_model)
         self._fitting_history = None
 
     def performInference(self, X: np.ndarray, batch_size: int = None, **kwargs) -> np.ndarray:
@@ -777,7 +762,7 @@ class TorchSKInterface(Model):
             Input data used to perform inference.
 
         batch_size : int, default=None
-            Parameter indicating whether to perform the inference using batches instead of all input data at once. By 
+            Parameter indicating whether to perform the inference using batches instead of all input data at once. By
             default, all input data will by used.
 
         **kwargs
@@ -792,15 +777,8 @@ class TorchSKInterface(Model):
             ('batch_size', batch_size, (int, type(None))))
 
         # select the model in inference mode
-        self.model = self.model.eval()
-        self.model = self.model.to(device=self.device)
-
-        # HACK. Avoid sorting the predictions
-        dataloader_op_args = deepcopy(self.valid_dataloader_kw)
-        dataloader_op_args['shuffle'] = False
-
-        # HACK. Avoid removing the last batch
-        dataloader_op_args['drop_last'] = False
+        self._model = self._model.eval()
+        self._model = self._model.to(device=torch.device(self.device))
 
         if batch_size is None and self.batch_size is None:
             batch_size = X.shape[0]
@@ -814,12 +792,27 @@ class TorchSKInterface(Model):
             if batch_size > X.shape[0]:   # maximum batch size will be cast to the input data shape
                 batch_size = X.shape[0]
 
-        # HACK. Change the batch size
-        dataloader_op_args['batch_size'] = batch_size
+        if self.inference_dataloader_kw is None:
+            # use training-modified dataloader
+            dataloader_op_args = deepcopy(self.train_dataloader_kw)
+
+            # avoid shuffle the input data
+            dataloader_op_args['shuffle'] = False
+
+            # avoid removing the last batch
+            dataloader_op_args['drop_last'] = False
+
+            # change the batch size
+            dataloader_op_args['batch_size'] = batch_size
+        else:
+            dataloader_op_args = self.inference_dataloader_kw
+
+        inference_dataset_op_args = _none2dict(self.train_dataset_kw)
 
         # create the dataloader
         test_dl = self.dataloader_class(
-            self.dataset_class(X=X, y=None, **kwargs, **self.valid_dataset_kw), 
+            self.dataset_class(
+                X=X, y=None, **kwargs, **inference_dataset_op_args),
             **dataloader_op_args)
 
         with torch.no_grad():
@@ -841,7 +834,7 @@ class TorchSKInterface(Model):
                     var_args = []
 
                 # make model predictions
-                y_hat = self.model(X_batch, *var_args).detach().cpu().numpy()
+                y_hat = self._model(X_batch, *var_args).detach().cpu().numpy()
                 y_pred.append(y_hat)
 
         y_pred = np.concatenate(y_pred)
@@ -854,8 +847,8 @@ class TorchSKInterface(Model):
 
     def copy(self):
         self_copy = deepcopy(self)
-        self_copy.model.to('cpu')  # save in cpu
-        self_copy._in_model.to('cpu')  # save in cpu
+        self_copy.model.to(device=torch.device('cpu'))  # save in cpu
+        self_copy._in_model.to(device=torch.device('cpu'))  # save in cpu
 
         torch.cuda.empty_cache()
 
@@ -863,8 +856,8 @@ class TorchSKInterface(Model):
 
 
 class ParametrizedTorchSKInterface(TorchSKInterface):
-    """ Parameterized version of :class:`gojo.core.base.TorchSKInterface`. This implementation is useful for performing
-    a cross validation with hyperparameter optimization using the :func:`gojo.core.loops.evalCrossValNestedHPO`
+    """ Parameterized version of :class:`gojo.interfaces.TorchSKInterface`. This implementation is useful for performing
+    cross validation with hyperparameter optimization using the :func:`gojo.core.loops.evalCrossValNestedHPO`
     function. This class provides an implementation of the :meth:`updateParameters` method.
 
 
@@ -887,10 +880,6 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
     n_epochs : int
         Number of epochs used to train the model.
 
-    train_split : float
-        Percentage of the training data received in :meth:`train` that will be used to train the model. The rest of
-        the data will be used as validation set.
-
     optimizer_class : type
         Pytorch optimizer used to train the model (see `torch.optim` module.)
 
@@ -907,20 +896,39 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
     train_dataset_kw : dict, default=None
         Parameters used to initialize the provided dataset class for the data used for training.
 
-    valid_dataset_kw : dict, default= None
-        Parameters used to initialize the provided dataset class for the data used for validation.
-
     train_dataloader_kw : dict, default=None
         Parameters used to initialize the provided dataloader class for the data used for training.
 
+    train_split : float, default=1.0
+        Percentage of the training data received in :meth:`train` that will be used to train the model. The rest of
+        the data will be used as validation set.
+
+    valid_dataset_kw : dict, default=None
+        Parameters used to initialize the provided dataset class for the data used for validation. Parameter ignored
+        if `train_split` == 1.0.
+
     valid_dataloader_kw : dict, default=None
-        Parameters used to initialize the provided dataloader class for the data used for validation.
+        Parameters used to initialize the provided dataloader class for the data used for validation. Parameter ignored
+        if `train_split` == 1.0.
+
+    inference_dataset_kw : dict, default=None
+        Parameters used to initialize the provided dataset class for the data used for inference when calling
+        :meth:`gojo.interfaces.TorchSKInterface.performInference`. If no parameters are provided, the arguments provided
+        for the training will be used.
+
+    inference_dataloader_kw : dict, default=None
+        Parameters used to initialize the provided dataloader class for the data used for inference when calling
+        :meth:`gojo.interfaces.TorchSKInterface.performInference`. If no parameters are provided, the arguments provided
+        for the training will be used changing the dataloader parameters: `shuffle` = False, `drop_last` = False,
+        `batch_size` = `batch_size` (`batch_size` provided in the constructor or when calling the method
+        :meth:`gojo.interfaces.TorchSKInterface.performInference`)
 
     iter_fn_kw : dict, default=None
         Optional arguments of the parameter `iter_fn`.
 
     train_split_stratify : bool, default=False
-        Parameter indicating whether to perform the train/validation split with class stratification.
+        Parameter indicating whether to perform the train/validation split with class stratification. Parameter ignored
+        if `train_split` == 1.0.
 
     callbacks : List[:class:`gojo.deepl.callback.Callback`], default=None
         Callbacks during model training. For more information see :py:mod:`gojo.deepl.callback`.
@@ -930,7 +938,8 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
         :py:mod:`gojo.core.evaluation.Metric`.
 
     batch_size : int, default=None
-        Batch size used when calling to :meth:`gojo.core.base.ParametrizedTorchSKInterface.performInference`.
+        Batch size used when calling to :meth:`gojo.interfaces.ParametrizedTorchSKInterface.performInference`. This
+        parameter can also be set during the function calling.
 
     seed : int, default=None
         Random seed used for controlling the randomness.
@@ -953,6 +962,7 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
     >>> from sklearn.model_selection import train_test_split
     >>>
     >>> # GOJO libraries
+    >>> from gojo import interfaces
     >>> from gojo import core
     >>> from gojo import deepl
     >>> from gojo import util
@@ -977,7 +987,7 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
     >>>     stratify=y
     >>> )
     >>>
-    >>> model = core.ParametrizedTorchSKInterface(
+    >>> model = interfaces.ParametrizedTorchSKInterface(
     >>>     generating_fn=deepl.ffn.createSimpleFFNModel,
     >>>     gf_params=dict(
     >>>         in_feats=X_train.shape[1],
@@ -1061,7 +1071,6 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
             # training parameters
             loss_function,
             n_epochs: int,
-            train_split: float,
 
             # classes
             optimizer_class,
@@ -1072,11 +1081,14 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
             optimizer_kw: dict = None,
             train_dataset_kw: dict = None,
             valid_dataset_kw: dict = None,
+            inference_dataset_kw: dict = None,
             train_dataloader_kw: dict = None,
             valid_dataloader_kw: dict = None,
+            inference_dataloader_kw: dict = None,
             iter_fn_kw: dict = None,
 
             # other parameters
+            train_split: float = 1.0,
             train_split_stratify: bool = False,
             callbacks: list = None,
             metrics: list = None,
@@ -1105,8 +1117,10 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
             optimizer_kw=optimizer_kw,
             train_dataset_kw=train_dataset_kw,
             valid_dataset_kw=valid_dataset_kw,
+            inference_dataset_kw=inference_dataset_kw,
             train_dataloader_kw=train_dataloader_kw,
             valid_dataloader_kw=valid_dataloader_kw,
+            inference_dataloader_kw=inference_dataloader_kw,
             iter_fn_kw=iter_fn_kw,
             train_split_stratify=train_split_stratify,
             callbacks=callbacks,
@@ -1137,11 +1151,11 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
 
         Examples
         --------
-        >>> from gojo import core
+        >>> from gojo import interfaces
         >>> from gojo import deepl
         >>>
         >>> # create the model to be evaluated
-        >>> model = core.ParametrizedTorchSKInterface(
+        >>> model = interfaces.ParametrizedTorchSKInterface(
         >>>     # example of generating function
         >>>     generating_fn=deepl.ffn.createSimpleFFNModel,
         >>>     gf_params=dict(
@@ -1276,7 +1290,7 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
 
                 # check that the input parameter was defined
                 if getattr(self, dict_name, self._NOT_DEFINED_PARAMETER) is self._NOT_DEFINED_PARAMETER:
-                    raise TypeError('Parameter "%s" not found. Review gojo.core.ParametrizedTorchSKInterface '
+                    raise TypeError('Parameter "%s" not found. Review gojo.interfaces.ParametrizedTorchSKInterface '
                                     'documentation.' % dict_name)
 
                 # check that the specified parameter is a dictionary
@@ -1294,7 +1308,7 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
                 # check that the input parameter was defined
                 if getattr(self, name, self._NOT_DEFINED_PARAMETER) is self._NOT_DEFINED_PARAMETER:
                     raise TypeError(
-                        'Parameter "%s" not found. Review gojo.core.ParametrizedTorchSKInterface documentation.' % name)
+                        'Parameter "%s" not found. Review gojo.interfaces.ParametrizedTorchSKInterface documentation.' % name)
 
                 # set the new value
                 setattr(self, name, value)
@@ -1314,489 +1328,7 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
         self_copy.model.to('cpu')  # save in cpu
         self_copy._in_model.to('cpu')  # save in cpu
 
+        torch.cuda.empty_cache()
+
         return self_copy
-
-
-class GNNTorchSKInterface(TorchSKInterface):
-    """  Wrapper class designed to integrate pytorch models ('torch.nn.Module' instances) based on Graph Neural Networks
-    (GNNs) in the :py:mod:`gojo` library functionalities.
-
-    .. important::
-        This is a wrapper of :class:`gojo.core.base.TorchSKInterface` adapted for GNNs.
-
-    Parameters
-    ----------
-    model : torch.nn.Module
-        Subclass of 'torch.nn.Module'.
-
-    iter_fn : callable
-        Function that executes an epoch of the torch.nn.Module typical training pipeline. For more information
-        consult :py:mod:`gojo.deepl.loops`.
-
-    loss_function : callable
-        Loss function used to train the model.
-
-    n_epochs : int
-        Number of epochs used to train the model.
-
-    train_split : float
-        Percentage of the training data received in :meth:`train` that will be used to train the model. The rest of
-        the data will be used as validation set.
-
-    optimizer_class : type
-        Pytorch optimizer used to train the model (see `torch.optim` module.)
-
-    dataset_class : type
-        Pytorch class dataset used to train the model (see `torch.utils.data` module or the `gojo` submodule
-        :py:mod:`gojo.deepl.loading`).
-
-    dataloader_class : type
-        Pytorch dataloader class (`torch.utils.data.DataLoader`).
-
-    optimizer_kw : dict, default=None
-        Parameters used to initialize the provided optimizer class.
-
-    train_dataset_kw : dict, default=None
-        Parameters used to initialize the provided dataset class for the data used for training.
-
-    valid_dataset_kw : dict, default= None
-        Parameters used to initialize the provided dataset class for the data used for validation.
-
-    train_dataloader_kw : dict, default=None
-        Parameters used to initialize the provided dataloader class for the data used for training.
-
-    valid_dataloader_kw : dict, default=None
-        Parameters used to initialize the provided dataloader class for the data used for validation.
-
-    iter_fn_kw : dict, default=None
-        Optional arguments of the parameter `iter_fn`.
-
-    train_split_stratify : bool, default=False
-        Parameter indicating whether to perform the train/validation split with class stratification.
-
-    callbacks : List[:class:`gojo.deepl.callback.Callback`], default=None
-        Callbacks during model training. For more information see :py:mod:`gojo.deepl.callback`.
-
-    metrics : List[:class:`gojo.core.evaluation.Metric`], default=None
-        Metrics used to evaluate the model performance during training. Fore more information see
-        :py:mod:`gojo.core.evaluation.Metric`.
-
-    batch_size: int, default=None
-        Batch size used when calling to :meth:`gojo.core.base.GNNTorchSKInterface.performInference`.
-
-    seed : int, default=None
-        Random seed used for controlling the randomness.
-
-    device : str, default='cpu'
-        Device used for training the model.
-
-    verbose : int, default=1
-        Verbosity level. Use -1 to indicate maximum verbosity.
-    """
-    def __init__(
-            self,
-            model: torch.nn.Module,
-            iter_fn: callable,
-
-            # training parameters
-            loss_function,
-            n_epochs: int,
-            train_split: float,
-
-            # classes
-            optimizer_class,
-            dataset_class,
-            dataloader_class,
-
-            # optional arguments for the input classes
-            optimizer_kw: dict = None,
-            train_dataset_kw: dict = None,
-            valid_dataset_kw: dict = None,
-            train_dataloader_kw: dict = None,
-            valid_dataloader_kw: dict = None,
-            iter_fn_kw: dict = None,
-
-            # other parameters
-            train_split_stratify: bool = False,
-            callbacks: list = None,
-            metrics: list = None,
-            batch_size: int = None,
-            seed: int = None,
-            device: str = 'cpu',
-            verbose: int = 1
-
-    ):
-        warnings.warn('gojo.core.base.GNNTorchSKInterface is deprecated. Use gojo.core.base.TorchSKInterface instead.')
-        super().__init__(
-            model=model, iter_fn=iter_fn,  loss_function=loss_function, n_epochs=n_epochs, train_split=train_split,
-            optimizer_class=optimizer_class, dataset_class=dataset_class, dataloader_class=dataloader_class,
-            optimizer_kw=optimizer_kw, train_dataset_kw=train_dataset_kw, valid_dataset_kw=valid_dataset_kw,
-            train_dataloader_kw=train_dataloader_kw, valid_dataloader_kw=valid_dataloader_kw, iter_fn_kw=iter_fn_kw,
-            train_split_stratify=train_split_stratify, callbacks=callbacks, metrics=metrics, batch_size=batch_size, 
-            seed=seed, device=device, verbose=verbose)
-
-    def __repr__(self):
-        return _createObjectRepresentation(
-            'GNNTorchSKInterface',
-            **self.getParameters())
-
-    def train(self, X: np.ndarray, y: np.ndarray or None = None, **kwargs):
-        """ Train the model using the input data.
-
-        Parameters
-        ----------
-        X : np.ndarray
-            Predictor variables.
-
-        y : np.ndarray or None, default=None
-            Target variable.
-
-        **kwargs
-            Optional arguments. Importantly, for models based on GNNs, an adjacency matrix or edge list associated
-            with each subject must be provided.
-        """
-
-        # reset callbacks inner states
-        if self.callbacks is not None:
-            for callback in self.callbacks:
-                callback.resetState()
-
-        # separate train/validation data
-        stratify = None
-        if self.train_split_stratify:
-            stratify = y
-            if y is None:
-                warnings.warn(
-                    'target indices have been specified to be stratified by class but a value of "y" has not been '
-                    'provided as input. Ignoring "train_split_stratify"')
-                stratify = None
-
-        # train/validation split based on indices
-        indices = np.arange(X.shape[0])
-        train_idx, valid_idx = train_test_split(
-            indices, train_size=self.train_split, random_state=self.seed, shuffle=True, stratify=stratify)
-
-        # train/validation split of the optional arguments
-        train_kwargs, valid_kwargs = _splitOpArgsDicts(kwargs, [train_idx, valid_idx])
-
-        # create dataloaders
-        train_dl = self.dataloader_class(
-            self.dataset_class(
-                X=X[train_idx],
-                y=y[train_idx] if y is not None else y,
-                **train_kwargs,
-                **self.train_dataset_kw),
-            **self.train_dataloader_kw)
-
-        valid_dl = self.dataloader_class(
-            self.dataset_class(
-                X=X[valid_idx],
-                y=y[valid_idx] if y is not None else y,
-                **valid_kwargs,
-                **self.valid_dataset_kw),
-            **self.valid_dataloader_kw)
-
-        # train the model
-        history = fitNeuralNetwork(
-            iter_fn=self.iter_fn,
-            model=self.model,
-            train_dl=train_dl,
-            valid_dl=valid_dl,
-            n_epochs=self.n_epochs,
-            loss_fn=self.loss_function,
-            optimizer_class=self.optimizer_class,
-            optimizer_params=self.optimizer_kw,
-            device=self.device,
-            verbose=self.verbose,
-            metrics=self.metrics,
-            callbacks=self.callbacks,
-            **self.iter_fn_kw)
-
-        # save model fitting history
-        self._fitting_history = history
-
-        self.fitted()
-
-    def performInference(self, X: np.ndarray,  batch_size: int = None, **kwargs) -> np.ndarray:
-        """ Method used to perform the model predictions.
-
-        Parameters
-        ----------
-        X : np.ndarray
-            Input data used to perform inference.
-
-        batch_size : int, default=None
-            Parameter indicating whether to perform the inference using batches instead of all input data at once. By 
-            default, all input data will by used.
-
-        **kwargs
-            Optional arguments. Importantly, for models based on GNNs, an adjacency matrix or edge list associated
-            with each subject must be provided. For more information about the optional arguments consult the
-            GNNs-associated datasets.
-
-        Returns
-        -------
-        model_predictions : np.ndarray
-            Model predictions associated with the input data.
-
-
-        Notes
-        -----
-        This function will internally create an internal dataloader using the template specified for the validation
-        data and setting the `shuffle` parameter to False.
-        """
-        checkMultiInputTypes(
-            ('batch_size', batch_size, (int, type(None))))
-
-        # select the model in inference mode
-        self.model = self.model.eval()
-        self.model = self.model.to(device=self.device)
-
-        # HACK. Avoid sorting the predictions
-        dataloader_op_args = deepcopy(self.valid_dataloader_kw)
-        dataloader_op_args['shuffle'] = False
-
-        # HACK. Avoid removing the last batch
-        dataloader_op_args['drop_last'] = False
-
-        if batch_size is None and self.batch_size is None:
-            batch_size = X.shape[0]
-        else:
-            if batch_size is None:
-                batch_size = self.batch_size
-
-            if batch_size < 0:
-                warnings.warn('Batch size cannot be less than 0. Selecting batch size to 1.')
-                batch_size = 1
-            if batch_size > X.shape[0]:   # maximum batch size will be cast to the input data shape
-                batch_size = X.shape[0]
-
-        # HACK. Change the batch size
-        dataloader_op_args['batch_size'] = batch_size
-
-        # create the dataloader
-        test_dl = self.dataloader_class(
-            self.dataset_class(X=X, y=None, **kwargs, **self.valid_dataset_kw), 
-            **dataloader_op_args)
-
-        with torch.no_grad():
-            y_pred = []
-
-            # iterate over the input data in batches
-            for dlargs in test_dl:
-                if len(dlargs) < 1:
-                    raise DataLoaderError(
-                        'The minimum number of arguments returned by a dataloader must be 1 where the first element'
-                        ' will correspond to the input data (the Xs). The rest of the returned arguments will be passed'
-                        ' to the model as optional arguments.')
-
-                if isinstance(dlargs, (tuple, list)):
-                    X_batch = dlargs[0].to(device=self.device)
-                    var_args = dlargs[1:]
-                else:
-                    X_batch = dlargs.to(device=self.device)
-                    var_args = []
-
-                # make model predictions
-                y_hat = self.model(X_batch, *var_args).detach().cpu().numpy()
-                y_pred.append(y_hat)
-
-        y_pred = np.concatenate(y_pred)
-
-        # flatten y_pred when dimensions are (n_samples, 1)
-        if len(y_pred.shape) == 2 and y_pred.shape[1] == 1:
-            y_pred = y_pred.reshape(-1)
-
-        return y_pred
-
-
-class ParametrizedGNNTorchSKInterface(ParametrizedTorchSKInterface):
-    """  Parameterized version of :class:`gojo.core.base.GNNTorchSKInterface`. This implementation is useful for
-    performing a cross validation with hyperparameter optimization using the
-    :func:`gojo.core.loops.evalCrossValNestedHPO` function. This class provides an implementation of the
-    :meth:`updateParameters` method.
-
-        .. important::
-        This is a wrapper of :class:`gojo.core.base.ParametrizedTorchSKInterface` adapted for GNNs.
-
-
-    """
-    def __init__(
-            self,
-            generating_fn: callable,
-            gf_params: dict,
-            iter_fn: callable,
-
-            # training parameters
-            loss_function,
-            n_epochs: int,
-            train_split: float,
-
-            # classes
-            optimizer_class,
-            dataset_class,
-            dataloader_class,
-
-            # optional arguments for the input classes
-            optimizer_kw: dict = None,
-            train_dataset_kw: dict = None,
-            valid_dataset_kw: dict = None,
-            train_dataloader_kw: dict = None,
-            valid_dataloader_kw: dict = None,
-            iter_fn_kw: dict = None,
-
-            # other parameters
-            train_split_stratify: bool = False,
-            callbacks: list = None,
-            metrics: list = None,
-            seed: int = None,
-            device: str = 'cpu',
-            verbose: int = 1
-    ):
-        warnings.warn(
-            'gojo.core.base.ParametrizedGNNTorchSKInterface is deprecated. Use gojo.core.base.ParametrizedTorchSKInterface instead.')
-        super().__init__(
-            generating_fn=generating_fn, gf_params=gf_params, iter_fn=iter_fn, loss_function=loss_function,
-            n_epochs=n_epochs, train_split=train_split, optimizer_class=optimizer_class, dataset_class=dataset_class,
-            dataloader_class=dataloader_class, optimizer_kw=optimizer_kw, train_dataset_kw=train_dataset_kw,
-            valid_dataset_kw=valid_dataset_kw, train_dataloader_kw=train_dataloader_kw,
-            valid_dataloader_kw=valid_dataloader_kw, iter_fn_kw=iter_fn_kw, train_split_stratify=train_split_stratify,
-            callbacks=callbacks, metrics=metrics, seed=seed, device=device, verbose=verbose)
-
-    def __repr__(self):
-        return _createObjectRepresentation(
-            'ParametrizedGNNTorchSKInterface',
-            **self.getParameters())
-
-    def train(self, X: np.ndarray, y: np.ndarray or None = None, **kwargs):
-        """ Train the model using the input data.
-
-        Parameters
-        ----------
-        X : np.ndarray
-            Predictor variables.
-
-        y : np.ndarray or None, default=None
-            Target variable.
-
-        **kwargs
-            Optional arguments. Importantly, for models based on GNNs, an adjacency matrix or edge list associated
-            with each subject must be provided.
-        """
-
-        # reset callbacks inner states
-        if self.callbacks is not None:
-            for callback in self.callbacks:
-                callback.resetState()
-
-        # separate train/validation data
-        stratify = None
-        if self.train_split_stratify:
-            stratify = y
-            if y is None:
-                warnings.warn(
-                    'target indices have been specified to be stratified by class but a value of "y" has not been '
-                    'provided as input. Ignoring "train_split_stratify"')
-                stratify = None
-
-        # train/validation split based on indices
-        indices = np.arange(X.shape[0])
-        train_idx, valid_idx = train_test_split(
-            indices, train_size=self.train_split, random_state=self.seed, shuffle=True, stratify=stratify)
-
-        # train/validation split of the optional arguments
-        train_kwargs, valid_kwargs = _splitOpArgsDicts(kwargs, [train_idx, valid_idx])
-
-        # create dataloaders
-        train_dl = self.dataloader_class(
-            self.dataset_class(
-                X=X[train_idx],
-                y=y[train_idx] if y is not None else y,
-                **train_kwargs,
-                **self.train_dataset_kw),
-            **self.train_dataloader_kw)
-
-        valid_dl = self.dataloader_class(
-            self.dataset_class(
-                X=X[valid_idx],
-                y=y[valid_idx] if y is not None else y,
-                **valid_kwargs,
-                **self.valid_dataset_kw),
-            **self.valid_dataloader_kw)
-
-        # train the model
-        history = fitNeuralNetwork(
-            iter_fn=self.iter_fn,
-            model=self.model,
-            train_dl=train_dl,
-            valid_dl=valid_dl,
-            n_epochs=self.n_epochs,
-            loss_fn=self.loss_function,
-            optimizer_class=self.optimizer_class,
-            optimizer_params=self.optimizer_kw,
-            device=self.device,
-            verbose=self.verbose,
-            metrics=self.metrics,
-            callbacks=self.callbacks,
-            **self.iter_fn_kw)
-
-        # save model fitting history
-        self._fitting_history = history
-
-        self.fitted()
-
-    def performInference(self, X: np.ndarray, **kwargs) -> np.ndarray:
-        """ Method used to perform the model predictions.
-
-        Parameters
-        ----------
-        X : np.ndarray
-            Input data used to perform inference.
-
-        **kwargs
-            Optional arguments. Importantly, for models based on GNNs, an adjacency matrix or edge list associated
-            with each subject must be provided. For more information about the optional arguments consult the
-            GNNs-associated datasets.
-
-        Returns
-        -------
-        model_predictions : np.ndarray
-            Model predictions associated with the input data.
-
-
-        Notes
-        -----
-        This function will internally create an internal dataloader using the template specified for the validation
-        data and setting the `shuffle` parameter to False.
-        """
-
-        # select the model in inference mode
-        self.model = self.model.eval()
-        self.model = self.model.to(device=self.device)
-
-        # HACK. Avoid sorting the predictions
-        dataloader_op_args = deepcopy(self.valid_dataloader_kw)
-        dataloader_op_args['shuffle'] = False
-
-        # create the dataloader
-        test_dl = self.dataloader_class(
-            self.dataset_class(X=X, y=None, **kwargs, **self.valid_dataset_kw), **dataloader_op_args)
-
-        with torch.no_grad():
-            y_pred = []
-
-            # iterate over the input data in batches
-            for X_batch, _ in test_dl:
-                X_batch = X_batch.to(device=self.device)
-                y_hat = self.model(X_batch).detach().cpu().numpy()
-                y_pred.append(y_hat)
-
-        y_pred = np.concatenate(y_pred)
-
-        # flatten y_pred when dimensions are (n_samples, 1)
-        if len(y_pred.shape) == 2 and y_pred.shape[1] == 1:
-            y_pred = y_pred.reshape(-1)
-
-        return y_pred
-
 

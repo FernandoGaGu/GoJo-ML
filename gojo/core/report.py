@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 from copy import deepcopy
 
-from ..core.base import Dataset
+from ..interfaces import Dataset
 from ..core.evaluation import (
     getScores,
     Metric

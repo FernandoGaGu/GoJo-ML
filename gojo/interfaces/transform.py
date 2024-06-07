@@ -11,14 +11,13 @@ from abc import ABCMeta, abstractmethod
 from copy import deepcopy
 
 
-from ..util.validation import (
-    checkInputType,
+from gojo.util.validation import (
     checkClass
 )
-from ..util.io import (
+from gojo.util.io import (
     _createObjectRepresentation
 )
-from ..exception import UnfittedTransform
+from gojo.exception import UnfittedTransform
 
 
 class Transform(object):
@@ -168,15 +167,16 @@ class SKLearnTransformWrapper(Transform):
     >>> # GOJO libraries
     >>> import gojo
     >>> from gojo import core
+    >>> from gojo import interfaces
     >>>
     >>> # previous model transforms
     >>> transforms = [
-    >>>     core.SKLearnTransformWrapper(StandardScaler),
-    >>>     core.SKLearnTransformWrapper(PCA, n_components=5)
+    >>>     interfaces.SKLearnTransformWrapper(StandardScaler),
+    >>>     interfaces.SKLearnTransformWrapper(PCA, n_components=5)
     >>> ]
     >>>
     >>> # default model
-    >>> model = core.SklearnModelWrapper(
+    >>> model = interfaces.SklearnModelWrapper(
     >>>     SVC, kernel='poly', degree=1, coef0=0.0,
     >>>     cache_size=1000, class_weight=None
     >>> )
