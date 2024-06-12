@@ -6,6 +6,8 @@
 #
 # STATUS: completed, functional, and documented.
 #
+import warnings
+
 import numpy as np
 from abc import ABCMeta, abstractmethod
 from copy import deepcopy
@@ -38,13 +40,16 @@ class Transform(object):
             Method used to reset the fitted transform
 
         - copy()
-            Method used to make a copy of the transform.
+            Method used to make a copy of the transform. It is not mandatory to define this method. By default, a deep
+            copy will be performed
 
         - getParameters()
-            Method that must return the transform parameters.
+            Method that must return the transform parameters. It is not mandatory to define this method. By default, it
+            will return a various dictionary
 
         - updateParameters()
-            Method used to update the transform parameters.
+            Method used to update the transform parameters. It is not mandatory to define this method. By default, it
+            will have no effect
 
     This abstract class provides the following properties:
 
@@ -98,12 +103,10 @@ class Transform(object):
         """ Method used to reset the fitted transform. """
         raise NotImplementedError
 
-    @abstractmethod
     def copy(self):
         """ Method used to make a copy of the transform. """
-        raise NotImplementedError
+        return deepcopy(self)
 
-    @abstractmethod
     def getParameters(self) -> dict:
         """ Method that must return the transform parameters.
 
@@ -112,12 +115,12 @@ class Transform(object):
         model_parameters : dict
             Model parameters.
         """
-        raise NotImplementedError
+        warnings.warn('gojo.interfaces.Transform.getParameters not implemented')
+        raise {}
 
-    @abstractmethod
     def updateParameters(self, **kwargs):
         """ Method used to update the transform parameters. """
-        raise NotImplementedError
+        warnings.warn('gojo.interfaces.Transform.getParameters not implemented')
 
     @property
     def is_fitted(self) -> bool:

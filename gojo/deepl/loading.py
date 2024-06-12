@@ -19,8 +19,7 @@ from ..interfaces import data as data_interface
 from ..util.validation import (
     checkInputType,
     checkMultiInputTypes,
-    checkCallable,
-    pathExists)
+    checkCallable)
 
 
 class GraphDataset(Dataset):
@@ -256,12 +255,9 @@ class GraphDataset(Dataset):
 
 
 class TorchDataset(Dataset):
-    """
-
-    TODO. Add documentation
-
-    Basic Dataset class for typical tabular data. This class can be passed to `torch.DataLoaders`
-    and subsequently used by the :func:`gojo.deepl.loops.fitNeuralNetwork` function.
+    """ Basic Dataset class torch models. This class can be passed to `torch.DataLoaders` and subsequently used by the
+    :func:`gojo.deepl.loops.fitNeuralNetwork` function or :class:`gojo.interfaces.TorchSKInterface` and
+    :class:`gojo.interfaces.ParametrizedTorchSKInterface` classes.
 
     Parameters
     ----------
@@ -271,8 +267,28 @@ class TorchDataset(Dataset):
     y : np.ndarray or pd.DataFrame or pd.Series, default=None
         Target variables to fit the models (or None).
 
-    transforms : list, default=None
-        Transforms to be applied to the input X data before returning the associated item.
+    x_transforms : list, default=None
+        Transformations to be applied to the data provided in `X`. This parameter must be provided as a list of
+        callables which will receive as input the `X` data.
+
+    y_transforms : list, default=None
+        Transformations to be applied to the data provided in `y`. This parameter must be provided as a list of
+        callables which will receive as input the `y` data.
+
+    x_stream_data : bool, default=False
+        Parameter indicating whether `X` data will be loaded in streaming. In this case the parameters of `X` will be
+        passed to `x_loading_fn` and this function must return the data that (if provided) will then go to the
+        transforms and subsequently be returned by the dataset.
+
+    x_loading_fn : callable, default=None
+        Function used to load streaming data. This parameter will have no effect if 'x_stream_data' has not been
+        provided.
+
+    y_stream_data : bool, default=False
+        Same logic as `x_stream_data` but applied to the `y` parameter.
+
+    y_loading_fn : callable, default=None
+        Same logic as `x_loading_fn` but applied to the `y` parameter.
 
     **op_instance_args
         Instance-level optional arguments. This parameter should be a dictionary whose values must be `np.ndarray`
@@ -370,23 +386,24 @@ class TorchDataset(Dataset):
         self.y = None
         self.y_loading_fn = None
         self.y_dataset = None
-        if y_stream_data:
-            self.y = y
-            self.y_loading_fn = y_loading_fn
-        else:
-            y_dt = data_interface.Dataset(y)
-            np_y = y_dt.array_data
+        if y is not None:
+            if y_stream_data:
+                self.y = y
+                self.y_loading_fn = y_loading_fn
+            else:
+                y_dt = data_interface.Dataset(y)
+                np_y = y_dt.array_data
 
-            # add extra dimension to y
-            if len(np_y.shape) == 1:
-                np_y = np_y[:, np.newaxis]
+                # add extra dimension to y
+                if len(np_y.shape) == 1:
+                    np_y = np_y[:, np.newaxis]
 
-            if len(self.X) != np_y.shape[0]:
-                raise TypeError(
-                    'Input "X" (shape[0] = %d) and "y" (shape[0] = %d) must contain the same number of entries in the '
-                    'first dimension.' % (len(self.X), np_y.shape[0]))
-            self.y = torch.from_numpy(np_y.astype(np.float32))
-            self.y_dataset = y_dt
+                if len(self.X) != np_y.shape[0]:
+                    raise TypeError(
+                        'Input "X" (shape[0] = %d) and "y" (shape[0] = %d) must contain the same number of entries in the '
+                        'first dimension.' % (len(self.X), np_y.shape[0]))
+                self.y = torch.from_numpy(np_y.astype(np.float32))
+                self.y_dataset = y_dt
 
         self.x_stream_data = x_stream_data
         self.y_stream_data = y_stream_data
@@ -443,3 +460,4 @@ class TorchDataset(Dataset):
 
     def __len__(self):
         return len(self.X)
+

@@ -37,6 +37,9 @@ class Metric(object):
     bin_threshold : float or int, default=None
         Threshold used to binarize the input predictions. By default, no thresholding is applied.
 
+    ignore_bin_threshold : bool, default=False
+        If provided, parameter `bin_threshold` will be ignored.
+
     multiclass : bool, default=False
         Parameter indicating if a multi-class classification metric is being computed.
 
@@ -52,13 +55,15 @@ class Metric(object):
         Optional parameters provided to the input callable specified by `function`.
     """
     def __init__(self, name: str, function: callable, bin_threshold: float or int = None,
-                 multiclass: bool = False, number_of_classes: int = None,
-                 use_multiclass_sparse: bool = True, **kwargs):
+                 ignore_bin_threshold: bool = False, multiclass: bool = False,
+                 number_of_classes: int = None, use_multiclass_sparse: bool = True,
+                 **kwargs):
 
         self.name = name.replace(' ', '_')  # replace spaces
         self.function = function
         self.function_kw = kwargs
         self.bin_threshold = bin_threshold
+        self.ignore_bin_threshold = ignore_bin_threshold
         self.multiclass = multiclass
         self.number_of_classes = number_of_classes
         self.use_multiclass_sparse = use_multiclass_sparse
@@ -72,6 +77,7 @@ class Metric(object):
         checkMultiInputTypes(
             ('name', self.name, [str]),
             ('bin_threshold', self.bin_threshold, [float, int, type(None)]),
+            ('ignore_bin_threshold', self.ignore_bin_threshold, [bool]),
             ('multiclass', self.multiclass, [bool]),
             ('number_of_classes', self.number_of_classes, [int, type(None)]),
             ('use_multiclass_sparse', self.use_multiclass_sparse, [bool]))
@@ -89,6 +95,7 @@ class Metric(object):
             parameters['number_of_classes'] = self.number_of_classes
             parameters['use_multiclass_sparse'] = self.use_multiclass_sparse
             parameters['bin_threshold'] = self.use_multiclass_sparse
+            parameters['ignore_bin_threshold'] = self.ignore_bin_threshold
         else:
             parameters['multiclass'] = self.multiclass
 
@@ -127,6 +134,10 @@ class Metric(object):
         # if not bin_threshold was provided use the value provided in the constructor
         if bin_threshold is None:
             bin_threshold = self.bin_threshold
+
+        # ignore bin_threshold
+        if self.ignore_bin_threshold:
+            bin_threshold = None
 
         # binarize predictions
         if bin_threshold is not None:
@@ -415,7 +426,7 @@ DEFINED_METRICS = {
         specificity=Metric('specificity', _specificity),
         npv=Metric('negative_predictive_value', _negativePredictiveValue),
         f1_score=Metric('f1_score', sk_metrics.f1_score),
-        auc=Metric('auc', sk_metrics.roc_auc_score)
+        auc=Metric('auc', sk_metrics.roc_auc_score, ignore_bin_threshold=True)
     ),
     'regression': dict(
         explained_variance=Metric('explained_variance', sk_metrics.explained_variance_score),

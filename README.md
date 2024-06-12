@@ -28,7 +28,7 @@ and after cloning the repository run the setup.py script
 
 ```bash
 cd Gojo-ML
-python setup.py install
+pip install -e .
 ```
 
 ## Usage
@@ -41,6 +41,7 @@ import pandas as pd
 from sklearn import datasets
 from sklearn.svm import SVC
 from gojo import core
+from gojo import interfaces
 from gojo import util
 
 # load test dataset (Wine)
@@ -51,7 +52,7 @@ y = (wine_dt['target'] == 1).astype(int)
 X = wine_dt['data']
 
 # create a simple model using the sklearn interfaz
-model = core.SklearnModelWrapper(
+model = interfaces.SklearnModelWrapper(
     SVC, kernel='poly', degree=3, coef0=50,
     cache_size=1000, class_weight=None)
 

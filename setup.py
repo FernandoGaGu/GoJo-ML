@@ -2,9 +2,9 @@ from setuptools import find_packages, setup
 import numpy
 
 
-# python setup.py install
+# install using 'pip install -e .'
 setup(name='gojo',
-      version='0.0.13',
+      version='0.1.0',
       license='MIT',
       description='Package with diverse Machine Learning and Deep Learning pipelines.',
       author='Fernando García Gutiérrez',
