@@ -1,4 +1,4 @@
-**Model evaluation by cross validation**
+Model evaluation by cross validation
 ========================================
 
 This example shows a basic use case when developing Machine Learning

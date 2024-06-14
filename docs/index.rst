@@ -99,6 +99,11 @@ Have a look at some of the examples:
    :caption: Hands-on
 
    examples/Example_1_Model_evaluation_by_cross_validation
+   examples/Example_2_Neural_networks_integration
+   examples/Example_3_Hyperparameter_optimization_by_nested_cross_validation
+   examples/Example_4_Vanilla_Variational_Autoencoder
+   examples/Example_5_Testing_different_CNN_architectures
+   examples/Advanced_use
 
 
 
