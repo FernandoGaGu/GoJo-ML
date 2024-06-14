@@ -89,6 +89,18 @@ The code used, although it has been reviewed and tested with different test prob
 .. _issues: https://github.com/FernandoGaGu/GoJo-ML/issues
 
 
+Examples
+========
+
+Have a look at some of the examples:
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Hands-on
+
+   examples/Example_1_Model_evaluation_by_cross_validation
+
+
 
 Modules
 ==================
