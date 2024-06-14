@@ -80,12 +80,12 @@ html_theme = 'sphinx_rtd_theme'
 
 html_theme_options = {
     'style_nav_header_background': '#F24C4C',
-    'display_version': True,
-    'prev_next_buttons_location': 'both',
-    'collapse_navigation': False,
-    'sticky_navigation': True,
-    'navigation_depth': 4,
-    'titles_only': False
+  #  'display_version': True,
+  #  'prev_next_buttons_location': 'both',
+  #  'collapse_navigation': False,
+  #  'sticky_navigation': True,
+  #  'navigation_depth': 4,
+  #  'titles_only': False
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
