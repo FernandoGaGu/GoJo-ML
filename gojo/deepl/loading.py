@@ -12,7 +12,7 @@ import pandas as pd
 import warnings
 import torch_geometric as geom
 from copy import deepcopy
-from typing import List
+from typing import List, Union
 from torch.utils.data import Dataset
 
 from ..interfaces import data as data_interface
@@ -39,14 +39,14 @@ class GraphDataset(Dataset):
     y : np.ndarray or pd.DataFrame or pd.Series, default=None
         Target variables to fit the models (or None).
 
-    adj_matrix : np.ndarray or pd.DataFrame or List[np.ndarray, pd.DataFrame], default=None
+    adj_matrix : np.ndarray or pd.DataFrame or List[Union[np.ndarray, pd.DataFrame]], default=None
         Adjacency matrix. If a numpy array or a pandas DataFrame is provided, it must have a shape of
         (`n_nodes`, `n_nodes`). In the case where a list of numpy arrays is provided, each element of the list will be
         interpreted as a graph, and it must have a shape of (`n_nodes`, `n_nodes`).
 
         One of `adj_matrix` or `edge_index` must be provided.
 
-    edge_index : np.ndarray or pd.DataFrame or List[np.ndarray, pd.DataFrame], default=None
+    edge_index : np.ndarray or pd.DataFrame or List[Union[np.ndarray, pd.DataFrame]], default=None
         Edge index. If a numpy array or a pandas DataFrame is provided, it must have a shape of (`2`, `n_nodes`). In
         the case where a list of numpy arrays is provided, each element of the list will be interpreted as a graph,
         and it must have a shape of (`2`, `n_nodes`).
@@ -99,8 +99,8 @@ class GraphDataset(Dataset):
         self,
         X: np.ndarray or pd.DataFrame or List[np.ndarray],
         y: np.ndarray or pd.DataFrame or pd.Series = None,
-        adj_matrix: np.ndarray or pd.DataFrame or List[np.ndarray, pd.DataFrame] = None,
-        edge_index: np.ndarray or pd.DataFrame or List[np.ndarray, pd.DataFrame] = None,
+        adj_matrix: np.ndarray or pd.DataFrame or List[Union[np.ndarray, pd.DataFrame]] = None,
+        edge_index: np.ndarray or pd.DataFrame or List[Union[np.ndarray, pd.DataFrame]] = None,
         tabular_x: np.ndarray or pd.DataFrame or List[np.ndarray] = None
     ):
         super(GraphDataset, self).__init__()

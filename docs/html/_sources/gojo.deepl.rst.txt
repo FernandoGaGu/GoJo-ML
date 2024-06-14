@@ -12,15 +12,6 @@ gojo.deepl.callback module
    :undoc-members:
    :show-inheritance:
 
-gojo.deepl.ffn module
----------------------
-
-.. automodule:: gojo.deepl.ffn
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
 gojo.deepl.cnn module
 ---------------------
 
@@ -29,6 +20,13 @@ gojo.deepl.cnn module
    :undoc-members:
    :show-inheritance:
 
+gojo.deepl.ffn module
+---------------------
+
+.. automodule:: gojo.deepl.ffn
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 gojo.deepl.loading module
 -------------------------
@@ -46,18 +44,18 @@ gojo.deepl.loops module
    :undoc-members:
    :show-inheritance:
 
-gojo.deepl.models module
-------------------------
+gojo.deepl.loss module
+----------------------
 
-.. automodule:: gojo.deepl.models
+.. automodule:: gojo.deepl.loss
    :members:
    :undoc-members:
    :show-inheritance:
 
-gojo.deepl.loss module
+gojo.deepl.models module
 ------------------------
 
-.. automodule:: gojo.deepl.loss
+.. automodule:: gojo.deepl.models
    :members:
    :undoc-members:
    :show-inheritance:

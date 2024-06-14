@@ -1,9 +1,6 @@
 gojo.experimental package
 =========================
 
-Submodules
-----------
-
 Module contents
 ---------------
 

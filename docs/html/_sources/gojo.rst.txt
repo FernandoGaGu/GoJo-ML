@@ -9,10 +9,10 @@ Subpackages
 
    gojo.core
    gojo.deepl
+   gojo.experimental
+   gojo.interfaces
    gojo.plotting
    gojo.util
-   gojo.experimental
-
 
 Submodules
 ----------

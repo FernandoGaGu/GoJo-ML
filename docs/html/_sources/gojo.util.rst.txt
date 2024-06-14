@@ -12,6 +12,22 @@ gojo.util.io module
    :undoc-members:
    :show-inheritance:
 
+gojo.util.login module
+----------------------
+
+.. automodule:: gojo.util.login
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gojo.util.splitter module
+-------------------------
+
+.. automodule:: gojo.util.splitter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 gojo.util.tools module
 ----------------------
 
@@ -27,15 +43,6 @@ gojo.util.validation module
    :members:
    :undoc-members:
    :show-inheritance:
-
-gojo.util.login module
----------------------------
-
-.. automodule:: gojo.util.login
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 
 Module contents
 ---------------

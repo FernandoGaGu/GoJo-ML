@@ -1,5 +1,5 @@
-.. gojo - Documentation documentation master file, created by
-   sphinx-quickstart on Sun Oct  8 13:50:24 2023.
+.. GoJo documentation master file, created by
+   sphinx-quickstart on Fri Jun 14 16:49:55 2024.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
@@ -18,6 +18,7 @@ This Python library offers a comprehensive suite of pipeline implementations, sp
 .. _github: https://github.com/FernandoGaGu/GoJo-ML
 
 
+
 Installation
 -------------
 
@@ -28,12 +29,12 @@ First clone the current repository:
    git clone git@github.com:FernandoGaGu/Gojo-ML.git
 
 
-and after cloning the repository run the setup.py script 
+and after cloning the repository run the setup.py script
 
 .. code:: bash
 
    cd Gojo-ML
-   python setup.py install
+   pip install -e .
 
 
 Usage
@@ -48,17 +49,18 @@ Below is a basic example of use, for more examples see the notebooks located in 
    from sklearn import datasets
    from sklearn.svm import SVC
    from gojo import core
+   from gojo import interfaces
    from gojo import util
 
    # load test dataset (Wine)
    wine_dt = datasets.load_wine()
 
    # create the target variable. Classification problem 1 vs rest
-   y = (wine_dt['target'] == 1).astype(int)  
+   y = (wine_dt['target'] == 1).astype(int)
    X = wine_dt['data']
 
    # create a simple model using the sklearn interfaz
-   model = core.SklearnModelWrapper(
+   model = interfaces.SklearnModelWrapper(
        SVC, kernel='poly', degree=3, coef0=50,
        cache_size=1000, class_weight=None)
 
@@ -87,18 +89,32 @@ The code used, although it has been reviewed and tested with different test prob
 .. _issues: https://github.com/FernandoGaGu/GoJo-ML/issues
 
 
+Examples
+========
+
+Have a look at some of the examples:
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Hands-on
+
+   examples/Example_1_Model_evaluation_by_cross_validation
+
+
+
 Modules
 ==================
 
 .. toctree::
    :maxdepth: 2
+   :caption: API
 
    gojo.core
+   gojo.interfaces
    gojo.deepl
    gojo.plotting
    gojo.util
    gojo.experimental
-
 
 Indices and tables
 ==================

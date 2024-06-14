@@ -13,7 +13,7 @@ gojo.plotting.basic module
    :show-inheritance:
 
 gojo.plotting.classification module
---------------------------
+-----------------------------------
 
 .. automodule:: gojo.plotting.classification
    :members:
