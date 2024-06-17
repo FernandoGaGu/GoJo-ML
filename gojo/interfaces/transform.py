@@ -13,13 +13,13 @@ from abc import ABCMeta, abstractmethod
 from copy import deepcopy
 
 
-from gojo.util.validation import (
+from ..util.validation import (
     checkClass
 )
-from gojo.util.io import (
+from ..util.io import (
     _createObjectRepresentation
 )
-from gojo.exception import UnfittedTransform
+from ..exception import UnfittedTransform
 
 
 class Transform(object):

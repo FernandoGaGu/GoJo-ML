@@ -290,6 +290,114 @@ class InstanceLevelKFoldSplitter(object):
         self._current_iteration = 0
 
 
+class PredefinedSplitter(object):
+    """ Wrapper that allows to incorporate a predefined split within the model evaluation subroutines. This wrapper
+    expects from the user two lists, with the indices (positions along dimension 0 of the input data) that will be
+    used as training and test respectively.
+
+    Parameters
+    ----------
+    train_index : list or np.ndarray
+        Indices used for train.
+
+    test_index : list or np.ndarray
+        Indices used for test.
+
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from gojo import util
+    >>>
+    >>> np.random.seed(1997)
+    >>>
+    >>> n_samples = 20
+    >>> n_feats = 10
+    >>> X = np.random.uniform(size=(n_samples, n_feats))
+    >>> y = np.random.randint(0, 2, size=n_samples)
+    >>>
+    >>> splitter = util.splitter.PredefinedSplitter(
+    >>>     train_index=np.arange(0, 15),
+    >>>     test_index=np.arange(15, 20),
+    >>> )
+    >>>
+    >>> for train_idx, test_idx in splitter.split(X, y):
+    >>>     print(len(train_idx), y[train_idx].mean())
+    >>>     print(len(test_idx), y[test_idx].mean())
+
+    """
+    def __init__(
+            self,
+            train_index: list or np.ndarray,
+            test_index: list or np.ndarray):
+
+        if isinstance(train_index, list):
+            train_index = np.array(train_index)
+        if isinstance(test_index, list):
+            test_index = np.array(test_index)
+
+        if len(train_index.shape) > 1:
+            raise ValueError(
+                'train_index must be a one-dimensional vector. Provided shape: %r' % list(train_index.shape))
+        if len(test_index.shape) > 1:
+            raise ValueError(
+                'test_index must be a one-dimensional vector. Provided shape: %r' % list(test_index.shape))
+
+        self.train_index = train_index
+        self.test_index = test_index
+
+    def __repr__(self):
+        return _createObjectRepresentation(
+            'PredefinedSplitter',
+            train_index_length=len(self.train_index),
+            test_index_length=len(self.test_index),
+        )
+
+    def __str__(self):
+        return self.__repr__()
+
+    def split(
+            self,
+            X: np.ndarray or pd.DataFrame,
+            y: np.ndarray or pd.Series = None) -> Tuple[np.ndarray, np.ndarray]:
+        """ Generates indices to split data into training and test set.
+
+        Parameters
+        ----------
+        X : np.ndarray or pd.DataFrame
+            Input data.
+
+        y : np.ndarray or pd.Series, default=None
+            Target variable.
+        """
+        indices = np.arange(len(X))
+
+        # check shape consistency
+        if len(indices) != (len(self.train_index) + len(self.test_index)):
+            raise ValueError(
+                'Inconsistency in the predefined indexes for separating training (length %d) and test (length %d)'
+                ' data, with the size of the data received (length %d).' % (
+                    len(self.train_index),
+                    len(self.test_index),
+                    len(indices)
+                ))
+
+        # check data leakages
+        common_indices = set(list(self.train_index)).intersection(set(list(self.test_index)))
+        if len(common_indices) > 0:
+            raise ValueError(
+                'Data leakage between training and test instances has been detected. Number '
+                'of common indexes: %d (%r)' % (len(common_indices), list(common_indices)))
+
+        # check index consistency
+        max_index_val = max(list(set(list(self.train_index)).union(set(list(self.test_index)))))
+
+        if max_index_val != (indices.shape[0] - 1):
+            raise ValueError('Indexes outside the possible range of values to index the data.')
+
+        yield self.train_index, self.test_index
+
+
 def getCrossValObj(cv: int = None, repeats: int = 1, stratified: bool = False, loocv: bool = False,
                    random_state: int = None) -> RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut:
     """ Function used to obtain the sklearn class used to perform an evaluation of the models according

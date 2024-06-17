@@ -39,7 +39,9 @@ from ..util.validation import (
 )
 from ..util.splitter import (
     SimpleSplitter,
-    InstanceLevelKFoldSplitter)
+    InstanceLevelKFoldSplitter,
+    PredefinedSplitter
+)
 from ..exception import (
     UnfittedTransform
 )
@@ -343,8 +345,8 @@ def evalCrossVal(
     model : :class:`gojo.interfaces.Model`
         Model to be trained. The input model must follow the :class:`gojo.base.Model` interfaz.
 
-    cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.SimpleSplitter` or
-    :class:`gojo.util.InstanceLevelKFoldSplitter`
+    cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.splitter.SimpleSplitter` or
+    :class:`gojo.util.splitter.InstanceLevelKFoldSplitter` or :class:`gojo.util.splitter.PredefinedSplitter`
         Cross-validation schema. For more information about cross validation see `sklearn.model_selection` module.
         The gojo module implements useful functions for easy loading of cross-validation objects (see
         :func:`gojo.util.getCrossValObj`).
@@ -444,7 +446,8 @@ def evalCrossVal(
         ('X', X, [np.ndarray, pd.DataFrame]),
         ('y', y, [np.ndarray, pd.DataFrame, pd.Series]),
         ('model', model, [Model]),
-        ('cv', cv, [RepeatedKFold, RepeatedStratifiedKFold, LeaveOneOut, SimpleSplitter, InstanceLevelKFoldSplitter]),
+        ('cv', cv, [RepeatedKFold, RepeatedStratifiedKFold, LeaveOneOut, SimpleSplitter, InstanceLevelKFoldSplitter,
+                    PredefinedSplitter]),
         ('transforms', transforms, [list, type(None)]),
         ('verbose', verbose, [int]),
         ('n_jobs', n_jobs, [int]),
@@ -601,14 +604,14 @@ def evalCrossValNestedHPO(
         >>>     'max_samples': ('suggest_float', (0.5, 1.0) ),
         >>> }
 
-    outer_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.SimpleSplitter` or
-    :class:`gojo.util.InstanceLevelKFoldSplitter`
+    outer_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.splitter.SimpleSplitter` or
+    :class:`gojo.util.splitter.InstanceLevelKFoldSplitter` or :class:`gojo.util.splitter.PredefinedSplitter`
         Cross-validation schema. For more information about cross validation see `sklearn.model_selection` module.
         The gojo module implements useful functions for easy loading of cross-validation objects (see
         :func:`gojo.util.getCrossValObj`).
 
-    inner_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.SimpleSplitter` or
-    :class:`gojo.util.InstanceLevelKFoldSplitter`
+    inner_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.splitter.SimpleSplitter` or
+    :class:`gojo.util.splitter.InstanceLevelKFoldSplitter` or :class:`gojo.util.splitter.PredefinedSplitter`
         Inner cross-validation schema used for evaluating model performance in the nested cross-validation used for
         optimize the model hyperparameters. For more information about cross validation see `sklearn.model_selection`
         module. The gojo module implements useful functions for easy loading of cross-validation objects (see
@@ -831,9 +834,11 @@ def evalCrossValNestedHPO(
         ('model', model, [Model]),
         ('search_space', search_space, [dict]),
         ('outer_cv', outer_cv, [
-            RepeatedKFold, RepeatedStratifiedKFold, LeaveOneOut, SimpleSplitter, InstanceLevelKFoldSplitter]),
+            RepeatedKFold, RepeatedStratifiedKFold, LeaveOneOut, SimpleSplitter, InstanceLevelKFoldSplitter,
+            PredefinedSplitter]),
         ('inner_cv', inner_cv, [
-            RepeatedKFold, RepeatedStratifiedKFold, LeaveOneOut, SimpleSplitter, InstanceLevelKFoldSplitter]),
+            RepeatedKFold, RepeatedStratifiedKFold, LeaveOneOut, SimpleSplitter, InstanceLevelKFoldSplitter,
+            PredefinedSplitter]),
         ('hpo_sampler', hpo_sampler, [optuna.samplers.BaseSampler]),
         ('metrics', metrics, [list]),
         ('objective_metric', objective_metric, [str, type(None)]),
