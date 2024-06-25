@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath('..'))
 project = 'gojo - Documentation'
 copyright = '2024, Fernando García Gutiérrez'
 author = 'Fernando García Gutiérrez'
-release = '0.1.2'
+release = '0.1.3'
 
 
 # -- General configuration ---------------------------------------------------
