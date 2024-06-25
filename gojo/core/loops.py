@@ -6,12 +6,17 @@
 #
 # STATUS: completed, functional, and documented.
 #
+import os
+import time
+import platform
 import pandas as pd
 import numpy as np
 import warnings
 import joblib
 import multiprocessing as mp
 import optuna
+from datetime import datetime
+from pathlib import Path
 from functools import partial
 from typing import List
 from copy import deepcopy
@@ -574,10 +579,12 @@ def evalCrossValNestedHPO(
         transforms: List[Transform] or None = None,
         verbose: int = -1,
         n_jobs: int = 1,
+        inner_cv_n_jobs: int = 1,
         save_train_preds: bool = False,
         save_transforms: bool = False,
         save_models: bool = False,
-        op_instance_args: dict = None):
+        op_instance_args: dict = None,
+        enable_experimental: bool = False):
     """ Subroutine used to evaluate a model according to a cross-validation scheme provided by the `outer_cv` argument.
     This function also perform a nested cross-validation for hyperparameter optimization (HPO) based on the `optuna`
     library.
@@ -603,6 +610,8 @@ def evalCrossValNestedHPO(
         >>>     # ... from a uniform distribution
         >>>     'max_samples': ('suggest_float', (0.5, 1.0) ),
         >>> }
+        Note: keyword arguments can be passed by providing a dictionary in the third position where the key will
+        correspond to the name of the parameter.
 
     outer_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.splitter.SimpleSplitter` or
     :class:`gojo.util.splitter.InstanceLevelKFoldSplitter` or :class:`gojo.util.splitter.PredefinedSplitter`
@@ -649,8 +658,13 @@ def evalCrossValNestedHPO(
     verbose : int, default=-1
         Verbosity level.
 
+     : int, default=1
+        Number of cores used to parallelise internal cross validation.
+
     n_jobs : int, default=1
-        Number of jobs used for parallelization.
+        Number of jobs used for parallelization. Parallelisation will be done at the `optuna` trial level and will
+        depend on a temporary database that will be created and automatically removed once the optimizzation ends.
+        This is an experimental feature, to enable this parameter you have to specify `enable_experimental=True`.
 
     save_train_preds : bool, default=False
         Parameter that indicates whether the predictions made on the training set will be saved in
@@ -667,6 +681,9 @@ def evalCrossValNestedHPO(
     op_instance_args : dict, default=None
         Instance-level optional arguments. This parameter should be a dictionary whose values must be list on an 
         array-like iterable containing the same number of elements as instances in `X` and `y`.
+
+    enable_experimental: bool, default=False
+        Parameter indicating whether the experimental characteristics of the function are allowed.
 
 
     Returns
@@ -735,7 +752,7 @@ def evalCrossValNestedHPO(
     >>>     verbose=1,
     >>>     save_train_preds=True,
     >>>     save_models=False,
-    >>>     n_jobs=8
+    >>>     n_jobs=1
     >>> )
     >>>
     >>> scores = cv_report.getScores(core.getDefaultMetrics('binary_classification', bin_threshold=0.5))
@@ -747,6 +764,24 @@ def evalCrossValNestedHPO(
     >>> results
     >>>
     """
+    def _getOptunaStorageTemp():
+        """ Subroutine used to create a temporary database to store the results of the parallelisation performed with
+        optuna."""
+        tmp_dir = os.path.join('.', '.tmp_gojo_optuna_hpo')
+        curr_time = datetime.now().strftime('%Y%m%d_%H%M%S')
+
+        if not os.path.exists(tmp_dir):
+            try:
+                # Control cases where concurrent attempts are made to create the temporary directory and generate
+                # errors
+                Path(tmp_dir).mkdir(parents=True)
+            except Exception as ex:
+                time.sleep(1)
+                if not os.path.exists(tmp_dir):
+                    raise ex
+
+        return os.path.abspath(os.path.join(tmp_dir, '%s_gojo_optuna_hpo.db' % curr_time))
+
     def _trialHPO(
             _trial,
             _X: np.ndarray,
@@ -758,7 +793,8 @@ def evalCrossValNestedHPO(
             _minimize: bool,
             _objective_metric: str = None,
             _customAggFunction: callable = None,
-            _op_instance_args: dict = None
+            _op_instance_args: dict = None,
+            _n_jobs: int = 1
     ) -> float:
         """ Subroutine used to run a HPO trial. """
 
@@ -771,10 +807,16 @@ def evalCrossValNestedHPO(
                 'should be defined')
 
         # sample parameters from the trial distribution
-        _optim_params = {
-            name: getattr(_trial, values[0])(name, *values[1])    # example trial.suggest_int('param_name', (0, 10))
-            for name, values in _search_space.items()
-        }
+        _optim_params = {}
+        for _name, _values in _search_space.items():
+            if len(_values) == 2:
+                _optim_params[_name] = getattr(_trial, _values[0])(_name, *_values[1])
+            elif len(_values) == 3:
+                _optim_params[_name] = getattr(_trial, _values[0])(_name, *_values[1], **_values[2])
+            else:
+                raise ValueError(
+                    'INNER ERROR IN gojo.core.loops._trialHPO number of input parameters for param "{}" ({})'.format(
+                        _name, _values))
 
         _model = model.copy()        # avoid inplace modifications
         _model.update(**_optim_params)   # update model parameters
@@ -787,7 +829,7 @@ def evalCrossValNestedHPO(
             cv=_cv,
             transforms=None,
             verbose=0,
-            n_jobs=1,                # avoid using nested parallel executions
+            n_jobs=_n_jobs,                # nested parallel executions
             save_train_preds=_customAggFunction is not None,  # save only if a costume aggregation function was provided
             save_models=False,        # does not save models
             save_transforms=False,
@@ -847,6 +889,7 @@ def evalCrossValNestedHPO(
         ('transforms', transforms, [list, type(None)]),
         ('verbose', verbose, [int]),
         ('n_jobs', n_jobs, [int]),
+        ('inner_cv_n_jobs', inner_cv_n_jobs, [int]),
         ('save_models', save_models, [bool]),
         ('save_transforms', save_transforms, [bool]),
         ('save_train_preds', save_train_preds, [bool]),
@@ -860,6 +903,8 @@ def evalCrossValNestedHPO(
             ('search_space["%s"]' % param_name, hpo_values, [tuple, list]),
             ('search_space["%s"][0]' % param_name, hpo_values[0], [str]),
             ('search_space["%s"][1]' % param_name, hpo_values[1], [tuple, list]))
+        if len(hpo_values) == 3:
+            checkInputType('search_space["%s"][1]', hpo_values[2], [dict])
 
     # check the provided aggregation function
     if agg_function is not None:
@@ -872,6 +917,15 @@ def evalCrossValNestedHPO(
     if n_jobs <= 0:
         raise TypeError(
             'Parameter "n_jobs" cannot be less than 0 (only -1 is allowed indicating use all cpu cores).')
+
+    if n_jobs > 1 and not enable_experimental:
+        raise ValueError(
+            'Parallelisation of hyperparameter optimisation is an experimental feature. To activate it you '
+            'will have to use `enable_experimental=True`.')
+
+    if (n_jobs > 1) and (platform.system().lower() == 'windows'):
+        warnings.warn('Parallelization of the HPO in optuna is not optimised for Windows and can lead to a significant '
+                      'loss in performance (can result in slower executions than without using parallelization).')
 
     # create the model datasets
     X_dt = Dataset(X)
@@ -919,115 +973,161 @@ def evalCrossValNestedHPO(
     hpo_trials_history = {}
     hpo_trials_best_params = {}
     fold_stats = []   # used to init the gojo.core.report.CVReport instance
-    for i, (train_idx, test_idx) in tqdm(
-            enumerate(outer_cv.split(X_dt.array_data, y_dt.array_data)),
-            desc='Performing cross-validation...',
-            disable=not show_pbar):
+    created_storages = []
+    try:
+        for i, (train_idx, test_idx) in tqdm(
+                enumerate(outer_cv.split(X_dt.array_data, y_dt.array_data)),
+                desc='Performing cross-validation...',
+                disable=not show_pbar):
 
-        if show_fold_number:    # verbose information
-            pprint('\nFold %d =============================================\n' % (i+1))
+            if show_fold_number:    # verbose information
+                pprint('\nFold %d =============================================\n' % (i+1))
 
-        # extract train/test data
-        X_train = X_dt.array_data[train_idx]
-        y_train = y_dt.array_data[train_idx]
-        X_test = X_dt.array_data[test_idx]
-        y_test = y_dt.array_data[test_idx]
+            # extract train/test data
+            X_train = X_dt.array_data[train_idx]
+            y_train = y_dt.array_data[train_idx]
+            X_test = X_dt.array_data[test_idx]
+            y_test = y_dt.array_data[test_idx]
 
-        # extract instance-level parameters
-        op_train_instance_args = {}
-        op_test_instance_args = {}
-        if len(op_instance_args) > 0:
-            for var_name, var_values in op_instance_args.items():
-                op_train_instance_args[var_name] = [var_values[idx] for idx in train_idx]
-                op_test_instance_args[var_name] = [var_values[idx] for idx in test_idx]
+            # extract instance-level parameters
+            op_train_instance_args = {}
+            op_test_instance_args = {}
+            if len(op_instance_args) > 0:
+                for var_name, var_values in op_instance_args.items():
+                    op_train_instance_args[var_name] = [var_values[idx] for idx in train_idx]
+                    op_test_instance_args[var_name] = [var_values[idx] for idx in test_idx]
 
-        transforms_ = None
-        if transforms is not None:
-            # TODO. Another option is to apply the transforms inside the HPO, but
-            # TODO. it can become a very computationally-intensive alternative...
-            # apply transformations based on the training data (DESIGN DECISION)
-            if save_transforms:
-                # fit a copy of the input transformations
-                transforms_ = [trans.copy() for trans in transforms]
-            else:
-                # reset fit and allow inplace modifications of the input transforms
-                for transform in transforms:
-                    transform.resetFit()
-                transforms_ = transforms
+            transforms_ = None
+            if transforms is not None:
+                # TODO. Another option is to apply the transforms inside the HPO, but
+                # TODO. it can become a very computationally-intensive alternative...
+                # apply transformations based on the training data (DESIGN DECISION)
+                if save_transforms:
+                    # fit a copy of the input transformations
+                    transforms_ = [trans.copy() for trans in transforms]
+                else:
+                    # reset fit and allow inplace modifications of the input transforms
+                    for transform in transforms:
+                        transform.resetFit()
+                    transforms_ = transforms
 
-            # fit and apply the input transformations based on the training data
-            X_train, X_test = _fitAndApplyTransforms(
-                transforms=transforms_, X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test,
-                op_train_instance_args=op_train_instance_args, op_test_instance_args=op_test_instance_args
+                # fit and apply the input transformations based on the training data
+                X_train, X_test = _fitAndApplyTransforms(
+                    transforms=transforms_, X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test,
+                    op_train_instance_args=op_train_instance_args, op_test_instance_args=op_test_instance_args
+                )
+
+            # create a partial initialization of the function to optimize
+            partial_trialHPO = partial(
+                _trialHPO,
+                _X=X_train,
+                _y=y_train,
+                _model=model,
+                _search_space=search_space,
+                _cv=inner_cv,
+                _metrics=metrics,
+                _minimize=minimization,
+                _objective_metric=objective_metric,
+                _customAggFunction=agg_function,
+                _op_instance_args=op_train_instance_args,
+                _n_jobs=inner_cv_n_jobs
             )
 
-        # create a partial initialization of the function to optimize
-        partial_trialHPO = partial(
-            _trialHPO,
-            _X=X_train,
-            _y=y_train,
-            _model=model,
-            _search_space=search_space,
-            _cv=inner_cv,
-            _metrics=metrics,
-            _minimize=minimization,
-            _objective_metric=objective_metric,
-            _customAggFunction=agg_function,
-            _op_instance_args=op_train_instance_args
-        )
+            # create the optuna study instance
+            # deepcopy the provided sampler to avoid inplace modifications
+            if n_jobs > 1:
+                # create a temporary database
+                storage_name = _getOptunaStorageTemp()
+                created_storages.append(storage_name)
+                study_name = os.path.split(storage_name)[-1].replace('.db', '')
 
-        # create the optuna study instance
-        # deepcopy the provided sampler to avoid inplace modifications
-        study = optuna.create_study(sampler=deepcopy(hpo_sampler))
-        study.optimize(partial_trialHPO, n_trials=hpo_n_trials, n_jobs=n_jobs)
+                study = optuna.create_study(
+                    study_name=study_name,
+                    storage='sqlite:///{}'.format(storage_name),
+                    sampler=deepcopy(hpo_sampler))
+            else:
+                study = optuna.create_study(sampler=deepcopy(hpo_sampler))
 
-        # save HPO results
-        hpo_trials_history[i] = study.trials_dataframe()
-        hpo_trials_best_params[i] = study.best_params
+            study.optimize(partial_trialHPO, n_trials=hpo_n_trials, n_jobs=n_jobs)
 
-        # display verbosity information
-        if show_hpo_best_values:
-            study_df = study.trials_dataframe()
-            pprint('Best trial: %d' % study_df.iloc[np.argmin(study_df['value'].values)].loc['number'])
-            pprint('Best value: %.5f' % study_df.iloc[np.argmin(study_df['value'].values)].loc['value'])
-            pprint()
+            # save HPO results
+            hpo_trials_history[i] = study.trials_dataframe()
+            hpo_trials_best_params[i] = study.best_params
 
-        if show_best_combinations:
-            pprint('Optimized model hyperparameters: {}\n'.format(study.best_params))
+            # display verbosity information
+            if show_hpo_best_values:
+                study_df = study.trials_dataframe()
+                pprint('Best trial: %d' % study_df.iloc[np.argmin(study_df['value'].values)].loc['number'])
+                pprint('Best value: %.5f' % study_df.iloc[np.argmin(study_df['value'].values)].loc['value'])
+                pprint()
 
-        # update input model hyperparameters
-        optim_model = model.copy()
-        optim_model.update(**study.best_params)
+            if show_best_combinations:
+                pprint('Optimized model hyperparameters: {}\n'.format(study.best_params))
 
-        # train the model and make the predictions on the test data
-        fold_results = _evalCrossValFold(
-            _n_fold=i,
-            _model=optim_model,
-            _X_train=X_train,
-            _y_train=y_train,
-            _X_test=X_test,
-            _y_test=y_test,
-            _train_idx=train_idx,
-            _test_idx=test_idx,
-            _predict_train=save_train_preds,
-            _return_model=save_models,
-            _reset_model_fit=True,
-            _transforms=None,   # transforms were applied at the beginning of the loop
-            _return_transforms=False,
-            _reset_transforms=False,
-            _op_instance_args=op_instance_args
-        )
+            # update input model hyperparameters
+            optim_model = model.copy()
+            optim_model.update(**study.best_params)
 
-        # add transforms to the returned fold results
-        if save_transforms:
-            fold_results = list(fold_results)   # convert to list for inplace modifications
-            for idx, (name, _) in enumerate(fold_results):
-                # replace 'transforms' key
-                if name == 'transforms':
-                    fold_results[idx] = (name, transforms_)
-            fold_results = tuple(fold_results)
+            # train the model and make the predictions on the test data
+            fold_results = _evalCrossValFold(
+                _n_fold=i,
+                _model=optim_model,
+                _X_train=X_train,
+                _y_train=y_train,
+                _X_test=X_test,
+                _y_test=y_test,
+                _train_idx=train_idx,
+                _test_idx=test_idx,
+                _predict_train=save_train_preds,
+                _return_model=save_models,
+                _reset_model_fit=True,
+                _transforms=None,   # transforms were applied at the beginning of the loop
+                _return_transforms=False,
+                _reset_transforms=False,
+                _op_instance_args=op_instance_args
+            )
 
-        fold_stats.append(fold_results)
+            # add transforms to the returned fold results
+            if save_transforms:
+                fold_results = list(fold_results)   # convert to list for inplace modifications
+                for idx, (name, _) in enumerate(fold_results):
+                    # replace 'transforms' key
+                    if name == 'transforms':
+                        fold_results[idx] = (name, transforms_)
+                fold_results = tuple(fold_results)
+
+            fold_stats.append(fold_results)
+
+            if n_jobs > 1:
+                optuna.delete_study(
+                    study_name=study_name,
+                    storage='sqlite:///{}'.format(storage_name))
+
+                del study
+
+    except Exception as ex:
+        print('Exception generated during the execution of gojo.core.evalCrossValNestedHPO. {} "{}"'.format(
+            type(ex), ex))
+
+        raise ex
+    finally:
+        # remove optuna storage databases
+        base_paths = []
+        for storage in created_storages:
+            base_paths.append(os.path.split(storage)[0])
+            try:
+                os.remove(storage)   # remove individual database
+            except Exception as ex:
+                print('Exception when removing optuna temporal files: {} - {}'.format(type(ex), ex))
+
+        # remove optuna storage directory
+        base_paths = list(set(base_paths))
+        for base_path in base_paths:
+            if len(os.listdir(base_path)) == 0:
+                try:
+                    os.rmdir(base_path)   # remove storage folder
+                except Exception as ex:
+                    print('Exception when removing optuna temporal directory: {} - {}'.format(type(ex), ex))
 
     # the model should not remain fitted after the execution of the previous subroutines
     if model.is_fitted:
