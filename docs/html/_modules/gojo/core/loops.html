@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gojo.core.loops &mdash; gojo - Documentation 0.1.2 documentation</title>
+  <title>gojo.core.loops &mdash; gojo - Documentation 0.1.3 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -177,12 +177,17 @@
 <span class="c1">#</span>
 <span class="c1"># STATUS: completed, functional, and documented.</span>
 <span class="c1">#</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">platform</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">joblib</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
 <span class="kn">import</span> <span class="nn">optuna</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
@@ -516,11 +521,14 @@
 <span class="sd">    model : :class:`gojo.interfaces.Model`</span>
 <span class="sd">        Model to be trained. The input model must follow the :class:`gojo.base.Model` interfaz.</span>
 
-<span class="sd">    cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.splitter.SimpleSplitter` or</span>
-<span class="sd">    :class:`gojo.util.splitter.InstanceLevelKFoldSplitter` or :class:`gojo.util.splitter.PredefinedSplitter`</span>
+<span class="sd">    cv : Cross-validation splitter</span>
 <span class="sd">        Cross-validation schema. For more information about cross validation see `sklearn.model_selection` module.</span>
 <span class="sd">        The gojo module implements useful functions for easy loading of cross-validation objects (see</span>
-<span class="sd">        :func:`gojo.util.getCrossValObj`).</span>
+<span class="sd">        :func:`gojo.util.getCrossValObj`). Supported splitters are :class:`sklearn.model_selection.RepeatedKFold`,</span>
+<span class="sd">        :class:`sklearn.model_selection.RepeatedStratifiedKFold`, :class:`sklearn.model_selection.LeaveOneOut`,</span>
+<span class="sd">        :class:`gojo.util.splitter.SimpleSplitter`, :class:`gojo.util.splitter.InstanceLevelKFoldSplitter` or </span>
+<span class="sd">        :class:`gojo.util.splitter.PredefinedSplitter` </span>
+
 
 <span class="sd">    transforms : List[Transform] or None, default=None</span>
 <span class="sd">        Transformations applied to the data before being provided to the models. These transformations will be fitted</span>
@@ -745,10 +753,12 @@
         <span class="n">transforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Transform</span><span class="p">]</span> <span class="ow">or</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">inner_cv_n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">save_train_preds</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">save_transforms</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">save_models</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">op_instance_args</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">op_instance_args</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">enable_experimental</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Subroutine used to evaluate a model according to a cross-validation scheme provided by the `outer_cv` argument.</span>
 <span class="sd">    This function also perform a nested cross-validation for hyperparameter optimization (HPO) based on the `optuna`</span>
 <span class="sd">    library.</span>
@@ -766,30 +776,45 @@
 
 <span class="sd">    search_space : dict</span>
 <span class="sd">        Search space used for performing the HPO. For more information about distributions and sampling strategies</span>
-<span class="sd">        consult `https://optuna.org/`.</span>
+<span class="sd">        consult `optuna &lt;https://optuna.org&gt;`_.</span>
 
 <span class="sd">        &gt;&gt;&gt; search_space = {</span>
 <span class="sd">        &gt;&gt;&gt;     # sample from a categorical distribution</span>
 <span class="sd">        &gt;&gt;&gt;     &#39;max_depth&#39;: (&#39;suggest_int&#39;, (2, 10)),</span>
 <span class="sd">        &gt;&gt;&gt;     # ... from a uniform distribution</span>
-<span class="sd">        &gt;&gt;&gt;     &#39;max_samples&#39;: (&#39;suggest_float&#39;, (0.5, 1.0) ),</span>
+<span class="sd">        &gt;&gt;&gt;     &#39;max_samples&#39;: (&#39;suggest_float&#39;, (0.5, 1.0)),</span>
 <span class="sd">        &gt;&gt;&gt; }</span>
 
-<span class="sd">    outer_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.splitter.SimpleSplitter` or</span>
-<span class="sd">    :class:`gojo.util.splitter.InstanceLevelKFoldSplitter` or :class:`gojo.util.splitter.PredefinedSplitter`</span>
+<span class="sd">        Keyword arguments can be passed by providing a dictionary in the third position where the key will</span>
+<span class="sd">        correspond to the name of the parameter:</span>
+
+<span class="sd">        &gt;&gt;&gt; search_space = {</span>
+<span class="sd">        &gt;&gt;&gt;     # sample from a categorical distribution in log space</span>
+<span class="sd">        &gt;&gt;&gt;     &#39;max_depth&#39;: (&#39;suggest_int&#39;, (2, 40), dict(step=1, log=True))),</span>
+<span class="sd">        &gt;&gt;&gt;     # ... from a uniform distribution</span>
+<span class="sd">        &gt;&gt;&gt;     &#39;max_samples&#39;: (&#39;suggest_float&#39;, (0.5, 1.0)),</span>
+<span class="sd">        &gt;&gt;&gt; }</span>
+<span class="sd">        </span>
+<span class="sd">    outer_cv : Cross-validation splitter</span>
 <span class="sd">        Cross-validation schema. For more information about cross validation see `sklearn.model_selection` module.</span>
 <span class="sd">        The gojo module implements useful functions for easy loading of cross-validation objects (see</span>
-<span class="sd">        :func:`gojo.util.getCrossValObj`).</span>
+<span class="sd">        :func:`gojo.util.getCrossValObj`). Supported splitters are :class:`sklearn.model_selection.RepeatedKFold`,</span>
+<span class="sd">        :class:`sklearn.model_selection.RepeatedStratifiedKFold`, :class:`sklearn.model_selection.LeaveOneOut`,</span>
+<span class="sd">        :class:`gojo.util.splitter.SimpleSplitter`, :class:`gojo.util.splitter.InstanceLevelKFoldSplitter` or </span>
+<span class="sd">        :class:`gojo.util.splitter.PredefinedSplitter` </span>
 
-<span class="sd">    inner_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.splitter.SimpleSplitter` or</span>
-<span class="sd">    :class:`gojo.util.splitter.InstanceLevelKFoldSplitter` or :class:`gojo.util.splitter.PredefinedSplitter`</span>
+<span class="sd">    inner_cv : Cross-validation splitter</span>
 <span class="sd">        Inner cross-validation schema used for evaluating model performance in the nested cross-validation used for</span>
 <span class="sd">        optimize the model hyperparameters. For more information about cross validation see `sklearn.model_selection`</span>
 <span class="sd">        module. The gojo module implements useful functions for easy loading of cross-validation objects (see</span>
-<span class="sd">        :func:`gojo.util.getCrossValObj`).</span>
+<span class="sd">        :func:`gojo.util.getCrossValObj`). Supported splitters are :class:`sklearn.model_selection.RepeatedKFold`,</span>
+<span class="sd">        :class:`sklearn.model_selection.RepeatedStratifiedKFold`, :class:`sklearn.model_selection.LeaveOneOut`,</span>
+<span class="sd">        :class:`gojo.util.splitter.SimpleSplitter`, :class:`gojo.util.splitter.InstanceLevelKFoldSplitter` or </span>
+<span class="sd">        :class:`gojo.util.splitter.PredefinedSplitter` </span>
+
 
 <span class="sd">    hpo_sampler : optuna.samplers.BaseSampler</span>
-<span class="sd">        Sampler used for suggest model hyperparameters. For more information see `https://optuna.org/`.</span>
+<span class="sd">        Sampler used for suggest model hyperparameters. For more information see `optuna &lt;https://optuna.org&gt;`_.</span>
 
 <span class="sd">    hpo_n_trials : int</span>
 <span class="sd">        Number of HPO iterations.</span>
@@ -820,8 +845,13 @@
 <span class="sd">    verbose : int, default=-1</span>
 <span class="sd">        Verbosity level.</span>
 
+<span class="sd">     : int, default=1</span>
+<span class="sd">        Number of cores used to parallelise internal cross validation.</span>
+
 <span class="sd">    n_jobs : int, default=1</span>
-<span class="sd">        Number of jobs used for parallelization.</span>
+<span class="sd">        Number of jobs used for parallelization. Parallelisation will be done at the `optuna` trial level and will</span>
+<span class="sd">        depend on a temporary database that will be created and automatically removed once the optimizzation ends.</span>
+<span class="sd">        This is an experimental feature, to enable this parameter you have to specify `enable_experimental=True`.</span>
 
 <span class="sd">    save_train_preds : bool, default=False</span>
 <span class="sd">        Parameter that indicates whether the predictions made on the training set will be saved in</span>
@@ -838,6 +868,9 @@
 <span class="sd">    op_instance_args : dict, default=None</span>
 <span class="sd">        Instance-level optional arguments. This parameter should be a dictionary whose values must be list on an </span>
 <span class="sd">        array-like iterable containing the same number of elements as instances in `X` and `y`.</span>
+
+<span class="sd">    enable_experimental: bool, default=False</span>
+<span class="sd">        Parameter indicating whether the experimental characteristics of the function are allowed.</span>
 
 
 <span class="sd">    Returns</span>
@@ -906,7 +939,7 @@
 <span class="sd">    &gt;&gt;&gt;     verbose=1,</span>
 <span class="sd">    &gt;&gt;&gt;     save_train_preds=True,</span>
 <span class="sd">    &gt;&gt;&gt;     save_models=False,</span>
-<span class="sd">    &gt;&gt;&gt;     n_jobs=8</span>
+<span class="sd">    &gt;&gt;&gt;     n_jobs=1</span>
 <span class="sd">    &gt;&gt;&gt; )</span>
 <span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &gt;&gt;&gt; scores = cv_report.getScores(core.getDefaultMetrics(&#39;binary_classification&#39;, bin_threshold=0.5))</span>
@@ -918,6 +951,24 @@
 <span class="sd">    &gt;&gt;&gt; results</span>
 <span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_getOptunaStorageTemp</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot; Subroutine used to create a temporary database to store the results of the parallelisation performed with</span>
+<span class="sd">        optuna.&quot;&quot;&quot;</span>
+        <span class="n">tmp_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;.tmp_gojo_optuna_hpo&#39;</span><span class="p">)</span>
+        <span class="n">curr_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">_%H%M%S&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">tmp_dir</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Control cases where concurrent attempts are made to create the temporary directory and generate</span>
+                <span class="c1"># errors</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">tmp_dir</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">tmp_dir</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="n">ex</span>
+
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_dir</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_gojo_optuna_hpo.db&#39;</span> <span class="o">%</span> <span class="n">curr_time</span><span class="p">))</span>
+
     <span class="k">def</span> <span class="nf">_trialHPO</span><span class="p">(</span>
             <span class="n">_trial</span><span class="p">,</span>
             <span class="n">_X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -929,7 +980,8 @@
             <span class="n">_minimize</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
             <span class="n">_objective_metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">_customAggFunction</span><span class="p">:</span> <span class="n">callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">_op_instance_args</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">_op_instance_args</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">_n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Subroutine used to run a HPO trial. &quot;&quot;&quot;</span>
 
@@ -942,10 +994,16 @@
                 <span class="s1">&#39;should be defined&#39;</span><span class="p">)</span>
 
         <span class="c1"># sample parameters from the trial distribution</span>
-        <span class="n">_optim_params</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">name</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_trial</span><span class="p">,</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])(</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>    <span class="c1"># example trial.suggest_int(&#39;param_name&#39;, (0, 10))</span>
-            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">_search_space</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-        <span class="p">}</span>
+        <span class="n">_optim_params</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">_name</span><span class="p">,</span> <span class="n">_values</span> <span class="ow">in</span> <span class="n">_search_space</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">_values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">_optim_params</span><span class="p">[</span><span class="n">_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_trial</span><span class="p">,</span> <span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">])(</span><span class="n">_name</span><span class="p">,</span> <span class="o">*</span><span class="n">_values</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">_values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">_optim_params</span><span class="p">[</span><span class="n">_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_trial</span><span class="p">,</span> <span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">])(</span><span class="n">_name</span><span class="p">,</span> <span class="o">*</span><span class="n">_values</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">_values</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s1">&#39;INNER ERROR IN gojo.core.loops._trialHPO number of input parameters for param &quot;</span><span class="si">{}</span><span class="s1">&quot; (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">_name</span><span class="p">,</span> <span class="n">_values</span><span class="p">))</span>
 
         <span class="n">_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>        <span class="c1"># avoid inplace modifications</span>
         <span class="n">_model</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">_optim_params</span><span class="p">)</span>   <span class="c1"># update model parameters</span>
@@ -958,7 +1016,7 @@
             <span class="n">cv</span><span class="o">=</span><span class="n">_cv</span><span class="p">,</span>
             <span class="n">transforms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>                <span class="c1"># avoid using nested parallel executions</span>
+            <span class="n">n_jobs</span><span class="o">=</span><span class="n">_n_jobs</span><span class="p">,</span>                <span class="c1"># nested parallel executions</span>
             <span class="n">save_train_preds</span><span class="o">=</span><span class="n">_customAggFunction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># save only if a costume aggregation function was provided</span>
             <span class="n">save_models</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>        <span class="c1"># does not save models</span>
             <span class="n">save_transforms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -1018,6 +1076,7 @@
         <span class="p">(</span><span class="s1">&#39;transforms&#39;</span><span class="p">,</span> <span class="n">transforms</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
         <span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
         <span class="p">(</span><span class="s1">&#39;n_jobs&#39;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;inner_cv_n_jobs&#39;</span><span class="p">,</span> <span class="n">inner_cv_n_jobs</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
         <span class="p">(</span><span class="s1">&#39;save_models&#39;</span><span class="p">,</span> <span class="n">save_models</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">]),</span>
         <span class="p">(</span><span class="s1">&#39;save_transforms&#39;</span><span class="p">,</span> <span class="n">save_transforms</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">]),</span>
         <span class="p">(</span><span class="s1">&#39;save_train_preds&#39;</span><span class="p">,</span> <span class="n">save_train_preds</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">]),</span>
@@ -1031,6 +1090,8 @@
             <span class="p">(</span><span class="s1">&#39;search_space[&quot;</span><span class="si">%s</span><span class="s1">&quot;]&#39;</span> <span class="o">%</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">hpo_values</span><span class="p">,</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">]),</span>
             <span class="p">(</span><span class="s1">&#39;search_space[&quot;</span><span class="si">%s</span><span class="s1">&quot;][0]&#39;</span> <span class="o">%</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">hpo_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
             <span class="p">(</span><span class="s1">&#39;search_space[&quot;</span><span class="si">%s</span><span class="s1">&quot;][1]&#39;</span> <span class="o">%</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">hpo_values</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">hpo_values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;search_space[&quot;</span><span class="si">%s</span><span class="s1">&quot;][1]&#39;</span><span class="p">,</span> <span class="n">hpo_values</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="nb">dict</span><span class="p">])</span>
 
     <span class="c1"># check the provided aggregation function</span>
     <span class="k">if</span> <span class="n">agg_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1043,6 +1104,15 @@
     <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
             <span class="s1">&#39;Parameter &quot;n_jobs&quot; cannot be less than 0 (only -1 is allowed indicating use all cpu cores).&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">enable_experimental</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s1">&#39;Parallelisation of hyperparameter optimisation is an experimental feature. To activate it you &#39;</span>
+            <span class="s1">&#39;will have to use `enable_experimental=True`.&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">n_jobs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;windows&#39;</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Parallelization of the HPO in optuna is not optimised for Windows and can lead to a significant &#39;</span>
+                      <span class="s1">&#39;loss in performance (can result in slower executions than without using parallelization).&#39;</span><span class="p">)</span>
 
     <span class="c1"># create the model datasets</span>
     <span class="n">X_dt</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -1090,115 +1160,161 @@
     <span class="n">hpo_trials_history</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">hpo_trials_best_params</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">fold_stats</span> <span class="o">=</span> <span class="p">[]</span>   <span class="c1"># used to init the gojo.core.report.CVReport instance</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span><span class="p">)</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>
-            <span class="nb">enumerate</span><span class="p">(</span><span class="n">outer_cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X_dt</span><span class="o">.</span><span class="n">array_data</span><span class="p">,</span> <span class="n">y_dt</span><span class="o">.</span><span class="n">array_data</span><span class="p">)),</span>
-            <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Performing cross-validation...&#39;</span><span class="p">,</span>
-            <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">show_pbar</span><span class="p">):</span>
+    <span class="n">created_storages</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span><span class="p">)</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>
+                <span class="nb">enumerate</span><span class="p">(</span><span class="n">outer_cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X_dt</span><span class="o">.</span><span class="n">array_data</span><span class="p">,</span> <span class="n">y_dt</span><span class="o">.</span><span class="n">array_data</span><span class="p">)),</span>
+                <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Performing cross-validation...&#39;</span><span class="p">,</span>
+                <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">show_pbar</span><span class="p">):</span>
 
-        <span class="k">if</span> <span class="n">show_fold_number</span><span class="p">:</span>    <span class="c1"># verbose information</span>
-            <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Fold </span><span class="si">%d</span><span class="s1"> =============================================</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">show_fold_number</span><span class="p">:</span>    <span class="c1"># verbose information</span>
+                <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Fold </span><span class="si">%d</span><span class="s1"> =============================================</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
 
-        <span class="c1"># extract train/test data</span>
-        <span class="n">X_train</span> <span class="o">=</span> <span class="n">X_dt</span><span class="o">.</span><span class="n">array_data</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span>
-        <span class="n">y_train</span> <span class="o">=</span> <span class="n">y_dt</span><span class="o">.</span><span class="n">array_data</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span>
-        <span class="n">X_test</span> <span class="o">=</span> <span class="n">X_dt</span><span class="o">.</span><span class="n">array_data</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
-        <span class="n">y_test</span> <span class="o">=</span> <span class="n">y_dt</span><span class="o">.</span><span class="n">array_data</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+            <span class="c1"># extract train/test data</span>
+            <span class="n">X_train</span> <span class="o">=</span> <span class="n">X_dt</span><span class="o">.</span><span class="n">array_data</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span>
+            <span class="n">y_train</span> <span class="o">=</span> <span class="n">y_dt</span><span class="o">.</span><span class="n">array_data</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span>
+            <span class="n">X_test</span> <span class="o">=</span> <span class="n">X_dt</span><span class="o">.</span><span class="n">array_data</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+            <span class="n">y_test</span> <span class="o">=</span> <span class="n">y_dt</span><span class="o">.</span><span class="n">array_data</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
 
-        <span class="c1"># extract instance-level parameters</span>
-        <span class="n">op_train_instance_args</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">op_test_instance_args</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">op_instance_args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">var_values</span> <span class="ow">in</span> <span class="n">op_instance_args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">op_train_instance_args</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">var_values</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">train_idx</span><span class="p">]</span>
-                <span class="n">op_test_instance_args</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">var_values</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">test_idx</span><span class="p">]</span>
+            <span class="c1"># extract instance-level parameters</span>
+            <span class="n">op_train_instance_args</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">op_test_instance_args</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">op_instance_args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">var_values</span> <span class="ow">in</span> <span class="n">op_instance_args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">op_train_instance_args</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">var_values</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">train_idx</span><span class="p">]</span>
+                    <span class="n">op_test_instance_args</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">var_values</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">test_idx</span><span class="p">]</span>
 
-        <span class="n">transforms_</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">transforms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># TODO. Another option is to apply the transforms inside the HPO, but</span>
-            <span class="c1"># TODO. it can become a very computationally-intensive alternative...</span>
-            <span class="c1"># apply transformations based on the training data (DESIGN DECISION)</span>
-            <span class="k">if</span> <span class="n">save_transforms</span><span class="p">:</span>
-                <span class="c1"># fit a copy of the input transformations</span>
-                <span class="n">transforms_</span> <span class="o">=</span> <span class="p">[</span><span class="n">trans</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">for</span> <span class="n">trans</span> <span class="ow">in</span> <span class="n">transforms</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># reset fit and allow inplace modifications of the input transforms</span>
-                <span class="k">for</span> <span class="n">transform</span> <span class="ow">in</span> <span class="n">transforms</span><span class="p">:</span>
-                    <span class="n">transform</span><span class="o">.</span><span class="n">resetFit</span><span class="p">()</span>
-                <span class="n">transforms_</span> <span class="o">=</span> <span class="n">transforms</span>
+            <span class="n">transforms_</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">transforms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># TODO. Another option is to apply the transforms inside the HPO, but</span>
+                <span class="c1"># TODO. it can become a very computationally-intensive alternative...</span>
+                <span class="c1"># apply transformations based on the training data (DESIGN DECISION)</span>
+                <span class="k">if</span> <span class="n">save_transforms</span><span class="p">:</span>
+                    <span class="c1"># fit a copy of the input transformations</span>
+                    <span class="n">transforms_</span> <span class="o">=</span> <span class="p">[</span><span class="n">trans</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">for</span> <span class="n">trans</span> <span class="ow">in</span> <span class="n">transforms</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># reset fit and allow inplace modifications of the input transforms</span>
+                    <span class="k">for</span> <span class="n">transform</span> <span class="ow">in</span> <span class="n">transforms</span><span class="p">:</span>
+                        <span class="n">transform</span><span class="o">.</span><span class="n">resetFit</span><span class="p">()</span>
+                    <span class="n">transforms_</span> <span class="o">=</span> <span class="n">transforms</span>
 
-            <span class="c1"># fit and apply the input transformations based on the training data</span>
-            <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">_fitAndApplyTransforms</span><span class="p">(</span>
-                <span class="n">transforms</span><span class="o">=</span><span class="n">transforms_</span><span class="p">,</span> <span class="n">X_train</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="o">=</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span>
-                <span class="n">op_train_instance_args</span><span class="o">=</span><span class="n">op_train_instance_args</span><span class="p">,</span> <span class="n">op_test_instance_args</span><span class="o">=</span><span class="n">op_test_instance_args</span>
+                <span class="c1"># fit and apply the input transformations based on the training data</span>
+                <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">_fitAndApplyTransforms</span><span class="p">(</span>
+                    <span class="n">transforms</span><span class="o">=</span><span class="n">transforms_</span><span class="p">,</span> <span class="n">X_train</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="o">=</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span>
+                    <span class="n">op_train_instance_args</span><span class="o">=</span><span class="n">op_train_instance_args</span><span class="p">,</span> <span class="n">op_test_instance_args</span><span class="o">=</span><span class="n">op_test_instance_args</span>
+                <span class="p">)</span>
+
+            <span class="c1"># create a partial initialization of the function to optimize</span>
+            <span class="n">partial_trialHPO</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+                <span class="n">_trialHPO</span><span class="p">,</span>
+                <span class="n">_X</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span>
+                <span class="n">_y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
+                <span class="n">_model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+                <span class="n">_search_space</span><span class="o">=</span><span class="n">search_space</span><span class="p">,</span>
+                <span class="n">_cv</span><span class="o">=</span><span class="n">inner_cv</span><span class="p">,</span>
+                <span class="n">_metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">,</span>
+                <span class="n">_minimize</span><span class="o">=</span><span class="n">minimization</span><span class="p">,</span>
+                <span class="n">_objective_metric</span><span class="o">=</span><span class="n">objective_metric</span><span class="p">,</span>
+                <span class="n">_customAggFunction</span><span class="o">=</span><span class="n">agg_function</span><span class="p">,</span>
+                <span class="n">_op_instance_args</span><span class="o">=</span><span class="n">op_train_instance_args</span><span class="p">,</span>
+                <span class="n">_n_jobs</span><span class="o">=</span><span class="n">inner_cv_n_jobs</span>
             <span class="p">)</span>
 
-        <span class="c1"># create a partial initialization of the function to optimize</span>
-        <span class="n">partial_trialHPO</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
-            <span class="n">_trialHPO</span><span class="p">,</span>
-            <span class="n">_X</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span>
-            <span class="n">_y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
-            <span class="n">_model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-            <span class="n">_search_space</span><span class="o">=</span><span class="n">search_space</span><span class="p">,</span>
-            <span class="n">_cv</span><span class="o">=</span><span class="n">inner_cv</span><span class="p">,</span>
-            <span class="n">_metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">,</span>
-            <span class="n">_minimize</span><span class="o">=</span><span class="n">minimization</span><span class="p">,</span>
-            <span class="n">_objective_metric</span><span class="o">=</span><span class="n">objective_metric</span><span class="p">,</span>
-            <span class="n">_customAggFunction</span><span class="o">=</span><span class="n">agg_function</span><span class="p">,</span>
-            <span class="n">_op_instance_args</span><span class="o">=</span><span class="n">op_train_instance_args</span>
-        <span class="p">)</span>
+            <span class="c1"># create the optuna study instance</span>
+            <span class="c1"># deepcopy the provided sampler to avoid inplace modifications</span>
+            <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># create a temporary database</span>
+                <span class="n">storage_name</span> <span class="o">=</span> <span class="n">_getOptunaStorageTemp</span><span class="p">()</span>
+                <span class="n">created_storages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">storage_name</span><span class="p">)</span>
+                <span class="n">study_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">storage_name</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.db&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
 
-        <span class="c1"># create the optuna study instance</span>
-        <span class="c1"># deepcopy the provided sampler to avoid inplace modifications</span>
-        <span class="n">study</span> <span class="o">=</span> <span class="n">optuna</span><span class="o">.</span><span class="n">create_study</span><span class="p">(</span><span class="n">sampler</span><span class="o">=</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">hpo_sampler</span><span class="p">))</span>
-        <span class="n">study</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">partial_trialHPO</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="n">hpo_n_trials</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
+                <span class="n">study</span> <span class="o">=</span> <span class="n">optuna</span><span class="o">.</span><span class="n">create_study</span><span class="p">(</span>
+                    <span class="n">study_name</span><span class="o">=</span><span class="n">study_name</span><span class="p">,</span>
+                    <span class="n">storage</span><span class="o">=</span><span class="s1">&#39;sqlite:///</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">storage_name</span><span class="p">),</span>
+                    <span class="n">sampler</span><span class="o">=</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">hpo_sampler</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">study</span> <span class="o">=</span> <span class="n">optuna</span><span class="o">.</span><span class="n">create_study</span><span class="p">(</span><span class="n">sampler</span><span class="o">=</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">hpo_sampler</span><span class="p">))</span>
 
-        <span class="c1"># save HPO results</span>
-        <span class="n">hpo_trials_history</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">study</span><span class="o">.</span><span class="n">trials_dataframe</span><span class="p">()</span>
-        <span class="n">hpo_trials_best_params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">study</span><span class="o">.</span><span class="n">best_params</span>
+            <span class="n">study</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">partial_trialHPO</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="n">hpo_n_trials</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
 
-        <span class="c1"># display verbosity information</span>
-        <span class="k">if</span> <span class="n">show_hpo_best_values</span><span class="p">:</span>
-            <span class="n">study_df</span> <span class="o">=</span> <span class="n">study</span><span class="o">.</span><span class="n">trials_dataframe</span><span class="p">()</span>
-            <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;Best trial: </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">study_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">study_df</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">])</span>
-            <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;Best value: </span><span class="si">%.5f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">study_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">study_df</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
-            <span class="n">pprint</span><span class="p">()</span>
+            <span class="c1"># save HPO results</span>
+            <span class="n">hpo_trials_history</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">study</span><span class="o">.</span><span class="n">trials_dataframe</span><span class="p">()</span>
+            <span class="n">hpo_trials_best_params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">study</span><span class="o">.</span><span class="n">best_params</span>
 
-        <span class="k">if</span> <span class="n">show_best_combinations</span><span class="p">:</span>
-            <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;Optimized model hyperparameters: </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">study</span><span class="o">.</span><span class="n">best_params</span><span class="p">))</span>
+            <span class="c1"># display verbosity information</span>
+            <span class="k">if</span> <span class="n">show_hpo_best_values</span><span class="p">:</span>
+                <span class="n">study_df</span> <span class="o">=</span> <span class="n">study</span><span class="o">.</span><span class="n">trials_dataframe</span><span class="p">()</span>
+                <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;Best trial: </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">study_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">study_df</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">])</span>
+                <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;Best value: </span><span class="si">%.5f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">study_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">study_df</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+                <span class="n">pprint</span><span class="p">()</span>
 
-        <span class="c1"># update input model hyperparameters</span>
-        <span class="n">optim_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">optim_model</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">study</span><span class="o">.</span><span class="n">best_params</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">show_best_combinations</span><span class="p">:</span>
+                <span class="n">pprint</span><span class="p">(</span><span class="s1">&#39;Optimized model hyperparameters: </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">study</span><span class="o">.</span><span class="n">best_params</span><span class="p">))</span>
 
-        <span class="c1"># train the model and make the predictions on the test data</span>
-        <span class="n">fold_results</span> <span class="o">=</span> <span class="n">_evalCrossValFold</span><span class="p">(</span>
-            <span class="n">_n_fold</span><span class="o">=</span><span class="n">i</span><span class="p">,</span>
-            <span class="n">_model</span><span class="o">=</span><span class="n">optim_model</span><span class="p">,</span>
-            <span class="n">_X_train</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span>
-            <span class="n">_y_train</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
-            <span class="n">_X_test</span><span class="o">=</span><span class="n">X_test</span><span class="p">,</span>
-            <span class="n">_y_test</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span>
-            <span class="n">_train_idx</span><span class="o">=</span><span class="n">train_idx</span><span class="p">,</span>
-            <span class="n">_test_idx</span><span class="o">=</span><span class="n">test_idx</span><span class="p">,</span>
-            <span class="n">_predict_train</span><span class="o">=</span><span class="n">save_train_preds</span><span class="p">,</span>
-            <span class="n">_return_model</span><span class="o">=</span><span class="n">save_models</span><span class="p">,</span>
-            <span class="n">_reset_model_fit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">_transforms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>   <span class="c1"># transforms were applied at the beginning of the loop</span>
-            <span class="n">_return_transforms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">_reset_transforms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">_op_instance_args</span><span class="o">=</span><span class="n">op_instance_args</span>
-        <span class="p">)</span>
+            <span class="c1"># update input model hyperparameters</span>
+            <span class="n">optim_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">optim_model</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">study</span><span class="o">.</span><span class="n">best_params</span><span class="p">)</span>
 
-        <span class="c1"># add transforms to the returned fold results</span>
-        <span class="k">if</span> <span class="n">save_transforms</span><span class="p">:</span>
-            <span class="n">fold_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">fold_results</span><span class="p">)</span>   <span class="c1"># convert to list for inplace modifications</span>
-            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fold_results</span><span class="p">):</span>
-                <span class="c1"># replace &#39;transforms&#39; key</span>
-                <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;transforms&#39;</span><span class="p">:</span>
-                    <span class="n">fold_results</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">transforms_</span><span class="p">)</span>
-            <span class="n">fold_results</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">fold_results</span><span class="p">)</span>
+            <span class="c1"># train the model and make the predictions on the test data</span>
+            <span class="n">fold_results</span> <span class="o">=</span> <span class="n">_evalCrossValFold</span><span class="p">(</span>
+                <span class="n">_n_fold</span><span class="o">=</span><span class="n">i</span><span class="p">,</span>
+                <span class="n">_model</span><span class="o">=</span><span class="n">optim_model</span><span class="p">,</span>
+                <span class="n">_X_train</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span>
+                <span class="n">_y_train</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
+                <span class="n">_X_test</span><span class="o">=</span><span class="n">X_test</span><span class="p">,</span>
+                <span class="n">_y_test</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span>
+                <span class="n">_train_idx</span><span class="o">=</span><span class="n">train_idx</span><span class="p">,</span>
+                <span class="n">_test_idx</span><span class="o">=</span><span class="n">test_idx</span><span class="p">,</span>
+                <span class="n">_predict_train</span><span class="o">=</span><span class="n">save_train_preds</span><span class="p">,</span>
+                <span class="n">_return_model</span><span class="o">=</span><span class="n">save_models</span><span class="p">,</span>
+                <span class="n">_reset_model_fit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">_transforms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>   <span class="c1"># transforms were applied at the beginning of the loop</span>
+                <span class="n">_return_transforms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">_reset_transforms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">_op_instance_args</span><span class="o">=</span><span class="n">op_instance_args</span>
+            <span class="p">)</span>
 
-        <span class="n">fold_stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fold_results</span><span class="p">)</span>
+            <span class="c1"># add transforms to the returned fold results</span>
+            <span class="k">if</span> <span class="n">save_transforms</span><span class="p">:</span>
+                <span class="n">fold_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">fold_results</span><span class="p">)</span>   <span class="c1"># convert to list for inplace modifications</span>
+                <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fold_results</span><span class="p">):</span>
+                    <span class="c1"># replace &#39;transforms&#39; key</span>
+                    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;transforms&#39;</span><span class="p">:</span>
+                        <span class="n">fold_results</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">transforms_</span><span class="p">)</span>
+                <span class="n">fold_results</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">fold_results</span><span class="p">)</span>
+
+            <span class="n">fold_stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fold_results</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">optuna</span><span class="o">.</span><span class="n">delete_study</span><span class="p">(</span>
+                    <span class="n">study_name</span><span class="o">=</span><span class="n">study_name</span><span class="p">,</span>
+                    <span class="n">storage</span><span class="o">=</span><span class="s1">&#39;sqlite:///</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">storage_name</span><span class="p">))</span>
+
+                <span class="k">del</span> <span class="n">study</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Exception generated during the execution of gojo.core.evalCrossValNestedHPO. </span><span class="si">{}</span><span class="s1"> &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="nb">type</span><span class="p">(</span><span class="n">ex</span><span class="p">),</span> <span class="n">ex</span><span class="p">))</span>
+
+        <span class="k">raise</span> <span class="n">ex</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="c1"># remove optuna storage databases</span>
+        <span class="n">base_paths</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">storage</span> <span class="ow">in</span> <span class="n">created_storages</span><span class="p">:</span>
+            <span class="n">base_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">storage</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">storage</span><span class="p">)</span>   <span class="c1"># remove individual database</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Exception when removing optuna temporal files: </span><span class="si">{}</span><span class="s1"> - </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">ex</span><span class="p">),</span> <span class="n">ex</span><span class="p">))</span>
+
+        <span class="c1"># remove optuna storage directory</span>
+        <span class="n">base_paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">base_paths</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">base_path</span> <span class="ow">in</span> <span class="n">base_paths</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">base_path</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>   <span class="c1"># remove storage folder</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Exception when removing optuna temporal directory: </span><span class="si">{}</span><span class="s1"> - </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">ex</span><span class="p">),</span> <span class="n">ex</span><span class="p">))</span>
 
     <span class="c1"># the model should not remain fitted after the execution of the previous subroutines</span>
     <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">is_fitted</span><span class="p">:</span>

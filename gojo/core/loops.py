@@ -350,11 +350,14 @@ def evalCrossVal(
     model : :class:`gojo.interfaces.Model`
         Model to be trained. The input model must follow the :class:`gojo.base.Model` interfaz.
 
-    cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.splitter.SimpleSplitter` or
-    :class:`gojo.util.splitter.InstanceLevelKFoldSplitter` or :class:`gojo.util.splitter.PredefinedSplitter`
+    cv : Cross-validation splitter
         Cross-validation schema. For more information about cross validation see `sklearn.model_selection` module.
         The gojo module implements useful functions for easy loading of cross-validation objects (see
-        :func:`gojo.util.getCrossValObj`).
+        :func:`gojo.util.getCrossValObj`). Supported splitters are :class:`sklearn.model_selection.RepeatedKFold`,
+        :class:`sklearn.model_selection.RepeatedStratifiedKFold`, :class:`sklearn.model_selection.LeaveOneOut`,
+        :class:`gojo.util.splitter.SimpleSplitter`, :class:`gojo.util.splitter.InstanceLevelKFoldSplitter` or 
+        :class:`gojo.util.splitter.PredefinedSplitter` 
+
 
     transforms : List[Transform] or None, default=None
         Transformations applied to the data before being provided to the models. These transformations will be fitted
@@ -602,32 +605,45 @@ def evalCrossValNestedHPO(
 
     search_space : dict
         Search space used for performing the HPO. For more information about distributions and sampling strategies
-        consult `https://optuna.org/`.
+        consult `optuna <https://optuna.org>`_.
 
         >>> search_space = {
         >>>     # sample from a categorical distribution
         >>>     'max_depth': ('suggest_int', (2, 10)),
         >>>     # ... from a uniform distribution
-        >>>     'max_samples': ('suggest_float', (0.5, 1.0) ),
+        >>>     'max_samples': ('suggest_float', (0.5, 1.0)),
         >>> }
-        Note: keyword arguments can be passed by providing a dictionary in the third position where the key will
-        correspond to the name of the parameter.
 
-    outer_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.splitter.SimpleSplitter` or
-    :class:`gojo.util.splitter.InstanceLevelKFoldSplitter` or :class:`gojo.util.splitter.PredefinedSplitter`
+        Keyword arguments can be passed by providing a dictionary in the third position where the key will
+        correspond to the name of the parameter:
+
+        >>> search_space = {
+        >>>     # sample from a categorical distribution in log space
+        >>>     'max_depth': ('suggest_int', (2, 40), dict(step=1, log=True))),
+        >>>     # ... from a uniform distribution
+        >>>     'max_samples': ('suggest_float', (0.5, 1.0)),
+        >>> }
+        
+    outer_cv : Cross-validation splitter
         Cross-validation schema. For more information about cross validation see `sklearn.model_selection` module.
         The gojo module implements useful functions for easy loading of cross-validation objects (see
-        :func:`gojo.util.getCrossValObj`).
+        :func:`gojo.util.getCrossValObj`). Supported splitters are :class:`sklearn.model_selection.RepeatedKFold`,
+        :class:`sklearn.model_selection.RepeatedStratifiedKFold`, :class:`sklearn.model_selection.LeaveOneOut`,
+        :class:`gojo.util.splitter.SimpleSplitter`, :class:`gojo.util.splitter.InstanceLevelKFoldSplitter` or 
+        :class:`gojo.util.splitter.PredefinedSplitter` 
 
-    inner_cv : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut or :class:`gojo.util.splitter.SimpleSplitter` or
-    :class:`gojo.util.splitter.InstanceLevelKFoldSplitter` or :class:`gojo.util.splitter.PredefinedSplitter`
+    inner_cv : Cross-validation splitter
         Inner cross-validation schema used for evaluating model performance in the nested cross-validation used for
         optimize the model hyperparameters. For more information about cross validation see `sklearn.model_selection`
         module. The gojo module implements useful functions for easy loading of cross-validation objects (see
-        :func:`gojo.util.getCrossValObj`).
+        :func:`gojo.util.getCrossValObj`). Supported splitters are :class:`sklearn.model_selection.RepeatedKFold`,
+        :class:`sklearn.model_selection.RepeatedStratifiedKFold`, :class:`sklearn.model_selection.LeaveOneOut`,
+        :class:`gojo.util.splitter.SimpleSplitter`, :class:`gojo.util.splitter.InstanceLevelKFoldSplitter` or 
+        :class:`gojo.util.splitter.PredefinedSplitter` 
+
 
     hpo_sampler : optuna.samplers.BaseSampler
-        Sampler used for suggest model hyperparameters. For more information see `https://optuna.org/`.
+        Sampler used for suggest model hyperparameters. For more information see `optuna <https://optuna.org>`_.
 
     hpo_n_trials : int
         Number of HPO iterations.
