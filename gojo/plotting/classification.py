@@ -331,7 +331,8 @@ def roc(
     stratify: str = None,
     n_roc_points: int = 200,
     add_auc_info: bool = True,
-    labels: list = None,
+    labels: dict = None,
+    labels_order: list = None,
     show_random: bool = True,
     random_ls: str = 'dotted',
     random_lw: int or float = 1,
@@ -405,9 +406,14 @@ def roc(
     add_auc_info : bool, default=True
         Parameter indicating whether to display the AUC value associated with each model in the legend.
 
-    labels : list, default=None
+    labels : dict, default=None
         Labels used to identify the models, if not provided the values of the variable specified in `stratify` or a
-        default value of "Model" will be used.
+        default value of "Model" will be used. The labels should be provided as a dictionary where the key will be the 
+        value that identifies the model in the input data and the key will be the name given to the model. 
+
+    labels_order : list, default=None
+        Order in which the labels will be displayed by default they will be sorted or if parameter `labels` is provided 
+        they will appear in the order defined in that input parameter.
 
     show_random : bool, default=True
         Indicates whether to display the ROC curve associated with a random model.
@@ -538,7 +544,8 @@ def roc(
         ('stratify', stratify, [str, type(None)]),
         ('n_roc_points', n_roc_points, [int]),
         ('add_auc_info', add_auc_info, [bool]),
-        ('labels', labels, [list, type(None)]),
+        ('labels', labels, [dict, type(None)]),
+        ('labels_order', labels_order, [list, type(None)]),
         ('show_random', show_random, [bool]),
         ('random_ls', random_ls, [str]),
         ('random_lw', random_lw, [int, float]),
@@ -603,13 +610,34 @@ def roc(
         for label, preds_df in df.groupby(stratify):
             labels_.append(label)
             model_preds.append(preds_df)
+
+        # sort label order
+        if labels is None and not labels_order is None:
+            if len(set(labels_order)) != len(labels_order):
+                raise ValueError('Duplicated model name in input labels (parameter labels_order) "%r"' % labels_order)
+            
+            labels = {l: l for l in labels_order}
+
+        # rename and sort the models
+        if labels is not None:
+            sorted_labels = []
+            sorted_preds = []
+            for lkey, lval in labels.items():
+                for idx, label_ in enumerate(labels_):
+                    if label_ == lkey:
+                        if lval in sorted_labels:
+                            raise ValueError('Duplicated model name "%s"' % lval)
+                        sorted_labels.append(lval)
+                        sorted_preds.append(model_preds[idx])
+
+            labels_ = sorted_labels
+            model_preds = sorted_preds
     else:
         model_preds = [df]
         labels_ = ['Model']
 
     # select default labels
-    if labels is None:
-        labels = labels_
+    labels = labels_
 
     # check labels shape
     if len(labels) != len(model_preds):
