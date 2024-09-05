@@ -5,15 +5,19 @@
 #
 # STATUS: completed, and testing to be done, and documented.
 #
+import os
 import numpy as np
 import pandas as pd
 import warnings
+import torch
 from abc import ABCMeta, abstractmethod
+from pathlib import Path
 
 from ..util.validation import (
     checkMultiInputTypes,
     checkInputType
 )
+from ..util.io import saveTorchModel
 
 
 class Callback(object):
@@ -148,3 +152,67 @@ class EarlyStopping(Callback):
     def resetState(self):
         """ Reset callback """
         self._saved_valid_loss = []
+
+
+class SaveCheckPoint(Callback):
+    """ Callback used to save the model parameters during training.
+
+    Parameters
+    ----------
+    output_dir : str
+        Output directory used to store model parameters. If it does not exist, it will
+        be created automatically.
+
+    key : str
+        Key used to identify the model.
+
+    each_epoch : int
+        Specify the number of epochs to save for each model.
+
+    verbose : bool, default=True
+        Parameter that indicates whether to display messages on the screen when
+        executing the early stop.
+    """
+    DIRECTIVE = None
+
+    def __init__(
+        self,
+        output_dir: str,
+        key: str,
+        each_epoch: int,
+        verbose: bool = True
+    ):
+        super().__init__(name='SaveCheckPoint')
+
+        self.output_dir = output_dir
+        self.key = key
+        self.each_epoch = each_epoch
+        self.verbose = verbose
+
+    def evaluate(self, n_epoch: int, model: torch.nn.Module, **_):
+
+        if n_epoch > 0:
+            # create the output directory if it does not exist
+            if not os.path.exists(self.output_dir):
+                Path(self.output_dir).mkdir(parents=True)
+
+            # save model
+            if n_epoch % self.each_epoch == 0:
+                out_file = saveTorchModel(
+                    base_path=self.output_dir,
+                    key='%s_checkpoint_%d' % (self.key, int(n_epoch)),
+                    model=model
+                )
+
+                if self.verbose:
+                    self.message(out_file)
+
+        return self.DIRECTIVE
+
+    @staticmethod
+    def message(out_file: str):
+        print('\nSaved model %s\n' % out_file)
+
+    def resetState(self):
+        """ Reset callback """
+        pass

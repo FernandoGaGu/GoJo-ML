@@ -499,6 +499,7 @@ def fitNeuralNetwork(
         if callbacks is not None:
             commands_to_exec = [
                 callback(
+                    n_epoch=epoch,
                     model=model,
                     train_metrics=train_metrics,
                     valid_metrics=valid_metrics,

@@ -8,7 +8,10 @@ import json
 import joblib
 import pickle
 import gzip
+import torch
+import pandas as pd
 from datetime import datetime
+from pathlib import Path
 
 from . import login as base_login
 from ..util.validation import (
@@ -118,6 +121,87 @@ def serialize(obj, path: str, time_prefix: bool = False, overwrite: bool = False
 
     # export the object
     return _serialize(obj, file_fp, backend)
+
+
+def saveTorchModel(
+        base_path: str,
+        key: str,
+        model: torch.nn.Module
+) -> str:
+    """ Function used to save the weights of `torch.nn.Module` models.
+
+    Parameters
+    ----------
+    base_path : str
+        Base directory where the model will be stored. If this directory does
+        not exist, it will be created.
+
+    key : str
+        Key used to identify the model.
+
+    model : torch.nn.Module
+        Model whose parameters will be saved.
+
+
+    Returns
+    -------
+    file : str
+        Generated file.
+    """
+    # create the directory if it does not exist
+    if not os.path.exists(base_path):
+        Path(base_path).mkdir(parents=True)
+
+    output_file = os.path.join(
+        base_path, '%s_%s' % (
+            datetime.now().strftime('%Y%m%d_%H%M%S'),
+            key
+        ))
+
+    with torch.no_grad():
+        torch.save(
+            model.state_dict(),
+            output_file
+        )
+
+    # clear cuda cache
+    torch.cuda.empty_cache()
+
+    return output_file
+
+
+def saveTorchModelAndHistory(
+        base_path: str,
+        key: str,
+        model: torch.nn.Module,
+        history: dict):
+    """ Subroutine used to serialize model data and convergence history.
+
+    Parameters
+    ----------
+    base_path : str
+        Base directory where the model and convergence information will be stored.
+        If this directory does not exist, it will be created.
+
+    key : str
+        Key used to identify the model.
+
+    model : torch.nn.Module
+        Model whose parameters will be saved.
+
+    history : dict
+        Dictionary similar to the one returned by the function :meth:`util.torch_util.fit_neural_network`.
+    """
+
+    # save the model
+    model_file = saveTorchModel(
+        base_path=base_path,
+        key=key,
+        model=model
+    )
+
+    # save the convergence information
+    pd.concat(history).to_parquet('%s_history.parquet' % model_file)
 
 
 def _serialize(obj, path: str, backend: str) -> str:
