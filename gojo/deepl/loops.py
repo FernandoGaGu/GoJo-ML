@@ -66,6 +66,7 @@ def iterSupervisedEpoch(
         device: str,
         training: bool,
         metrics: list,
+        scheduler=None,
         **kwargs) -> tuple:
     """ Basic function applied to supervised problems that executes the code necessary to perform an epoch.
 
@@ -121,12 +122,18 @@ def iterSupervisedEpoch(
         if training:
             # training loop (calculate gradients and apply backpropagation)
             y_hat = model(X, *var_args)
+
             # evaluate loss function
             loss = loss_fn(y_hat, y)    # in: (input, target)
+
             # apply backpropagation
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+
+            if scheduler is not None:
+                scheduler.step()
+
         else:
             # inference model (no gradients will be computed)
             with torch.no_grad():
@@ -171,6 +178,7 @@ def iterUnsupervisedEpoch(
         device: str,
         training: bool,
         metrics: list,
+        scheduler=None,
         **kwargs) -> tuple:
     """ Basic function applied to supervised problems that executes the code necessary to perform an epoch.
 
@@ -241,6 +249,9 @@ def iterUnsupervisedEpoch(
             loss.backward()
             optimizer.step()
 
+            if scheduler is not None:
+                scheduler.step()
+
         else:
             # inference model (no gradients will be computed)
             with torch.no_grad():
@@ -305,6 +316,8 @@ def fitNeuralNetwork(
         loss_fn: callable,
         optimizer_class,
         optimizer_params: dict = None,
+        lr_scheduler_class=None,
+        lr_scheduler_params: dict = None,
         valid_dl: Iterable = None,
         device: str = None,
         verbose: int = 1,
@@ -343,6 +356,12 @@ def fitNeuralNetwork(
 
     optimizer_params : dict, default=None
         Parameters used to initialize the optimizer provided using `optimizer_params`.
+
+    lr_scheduler_class : type, default=None
+        Class used to construct a learning rate schedule as defined in :meth:`torch.optim.lr_scheduler`.
+
+    lr_scheduler_params : dict, default=None
+        Parameters used to initialize the learning rate scheduler as defined based on `lr_scheduler_class`.
 
     valid_dl : Iterable, default=None
         Validation dataloader (see `torch.utils.data.DataLoader
@@ -388,6 +407,7 @@ def fitNeuralNetwork(
     checkMultiInputTypes(
         ('n_epochs', n_epochs, [int]),
         ('optimizer_params', optimizer_params, [dict, type(None)]),
+        ('lr_scheduler_params', lr_scheduler_params, [dict, type(None)]),
         ('device', device, [str, type(None)]),
         ('verbose', verbose, [int]),
         ('metrics', metrics, [list, type(None)]),
@@ -425,6 +445,12 @@ def fitNeuralNetwork(
     # initialize the optimizer
     optimizer_obj = optimizer_class(model.parameters(), **optimizer_params)
 
+    # initialize the learning rate scheduler
+    scheduler = None
+    if lr_scheduler_class is not None:
+        lr_scheduler_params = {} if lr_scheduler_params is None else lr_scheduler_params
+        scheduler = lr_scheduler_class(optimizer_obj, **lr_scheduler_params)
+
     # perform the training loop
     train_metrics = []
     valid_metrics = []
@@ -444,6 +470,7 @@ def fitNeuralNetwork(
             device=device,
             training=True,
             metrics=metrics,
+            scheduler=scheduler,
             **kwargs)
 
         # check returned function values
@@ -474,6 +501,7 @@ def fitNeuralNetwork(
                 device=device,
                 training=False,
                 metrics=metrics,
+                scheduler=scheduler,
                 **kwargs)
 
             # check returned function values

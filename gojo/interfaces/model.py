@@ -343,8 +343,14 @@ class TorchSKInterface(Model):
     dataloader_class : type
         Pytorch dataloader class (`torch.utils.data.DataLoader`).
 
+    lr_scheduler_class : type, default=None
+        Class used to construct a learning rate schedule as defined in :meth:`torch.optim.lr_scheduler`.
+
     optimizer_kw : dict, default=None
         Parameters used to initialize the provided optimizer class.
+
+    lr_scheduler_kw : dict, default=None
+        Parameters used to initialize the learning rate scheduler as defined based on `lr_scheduler_class`.
 
     train_dataset_kw : dict, default=None
         Parameters used to initialize the provided dataset class for the data used for training.
@@ -511,9 +517,11 @@ class TorchSKInterface(Model):
             optimizer_class,
             dataset_class,
             dataloader_class,
+            lr_scheduler_class: type = None,
 
             # optional arguments for the input classes
             optimizer_kw: dict = None,
+            lr_scheduler_kw: dict = None,
             train_dataset_kw: dict = None,
             valid_dataset_kw: dict = None,
             inference_dataset_kw: dict = None,
@@ -542,9 +550,11 @@ class TorchSKInterface(Model):
         self.optimizer_class = optimizer_class
         self.dataset_class = dataset_class
         self.dataloader_class = dataloader_class
+        self.lr_scheduler_class = lr_scheduler_class
 
         # input classes initialization parameters
         self.optimizer_kw = _none2dict(optimizer_kw)
+        self.lr_scheduler_kw = _none2dict(lr_scheduler_kw)
         self.train_dataset_kw = _none2dict(train_dataset_kw)
         self.valid_dataset_kw = _none2dict(valid_dataset_kw)
         self.inference_dataset_kw = inference_dataset_kw    # let as None if provided
@@ -578,11 +588,14 @@ class TorchSKInterface(Model):
         checkClass('optimizer_class', self.optimizer_class)
         checkClass('dataset_class', self.dataset_class)
         checkClass('dataloader_class', self.dataloader_class)
+        if self.lr_scheduler_class is not None:
+            checkClass('lr_scheduler_class', self.lr_scheduler_class)
         checkMultiInputTypes(
             ('model', self._model, [torch.nn.Module]),
             ('n_epochs', self.n_epochs, [int]),
             ('train_split', self.train_split, [float]),
             ('optimizer_kw', self.optimizer_kw, [dict, type(None)]),
+            ('lr_scheduler_kw', self.lr_scheduler_kw, [dict, type(None)]),
             ('train_dataset_kw', self.train_dataset_kw, [dict, type(None)]),
             ('valid_dataset_kw', self.valid_dataset_kw, [dict, type(None)]),
             ('inference_dataset_kw', self.inference_dataset_kw, [dict, type(None)]),
@@ -638,9 +651,11 @@ class TorchSKInterface(Model):
             train_split=self.train_split,
             train_split_stratify=self.train_split_stratify,
             optimizer_class=self.optimizer_class,
+            lr_scheduler_class=self.lr_scheduler_class,
             dataset_class=self.dataset_class,
             dataloader_class=self.dataloader_class,
             optimizer_kw=self.optimizer_kw,
+            lr_scheduler_kw=self.lr_scheduler_kw,
             train_dataset_kw=self.train_dataset_kw,
             valid_dataset_kw=self.valid_dataset_kw,
             inference_dataset_kw=self.inference_dataset_kw,
@@ -738,6 +753,8 @@ class TorchSKInterface(Model):
             loss_fn=self.loss_function,
             optimizer_class=self.optimizer_class,
             optimizer_params=self.optimizer_kw,
+            lr_scheduler_class=self.lr_scheduler_class,
+            lr_scheduler_params=self.lr_scheduler_kw,
             device=self.device,
             verbose=self.verbose,
             metrics=self.metrics,
@@ -890,8 +907,14 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
     dataloader_class : type
         Pytorch dataloader class (`torch.utils.data.DataLoader`).
 
+    lr_scheduler_class : type, default=None
+        Class used to construct a learning rate schedule as defined in :meth:`torch.optim.lr_scheduler`.
+
     optimizer_kw : dict, default=None
         Parameters used to initialize the provided optimizer class.
+
+    lr_scheduler_kw : dict, default=None
+        Parameters used to initialize the learning rate scheduler as defined based on `lr_scheduler_class`.
 
     train_dataset_kw : dict, default=None
         Parameters used to initialize the provided dataset class for the data used for training.
@@ -1076,9 +1099,11 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
             optimizer_class,
             dataset_class,
             dataloader_class,
+            lr_scheduler_class: type = None,
 
             # optional arguments for the input classes
             optimizer_kw: dict = None,
+            lr_scheduler_kw: dict = None,
             train_dataset_kw: dict = None,
             valid_dataset_kw: dict = None,
             inference_dataset_kw: dict = None,
@@ -1114,7 +1139,9 @@ class ParametrizedTorchSKInterface(TorchSKInterface):
             optimizer_class=optimizer_class,
             dataset_class=dataset_class,
             dataloader_class=dataloader_class,
+            lr_scheduler_class=lr_scheduler_class,
             optimizer_kw=optimizer_kw,
+            lr_scheduler_kw=lr_scheduler_kw,
             train_dataset_kw=train_dataset_kw,
             valid_dataset_kw=valid_dataset_kw,
             inference_dataset_kw=inference_dataset_kw,

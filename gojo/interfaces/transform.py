@@ -259,6 +259,15 @@ class SKLearnTransformWrapper(Transform):
 
         return self._transform_obj.transform(X)
 
+    @property
+    def transform_obj(self, copy: bool = True) -> object:
+        """ Get the internal transform object. By default, a deepcopy from the transform will be generated. To return
+        the internal transformation directly, it is possible by selecting `copy=True`. """
+        if copy:
+            return deepcopy(self._transform_obj)
+
+        return self._transform_obj
+
     def copy(self):
         """ Make a deepcopy of the instance. """
         return deepcopy(self)

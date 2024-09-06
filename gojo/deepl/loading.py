@@ -394,15 +394,15 @@ class TorchDataset(Dataset):
                 y_dt = data_interface.Dataset(y)
                 np_y = y_dt.array_data
 
-                # add extra dimension to y
-                if len(np_y.shape) == 1:
-                    np_y = np_y[:, np.newaxis]
+                # remove the extra dimension from y
+                if len(np_y.shape) == 2 and np_y.shape[1] == 1:
+                    np_y = np_y.reshape(-1)
 
                 if len(self.X) != np_y.shape[0]:
                     raise TypeError(
-                        'Input "X" (shape[0] = %d) and "y" (shape[0] = %d) must contain the same number of entries in the '
-                        'first dimension.' % (len(self.X), np_y.shape[0]))
-                self.y = torch.from_numpy(np_y.astype(np.float32))
+                        'Input "X" (shape[0] = %d) and "y" (shape[0] = %d) must contain the same number of entries '
+                        'in the first dimension.' % (len(self.X), np_y.shape[0]))
+                self.y = torch.from_numpy(np_y)
                 self.y_dataset = y_dt
 
         self.x_stream_data = x_stream_data

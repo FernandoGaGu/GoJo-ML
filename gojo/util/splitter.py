@@ -424,8 +424,9 @@ def getCrossValObj(cv: int = None, repeats: int = 1, stratified: bool = False, l
     random_state : int, default=None
         (cross-validation) Random state for study replication.
 
+
     Returns
-    -------
+    --------
     cv_obj : RepeatedKFold or RepeatedStratifiedKFold or LeaveOneOut
         Cross-validation instance from the `sklearn <https://scikit-learn.org/stable/modules/cross_validation.html>`_
         library.
