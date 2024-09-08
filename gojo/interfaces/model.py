@@ -5,6 +5,7 @@
 #
 # STATUS: completed, functional, and documented.
 #
+import os
 import torch
 import numpy as np
 import warnings
@@ -17,7 +18,8 @@ from ..util.validation import (
     checkInputType,
     checkCallable,
     checkMultiInputTypes,
-    checkClass
+    checkClass,
+    fileExists
 )
 from ..util.io import (
     _createObjectRepresentation
@@ -861,6 +863,18 @@ class TorchSKInterface(Model):
             y_pred = y_pred.reshape(-1)
 
         return y_pred
+
+    def loadStateDict(self, file: str):
+        """ Subroutine used to load a state dictionary with the serialized model weights using `torch.save`.
+
+        Parameters
+        ----------
+        file : str
+            File with the saved weights.
+        """
+        fileExists(file, must_exists=True)
+
+        self._model.load_state_dict(torch.load(file))
 
     def copy(self):
         self_copy = deepcopy(self)

@@ -131,9 +131,6 @@ def iterSupervisedEpoch(
             loss.backward()
             optimizer.step()
 
-            if scheduler is not None:
-                scheduler.step()
-
         else:
             # inference model (no gradients will be computed)
             with torch.no_grad():
@@ -151,6 +148,9 @@ def iterSupervisedEpoch(
 
         # save loss value
         loss_values.append(loss.detach().cpu().item())
+
+    if training and scheduler is not None:
+        scheduler.step()
 
     # calculate metrics (if provided)
     metric_stats = {}
@@ -249,9 +249,6 @@ def iterUnsupervisedEpoch(
             loss.backward()
             optimizer.step()
 
-            if scheduler is not None:
-                scheduler.step()
-
         else:
             # inference model (no gradients will be computed)
             with torch.no_grad():
@@ -265,6 +262,9 @@ def iterUnsupervisedEpoch(
 
                 # process loss function output
                 loss, loss_opargs = _processOutput(loss)
+
+        if training and scheduler is not None:
+            scheduler.step()
 
         # gather model predictions and true values
         x_hat_np = model_out.detach().cpu().numpy().astype(float)

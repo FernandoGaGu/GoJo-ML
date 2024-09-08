@@ -96,25 +96,39 @@ class EarlyStopping(Callback):
             - 'mean': compare the current value with respect to the average of the `it_without_improve` epochs.
             - 'count': compare the current value with respect to `it_without_improve` epochs.
 
+    ref_metric : str, default=None
+        Reference metric calculated on the validation set to be used as a reference. By default, the loss value will be
+        used.
+        
+    smooth_n : int, default=None
+        Value that indicates if instead of considering the last value of the loss and comparing against the
+        historical ones, to smooth the last value considering the average value of the last `smooth_n` iterations.
+
     """
 
     VALID_TRACKING_OPTS = ['mean', 'count']
     _LOSS_IDENTIFICATION_KEY = 'loss (mean)'   # HACK. Hard-coding, key used to identify the average loss values
     DIRECTIVE = 'stop'
 
-    def __init__(self, it_without_improve: int, track: str = 'mean'):
+    def __init__(self, it_without_improve: int, track: str = 'mean', ref_metric: str = None, smooth_n: int = None):
         super().__init__(name='EarlyStopping')
 
         assert track in EarlyStopping.VALID_TRACKING_OPTS
 
+        # check smooth parameter
+        if smooth_n is not None and smooth_n <= 1:
+            raise ValueError('If provided. Parameter "smooth_n" must be greater than 1.')
+
         self.it_without_improve = it_without_improve
+        self.ref_metric = ref_metric if ref_metric is not None else self._LOSS_IDENTIFICATION_KEY
         self.track = track
+        self.smooth_n = smooth_n
 
         self._saved_valid_loss = []
 
     def _getLastLossValue(self, stats: list) -> float:
         """ Function used to get and check the current loss values. """
-        curr_loss = stats[-1].get(self._LOSS_IDENTIFICATION_KEY, np.nan)
+        curr_loss = stats[-1].get(self.ref_metric, np.nan)
 
         # check for NaNs in the current loss
         if pd.isna(curr_loss):
@@ -135,16 +149,29 @@ class EarlyStopping(Callback):
 
         else:
             # there is enough iterations performed to check loss improvements
+
+            # get the saved losses
+            saved_valid_loss = np.array(self._saved_valid_loss)
+
+            # get the current loss
             curr_loss = self._getLastLossValue(valid_loss)
+
+            # get the loss to compare
+            if self.smooth_n is None:
+                loss_to_comp = curr_loss
+            else:
+                loss_to_comp = np.mean(list(saved_valid_loss[-1*self.smooth_n+1:]) + [curr_loss])
+
             if self.track == 'count':
-                if np.all(curr_loss > np.array(self._saved_valid_loss)[-1 * self.it_without_improve:]):
+                if np.all(loss_to_comp > saved_valid_loss[-1 * self.it_without_improve:]):
                     command = self.DIRECTIVE
             elif self.track == 'mean':
-                if curr_loss > np.mean(self._saved_valid_loss[-1 * self.it_without_improve:]):
+                if loss_to_comp > np.mean(saved_valid_loss[-1 * self.it_without_improve:]):
                     command = self.DIRECTIVE
             else:
                 raise NotImplementedError()
 
+            # save the current loss
             self._saved_valid_loss.append(curr_loss)
 
         return command
