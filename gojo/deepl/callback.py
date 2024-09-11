@@ -99,7 +99,7 @@ class EarlyStopping(Callback):
     ref_metric : str, default=None
         Reference metric calculated on the validation set to be used as a reference. By default, the loss value will be
         used.
-        
+
     smooth_n : int, default=None
         Value that indicates if instead of considering the last value of the loss and comparing against the
         historical ones, to smooth the last value considering the average value of the last `smooth_n` iterations.
