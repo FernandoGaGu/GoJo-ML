@@ -11,5 +11,6 @@ from .data import (
 
 from .transform import (
     Transform,
-    SKLearnTransformWrapper
+    SKLearnTransformWrapper,
+    GraphStandardScaler
 )

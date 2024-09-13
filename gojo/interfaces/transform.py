@@ -271,3 +271,78 @@ class SKLearnTransformWrapper(Transform):
     def copy(self):
         """ Make a deepcopy of the instance. """
         return deepcopy(self)
+
+
+class GraphStandardScaler(Transform):
+    """ Class that performs a standardization of three-dimensional input data associated with the following dimensions:
+    (n_instances, n_nodes, n_features). The returned data will have a mean of 0 and standard deviation of 1 along
+    dimensions 1 and 2."""
+    def __init__(self):
+        super(GraphStandardScaler, self).__init__()
+
+        self.means_ = None
+        self.stds_ = None
+
+    def __repr__(self):
+        return 'GraphStandardScaler'
+
+    def __str__(self):
+        return self.__repr__()
+
+    def getParameters(self) -> dict:
+        return {}
+
+    def updateParameters(self, **kwargs):
+        """ This method has no effect. """
+        pass
+
+    @staticmethod
+    def _checkInputShape(X: np.ndarray):
+        if len(X.shape) != 3:
+            raise ValueError('Expected X to be three dimensional. Input dimensions: %r' % list(X.shape))
+
+    def fit(self, X: np.ndarray, y: np.ndarray or None = None, **kwargs):
+        """ Method used to fit a transform to a given input data.
+
+        Parameters
+        ----------
+        X : np.ndarray
+            Input data to fit the model.
+
+        y : np.ndarray or None, default=None
+            Data labels (optional).
+        """
+        self._checkInputShape(X)
+
+        self.means_ = X.mean(axis=0)
+        self.stds_ = X.std(axis=0, ddof=1)
+
+        self.fitted()
+
+    def reset(self):
+        """ Reset the model fit. """
+        self.means_ = None
+        self.stds_ = None
+
+    def transform(self, X: np.ndarray, **kwargs) -> np.ndarray:
+        """ Method used to apply the transformations.
+
+        Parameters
+        ----------
+        X : np.ndarray
+            Input data to be transformed.
+
+        Returns
+        -------
+        X_trans : np.ndarray
+            Transformer data.
+        """
+        if not self.is_fitted:
+            raise UnfittedTransform()
+
+        self._checkInputShape(X)
+
+        return (X - self.means_) / self.stds_
+
+
+

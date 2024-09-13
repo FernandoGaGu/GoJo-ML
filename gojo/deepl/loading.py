@@ -114,7 +114,7 @@ class GraphDataset(Dataset):
             raise TypeError('At least one of "adj_matrix" or "edge_index" must be provided.')
 
         # process the y variable
-        y_tensor = torch.from_numpy(np.array([np.nan] * len(X)).astype(np.float32))
+        y_tensor = torch.from_numpy(np.array([np.nan] * len(X)).astype(np.float32)).float()
         if y is not None:
             # get the y data as a numpy array
             np_y = data_interface.Dataset(y).array_data
@@ -124,7 +124,7 @@ class GraphDataset(Dataset):
                 np_y = np_y[:, np.newaxis]
 
             # convert the y variable to a torch.Tensor
-            y_tensor = torch.from_numpy(np_y.astype(np.float32))
+            y_tensor = torch.from_numpy(np_y.astype(np.float32)).float()
 
         # process X variable
         x_list_tensor = []
@@ -152,7 +152,7 @@ class GraphDataset(Dataset):
 
             # create a list of tensors
             x_list_tensor = [
-                torch.from_numpy(np_X[i, ...]) for i in range(np_X.shape[0])]
+                torch.from_numpy(np_X[i, ...]).float() for i in range(np_X.shape[0])]
 
         # check y and X shape
         if len(y_tensor) != len(x_list_tensor):
