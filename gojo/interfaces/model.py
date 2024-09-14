@@ -823,6 +823,9 @@ class TorchSKInterface(Model):
 
             # change the batch size
             dataloader_op_args['batch_size'] = batch_size
+
+            # avoid the use of samplers
+            dataloader_op_args['sampler'] = None
         else:
             dataloader_op_args = self.inference_dataloader_kw
 
@@ -851,7 +854,6 @@ class TorchSKInterface(Model):
                 else:
                     X_batch = dlargs.to(device=self.device)
                     var_args = []
-
                 # make model predictions
                 y_hat = self._model(X_batch, *var_args).detach().cpu().numpy()
                 y_pred.append(y_hat)

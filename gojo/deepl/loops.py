@@ -113,8 +113,8 @@ def iterSupervisedEpoch(
                 'correspond to the input data (the Xs) and the second to the target to be approximated (the Ys). '
                 'The rest of the returned arguments will be passed in the order returned to the model.')
 
-        X = dlargs[0].to(device=torch.device(device)).float()
-        y = dlargs[1].to(device=torch.device(device)).float()
+        X = dlargs[0].to(device=torch.device(device))
+        y = dlargs[1].to(device=torch.device(device))
         var_args = dlargs[2:]
 
         # TODO. Loss function calculation can be generalized through a Loss interface.
@@ -224,10 +224,10 @@ def iterUnsupervisedEpoch(
                 'der returned to the model.')
 
         if isinstance(dlargs, (tuple, list)):
-            X = dlargs[0].to(device=torch.device(device)).float()
+            X = dlargs[0].to(device=torch.device(device))
             var_args = dlargs[1:]
         else:
-            X = dlargs.to(device=torch.device(device)).float()
+            X = dlargs.to(device=torch.device(device))
             var_args = []
 
         # perform model inference (training/testing)
