@@ -1,7 +1,7 @@
 # Module containing the definitions of some loss functions typically used in Deep Learning models.
 #
 # Author: Fernando García Gutiérrez
-# Email: fgarcia@fundacioace.org
+# Email: ga.gu.fernando.concat@gmail.com
 #
 # STATUS: under development
 #

@@ -1,7 +1,7 @@
 # Module containing the code used to collect the results of the model evaluation.
 #
 # Author: Fernando García Gutiérrez
-# Email: fgarcia@fundacioace.org
+# Email: ga.gu.fernando.concat@gmail.com
 #
 # STATUS: completed and functional
 #

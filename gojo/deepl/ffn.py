@@ -2,7 +2,7 @@
 # networks (FFN)
 #
 # Author: Fernando García Gutiérrez
-# Email: fgarcia@fundacioace.org
+# Email: ga.gu.fernando.concat@gmail.com
 #
 # STATUS: completed, functional, and documented.
 #

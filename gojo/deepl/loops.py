@@ -1,7 +1,7 @@
 # Module containing the code typically used to train and evaluate Deep Learning models
 #
 # Author: Fernando García Gutiérrez
-# Email: fgarcia@fundacioace.org
+# Email: ga.gu.fernando.concat@gmail.com
 #
 # STATUS: completed, functional, and documented.
 #

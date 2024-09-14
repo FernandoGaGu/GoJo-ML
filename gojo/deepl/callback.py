@@ -1,7 +1,7 @@
 # Module containing the callbacks used by the training loops of deep learning models.
 #
 # Author: Fernando García Gutiérrez
-# Email: fgarcia@fundacioace.org
+# Email: ga.gu.fernando.concat@gmail.com
 #
 # STATUS: completed, and testing to be done, and documented.
 #

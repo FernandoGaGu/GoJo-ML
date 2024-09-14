@@ -1,7 +1,7 @@
 # Module that contains all the necessary functionalities to separate the data into different sets.
 #
 # Author: Fernando García Gutiérrez
-# Email: fgarcia@fundacioace.org
+# Email: ga.gu.fernando.concat@gmail.com
 #
 # STATUS: uncompleted and not functional, still in development
 #

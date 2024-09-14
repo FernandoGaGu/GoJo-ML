@@ -1,7 +1,7 @@
 # Module with tools related to data validation.
 #
 # Author: Fernando García Gutiérrez
-# Email: fgarcia@fundacioace.org
+# Email: ga.gu.fernando.concat@gmail.com
 #
 import os
 import inspect

@@ -1,7 +1,7 @@
 # Module with login functionalities.
 #
 # Author: Fernando García Gutiérrez
-# Email: fgarcia@fundacioace.org
+# Email: ga.gu.fernando.concat@gmail.com
 #
 import warnings
 import sys

@@ -1,7 +1,7 @@
 # Module with various functionalities used by the library.
 #
 # Author: Fernando García Gutiérrez
-# Email: fgarcia@fundacioace.org
+# Email: ga.gu.fernando.concat@gmail.com
 #
 # STATUS: uncompleted and not functional, still in development
 #

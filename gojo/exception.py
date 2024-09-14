@@ -1,7 +1,7 @@
 # Exceptions module
 #
 # Author: Fernando García Gutiérrez
-# Email: fgarcia@fundacioace.org
+# Email: ga.gu.fernando.concat@gmail.com
 #
 class IncorrectNumberOfClasses(Exception):
     """ Exception thrown when the input number of classes in an array is different from the predefined by the user. """

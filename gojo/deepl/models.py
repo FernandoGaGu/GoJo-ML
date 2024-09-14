@@ -1,7 +1,7 @@
 # Module with common neural network architectures.
 #
 # Author: Fernando García Gutiérrez
-# Email: fgarcia@fundacioace.org
+# Email: ga.gu.fernando.concat@gmail.com
 #
 # STATUS: completed, functional, and documented.
 #
@@ -353,7 +353,7 @@ class MultiTaskFFNv2(torch.nn.Module):
         return out
 
 
-class GNN(torch.nn.Module):
+class WrapperGNN(torch.nn.Module):
     """ Graph Neural Network wrapper for graph classification. This model allows integrating data in the form of a
     graph through a model defined `gnn_model` parameter, and  tabular data through a model defined in `ffn_model` and
     the resulting information will be fused using the defined `fusion_model`.
@@ -387,7 +387,7 @@ class GNN(torch.nn.Module):
             use_tabular_x: bool = False,
             gp_agg: str = 'sum'
     ):
-        super(GNN, self).__init__()
+        super(WrapperGNN, self).__init__()
 
         self.gnn_model = gnn_model
         self.ffn_model = ffn_model

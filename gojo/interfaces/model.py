@@ -1,7 +1,7 @@
 # Module with the interfaces that encapsulate the behavior of the models inside the library.
 #
 # Author: Fernando García Gutiérrez
-# Email: fgarcia@fundacioace.org
+# Email: ga.gu.fernando.concat@gmail.com
 #
 # STATUS: completed, functional, and documented.
 #

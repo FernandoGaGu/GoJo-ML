@@ -1,7 +1,7 @@
 # Module with the necessary interfaces to encapsulate the internal data handling within the module.
 #
 # Author: Fernando García Gutiérrez
-# Email: fgarcia@fundacioace.org
+# Email: ga.gu.fernando.concat@gmail.com
 #
 # STATUS: completed, functional, and documented.
 #

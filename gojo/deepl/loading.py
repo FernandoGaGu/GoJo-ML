@@ -1,7 +1,7 @@
 # Module with data loading utilities
 #
 # Author: Fernando García Gutiérrez
-# Email: fgarcia@fundacioace.org
+# Email: ga.gu.fernando.concat@gmail.com
 #
 # STATUS: completed, functional, and documented.
 #
@@ -227,11 +227,12 @@ class GraphDataset(Dataset):
                 tabular_x = np.stack(tabular_x)
 
             if tabular_x is None:
-                tabular_x = torch.from_numpy(np.array([np.nan] * len(X)).astype(np.float32))
+                tabular_x = [None] * len(X)
             else:
                 tabular_x = torch.from_numpy(data_interface.Dataset(tabular_x).array_data.astype(np.float32))
                 tabular_x = tabular_x.unsqueeze(1)
 
+            # ---- end development
         # TODO. Implement edge_attr
         # ...
 
