@@ -291,6 +291,9 @@ class TorchDataset(Dataset):
     y_loading_fn : callable, default=None
         Same logic as `x_loading_fn` but applied to the `y` parameter.
 
+    squeeze_y : bool, default=False
+        Parameter indicating whether to flatten the `y` variable and when its dimensions are (X, 1).
+
     **op_instance_args
         Instance-level optional arguments. This parameter should be a dictionary whose values must be `np.ndarray`
         containing the same number of elements as instances in `X` and `y`.
@@ -320,6 +323,7 @@ class TorchDataset(Dataset):
             x_loading_fn: callable = None,
             y_stream_data: bool = False,
             y_loading_fn: callable = None,
+            squeeze_y: bool = False,
             **op_instance_args):
         super(TorchDataset, self).__init__()
 
@@ -331,7 +335,8 @@ class TorchDataset(Dataset):
             ('x_transforms', x_transforms, [list, type(None)]),
             ('y_transforms', y_transforms, [list, type(None)]),
             ('x_stream_data', x_stream_data, [bool]),
-            ('y_stream_data', y_stream_data, [bool])
+            ('y_stream_data', y_stream_data, [bool]),
+            ('squeeze_y', squeeze_y, [bool])
         )
 
         # check transforms
@@ -346,6 +351,7 @@ class TorchDataset(Dataset):
         # save parameters
         self.x_transforms = x_transforms
         self.y_transforms = y_transforms
+        self.squeeze_y = squeeze_y
 
         # check op_instance_args
         op_instance_args = deepcopy(op_instance_args)   # avoid inplace modifications
@@ -396,7 +402,7 @@ class TorchDataset(Dataset):
                 np_y = y_dt.array_data
 
                 # remove the extra dimension from y
-                if len(np_y.shape) == 2 and np_y.shape[1] == 1:
+                if self.squeeze_y and len(np_y.shape) == 2 and np_y.shape[1] == 1:
                     np_y = np_y.reshape(-1)
 
                 if len(self.X) != np_y.shape[0]:
