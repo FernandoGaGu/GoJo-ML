@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gojo.deepl.loading &mdash; gojo - Documentation 0.1.5.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #F24C4C" >
+            <a href="../../../index.html" class="icon icon-home"> gojo - Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Hands-on</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html">Model evaluation by cross validation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#definition-and-evaluation-of-a-support-vector-machine-svm-model"><strong>Definition and evaluation of a Support Vector Machine (SVM) model</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#understanding-svms-with-polynomial-kernels"><strong>Understanding SVMs with Polynomial Kernels</strong></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#introduction-to-svm"><strong>Introduction to SVM</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-hyperplane"><strong>The Mathematical Foundation - Hyperplane</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-maximizing-the-margin"><strong>The Mathematical Foundation - Maximizing the Margin</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-the-optimization-problem"><strong>The Mathematical Foundation - The Optimization Problem</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-introducing-kernels"><strong>The Mathematical Foundation - Introducing Kernels</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#hands-on"><strong>Hands-on</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_2_Neural_networks_integration.html">Neural networks integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_2_Neural_networks_integration.html#basic-model-training">Basic model training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_2_Neural_networks_integration.html#model-evaluation-via-cross-validation">Model evaluation via cross-validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_3_Hyperparameter_optimization_by_nested_cross_validation.html">Hyperparameter optimization by nested cross-validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_3_Hyperparameter_optimization_by_nested_cross_validation.html#initial-model-evaluation">Initial model evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_3_Hyperparameter_optimization_by_nested_cross_validation.html#hyperparameter-optimization">Hyperparameter optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html">Vanilla Variational Autoencoder (vVAE)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#data-loading">Data loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#model-training">Model training</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#model-convergence">Model convergence</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#model-evaluation">Model evaluation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#analyze-the-reconstruction-error">Analyze the reconstruction error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#compute-regression-metrics">Compute regression metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#visualize-embedding-dimensions">Visualize embedding dimensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#generate-samples">Generate samples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html">Example 6. Testing different CNN architectures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#data-loading">Data loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#vanilla-cnn">Vanilla CNN</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#model-convergence">Model convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#model-evaluation">Model evaluation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#cnn-with-residual-connections">CNN with residual connections</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#id1">Model convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#id2">Model evaluation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Advanced_use.html">Advanced use</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Advanced_use.html#definition-of-your-own-transformations-gojo-interfaces-transform">Definition of your own transformations (gojo.interfaces.Transform)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.core.html">gojo.core package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.core.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.core.html#module-gojo.core.evaluation">gojo.core.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.core.html#module-gojo.core.loops">gojo.core.loops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.core.html#module-gojo.core.report">gojo.core.report module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.core.html#module-gojo.core">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.interfaces.html">gojo.interfaces package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.interfaces.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.interfaces.html#module-gojo.interfaces.model">gojo.interfaces.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.interfaces.html#module-gojo.interfaces.data">gojo.interfaces.data module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.interfaces.html#module-gojo.interfaces.transform">gojo.interfaces.transform module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.interfaces.html#module-gojo.interfaces">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.deepl.html">gojo.deepl package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.callback">gojo.deepl.callback module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.cnn">gojo.deepl.cnn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.ffn">gojo.deepl.ffn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.loading">gojo.deepl.loading module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.loops">gojo.deepl.loops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.loss">gojo.deepl.loss module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.models">gojo.deepl.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.plotting.html">gojo.plotting package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.plotting.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.plotting.html#module-gojo.plotting.basic">gojo.plotting.basic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.plotting.html#module-gojo.plotting.classification">gojo.plotting.classification module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.plotting.html#module-gojo.plotting">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.util.html">gojo.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util.io">gojo.util.io module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util.login">gojo.util.login module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util.splitter">gojo.util.splitter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util.tools">gojo.util.tools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util.validation">gojo.util.validation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.experimental.html">gojo.experimental package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.experimental.html#module-gojo.experimental">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #F24C4C" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gojo - Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>gojo.deepl.loading</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gojo.deepl.loading</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Module with data loading utilities</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Fernando García Gutiérrez</span>
+<span class="c1"># Email: ga.gu.fernando.concat@gmail.com</span>
+<span class="c1">#</span>
+<span class="c1"># STATUS: completed, functional, and documented.</span>
+<span class="c1">#</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">torch_geometric</span> <span class="k">as</span> <span class="nn">geom</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">Dataset</span>
+
+<span class="kn">from</span> <span class="nn">..interfaces</span> <span class="kn">import</span> <span class="n">data</span> <span class="k">as</span> <span class="n">data_interface</span>
+<span class="kn">from</span> <span class="nn">..util.validation</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">checkInputType</span><span class="p">,</span>
+    <span class="n">checkMultiInputTypes</span><span class="p">,</span>
+    <span class="n">checkCallable</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="GraphDataset"><a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.loading.GraphDataset">[docs]</a><span class="k">class</span> <span class="nc">GraphDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Class used to generate a dataset adapted to operate with Graph Neural Networks. This class can be passed</span>
+<span class="sd">    to `torch.utils.data.DataLoader` and subsequently used by the :func:`gojo.deepl.loops.fitNeuralNetwork` function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    X : np.ndarray or pd.DataFrame or List[np.ndarray]</span>
+<span class="sd">        Input predictor variables used to adjust the models. If a numpy array or a pandas DataFrame is provided,</span>
+<span class="sd">        entries along dimension 0 will be interpreted as instances, and the 1-axis will be interpreted as the</span>
+<span class="sd">        number of nodes in the network. In the case where a list of numpy arrays is provided, each element of</span>
+<span class="sd">        the list will be interpreted as an instance, the 0-axis as the number of nodes, and the remaining</span>
+<span class="sd">        dimensions as node features.</span>
+
+<span class="sd">    y : np.ndarray or pd.DataFrame or pd.Series, default=None</span>
+<span class="sd">        Target variables to fit the models (or None).</span>
+
+<span class="sd">    adj_matrix : np.ndarray or pd.DataFrame or List[Union[np.ndarray, pd.DataFrame]], default=None</span>
+<span class="sd">        Adjacency matrix. If a numpy array or a pandas DataFrame is provided, it must have a shape of</span>
+<span class="sd">        (`n_nodes`, `n_nodes`). In the case where a list of numpy arrays is provided, each element of the list will be</span>
+<span class="sd">        interpreted as a graph, and it must have a shape of (`n_nodes`, `n_nodes`).</span>
+
+<span class="sd">        One of `adj_matrix` or `edge_index` must be provided.</span>
+
+<span class="sd">    edge_index : np.ndarray or pd.DataFrame or List[Union[np.ndarray, pd.DataFrame]], default=None</span>
+<span class="sd">        Edge index. If a numpy array or a pandas DataFrame is provided, it must have a shape of (`2`, `n_nodes`). In</span>
+<span class="sd">        the case where a list of numpy arrays is provided, each element of the list will be interpreted as a graph,</span>
+<span class="sd">        and it must have a shape of (`2`, `n_nodes`).</span>
+
+<span class="sd">        One of `adj_matrix` or `edge_index` must be provided.</span>
+
+<span class="sd">    tabular_x: np.ndarray or pd.DataFrame or List[np.ndarray], default=None</span>
+<span class="sd">        Tabular characteristics that will be stored in the `tabular_x` attribute of the instances (</span>
+<span class="sd">        `torch_geometric.data.DataBatch`) returned by this dataset.</span>
+
+<span class="sd">        .. important::</span>
+<span class="sd">            Internally a dimension will be added along axis 1 to prevent `torch_geometric` dataloaders from flattening</span>
+<span class="sd">            the data to a single dimension.</span>
+
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import gojo</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; n_samples = 10     # number of instances</span>
+<span class="sd">    &gt;&gt;&gt; n_node_feats = 3   # number of node features</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # generate random adjacency matrices, one for each sample</span>
+<span class="sd">    &gt;&gt;&gt; adj_matrices = []</span>
+<span class="sd">    &gt;&gt;&gt; for _ in range(n_samples):</span>
+<span class="sd">    &gt;&gt;&gt;     n_nodes = np.random.randint(5, 30)</span>
+<span class="sd">    &gt;&gt;&gt;     adj_matrices.append(np.random.randint(0, 2, size=(n_nodes, n_nodes)))</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # generate the node features</span>
+<span class="sd">    &gt;&gt;&gt; # each sample will be (n_nodes, n_node_features)</span>
+<span class="sd">    &gt;&gt;&gt; node_feats = [</span>
+<span class="sd">    &gt;&gt;&gt;     np.random.uniform(size=(adj_matrix.shape[0], n_node_feats))</span>
+<span class="sd">    &gt;&gt;&gt;     for adj_matrix in adj_matrices</span>
+<span class="sd">    &gt;&gt;&gt; ]</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # generate a target feature</span>
+<span class="sd">    &gt;&gt;&gt; target = np.random.randint(0, 2, size=n_samples)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # create the dataset</span>
+<span class="sd">    &gt;&gt;&gt; graph_dt = gojo.experimental.deepl_loading.GraphDataset(</span>
+<span class="sd">    &gt;&gt;&gt;     X=node_feats,</span>
+<span class="sd">    &gt;&gt;&gt;     y=target,</span>
+<span class="sd">    &gt;&gt;&gt;     adj_matrix=adj_matrices</span>
+<span class="sd">    &gt;&gt;&gt; )</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">adj_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">edge_index</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tabular_x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GraphDataset</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># check input arguments</span>
+        <span class="k">if</span> <span class="n">adj_matrix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">edge_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s1">&#39;Both &quot;adj_matrix&quot; and &quot;edge_index&quot; have been provided, &quot;edge_index&quot; will be ignored.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">adj_matrix</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">edge_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;At least one of &quot;adj_matrix&quot; or &quot;edge_index&quot; must be provided.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># process the y variable</span>
+        <span class="n">y_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># get the y data as a numpy array</span>
+            <span class="n">np_y</span> <span class="o">=</span> <span class="n">data_interface</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">array_data</span>
+
+            <span class="c1"># add extra dimension to y (n_samples, n_targets)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np_y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">np_y</span> <span class="o">=</span> <span class="n">np_y</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+
+            <span class="c1"># convert the y variable to a torch.Tensor</span>
+            <span class="n">y_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">np_y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+
+        <span class="c1"># process X variable</span>
+        <span class="n">x_list_tensor</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+                <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;X[i]&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span>
+
+            <span class="c1"># create a list of tensors</span>
+            <span class="n">x_list_tensor</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))]</span>
+
+            <span class="c1"># if the elements of the tensor are of shape (n_nodes) add n_node_features dimension</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_list_tensor</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_list_tensor</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">x_list_tensor</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_list_tensor</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># get the X data as a numpy array</span>
+            <span class="n">np_X</span> <span class="o">=</span> <span class="n">data_interface</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">array_data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+            <span class="c1"># add extra dimension to X (n_samples, n_nodes, n_node_features)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np_X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">np_X</span> <span class="o">=</span> <span class="n">np_X</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+
+            <span class="c1"># create a list of tensors</span>
+            <span class="n">x_list_tensor</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">np_X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+
+        <span class="c1"># check y and X shape</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_tensor</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_list_tensor</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;Number of samples in &quot;X&quot; (</span><span class="si">%d</span><span class="s1">) does not match the number of samples in &quot;y&quot; (</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                 <span class="nb">len</span><span class="p">(</span><span class="n">x_list_tensor</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_tensor</span><span class="p">)))</span>
+
+        <span class="c1"># process the adjacency matrix / edge index</span>
+        <span class="n">edge_index_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">adj_matrix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">):</span>
+                    <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;adj_matrix[i]&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span>
+
+                <span class="c1"># convert adjacency matrix to edge index</span>
+                <span class="n">edge_index_</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)))</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">))]</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># create copies of the adjacency matrix as edge index</span>
+                <span class="n">adj_matrix_np</span> <span class="o">=</span> <span class="n">data_interface</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">)</span><span class="o">.</span><span class="n">array_data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+                <span class="n">edge_index_</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">adj_matrix_np</span><span class="p">))</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
+                    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_list_tensor</span><span class="p">))]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="c1"># convert edge index to torch.Tensor</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">edge_index</span><span class="p">):</span>
+                    <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;edge_index[i]&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span>
+                    <span class="n">edge_index</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">edge_index</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+
+                <span class="n">edge_index_</span> <span class="o">=</span> <span class="n">edge_index</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># create copies of the edge index</span>
+                <span class="n">np_edge_index</span> <span class="o">=</span> <span class="n">data_interface</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">edge_index</span><span class="p">)</span><span class="o">.</span><span class="n">array_data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+                <span class="n">edge_index_</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">np_edge_index</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_list_tensor</span><span class="p">))]</span>
+
+        <span class="c1"># check the shape of the edge index</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">edge_index_</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_list_tensor</span><span class="p">),</span>\
+            <span class="s1">&#39;Missmatch in internal &quot;edge_index_&quot; (</span><span class="si">%d</span><span class="s1">) shape and &quot;x_list_tensor&quot; (</span><span class="si">%d</span><span class="s1">).&#39;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">edge_index_</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_list_tensor</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">edge_index_</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">edge_index_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s1">&#39;edge_index[</span><span class="si">%d</span><span class="s1">] shape different from 2 (</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">edge_index_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)))</span>
+
+            <span class="k">if</span> <span class="n">edge_index_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s1">&#39;edge_index[</span><span class="si">%d</span><span class="s1">].shape[0] different from 2 (</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">edge_index_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="c1"># check the consistency in the number of nodes</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">nodes_</span><span class="p">,</span> <span class="n">sample_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">edge_index_</span><span class="p">,</span> <span class="n">x_list_tensor</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">nodes_</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">+</span><span class="mi">1</span> <span class="o">!=</span> <span class="n">sample_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s1">&#39;Different number of nodes in sample </span><span class="si">%d</span><span class="s1"> (edge_index=</span><span class="si">%d</span><span class="s1">, feature_vector=</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                    <span class="n">i</span><span class="p">,</span> <span class="n">nodes_</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">sample_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="c1"># check tabular information</span>
+        <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;tabular_x&#39;</span><span class="p">,</span> <span class="n">tabular_x</span><span class="p">,</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">tabular_x</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">tabular_x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;&quot;tabular_x&quot; shape along 0 axis missmatch (expected </span><span class="si">%d</span><span class="s1">, input </span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_list_tensor</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tabular_x</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tabular_x</span><span class="p">):</span>
+                    <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;tabular_x[</span><span class="si">%d</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span>
+                <span class="n">tabular_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">tabular_x</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">tabular_x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">tabular_x</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tabular_x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">data_interface</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">tabular_x</span><span class="p">)</span><span class="o">.</span><span class="n">array_data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+                <span class="n">tabular_x</span> <span class="o">=</span> <span class="n">tabular_x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># ---- end development</span>
+        <span class="c1"># TODO. Implement edge_attr</span>
+        <span class="c1"># ...</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_tensor</span> <span class="o">=</span> <span class="n">y_tensor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_list_tensor</span> <span class="o">=</span> <span class="n">x_list_tensor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edge_index</span> <span class="o">=</span> <span class="n">edge_index_</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabular_x</span> <span class="o">=</span> <span class="n">tabular_x</span>
+
+        <span class="c1"># create the torch_geometric.data.Data instances</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">geom</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Data</span><span class="p">(</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="o">=</span><span class="n">ei</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">tabular_x</span><span class="o">=</span><span class="n">tab_x</span>
+            <span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">ei</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tab_x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x_list_tensor</span><span class="p">,</span> <span class="n">edge_index_</span><span class="p">,</span> <span class="n">y_tensor</span><span class="p">,</span> <span class="n">tabular_x</span><span class="p">)</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_list</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_tensor</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_list</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TorchDataset"><a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.loading.TorchDataset">[docs]</a><span class="k">class</span> <span class="nc">TorchDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Basic Dataset class torch models. This class can be passed to `torch.DataLoaders` and subsequently used by the</span>
+<span class="sd">    :func:`gojo.deepl.loops.fitNeuralNetwork` function or :class:`gojo.interfaces.TorchSKInterface` and</span>
+<span class="sd">    :class:`gojo.interfaces.ParametrizedTorchSKInterface` classes.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : np.ndarray or pd.DataFrame or pd.Series</span>
+<span class="sd">        Input predictor variables used to fit the models.</span>
+
+<span class="sd">    y : np.ndarray or pd.DataFrame or pd.Series, default=None</span>
+<span class="sd">        Target variables to fit the models (or None).</span>
+
+<span class="sd">    x_transforms : list, default=None</span>
+<span class="sd">        Transformations to be applied to the data provided in `X`. This parameter must be provided as a list of</span>
+<span class="sd">        callables which will receive as input the `X` data.</span>
+
+<span class="sd">    y_transforms : list, default=None</span>
+<span class="sd">        Transformations to be applied to the data provided in `y`. This parameter must be provided as a list of</span>
+<span class="sd">        callables which will receive as input the `y` data.</span>
+
+<span class="sd">    x_stream_data : bool, default=False</span>
+<span class="sd">        Parameter indicating whether `X` data will be loaded in streaming. In this case the parameters of `X` will be</span>
+<span class="sd">        passed to `x_loading_fn` and this function must return the data that (if provided) will then go to the</span>
+<span class="sd">        transforms and subsequently be returned by the dataset.</span>
+
+<span class="sd">    x_loading_fn : callable, default=None</span>
+<span class="sd">        Function used to load streaming data. This parameter will have no effect if &#39;x_stream_data&#39; has not been</span>
+<span class="sd">        provided.</span>
+
+<span class="sd">    y_stream_data : bool, default=False</span>
+<span class="sd">        Same logic as `x_stream_data` but applied to the `y` parameter.</span>
+
+<span class="sd">    y_loading_fn : callable, default=None</span>
+<span class="sd">        Same logic as `x_loading_fn` but applied to the `y` parameter.</span>
+
+<span class="sd">    **op_instance_args</span>
+<span class="sd">        Instance-level optional arguments. This parameter should be a dictionary whose values must be `np.ndarray`</span>
+<span class="sd">        containing the same number of elements as instances in `X` and `y`.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import deepl</span>
+<span class="sd">    &gt;&gt;&gt; from torch.utils.data import DataLoader</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # dataset loading ...</span>
+<span class="sd">    &gt;&gt;&gt; X = np.random.uniform(size=(30, 10))</span>
+<span class="sd">    &gt;&gt;&gt; y = np.random.uniform(size=30)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # use TorchDataset for an easy use of pytorch DataLoaders</span>
+<span class="sd">    &gt;&gt;&gt; dataloader = DataLoader(</span>
+<span class="sd">    &gt;&gt;&gt;     deepl.loading.TorchDataset(X=X, y=y),</span>
+<span class="sd">    &gt;&gt;&gt;     batch_size=16, shuffle=True)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">X</span><span class="p">:</span> <span class="nb">list</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+            <span class="n">y</span><span class="p">:</span> <span class="nb">list</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">x_transforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">y_transforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">x_stream_data</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">x_loading_fn</span><span class="p">:</span> <span class="n">callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">y_stream_data</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">y_loading_fn</span><span class="p">:</span> <span class="n">callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">op_instance_args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TorchDataset</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># check the input arguments</span>
+        <span class="n">checkMultiInputTypes</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+            <span class="p">(</span><span class="s1">&#39;op_instance_args&#39;</span><span class="p">,</span> <span class="n">op_instance_args</span><span class="p">,</span> <span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+            <span class="p">(</span><span class="s1">&#39;x_transforms&#39;</span><span class="p">,</span> <span class="n">x_transforms</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+            <span class="p">(</span><span class="s1">&#39;y_transforms&#39;</span><span class="p">,</span> <span class="n">y_transforms</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+            <span class="p">(</span><span class="s1">&#39;x_stream_data&#39;</span><span class="p">,</span> <span class="n">x_stream_data</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;y_stream_data&#39;</span><span class="p">,</span> <span class="n">y_stream_data</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">])</span>
+        <span class="p">)</span>
+
+        <span class="c1"># check transforms</span>
+        <span class="k">if</span> <span class="n">x_transforms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">transform</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x_transforms</span><span class="p">):</span>
+                <span class="n">checkCallable</span><span class="p">(</span><span class="s1">&#39;x_transforms[</span><span class="si">%d</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">y_transforms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">transform</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">y_transforms</span><span class="p">):</span>
+                <span class="n">checkCallable</span><span class="p">(</span><span class="s1">&#39;y_transforms[</span><span class="si">%d</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span>
+
+        <span class="c1"># save parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_transforms</span> <span class="o">=</span> <span class="n">x_transforms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_transforms</span> <span class="o">=</span> <span class="n">y_transforms</span>
+
+        <span class="c1"># check op_instance_args</span>
+        <span class="n">op_instance_args</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">op_instance_args</span><span class="p">)</span>   <span class="c1"># avoid inplace modifications</span>
+        <span class="k">if</span> <span class="n">op_instance_args</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">var_values</span> <span class="ow">in</span> <span class="n">op_instance_args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;op_instance_args[&quot;</span><span class="si">%s</span><span class="s1">&quot;]&#39;</span> <span class="o">%</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">var_values</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">])</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_values</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                        <span class="s1">&#39;Missmatch in X shape (</span><span class="si">%d</span><span class="s1">) and op_instance_args[&quot;</span><span class="si">%s</span><span class="s1">&quot;] shape (</span><span class="si">%d</span><span class="s1">).&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                            <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">var_name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_values</span><span class="p">)))</span>
+
+        <span class="c1"># save parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">op_instance_args</span> <span class="o">=</span> <span class="n">op_instance_args</span>
+
+        <span class="c1"># check loading functions (if stream_data == True)</span>
+        <span class="k">if</span> <span class="n">x_stream_data</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">x_loading_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">checkCallable</span><span class="p">(</span><span class="s1">&#39;x_loading_fn&#39;</span><span class="p">,</span> <span class="n">x_loading_fn</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">y_stream_data</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">y_loading_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">checkCallable</span><span class="p">(</span><span class="s1">&#39;y_loading_fn&#39;</span><span class="p">,</span> <span class="n">y_loading_fn</span><span class="p">)</span>
+
+        <span class="c1"># process X-related parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_loading_fn</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_dataset</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">x_stream_data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">X</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_loading_fn</span> <span class="o">=</span> <span class="n">x_loading_fn</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># process X-related parameters</span>
+            <span class="n">X_dt</span> <span class="o">=</span> <span class="n">data_interface</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="n">np_X</span> <span class="o">=</span> <span class="n">X_dt</span><span class="o">.</span><span class="n">array_data</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">np_X</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_dataset</span> <span class="o">=</span> <span class="n">X_dt</span>
+
+        <span class="c1"># process y-related parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_loading_fn</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_dataset</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">y_stream_data</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">y_loading_fn</span> <span class="o">=</span> <span class="n">y_loading_fn</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">y_dt</span> <span class="o">=</span> <span class="n">data_interface</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+                <span class="n">np_y</span> <span class="o">=</span> <span class="n">y_dt</span><span class="o">.</span><span class="n">array_data</span>
+
+                <span class="c1"># remove the extra dimension from y</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np_y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">np_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">np_y</span> <span class="o">=</span> <span class="n">np_y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">)</span> <span class="o">!=</span> <span class="n">np_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                        <span class="s1">&#39;Input &quot;X&quot; (shape[0] = </span><span class="si">%d</span><span class="s1">) and &quot;y&quot; (shape[0] = </span><span class="si">%d</span><span class="s1">) must contain the same number of entries &#39;</span>
+                        <span class="s1">&#39;in the first dimension.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">),</span> <span class="n">np_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">np_y</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">y_dataset</span> <span class="o">=</span> <span class="n">y_dt</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_stream_data</span> <span class="o">=</span> <span class="n">x_stream_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_stream_data</span> <span class="o">=</span> <span class="n">y_stream_data</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+
+        <span class="n">elements_to_return</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># load X data</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_stream_data</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_loading_fn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+        <span class="c1"># apply transforms (optionally)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_transforms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">transform</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_transforms</span><span class="p">:</span>
+                <span class="n">X</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="c1"># check that X is a torch Tensor</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;The load function (Xs) must return tensors. The returned type is </span><span class="si">{}</span><span class="s1">. To solve it you can &#39;</span>
+                <span class="s1">&#39;provide transformations or reformulate the load function.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span>
+
+        <span class="c1"># add X to the elements that will be returned</span>
+        <span class="n">elements_to_return</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="c1"># add y to the elements that will be returned (if provided)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_stream_data</span><span class="p">:</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_loading_fn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+            <span class="c1"># apply transforms (optionally)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_transforms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">transform</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_transforms</span><span class="p">:</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+            <span class="c1"># check that y is a torch Tensor</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s1">&#39;The load function (Ys) must return tensors. The returned type is </span><span class="si">{}</span><span class="s1">. To solve it you can &#39;</span>
+                    <span class="s1">&#39;provide transformations or reformulate the load function.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span>
+
+            <span class="n">elements_to_return</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_instance_args</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">values</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_instance_args</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">elements_to_return</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">elements_to_return</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Fernando García Gutiérrez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

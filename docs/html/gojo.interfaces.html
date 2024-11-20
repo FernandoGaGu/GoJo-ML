@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gojo.interfaces package &mdash; gojo - Documentation 0.1.5.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="gojo.deepl package" href="gojo.deepl.html" />
+    <link rel="prev" title="gojo.core package" href="gojo.core.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #F24C4C" >
+            <a href="index.html" class="icon icon-home"> gojo - Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Hands-on</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/Example_1_Model_evaluation_by_cross_validation.html">Model evaluation by cross validation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/Example_1_Model_evaluation_by_cross_validation.html#definition-and-evaluation-of-a-support-vector-machine-svm-model"><strong>Definition and evaluation of a Support Vector Machine (SVM) model</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/Example_1_Model_evaluation_by_cross_validation.html#understanding-svms-with-polynomial-kernels"><strong>Understanding SVMs with Polynomial Kernels</strong></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="examples/Example_1_Model_evaluation_by_cross_validation.html#introduction-to-svm"><strong>Introduction to SVM</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-hyperplane"><strong>The Mathematical Foundation - Hyperplane</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-maximizing-the-margin"><strong>The Mathematical Foundation - Maximizing the Margin</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-the-optimization-problem"><strong>The Mathematical Foundation - The Optimization Problem</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-introducing-kernels"><strong>The Mathematical Foundation - Introducing Kernels</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="examples/Example_1_Model_evaluation_by_cross_validation.html#hands-on"><strong>Hands-on</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Example_2_Neural_networks_integration.html">Neural networks integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/Example_2_Neural_networks_integration.html#basic-model-training">Basic model training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Example_2_Neural_networks_integration.html#model-evaluation-via-cross-validation">Model evaluation via cross-validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Example_3_Hyperparameter_optimization_by_nested_cross_validation.html">Hyperparameter optimization by nested cross-validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Example_3_Hyperparameter_optimization_by_nested_cross_validation.html#initial-model-evaluation">Initial model evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Example_3_Hyperparameter_optimization_by_nested_cross_validation.html#hyperparameter-optimization">Hyperparameter optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Example_4_Vanilla_Variational_Autoencoder.html">Vanilla Variational Autoencoder (vVAE)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/Example_4_Vanilla_Variational_Autoencoder.html#data-loading">Data loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Example_4_Vanilla_Variational_Autoencoder.html#model-training">Model training</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/Example_4_Vanilla_Variational_Autoencoder.html#model-convergence">Model convergence</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Example_4_Vanilla_Variational_Autoencoder.html#model-evaluation">Model evaluation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/Example_4_Vanilla_Variational_Autoencoder.html#analyze-the-reconstruction-error">Analyze the reconstruction error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/Example_4_Vanilla_Variational_Autoencoder.html#compute-regression-metrics">Compute regression metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/Example_4_Vanilla_Variational_Autoencoder.html#visualize-embedding-dimensions">Visualize embedding dimensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/Example_4_Vanilla_Variational_Autoencoder.html#generate-samples">Generate samples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Example_5_Testing_different_CNN_architectures.html">Example 6. Testing different CNN architectures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/Example_5_Testing_different_CNN_architectures.html#data-loading">Data loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Example_5_Testing_different_CNN_architectures.html#vanilla-cnn">Vanilla CNN</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/Example_5_Testing_different_CNN_architectures.html#model-convergence">Model convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/Example_5_Testing_different_CNN_architectures.html#model-evaluation">Model evaluation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Example_5_Testing_different_CNN_architectures.html#cnn-with-residual-connections">CNN with residual connections</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/Example_5_Testing_different_CNN_architectures.html#id1">Model convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/Example_5_Testing_different_CNN_architectures.html#id2">Model evaluation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Advanced_use.html">Advanced use</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/Advanced_use.html#definition-of-your-own-transformations-gojo-interfaces-transform">Definition of your own transformations (gojo.interfaces.Transform)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="gojo.core.html">gojo.core package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gojo.core.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.core.html#module-gojo.core.evaluation">gojo.core.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.core.html#module-gojo.core.loops">gojo.core.loops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.core.html#module-gojo.core.report">gojo.core.report module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.core.html#module-gojo.core">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">gojo.interfaces package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gojo.interfaces.model">gojo.interfaces.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gojo.interfaces.data">gojo.interfaces.data module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gojo.interfaces.transform">gojo.interfaces.transform module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gojo.interfaces">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gojo.deepl.html">gojo.deepl package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.callback">gojo.deepl.callback module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.cnn">gojo.deepl.cnn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.ffn">gojo.deepl.ffn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.loading">gojo.deepl.loading module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.loops">gojo.deepl.loops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.loss">gojo.deepl.loss module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.models">gojo.deepl.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.deepl.html#module-gojo.deepl">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gojo.plotting.html">gojo.plotting package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gojo.plotting.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.plotting.html#module-gojo.plotting.basic">gojo.plotting.basic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.plotting.html#module-gojo.plotting.classification">gojo.plotting.classification module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.plotting.html#module-gojo.plotting">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gojo.util.html">gojo.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gojo.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.util.html#module-gojo.util.io">gojo.util.io module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.util.html#module-gojo.util.login">gojo.util.login module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.util.html#module-gojo.util.splitter">gojo.util.splitter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.util.html#module-gojo.util.tools">gojo.util.tools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.util.html#module-gojo.util.validation">gojo.util.validation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gojo.util.html#module-gojo.util">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gojo.experimental.html">gojo.experimental package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gojo.experimental.html#module-gojo.experimental">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #F24C4C" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">gojo - Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>gojo.interfaces package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/gojo.interfaces.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="gojo.core.html" class="btn btn-neutral float-left" title="gojo.core package" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gojo.deepl.html" class="btn btn-neutral float-right" title="gojo.deepl package" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gojo-interfaces-package">
+<h1>gojo.interfaces package<a class="headerlink" href="#gojo-interfaces-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-gojo.interfaces.model">
+<span id="gojo-interfaces-model-module"></span><h2>gojo.interfaces.model module<a class="headerlink" href="#module-gojo.interfaces.model" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gojo.interfaces.model.Model">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.interfaces.model.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><a class="reference internal" href="_modules/gojo/interfaces/model.html#Model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.Model" title="Permalink to this definition"></a></dt>
+<dd><p>Base class (interface) used to define a model that can interact with the <a class="reference internal" href="gojo.html#module-gojo" title="gojo"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo</span></code></a> library.</p>
+<p>Subclasses must define the following methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>train()</dt><dd><p>This method is used to fit a given model to the input data. Once the model has been fitted, inside
+this method, the superclass method <a class="reference internal" href="#gojo.interfaces.model.Model.fitted" title="gojo.interfaces.model.Model.fitted"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fitted()</span></code></a> must be called; otherwise, the model will not be
+recognized as fitted to any data, and <a class="reference internal" href="#gojo.interfaces.model.Model.performInference" title="gojo.interfaces.model.Model.performInference"><code class="xref py py-meth docutils literal notranslate"><span class="pre">performInference()</span></code></a> will raise a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.exception.UnfittedEstimator</span></code> error.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>performInference()</dt><dd><p>Once the model has been fitted using the <a class="reference internal" href="#gojo.interfaces.model.Model.train" title="gojo.interfaces.model.Model.train"><code class="xref py py-meth docutils literal notranslate"><span class="pre">train()</span></code></a> method (when the <a class="reference internal" href="#gojo.interfaces.model.Model.is_fitted" title="gojo.interfaces.model.Model.is_fitted"><code class="xref py py-attr docutils literal notranslate"><span class="pre">is_fitted</span></code></a> property is
+called, the returned value should be True), this method allows performing inferences on new data.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>reset()</dt><dd><p>This method should reset the inner estimator, forgetting all the data seen.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>getParameters()</dt><dd><p>This method must return a dictionary containing the parameters used by the model. The parameters
+returned by this method will be used to store metadata about the model.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>updateParameters()</dt><dd><p>This method must update the inner parameters of the model.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>copy()</dt><dd><p>This method must return a copy of the model.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>This abstract class provides the following properties:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>parameters -&gt; dict</dt><dd><p>Returns the hyperparameters of the model.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>is_fitted -&gt; bool</dt><dd><p>Indicates whether a given model has been fitted (i.e., if the <a class="reference internal" href="#gojo.interfaces.model.Model.train" title="gojo.interfaces.model.Model.train"><code class="xref py py-meth docutils literal notranslate"><span class="pre">train()</span></code></a> method was called).</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>And the following methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>fitted()</dt><dd><p>This method should be called inside the <a class="reference internal" href="#gojo.interfaces.model.Model.train" title="gojo.interfaces.model.Model.train"><code class="xref py py-meth docutils literal notranslate"><span class="pre">train()</span></code></a> method to indicate that the model was
+fitted to the input data and can now perform inferences using the <a class="reference internal" href="#gojo.interfaces.model.Model.performInference" title="gojo.interfaces.model.Model.performInference"><code class="xref py py-meth docutils literal notranslate"><span class="pre">performInference()</span></code></a> subroutine.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>resetFit()</dt><dd><p>This method is used to reset learned model weights.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.Model.copy">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#Model.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.Model.copy" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to make a copy of the model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.Model.fitted">
+<span class="sig-name descname"><span class="pre">fitted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#Model.fitted"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.Model.fitted" title="Permalink to this definition"></a></dt>
+<dd><p>Method called to indicate that a given model have been fitted.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.Model.getParameters">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/interfaces/model.html#Model.getParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.Model.getParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Method that must return the model parameters.</p>
+<dl class="simple">
+<dt>model_parameters<span class="classifier">dict</span></dt><dd><p>Model parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gojo.interfaces.model.Model.is_fitted">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_fitted</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#gojo.interfaces.model.Model.is_fitted" title="Permalink to this definition"></a></dt>
+<dd><p>Indicates whether the model has been trained by calling the <a class="reference internal" href="#gojo.interfaces.model.Model.train" title="gojo.interfaces.model.Model.train"><code class="xref py py-meth docutils literal notranslate"><span class="pre">train()</span></code></a> method.</p>
+<dl class="simple">
+<dt>model_fitted<span class="classifier">bool</span></dt><dd><p>Returns True if the model was fitted.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gojo.interfaces.model.Model.parameters">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#gojo.interfaces.model.Model.parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Return the model parameters defined in the <a class="reference internal" href="#gojo.interfaces.model.Model.getParameters" title="gojo.interfaces.model.Model.getParameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getParameters()</span></code></a> method.</p>
+<dl class="simple">
+<dt>model_parameters<span class="classifier">dict</span></dt><dd><p>Model parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.Model.performInference">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">performInference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></span><a class="reference internal" href="_modules/gojo/interfaces/model.html#Model.performInference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.Model.performInference" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to perform the model predictions.</p>
+<dl class="simple">
+<dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data used to perform inference.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.Model.reset">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#Model.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.Model.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to reset the fitted model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.Model.resetFit">
+<span class="sig-name descname"><span class="pre">resetFit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#Model.resetFit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.Model.resetFit" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to reset a fitted model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.Model.train">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#Model.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.Model.train" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to fit a model to a given input data.</p>
+<dl class="simple">
+<dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data to fit the model.</p>
+</dd>
+<dt>y<span class="classifier">np.ndarray or None, default=None</span></dt><dd><p>Data labels (optional).</p>
+</dd>
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs</dt><dd><p>Additional training parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.Model.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#Model.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.Model.update" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to update model parameters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.Model.updateParameters">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">updateParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#Model.updateParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.Model.updateParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to update model parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gojo.interfaces.model.SklearnModelWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.interfaces.model.</span></span><span class="sig-name descname"><span class="pre">SklearnModelWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predict_proba</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supress_warnings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#SklearnModelWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.SklearnModelWrapper" title="Permalink to this definition"></a></dt>
+<dd><p>Wrapper used for easy integration of models following the sklearn interface into the <a class="reference internal" href="gojo.html#module-gojo" title="gojo"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo</span></code></a> library
+and functionality.</p>
+<dl class="simple">
+<dt>model_class<span class="classifier">type</span></dt><dd><p>Model following the ‘sklearn.base.BaseEstimator’ interface. The class provided does not have to be a subclass
+of the sklearn interfacebut should provide the basic <code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">predict()</span></code> (or
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">predict_proba()</span></code>) methods.</p>
+</dd>
+<dt>predict_proba<span class="classifier">bool, default=False</span></dt><dd><p>Parameter that indicates whether to call the <code class="xref py py-meth docutils literal notranslate"><span class="pre">predict_proba()</span></code> method when making predictions. If this
+parameter is False (default behavior) the <code class="xref py py-meth docutils literal notranslate"><span class="pre">predict()</span></code> method will be called. If the parameter is set to
+True and the model provided does not have the predict_proba method implemented, the <code class="xref py py-meth docutils literal notranslate"><span class="pre">predict()</span></code> method
+will be called and a warning will inform that an attempt has been made to call the <code class="xref py py-meth docutils literal notranslate"><span class="pre">predict_proba()</span></code>
+method.</p>
+</dd>
+<dt>supress_warnings<span class="classifier">bool, default=False</span></dt><dd><p>Parameter indicating whether to suppress the warnings issued by the class.</p>
+</dd>
+<dt><a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs</dt><dd><p>Additional model hyparameters. This parameters will be passed to the <cite>model_class</cite> constructor.</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">interfaces</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <span class="n">GaussianNB</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># create model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">interfaces</span><span class="o">.</span><span class="n">SklearnModelWrapper</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">GaussianNB</span><span class="p">,</span> <span class="n">predict_proba</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">priors</span><span class="o">=</span><span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">])</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># train model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>    <span class="c1"># X and y are numpy.arrays</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># perform inference</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_hat</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">performInference</span><span class="p">(</span><span class="n">X_new</span><span class="p">)</span>    <span class="c1"># X_new is a numpy.array</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># reset model fitting</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">resetFit</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">is_fitted</span>    <span class="c1"># must return False</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.SklearnModelWrapper.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#SklearnModelWrapper.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.SklearnModelWrapper.copy" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to make a copy of the model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.SklearnModelWrapper.getParameters">
+<span class="sig-name descname"><span class="pre">getParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/interfaces/model.html#SklearnModelWrapper.getParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.SklearnModelWrapper.getParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Method that must return the model parameters.</p>
+<dl class="simple">
+<dt>model_parameters<span class="classifier">dict</span></dt><dd><p>Model parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gojo.interfaces.model.SklearnModelWrapper.model">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#gojo.interfaces.model.SklearnModelWrapper.model" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the internal model provided by the constructor and adjusted if the train method has been called.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.SklearnModelWrapper.performInference">
+<span class="sig-name descname"><span class="pre">performInference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></span><a class="reference internal" href="_modules/gojo/interfaces/model.html#SklearnModelWrapper.performInference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.SklearnModelWrapper.performInference" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to perform the model predictions.</p>
+<dl class="simple">
+<dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data used to perform inference.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>model_predictions<span class="classifier">np.ndarray</span></dt><dd><p>Model predictions associated with the input data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.SklearnModelWrapper.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#SklearnModelWrapper.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.SklearnModelWrapper.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to reset the fitted model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.SklearnModelWrapper.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#SklearnModelWrapper.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.SklearnModelWrapper.train" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to fit a model to a given input data.</p>
+<dl class="simple">
+<dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data to fit the model.</p>
+</dd>
+<dt>y<span class="classifier">np.ndarray or None, default=None</span></dt><dd><p>Data labels (optional).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.SklearnModelWrapper.updateParameters">
+<span class="sig-name descname"><span class="pre">updateParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#SklearnModelWrapper.updateParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.SklearnModelWrapper.updateParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to update the inner model parameters.</p>
+<ul class="simple">
+<li><p>NOTE: Model parameters should be updated by calling the <code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code> method from the model superclass.</p></li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gojo.interfaces.model.TorchSKInterface">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.interfaces.model.</span></span><span class="sig-name descname"><span class="pre">TorchSKInterface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.5)"><span class="pre">torch.nn.Module</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">iter_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataloader_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr_scheduler_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">type</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr_scheduler_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dataset_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_dataset_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inference_dataset_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dataloader_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_dataloader_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inference_dataloader_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iter_fn_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_split</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_split_stratify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#TorchSKInterface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.TorchSKInterface" title="Permalink to this definition"></a></dt>
+<dd><p>Wrapper class designed to integrate pytorch models (‘torch.nn.Module’ instances) in the <a class="reference internal" href="gojo.html#module-gojo" title="gojo"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo</span></code></a>.
+library functionalities.</p>
+<dl>
+<dt>model<span class="classifier">torch.nn.Module</span></dt><dd><p>Subclass of ‘torch.nn.Module’.</p>
+</dd>
+<dt>iter_fn<span class="classifier">callable</span></dt><dd><p>Function that executes an epoch of the torch.nn.Module typical training pipeline. For more information
+consult <a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.loops" title="gojo.deepl.loops"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.deepl.loops</span></code></a>.</p>
+</dd>
+<dt>loss_function<span class="classifier">callable</span></dt><dd><p>Loss function used to train the model.</p>
+</dd>
+<dt>n_epochs<span class="classifier">int</span></dt><dd><p>Number of epochs used to train the model.</p>
+</dd>
+<dt>optimizer_class<span class="classifier">type</span></dt><dd><p>Pytorch optimizer used to train the model (see <cite>torch.optim</cite> module.)</p>
+</dd>
+<dt>dataset_class<span class="classifier">type</span></dt><dd><p>Pytorch class dataset used to train the model (see <cite>torch.utils.data</cite> module or the <cite>gojo</cite> submodule
+<a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.loading" title="gojo.deepl.loading"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.deepl.loading</span></code></a>).</p>
+</dd>
+<dt>dataloader_class<span class="classifier">type</span></dt><dd><p>Pytorch dataloader class (<cite>torch.utils.data.DataLoader</cite>).</p>
+</dd>
+<dt>lr_scheduler_class<span class="classifier">type, default=None</span></dt><dd><p>Class used to construct a learning rate schedule as defined in <code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.optim.lr_scheduler()</span></code>.</p>
+</dd>
+<dt>optimizer_kw<span class="classifier">dict, default=None</span></dt><dd><p>Parameters used to initialize the provided optimizer class.</p>
+</dd>
+<dt>lr_scheduler_kw<span class="classifier">dict, default=None</span></dt><dd><p>Parameters used to initialize the learning rate scheduler as defined based on <cite>lr_scheduler_class</cite>.</p>
+</dd>
+<dt>train_dataset_kw<span class="classifier">dict, default=None</span></dt><dd><p>Parameters used to initialize the provided dataset class for the data used for training.</p>
+</dd>
+<dt>train_dataloader_kw<span class="classifier">dict, default=None</span></dt><dd><p>Parameters used to initialize the provided dataloader class for the data used for training.</p>
+</dd>
+<dt>train_split<span class="classifier">float, default=1.0</span></dt><dd><p>Percentage of the training data received in <a class="reference internal" href="#gojo.interfaces.model.TorchSKInterface.train" title="gojo.interfaces.model.TorchSKInterface.train"><code class="xref py py-meth docutils literal notranslate"><span class="pre">train()</span></code></a> that will be used to train the model. The rest of
+the data will be used as validation set.</p>
+</dd>
+<dt>valid_dataset_kw<span class="classifier">dict, default=None</span></dt><dd><p>Parameters used to initialize the provided dataset class for the data used for validation. Parameter ignored
+if <cite>train_split</cite> == 1.0.</p>
+</dd>
+<dt>valid_dataloader_kw<span class="classifier">dict, default=None</span></dt><dd><p>Parameters used to initialize the provided dataloader class for the data used for validation. Parameter ignored
+if <cite>train_split</cite> == 1.0.</p>
+</dd>
+<dt>inference_dataset_kw<span class="classifier">dict, default=None</span></dt><dd><p>Parameters used to initialize the provided dataset class for the data used for inference when calling
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">gojo.interfaces.TorchSKInterface.performInference()</span></code>. If no parameters are provided, the arguments provided
+for the training will be used.</p>
+</dd>
+<dt>inference_dataloader_kw<span class="classifier">dict, default=None</span></dt><dd><p>Parameters used to initialize the provided dataloader class for the data used for inference when calling
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">gojo.interfaces.TorchSKInterface.performInference()</span></code>. If no parameters are provided, the arguments provided
+for the training will be used changing the dataloader parameters: <cite>shuffle</cite> = False, <cite>drop_last</cite> = False,
+<cite>batch_size</cite> = <cite>batch_size</cite> (<cite>batch_size</cite> provided in the constructor or when calling the method
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">gojo.interfaces.TorchSKInterface.performInference()</span></code>)</p>
+</dd>
+<dt>iter_fn_kw<span class="classifier">dict, default=None</span></dt><dd><p>Optional arguments of the parameter <cite>iter_fn</cite>.</p>
+</dd>
+<dt>train_split_stratify<span class="classifier">bool, default=False</span></dt><dd><p>Parameter indicating whether to perform the train/validation split with class stratification. Parameter ignored
+if <cite>train_split</cite> == 1.0.</p>
+</dd>
+<dt>callbacks<span class="classifier">List[<a class="reference internal" href="gojo.deepl.html#gojo.deepl.callback.Callback" title="gojo.deepl.callback.Callback"><code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.deepl.callback.Callback</span></code></a>], default=None</span></dt><dd><p>Callbacks during model training. For more information see <a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.callback" title="gojo.deepl.callback"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.deepl.callback</span></code></a>.</p>
+</dd>
+<dt>metrics<span class="classifier">List[<a class="reference internal" href="gojo.core.html#gojo.core.evaluation.Metric" title="gojo.core.evaluation.Metric"><code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.core.evaluation.Metric</span></code></a>], default=None</span></dt><dd><p>Metrics used to evaluate the model performance during training. Fore more information see
+<a class="reference internal" href="gojo.core.html#gojo.core.evaluation.Metric" title="gojo.core.evaluation.Metric"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.core.evaluation.Metric</span></code></a>.</p>
+</dd>
+<dt>batch_size<span class="classifier">int, default=None</span></dt><dd><p>Batch size used when calling to <code class="xref py py-meth docutils literal notranslate"><span class="pre">gojo.interfaces.TorchSKInterface.performInference()</span></code>. This parameter can
+also be set during the function calling.</p>
+</dd>
+<dt>seed<span class="classifier">int, default=None</span></dt><dd><p>Random seed used for controlling the randomness.</p>
+</dd>
+<dt>device<span class="classifier">str, default=’cpu’</span></dt><dd><p>Device used for training the model.</p>
+</dd>
+<dt>verbose<span class="classifier">int, default=1</span></dt><dd><p>Verbosity level. Use -1 to indicate maximum verbosity.</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Gojo libraries</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">interfaces</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">core</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">deepl</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">util</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">plotting</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DEVICE</span> <span class="o">=</span> <span class="s1">&#39;mps&#39;</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># load test dataset (Wine)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wine_dt</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_wine</span><span class="p">()</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># create the target variable. Classification problem 0 vs rest</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># to see the target names you can use wine_dt[&#39;target_names&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">wine_dt</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">wine_dt</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># standardize input data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">std_X</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">zscoresScaling</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># split Xs and Ys in training and validation</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_valid</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_valid</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">std_X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1997</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">interfaces</span><span class="o">.</span><span class="n">TorchSKInterface</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">model</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">ffn</span><span class="o">.</span><span class="n">createSimpleFFNModel</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">in_feats</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">out_feats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">layer_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">layer_activation</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ELU</span><span class="p">(),</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">output_activation</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">iter_fn</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">iterSupervisedEpoch</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">loss_function</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">(),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">n_epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_split</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_split_stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">optimizer_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">dataset_class</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">loading</span><span class="o">.</span><span class="n">TorchDataset</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">dataloader_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">optimizer_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_dataset_kw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">valid_dataset_kw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_dataloader_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">valid_dataloader_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">batch_size</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">iter_fn_kw</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">callbacks</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">seed</span><span class="o">=</span><span class="mi">1997</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">metrics</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># train the model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># get the model convergence information</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model_history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fitting_history</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># display model convergence</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plotting</span><span class="o">.</span><span class="n">linePlot</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;valid&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">x</span><span class="o">=</span><span class="s1">&#39;epoch&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;loss (mean)&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="s1">&#39;loss (std)&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Train&#39;</span><span class="p">,</span> <span class="s1">&#39;Validation&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Model convergence&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ls</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="s1">&#39;dashed&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">legend_pos</span><span class="o">=</span><span class="s1">&#39;center right&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># display model performance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plotting</span><span class="o">.</span><span class="n">linePlot</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;valid&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">x</span><span class="o">=</span><span class="s1">&#39;epoch&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;f1_score&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Train&#39;</span><span class="p">,</span> <span class="s1">&#39;Validation&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Model F1-score&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ls</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="s1">&#39;dashed&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">legend_pos</span><span class="o">=</span><span class="s1">&#39;center right&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.TorchSKInterface.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#TorchSKInterface.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.TorchSKInterface.copy" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to make a copy of the model.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gojo.interfaces.model.TorchSKInterface.fitting_history">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fitting_history</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span></em><a class="headerlink" href="#gojo.interfaces.model.TorchSKInterface.fitting_history" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a tuple with the training/validation fitting history of the models returned by the
+<a class="reference internal" href="gojo.deepl.html#gojo.deepl.loops.fitNeuralNetwork" title="gojo.deepl.loops.fitNeuralNetwork"><code class="xref py py-func docutils literal notranslate"><span class="pre">gojo.deepl.loops.fitNeuralNetwork()</span></code></a> function. The first element will correspond to the training
+data while the second element to the validation data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.TorchSKInterface.getParameters">
+<span class="sig-name descname"><span class="pre">getParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/interfaces/model.html#TorchSKInterface.getParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.TorchSKInterface.getParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the model parameters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.TorchSKInterface.loadStateDict">
+<span class="sig-name descname"><span class="pre">loadStateDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#TorchSKInterface.loadStateDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.TorchSKInterface.loadStateDict" title="Permalink to this definition"></a></dt>
+<dd><p>Subroutine used to load a state dictionary with the serialized model weights using <cite>torch.save</cite>.</p>
+<dl class="simple">
+<dt>file<span class="classifier">str</span></dt><dd><p>File with the saved weights.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gojo.interfaces.model.TorchSKInterface.model">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.5)"><span class="pre">torch.nn.Module</span></a></em><a class="headerlink" href="#gojo.interfaces.model.TorchSKInterface.model" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the internal model provided by the constructor and adjusted if the train method has been called.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gojo.interfaces.model.TorchSKInterface.num_params">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_params</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#gojo.interfaces.model.TorchSKInterface.num_params" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the number model trainable parameters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.TorchSKInterface.performInference">
+<span class="sig-name descname"><span class="pre">performInference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></span><a class="reference internal" href="_modules/gojo/interfaces/model.html#TorchSKInterface.performInference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.TorchSKInterface.performInference" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to perform the model predictions.</p>
+<dl class="simple">
+<dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data used to perform inference.</p>
+</dd>
+<dt>batch_size<span class="classifier">int, default=None</span></dt><dd><p>Parameter indicating whether to perform the inference using batches instead of all input data at once. By
+default, all input data will by used.</p>
+</dd>
+<dt><a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs</dt><dd><p>Optional arguments for instance-level data.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>model_predictions<span class="classifier">np.ndarray</span></dt><dd><p>Model predictions associated with the input data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.TorchSKInterface.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#TorchSKInterface.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.TorchSKInterface.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to reset the fitted model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.TorchSKInterface.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#TorchSKInterface.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.TorchSKInterface.train" title="Permalink to this definition"></a></dt>
+<dd><p>Train the model using the input data.</p>
+<dl class="simple">
+<dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Predictor variables.</p>
+</dd>
+<dt>y<span class="classifier">np.ndarray or None, default=None</span></dt><dd><p>Target variable.</p>
+</dd>
+<dt><a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs</dt><dd><p>Optional instance-level arguments.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.TorchSKInterface.updateParameters">
+<span class="sig-name descname"><span class="pre">updateParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#TorchSKInterface.updateParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.TorchSKInterface.updateParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Function not available for this class objects. If you want to use a parametrized version see
+<code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.core.base.ParametrizedTorchSKInterface</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gojo.interfaces.model.ParametrizedTorchSKInterface">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.interfaces.model.</span></span><span class="sig-name descname"><span class="pre">ParametrizedTorchSKInterface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generating_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gf_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iter_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataloader_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr_scheduler_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">type</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr_scheduler_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dataset_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_dataset_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inference_dataset_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dataloader_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_dataloader_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inference_dataloader_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iter_fn_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_split</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_split_stratify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#ParametrizedTorchSKInterface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.ParametrizedTorchSKInterface" title="Permalink to this definition"></a></dt>
+<dd><p>Parameterized version of <code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.interfaces.TorchSKInterface</span></code>. This implementation is useful for performing
+cross validation with hyperparameter optimization using the <a class="reference internal" href="gojo.core.html#gojo.core.loops.evalCrossValNestedHPO" title="gojo.core.loops.evalCrossValNestedHPO"><code class="xref py py-func docutils literal notranslate"><span class="pre">gojo.core.loops.evalCrossValNestedHPO()</span></code></a>
+function. This class provides an implementation of the <a class="reference internal" href="#gojo.interfaces.model.ParametrizedTorchSKInterface.updateParameters" title="gojo.interfaces.model.ParametrizedTorchSKInterface.updateParameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">updateParameters()</span></code></a> method.</p>
+<dl>
+<dt>generating_fn<span class="classifier">callable</span></dt><dd><p>Function used to generate a model from a set of parameters. Currently, there are some implemented functions
+such as <a class="reference internal" href="gojo.deepl.html#gojo.deepl.ffn.createSimpleFFNModel" title="gojo.deepl.ffn.createSimpleFFNModel"><code class="xref py py-func docutils literal notranslate"><span class="pre">gojo.deepl.ffn.createSimpleFFNModel()</span></code></a>. Also, the user can define its own generating function.</p>
+</dd>
+<dt>gf_params<span class="classifier">dict</span></dt><dd><p>Parameters used by the input function <cite>generating_fn</cite> to generate a <cite>torch.nn.Module</cite> instance.</p>
+</dd>
+<dt>iter_fn<span class="classifier">callable</span></dt><dd><p>Function that executes an epoch of the torch.nn.Module typical training pipeline. For more information
+consult <a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.loops" title="gojo.deepl.loops"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.deepl.loops</span></code></a>.</p>
+</dd>
+<dt>loss_function<span class="classifier">callable</span></dt><dd><p>Loss function used to train the model.</p>
+</dd>
+<dt>n_epochs<span class="classifier">int</span></dt><dd><p>Number of epochs used to train the model.</p>
+</dd>
+<dt>optimizer_class<span class="classifier">type</span></dt><dd><p>Pytorch optimizer used to train the model (see <cite>torch.optim</cite> module.)</p>
+</dd>
+<dt>dataset_class<span class="classifier">type</span></dt><dd><p>Pytorch class dataset used to train the model (see <cite>torch.utils.data</cite> module or the <cite>gojo</cite> submodule
+<a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.loading" title="gojo.deepl.loading"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.deepl.loading</span></code></a>).</p>
+</dd>
+<dt>dataloader_class<span class="classifier">type</span></dt><dd><p>Pytorch dataloader class (<cite>torch.utils.data.DataLoader</cite>).</p>
+</dd>
+<dt>lr_scheduler_class<span class="classifier">type, default=None</span></dt><dd><p>Class used to construct a learning rate schedule as defined in <code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.optim.lr_scheduler()</span></code>.</p>
+</dd>
+<dt>optimizer_kw<span class="classifier">dict, default=None</span></dt><dd><p>Parameters used to initialize the provided optimizer class.</p>
+</dd>
+<dt>lr_scheduler_kw<span class="classifier">dict, default=None</span></dt><dd><p>Parameters used to initialize the learning rate scheduler as defined based on <cite>lr_scheduler_class</cite>.</p>
+</dd>
+<dt>train_dataset_kw<span class="classifier">dict, default=None</span></dt><dd><p>Parameters used to initialize the provided dataset class for the data used for training.</p>
+</dd>
+<dt>train_dataloader_kw<span class="classifier">dict, default=None</span></dt><dd><p>Parameters used to initialize the provided dataloader class for the data used for training.</p>
+</dd>
+<dt>train_split<span class="classifier">float, default=1.0</span></dt><dd><p>Percentage of the training data received in <code class="xref py py-meth docutils literal notranslate"><span class="pre">train()</span></code> that will be used to train the model. The rest of
+the data will be used as validation set.</p>
+</dd>
+<dt>valid_dataset_kw<span class="classifier">dict, default=None</span></dt><dd><p>Parameters used to initialize the provided dataset class for the data used for validation. Parameter ignored
+if <cite>train_split</cite> == 1.0.</p>
+</dd>
+<dt>valid_dataloader_kw<span class="classifier">dict, default=None</span></dt><dd><p>Parameters used to initialize the provided dataloader class for the data used for validation. Parameter ignored
+if <cite>train_split</cite> == 1.0.</p>
+</dd>
+<dt>inference_dataset_kw<span class="classifier">dict, default=None</span></dt><dd><p>Parameters used to initialize the provided dataset class for the data used for inference when calling
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">gojo.interfaces.TorchSKInterface.performInference()</span></code>. If no parameters are provided, the arguments provided
+for the training will be used.</p>
+</dd>
+<dt>inference_dataloader_kw<span class="classifier">dict, default=None</span></dt><dd><p>Parameters used to initialize the provided dataloader class for the data used for inference when calling
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">gojo.interfaces.TorchSKInterface.performInference()</span></code>. If no parameters are provided, the arguments provided
+for the training will be used changing the dataloader parameters: <cite>shuffle</cite> = False, <cite>drop_last</cite> = False,
+<cite>batch_size</cite> = <cite>batch_size</cite> (<cite>batch_size</cite> provided in the constructor or when calling the method
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">gojo.interfaces.TorchSKInterface.performInference()</span></code>)</p>
+</dd>
+<dt>iter_fn_kw<span class="classifier">dict, default=None</span></dt><dd><p>Optional arguments of the parameter <cite>iter_fn</cite>.</p>
+</dd>
+<dt>train_split_stratify<span class="classifier">bool, default=False</span></dt><dd><p>Parameter indicating whether to perform the train/validation split with class stratification. Parameter ignored
+if <cite>train_split</cite> == 1.0.</p>
+</dd>
+<dt>callbacks<span class="classifier">List[<a class="reference internal" href="gojo.deepl.html#gojo.deepl.callback.Callback" title="gojo.deepl.callback.Callback"><code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.deepl.callback.Callback</span></code></a>], default=None</span></dt><dd><p>Callbacks during model training. For more information see <a class="reference internal" href="gojo.deepl.html#module-gojo.deepl.callback" title="gojo.deepl.callback"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.deepl.callback</span></code></a>.</p>
+</dd>
+<dt>metrics<span class="classifier">List[<a class="reference internal" href="gojo.core.html#gojo.core.evaluation.Metric" title="gojo.core.evaluation.Metric"><code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.core.evaluation.Metric</span></code></a>], default=None</span></dt><dd><p>Metrics used to evaluate the model performance during training. Fore more information see
+<a class="reference internal" href="gojo.core.html#gojo.core.evaluation.Metric" title="gojo.core.evaluation.Metric"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.core.evaluation.Metric</span></code></a>.</p>
+</dd>
+<dt>batch_size<span class="classifier">int, default=None</span></dt><dd><p>Batch size used when calling to <code class="xref py py-meth docutils literal notranslate"><span class="pre">gojo.interfaces.ParametrizedTorchSKInterface.performInference()</span></code>. This
+parameter can also be set during the function calling.</p>
+</dd>
+<dt>seed<span class="classifier">int, default=None</span></dt><dd><p>Random seed used for controlling the randomness.</p>
+</dd>
+<dt>device<span class="classifier">str, default=’cpu’</span></dt><dd><p>Device used for training the model.</p>
+</dd>
+<dt>verbose<span class="classifier">int, default=1</span></dt><dd><p>Verbosity level. Use -1 to indicate maximum verbosity.</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># GOJO libraries</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">interfaces</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">core</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">deepl</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">util</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">plotting</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DEVICE</span> <span class="o">=</span> <span class="s1">&#39;mps&#39;</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># load test dataset (Wine)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wine_dt</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_wine</span><span class="p">()</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># create the target variable. Classification problem 0 vs rest</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># to see the target names you can use wine_dt[&#39;target_names&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">wine_dt</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">wine_dt</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># standarize input data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">std_X</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">zscoresScaling</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># split Xs and Ys in training and validation</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_valid</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_valid</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">std_X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1997</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">interfaces</span><span class="o">.</span><span class="n">ParametrizedTorchSKInterface</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">generating_fn</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">ffn</span><span class="o">.</span><span class="n">createSimpleFFNModel</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">gf_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">in_feats</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">out_feats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">layer_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">layer_activation</span><span class="o">=</span><span class="s1">&#39;ELU&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">output_activation</span><span class="o">=</span><span class="s1">&#39;Sigmoid&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">iter_fn</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">iterSupervisedEpoch</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">loss_function</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">(),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">n_epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_split</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_split_stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">optimizer_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">dataset_class</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">loading</span><span class="o">.</span><span class="n">TorchDataset</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">dataloader_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">optimizer_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_dataset_kw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">valid_dataset_kw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_dataloader_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">valid_dataloader_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">batch_size</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">iter_fn_kw</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">callbacks</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">seed</span><span class="o">=</span><span class="mi">1997</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">metrics</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;f1_score&#39;</span><span class="p">]),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># train the model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># display model convergence</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model_history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fitting_history</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plotting</span><span class="o">.</span><span class="n">linePlot</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;valid&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">x</span><span class="o">=</span><span class="s1">&#39;epoch&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;loss (mean)&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="s1">&#39;loss (std)&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Train&#39;</span><span class="p">,</span> <span class="s1">&#39;Validation&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Model convergence&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ls</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="s1">&#39;dashed&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">legend_pos</span><span class="o">=</span><span class="s1">&#39;center right&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># display model performance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plotting</span><span class="o">.</span><span class="n">linePlot</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;valid&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">x</span><span class="o">=</span><span class="s1">&#39;epoch&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;f1_score&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Train&#39;</span><span class="p">,</span> <span class="s1">&#39;Validation&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Model F1-score&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ls</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="s1">&#39;dashed&#39;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">legend_pos</span><span class="o">=</span><span class="s1">&#39;center right&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># update model paramters</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">n_epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_dataloader_kw__batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">gf_params__layer_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">metrics</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;f1_score&#39;</span><span class="p">,</span> <span class="s1">&#39;auc&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># after parameter updating the model is reseted</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_hat</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">performInference</span><span class="p">(</span><span class="n">X_valid</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">core</span><span class="o">.</span><span class="n">getScores</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_valid</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_hat</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>               <span class="n">metrics</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.ParametrizedTorchSKInterface.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#ParametrizedTorchSKInterface.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.ParametrizedTorchSKInterface.copy" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to make a copy of the model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.ParametrizedTorchSKInterface.getParameters">
+<span class="sig-name descname"><span class="pre">getParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/interfaces/model.html#ParametrizedTorchSKInterface.getParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.ParametrizedTorchSKInterface.getParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the model parameters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.model.ParametrizedTorchSKInterface.updateParameters">
+<span class="sig-name descname"><span class="pre">updateParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/model.html#ParametrizedTorchSKInterface.updateParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.model.ParametrizedTorchSKInterface.updateParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Method that allows updating the model parameters. If you want to update a parameter contained in a
+dictionary, the name of the dictionary key must be specified together with the name of the parameter
+separated by “__”.</p>
+<ul class="simple">
+<li><p>NOTE: Model parameters should be updated by calling the <code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code> method from the model superclass.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">interfaces</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">deepl</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># create the model to be evaluated</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">interfaces</span><span class="o">.</span><span class="n">ParametrizedTorchSKInterface</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># example of generating function</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">generating_fn</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">ffn</span><span class="o">.</span><span class="n">createSimpleFFNModel</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">gf_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">in_feats</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">out_feats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">layer_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">layer_activation</span><span class="o">=</span><span class="s1">&#39;ELU&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">output_activation</span><span class="o">=</span><span class="s1">&#39;Sigmoid&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># example of iteration function</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">iter_fn</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">iterSupervisedEpoch</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">loss_function</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">(),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">n_epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_split</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_split_stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">optimizer_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">dataset_class</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">loading</span><span class="o">.</span><span class="n">TorchDataset</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">dataloader_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">optimizer_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">train_dataloader_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">valid_dataloader_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">batch_size</span><span class="o">=</span><span class="mi">200</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># use default classification metrics</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">metrics</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;f1_score&#39;</span><span class="p">]),</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span>
+<span class="go">Out [0]</span>
+<span class="go">    ParametrizedTorchSKInterface(</span>
+<span class="go">        model=Sequential(</span>
+<span class="go">      (LinearLayer 0): Linear(in_features=13, out_features=20, bias=True)</span>
+<span class="go">      (Activation 0): ELU(alpha=1.0)</span>
+<span class="go">      (LinearLayer 1): Linear(in_features=20, out_features=10, bias=True)</span>
+<span class="go">      (Activation 1): ELU(alpha=1.0)</span>
+<span class="go">      (LinearLayer 2): Linear(in_features=10, out_features=1, bias=True)</span>
+<span class="go">      (Activation 2): Sigmoid()</span>
+<span class="go">    ),</span>
+<span class="go">        iter_fn=&lt;function iterSupervisedEpoch at 0x7fd7ca47b940&gt;,</span>
+<span class="go">        loss_function=BCELoss(),</span>
+<span class="go">        n_epochs=50,</span>
+<span class="go">        train_split=0.8,</span>
+<span class="go">        train_split_stratify=True,</span>
+<span class="go">        optimizer_class=&lt;class &#39;torch.optim.adam.Adam&#39;&gt;,</span>
+<span class="go">        dataset_class=&lt;class &#39;gojo.deepl.loading.TorchDataset&#39;&gt;,</span>
+<span class="go">        dataloader_class=&lt;class &#39;torch.utils.data.dataloader.DataLoader&#39;&gt;,</span>
+<span class="go">        optimizer_kw={&#39;lr&#39;: 0.001},</span>
+<span class="go">        train_dataset_kw={},</span>
+<span class="go">        valid_dataset_kw={},</span>
+<span class="go">        train_dataloader_kw={&#39;batch_size&#39;: 16, &#39;shuffle&#39;: True},</span>
+<span class="go">        valid_dataloader_kw={&#39;batch_size&#39;: 200},</span>
+<span class="go">        iter_fn_kw={},</span>
+<span class="go">        callbacks=None,</span>
+<span class="go">        metrics=[Metric(</span>
+<span class="go">        name=f1_score,</span>
+<span class="go">        function_kw={},</span>
+<span class="go">        multiclass=False</span>
+<span class="go">    )],</span>
+<span class="go">        seed=None,</span>
+<span class="go">        device=cpu,</span>
+<span class="go">        verbose=1,</span>
+<span class="go">        generating_fn=&lt;function createSimpleFFNModel at 0x7fd7ca4805e0&gt;,</span>
+<span class="go">        gf_params={&#39;in_feats&#39;: 13, &#39;out_feats&#39;: 1, &#39;layer_dims&#39;: [20, 10], &#39;layer_activation&#39;: &#39;ELU&#39;,</span>
+<span class="go">        &#39;output_activation&#39;: &#39;Sigmoid&#39;}</span>
+<span class="go">    )</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># update parameters by using the update() method provided by the Model interface</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">gf_params__layer_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>    <span class="c1"># update dictionary-level parameter</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">n_epochs</span><span class="o">=</span><span class="mi">100</span>                  <span class="c1"># update model-level parameter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="go">Out [1]</span>
+<span class="go">    ParametrizedTorchSKInterface(</span>
+<span class="go">        model=Sequential(</span>
+<span class="go">      (LinearLayer 0): Linear(in_features=13, out_features=5, bias=True)</span>
+<span class="go">      (Activation 0): ELU(alpha=1.0)</span>
+<span class="go">      (LinearLayer 1): Linear(in_features=5, out_features=1, bias=True)</span>
+<span class="go">      (Activation 1): Sigmoid()</span>
+<span class="go">    ),</span>
+<span class="go">        iter_fn=&lt;function iterSupervisedEpoch at 0x7fd7ca47b940&gt;,</span>
+<span class="go">        loss_function=BCELoss(),</span>
+<span class="go">        n_epochs=100,</span>
+<span class="go">        train_split=0.8,</span>
+<span class="go">        train_split_stratify=True,</span>
+<span class="go">        optimizer_class=&lt;class &#39;torch.optim.adam.Adam&#39;&gt;,</span>
+<span class="go">        dataset_class=&lt;class &#39;gojo.deepl.loading.TorchDataset&#39;&gt;,</span>
+<span class="go">        dataloader_class=&lt;class &#39;torch.utils.data.dataloader.DataLoader&#39;&gt;,</span>
+<span class="go">        optimizer_kw={&#39;lr&#39;: 0.001},</span>
+<span class="go">        train_dataset_kw={},</span>
+<span class="go">        valid_dataset_kw={},</span>
+<span class="go">        train_dataloader_kw={&#39;batch_size&#39;: 16, &#39;shuffle&#39;: True},</span>
+<span class="go">        valid_dataloader_kw={&#39;batch_size&#39;: 200},</span>
+<span class="go">        iter_fn_kw={},</span>
+<span class="go">        callbacks=None,</span>
+<span class="go">        metrics=[Metric(</span>
+<span class="go">        name=f1_score,</span>
+<span class="go">        function_kw={},</span>
+<span class="go">        multiclass=False</span>
+<span class="go">    )],</span>
+<span class="go">        seed=None,</span>
+<span class="go">        device=cpu,</span>
+<span class="go">        verbose=1,</span>
+<span class="go">        generating_fn=&lt;function createSimpleFFNModel at 0x7fd7ca4805e0&gt;,</span>
+<span class="go">        gf_params={&#39;in_feats&#39;: 13, &#39;out_feats&#39;: 1, &#39;layer_dims&#39;: [5], &#39;layer_activation&#39;: &#39;ELU&#39;,</span>
+<span class="go">        &#39;output_activation&#39;: &#39;Sigmoid&#39;}</span>
+<span class="go">    )</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gojo.interfaces.data">
+<span id="gojo-interfaces-data-module"></span><h2>gojo.interfaces.data module<a class="headerlink" href="#module-gojo.interfaces.data" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gojo.interfaces.data.Dataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.interfaces.data.</span></span><span class="sig-name descname"><span class="pre">Dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v2.2.3)"><span class="pre">pandas.Series</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/data.html#Dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.data.Dataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class representing a dataset. This class is used internally by the functions defined
+in <a class="reference internal" href="gojo.core.html#module-gojo.core.loops" title="gojo.core.loops"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.core.loops</span></code></a>.</p>
+<dl class="simple">
+<dt>data<span class="classifier">np.ndarray or pd.DataFrame or pd.Series</span></dt><dd><p>Data to be homogenized as a dataset.</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="gojo.interfaces.data.Dataset.array_data">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">array_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></em><a class="headerlink" href="#gojo.interfaces.data.Dataset.array_data" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the input data as a numpy.array.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gojo.interfaces.data.Dataset.index_values">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">index_values</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.array</span></em><a class="headerlink" href="#gojo.interfaces.data.Dataset.index_values" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the input data index values.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gojo.interfaces.data.Dataset.var_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">var_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#gojo.interfaces.data.Dataset.var_names" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the name of the variables.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gojo.interfaces.transform">
+<span id="gojo-interfaces-transform-module"></span><h2>gojo.interfaces.transform module<a class="headerlink" href="#module-gojo.interfaces.transform" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.GraphStandardScaler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.interfaces.transform.</span></span><span class="sig-name descname"><span class="pre">GraphStandardScaler</span></span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#GraphStandardScaler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.GraphStandardScaler" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gojo.interfaces.transform.Transform" title="gojo.interfaces.transform.Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.interfaces.transform.Transform</span></code></a></p>
+<p>Class that performs a standardization of three-dimensional input data associated with the following dimensions:
+(n_instances, n_nodes, n_features). The returned data will have a mean of 0 and standard deviation of 1 along
+dimensions 1 and 2.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.GraphStandardScaler.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#GraphStandardScaler.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.GraphStandardScaler.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to fit a transform to a given input data.</p>
+<dl class="simple">
+<dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data to fit the model.</p>
+</dd>
+<dt>y<span class="classifier">np.ndarray or None, default=None</span></dt><dd><p>Data labels (optional).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.GraphStandardScaler.getParameters">
+<span class="sig-name descname"><span class="pre">getParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#GraphStandardScaler.getParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.GraphStandardScaler.getParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Method that must return the transform parameters.</p>
+<dl class="simple">
+<dt>model_parameters<span class="classifier">dict</span></dt><dd><p>Model parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.GraphStandardScaler.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#GraphStandardScaler.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.GraphStandardScaler.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the model fit.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.GraphStandardScaler.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#GraphStandardScaler.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.GraphStandardScaler.transform" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to apply the transformations.</p>
+<dl class="simple">
+<dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data to be transformed.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>X_trans<span class="classifier">np.ndarray</span></dt><dd><p>Transformer data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.GraphStandardScaler.updateParameters">
+<span class="sig-name descname"><span class="pre">updateParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#GraphStandardScaler.updateParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.GraphStandardScaler.updateParameters" title="Permalink to this definition"></a></dt>
+<dd><p>This method has no effect.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.SKLearnTransformWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.interfaces.transform.</span></span><span class="sig-name descname"><span class="pre">SKLearnTransformWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transform_class</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#SKLearnTransformWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.SKLearnTransformWrapper" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gojo.interfaces.transform.Transform" title="gojo.interfaces.transform.Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.interfaces.transform.Transform</span></code></a></p>
+<p>Wrapper used to easily incorporate the transformations implemented in the <cite>sklearn</cite> library.</p>
+<dl class="simple">
+<dt>transform_class<span class="classifier">Type</span></dt><dd><p><cite>sklearn</cite> transform. The instances of this class must have the <cite>fit</cite> and <cite>transform</cite> methods defined according
+to the <cite>sklearn</cite> implementation.</p>
+</dd>
+<dt><a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs</dt><dd><p>Optional arguments used to initialize instances of the provided class.</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># GOJO libraries</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gojo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">core</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">interfaces</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># previous model transforms</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">transforms</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">interfaces</span><span class="o">.</span><span class="n">SKLearnTransformWrapper</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">interfaces</span><span class="o">.</span><span class="n">SKLearnTransformWrapper</span><span class="p">(</span><span class="n">PCA</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># default model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">interfaces</span><span class="o">.</span><span class="n">SklearnModelWrapper</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">SVC</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;poly&#39;</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">coef0</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">cache_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="kc">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cv_report</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">evalCrossVal</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">cv</span><span class="o">=</span><span class="n">gojo</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">getCrossValObj</span><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">transforms</span><span class="o">=</span><span class="n">transforms</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.SKLearnTransformWrapper.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#SKLearnTransformWrapper.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.SKLearnTransformWrapper.copy" title="Permalink to this definition"></a></dt>
+<dd><p>Make a deepcopy of the instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.SKLearnTransformWrapper.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#SKLearnTransformWrapper.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.SKLearnTransformWrapper.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to fit a transform to a given input data.</p>
+<dl class="simple">
+<dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data to fit the model.</p>
+</dd>
+<dt>y<span class="classifier">np.ndarray or None, default=None</span></dt><dd><p>Data labels (optional).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.SKLearnTransformWrapper.getParameters">
+<span class="sig-name descname"><span class="pre">getParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#SKLearnTransformWrapper.getParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.SKLearnTransformWrapper.getParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Method that must return the transform parameters.</p>
+<dl class="simple">
+<dt>model_parameters<span class="classifier">dict</span></dt><dd><p>Model parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.SKLearnTransformWrapper.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#SKLearnTransformWrapper.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.SKLearnTransformWrapper.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the model fit.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.SKLearnTransformWrapper.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#SKLearnTransformWrapper.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.SKLearnTransformWrapper.transform" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to apply the transformations.</p>
+<dl class="simple">
+<dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data to be transformed.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>X_trans<span class="classifier">np.ndarray</span></dt><dd><p>Transformer data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.SKLearnTransformWrapper.transform_obj">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transform_obj</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">object</span></em><a class="headerlink" href="#gojo.interfaces.transform.SKLearnTransformWrapper.transform_obj" title="Permalink to this definition"></a></dt>
+<dd><p>Get the internal transform object. By default, a deepcopy from the transform will be generated. To return
+the internal transformation directly, it is possible by selecting <cite>copy=True</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.SKLearnTransformWrapper.updateParameters">
+<span class="sig-name descname"><span class="pre">updateParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#SKLearnTransformWrapper.updateParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.SKLearnTransformWrapper.updateParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to update the inner transform parameters.</p>
+<p>IMPORTANT NOTE: Transform parameters should be updated by calling the <code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code> method from the
+superclass <code class="xref py py-class docutils literal notranslate"><span class="pre">gojo.core.transform.Transform</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.Transform">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gojo.interfaces.transform.</span></span><span class="sig-name descname"><span class="pre">Transform</span></span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#Transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.Transform" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base interface for applying transformations to the input data in the <a class="reference internal" href="gojo.core.html#module-gojo.core.loops" title="gojo.core.loops"><code class="xref py py-mod docutils literal notranslate"><span class="pre">gojo.core.loops</span></code></a> subroutines.
+Internally, the training data will be passed to the <a class="reference internal" href="#gojo.interfaces.transform.Transform.fit" title="gojo.interfaces.transform.Transform.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> method for adjusting the transformation to the
+training dataset statistics, and subsequently, the transformation will be applied to the training and test data
+by means of the <a class="reference internal" href="#gojo.interfaces.transform.Transform.transform" title="gojo.interfaces.transform.Transform.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">transform()</span></code></a>.</p>
+<p>Subclasses must define the following methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>fit()</dt><dd><p>Method used to fit a transform to a given input data.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>transform()</dt><dd><p>Method used to perform the transformations to the input data.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>reset()</dt><dd><p>Method used to reset the fitted transform</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>copy()</dt><dd><p>Method used to make a copy of the transform. It is not mandatory to define this method. By default, a deep
+copy will be performed</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>getParameters()</dt><dd><p>Method that must return the transform parameters. It is not mandatory to define this method. By default, it
+will return a various dictionary</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>updateParameters()</dt><dd><p>Method used to update the transform parameters. It is not mandatory to define this method. By default, it
+will have no effect</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>This abstract class provides the following properties:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>is_fitted</dt><dd><p>Indicates whether the transformation has been fitted by calling the <a class="reference internal" href="#gojo.interfaces.transform.Transform.fit" title="gojo.interfaces.transform.Transform.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> method.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>And the following methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>update()</dt><dd><p>Method used to update the transform parameters.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>fitted()</dt><dd><p>Method called (usually internally) to indicate that a given transformation have been fitted.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>resetFit()</dt><dd><p>Method used to reset a fitted transformation (usually called internally).</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.Transform.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#Transform.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.Transform.copy" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to make a copy of the transform.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.Transform.fit">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#Transform.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.Transform.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to fit a transform to a given input data.</p>
+<dl class="simple">
+<dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data to fit the transformation.</p>
+</dd>
+<dt>y<span class="classifier">np.ndarray or None, optional</span></dt><dd><p>Data labels (optional).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.Transform.fitted">
+<span class="sig-name descname"><span class="pre">fitted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#Transform.fitted"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.Transform.fitted" title="Permalink to this definition"></a></dt>
+<dd><p>Method called to indicate that a given transformation have been fitted.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.Transform.getParameters">
+<span class="sig-name descname"><span class="pre">getParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#Transform.getParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.Transform.getParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Method that must return the transform parameters.</p>
+<dl class="simple">
+<dt>model_parameters<span class="classifier">dict</span></dt><dd><p>Model parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.Transform.is_fitted">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_fitted</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#gojo.interfaces.transform.Transform.is_fitted" title="Permalink to this definition"></a></dt>
+<dd><p>Indicates whether the transformation has been fitted by calling the <a class="reference internal" href="#gojo.interfaces.transform.Transform.fit" title="gojo.interfaces.transform.Transform.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> method.</p>
+<dl class="simple">
+<dt>model_fitted<span class="classifier">bool</span></dt><dd><p>Returns True if the model was fitted.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.Transform.reset">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#Transform.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.Transform.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to reset the fitted transform.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.Transform.resetFit">
+<span class="sig-name descname"><span class="pre">resetFit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#Transform.resetFit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.Transform.resetFit" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to reset a fitted transformation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.Transform.transform">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">numpy.ndarray</span></a></span></span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#Transform.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.Transform.transform" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to perform the transformations to the input data.</p>
+<dl class="simple">
+<dt>X<span class="classifier">np.ndarray</span></dt><dd><p>Input data used to perform the transformations.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.Transform.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#Transform.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.Transform.update" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to update the transform parameters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gojo.interfaces.transform.Transform.updateParameters">
+<span class="sig-name descname"><span class="pre">updateParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gojo/interfaces/transform.html#Transform.updateParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gojo.interfaces.transform.Transform.updateParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to update the transform parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gojo.interfaces">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gojo.interfaces" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gojo.core.html" class="btn btn-neutral float-left" title="gojo.core package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gojo.deepl.html" class="btn btn-neutral float-right" title="gojo.deepl package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Fernando García Gutiérrez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

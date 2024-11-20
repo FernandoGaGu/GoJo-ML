@@ -462,9 +462,6 @@
 <span class="sd">    y_loading_fn : callable, default=None</span>
 <span class="sd">        Same logic as `x_loading_fn` but applied to the `y` parameter.</span>
 
-<span class="sd">    squeeze_y : bool, default=False</span>
-<span class="sd">        Parameter indicating whether to flatten the `y` variable and when its dimensions are (X, 1).</span>
-
 <span class="sd">    **op_instance_args</span>
 <span class="sd">        Instance-level optional arguments. This parameter should be a dictionary whose values must be `np.ndarray`</span>
 <span class="sd">        containing the same number of elements as instances in `X` and `y`.</span>
@@ -494,7 +491,6 @@
             <span class="n">x_loading_fn</span><span class="p">:</span> <span class="n">callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">y_stream_data</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
             <span class="n">y_loading_fn</span><span class="p">:</span> <span class="n">callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">squeeze_y</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
             <span class="o">**</span><span class="n">op_instance_args</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">TorchDataset</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
@@ -506,8 +502,7 @@
             <span class="p">(</span><span class="s1">&#39;x_transforms&#39;</span><span class="p">,</span> <span class="n">x_transforms</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
             <span class="p">(</span><span class="s1">&#39;y_transforms&#39;</span><span class="p">,</span> <span class="n">y_transforms</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
             <span class="p">(</span><span class="s1">&#39;x_stream_data&#39;</span><span class="p">,</span> <span class="n">x_stream_data</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">]),</span>
-            <span class="p">(</span><span class="s1">&#39;y_stream_data&#39;</span><span class="p">,</span> <span class="n">y_stream_data</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">]),</span>
-            <span class="p">(</span><span class="s1">&#39;squeeze_y&#39;</span><span class="p">,</span> <span class="n">squeeze_y</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">])</span>
+            <span class="p">(</span><span class="s1">&#39;y_stream_data&#39;</span><span class="p">,</span> <span class="n">y_stream_data</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">])</span>
         <span class="p">)</span>
 
         <span class="c1"># check transforms</span>
@@ -522,7 +517,6 @@
         <span class="c1"># save parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x_transforms</span> <span class="o">=</span> <span class="n">x_transforms</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y_transforms</span> <span class="o">=</span> <span class="n">y_transforms</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">squeeze_y</span> <span class="o">=</span> <span class="n">squeeze_y</span>
 
         <span class="c1"># check op_instance_args</span>
         <span class="n">op_instance_args</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">op_instance_args</span><span class="p">)</span>   <span class="c1"># avoid inplace modifications</span>
@@ -573,7 +567,7 @@
                 <span class="n">np_y</span> <span class="o">=</span> <span class="n">y_dt</span><span class="o">.</span><span class="n">array_data</span>
 
                 <span class="c1"># remove the extra dimension from y</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">squeeze_y</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">np_y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">np_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np_y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">np_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="n">np_y</span> <span class="o">=</span> <span class="n">np_y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">)</span> <span class="o">!=</span> <span class="n">np_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
