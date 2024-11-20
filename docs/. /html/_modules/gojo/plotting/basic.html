@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gojo.plotting.basic &mdash; gojo - Documentation 0.1.5.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #F24C4C" >
+            <a href="../../../index.html" class="icon icon-home"> gojo - Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Hands-on</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html">Model evaluation by cross validation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#definition-and-evaluation-of-a-support-vector-machine-svm-model"><strong>Definition and evaluation of a Support Vector Machine (SVM) model</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#understanding-svms-with-polynomial-kernels"><strong>Understanding SVMs with Polynomial Kernels</strong></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#introduction-to-svm"><strong>Introduction to SVM</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-hyperplane"><strong>The Mathematical Foundation - Hyperplane</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-maximizing-the-margin"><strong>The Mathematical Foundation - Maximizing the Margin</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-the-optimization-problem"><strong>The Mathematical Foundation - The Optimization Problem</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-introducing-kernels"><strong>The Mathematical Foundation - Introducing Kernels</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#hands-on"><strong>Hands-on</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_2_Neural_networks_integration.html">Neural networks integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_2_Neural_networks_integration.html#basic-model-training">Basic model training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_2_Neural_networks_integration.html#model-evaluation-via-cross-validation">Model evaluation via cross-validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_3_Hyperparameter_optimization_by_nested_cross_validation.html">Hyperparameter optimization by nested cross-validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_3_Hyperparameter_optimization_by_nested_cross_validation.html#initial-model-evaluation">Initial model evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_3_Hyperparameter_optimization_by_nested_cross_validation.html#hyperparameter-optimization">Hyperparameter optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html">Vanilla Variational Autoencoder (vVAE)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#data-loading">Data loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#model-training">Model training</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#model-convergence">Model convergence</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#model-evaluation">Model evaluation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#analyze-the-reconstruction-error">Analyze the reconstruction error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#compute-regression-metrics">Compute regression metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#visualize-embedding-dimensions">Visualize embedding dimensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#generate-samples">Generate samples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html">Example 6. Testing different CNN architectures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#data-loading">Data loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#vanilla-cnn">Vanilla CNN</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#model-convergence">Model convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#model-evaluation">Model evaluation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#cnn-with-residual-connections">CNN with residual connections</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#id1">Model convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#id2">Model evaluation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Advanced_use.html">Advanced use</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Advanced_use.html#definition-of-your-own-transformations-gojo-interfaces-transform">Definition of your own transformations (gojo.interfaces.Transform)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.core.html">gojo.core package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.core.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.core.html#module-gojo.core.evaluation">gojo.core.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.core.html#module-gojo.core.loops">gojo.core.loops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.core.html#module-gojo.core.report">gojo.core.report module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.core.html#module-gojo.core">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.interfaces.html">gojo.interfaces package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.interfaces.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.interfaces.html#module-gojo.interfaces.model">gojo.interfaces.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.interfaces.html#module-gojo.interfaces.data">gojo.interfaces.data module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.interfaces.html#module-gojo.interfaces.transform">gojo.interfaces.transform module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.interfaces.html#module-gojo.interfaces">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.deepl.html">gojo.deepl package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.callback">gojo.deepl.callback module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.cnn">gojo.deepl.cnn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.ffn">gojo.deepl.ffn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.loading">gojo.deepl.loading module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.loops">gojo.deepl.loops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.loss">gojo.deepl.loss module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.models">gojo.deepl.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.plotting.html">gojo.plotting package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.plotting.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.plotting.html#module-gojo.plotting.basic">gojo.plotting.basic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.plotting.html#module-gojo.plotting.classification">gojo.plotting.classification module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.plotting.html#module-gojo.plotting">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.util.html">gojo.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util.io">gojo.util.io module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util.login">gojo.util.login module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util.splitter">gojo.util.splitter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util.tools">gojo.util.tools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util.validation">gojo.util.validation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.experimental.html">gojo.experimental package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.experimental.html#module-gojo.experimental">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #F24C4C" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gojo - Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>gojo.plotting.basic</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gojo.plotting.basic</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Module with basic plotting functions.</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Fernando García Gutiérrez</span>
+<span class="c1"># Email: ga.gu.fernando.concat@gmail.com</span>
+<span class="c1">#</span>
+<span class="c1"># STATUS: completed, functional, and documented.</span>
+<span class="c1">#</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="kn">from</span> <span class="nn">..util.validation</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">checkMultiInputTypes</span><span class="p">,</span>
+    <span class="n">checkInputType</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="linePlot"><a class="viewcode-back" href="../../../gojo.plotting.html#gojo.plotting.basic.linePlot">[docs]</a><span class="k">def</span> <span class="nf">linePlot</span><span class="p">(</span>
+        <span class="o">*</span><span class="n">dfs</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">err</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">err_alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span>
+        <span class="n">labels</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ax</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">figsize</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">),</span>
+        <span class="n">style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;ggplot&#39;</span><span class="p">,</span>
+        <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">colors</span><span class="p">:</span> <span class="nb">list</span> <span class="ow">or</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">title_size</span><span class="p">:</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="n">title_pad</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="n">hide_legend</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">legend_pos</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;upper right&#39;</span><span class="p">,</span>
+        <span class="n">legend_size</span><span class="p">:</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="n">xlabel_size</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+        <span class="n">ylabel_size</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+        <span class="n">grid_alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">yvmin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">yvmax</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">xvmin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">xvmax</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">lw</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ls</span><span class="p">:</span> <span class="nb">str</span> <span class="ow">or</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">save</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">save_kw</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Line plot function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    *dfs : pd.DataFrame</span>
+<span class="sd">        Input dataframes with the data to be represented.</span>
+
+<span class="sd">    x : str</span>
+<span class="sd">        X-axis variable. Must be present in the input dataframes.</span>
+
+<span class="sd">    y : str</span>
+<span class="sd">        Y-axis variable. Must be present in the input dataframes.</span>
+
+<span class="sd">    err : str</span>
+<span class="sd">        Variable indicating the errors associated with the lines. Must be present in the input</span>
+<span class="sd">        dataframes.</span>
+
+<span class="sd">    err_alpha : float, default=0.3</span>
+<span class="sd">        Opacity used to plot the errors.</span>
+
+<span class="sd">    labels : list, default=None</span>
+<span class="sd">        Labels used for identifying the input dataframes.</span>
+
+<span class="sd">    ax : matplotlib.axes.Axes, default=None</span>
+<span class="sd">        Axes used to represent the figure.</span>
+
+<span class="sd">    figsize : tuple, default=(6, 3.5)</span>
+<span class="sd">        Figure size.</span>
+
+<span class="sd">    style : str, default=&#39;ggplot&#39;</span>
+<span class="sd">        Plot styling. (see &#39;matplotlib.pyplot.styles&#39;)</span>
+
+<span class="sd">    dpi : int, default=100</span>
+<span class="sd">        Figure dpi.</span>
+
+<span class="sd">    colors : list or str, default=None</span>
+<span class="sd">        Colors used for identifying the dataframe information. A string colormap can be provided.</span>
+
+<span class="sd">    title : str, default=&#39;&#39;</span>
+<span class="sd">        Plot title.</span>
+
+<span class="sd">    title_size : int or float, default=0.5</span>
+<span class="sd">        Title font size.</span>
+
+<span class="sd">    title_pad : int, default=15</span>
+<span class="sd">        Title pad.</span>
+
+<span class="sd">    hide_legend : bool, default=False</span>
+<span class="sd">        Parameter indicating whether to hide the legend.</span>
+
+<span class="sd">    legend_pos : str, default=&#39;upper right&#39;</span>
+<span class="sd">        Legend position.</span>
+
+<span class="sd">    legend_size : int, default=12</span>
+<span class="sd">        Legend size.</span>
+
+<span class="sd">    yvmin : float, default=None</span>
+<span class="sd">        Minimum value in the y-axis.</span>
+
+<span class="sd">    yvmax : float, default=None</span>
+<span class="sd">        Maximum value in the y-axis.</span>
+
+<span class="sd">    xvmin : float, default=None</span>
+<span class="sd">        Minimum value in the x-axis.</span>
+
+<span class="sd">    xvmax : float, default=None</span>
+<span class="sd">        Maximum value in the x-axis.</span>
+
+<span class="sd">    xlabel_size : float or int, default=13</span>
+<span class="sd">        X-axis label size.</span>
+
+<span class="sd">    ylabel_size : float ot int, default=13</span>
+<span class="sd">        Y-axis label size.</span>
+
+<span class="sd">    grid_alpha : float, default=0.5</span>
+<span class="sd">        Grid opacity.</span>
+
+<span class="sd">    lw : float or int or list, default=None</span>
+<span class="sd">        Line(s) width(s).</span>
+
+<span class="sd">    ls : str or list, default=None</span>
+<span class="sd">        Line(s) styles(s).</span>
+
+<span class="sd">    save : str, default=None</span>
+<span class="sd">        Parameter indicating whether to save the generated plot. If None (default) the plot will not be</span>
+<span class="sd">        saved.</span>
+
+<span class="sd">    save_kw : dict, default=None</span>
+<span class="sd">        Optional parameters for saving the plot. This parameter will not have effect if the</span>
+<span class="sd">        save parameter was set as None.</span>
+
+<span class="sd">    show : bool, default=True</span>
+<span class="sd">        Parameter indicating whether to save the generated plot.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import plotting</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # train_info, test_info are pandas dataframes returned by gojo.deepl.fitNeuralNetwork</span>
+<span class="sd">    &gt;&gt;&gt; plotting.linePlot(</span>
+<span class="sd">    &gt;&gt;&gt;     train_info, valid_info,</span>
+<span class="sd">    &gt;&gt;&gt;     x=&#39;epoch&#39;, y=&#39;loss (mean)&#39;, err=&#39;loss (std)&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     labels=[&#39;Train&#39;, &#39;Validation&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     title=&#39;Model convergence&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     ls=[&#39;solid&#39;, &#39;dashed&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     style=&#39;default&#39;, legend_pos=&#39;center right&#39;)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">checkMultiInputTypes</span><span class="p">(</span>
+        <span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;err&#39;</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;err_alpha&#39;</span><span class="p">,</span> <span class="n">err_alpha</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;hide_legend&#39;</span><span class="p">,</span> <span class="n">hide_legend</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;legend_pos&#39;</span><span class="p">,</span> <span class="n">legend_pos</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;legend_size&#39;</span><span class="p">,</span> <span class="n">legend_size</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;yvmin&#39;</span><span class="p">,</span> <span class="n">yvmin</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;yvmax&#39;</span><span class="p">,</span> <span class="n">yvmax</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;xvmin&#39;</span><span class="p">,</span> <span class="n">xvmin</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;xvmax&#39;</span><span class="p">,</span> <span class="n">xvmax</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;xlabel_size&#39;</span><span class="p">,</span> <span class="n">xlabel_size</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;ylabel_size&#39;</span><span class="p">,</span> <span class="n">ylabel_size</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;title_size&#39;</span><span class="p">,</span> <span class="n">title_size</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;title_pad&#39;</span><span class="p">,</span> <span class="n">title_pad</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;figsize&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="p">,</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;ax&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;colors&#39;</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;grid_alpha&#39;</span><span class="p">,</span> <span class="n">grid_alpha</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;lw&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;ls&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;dpi&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;style&#39;</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="n">save</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;save_kw&#39;</span><span class="p">,</span> <span class="n">save_kw</span><span class="p">,</span> <span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="n">show</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">]))</span>
+
+    <span class="c1"># check input data types</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dfs</span><span class="p">):</span>
+        <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;df (</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Missing &quot;x&quot; variable &quot;</span><span class="si">%s</span><span class="s1">&quot;. Available variables are: </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="n">y</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Missing &quot;y&quot; variable &quot;</span><span class="si">%s</span><span class="s1">&quot;. Available variables are: </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">err</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">err</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Missing &quot;err&quot; variable &quot;</span><span class="si">%s</span><span class="s1">&quot;. Available variables are: </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;(</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">))]</span>
+
+    <span class="k">if</span> <span class="n">lw</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">lw</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lw</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">lw</span> <span class="o">=</span> <span class="p">[</span><span class="n">lw</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lw</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s1">&#39;Missmatch shape between input dataframes (</span><span class="si">%d</span><span class="s1">) and &quot;lw&quot; (</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">lw</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="n">ls</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ls</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;solid&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ls</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">ls</span> <span class="o">=</span> <span class="p">[</span><span class="n">ls</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ls</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s1">&#39;Missmatch shape between input dataframes (</span><span class="si">%d</span><span class="s1">) and &quot;ls&quot; (</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">ls</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s1">&#39;Missmatch shape between input dataframes (</span><span class="si">%d</span><span class="s1">) and &quot;legend_labels&quot; (</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="n">cmap</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">))]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s1">&#39;Missmatch shape between input dataframes (</span><span class="si">%d</span><span class="s1">) and &quot;colors&quot; (</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">)))</span>
+
+    <span class="c1"># plot information</span>
+    <span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">context</span><span class="p">(</span><span class="n">style</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">set_dpi</span><span class="p">(</span><span class="n">dpi</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">dfs</span><span class="p">)):</span>
+            <span class="c1"># select color (if specified)</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="c1"># plot line</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">lw</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="n">ls</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+
+            <span class="c1"># plot error</span>
+            <span class="k">if</span> <span class="n">err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span>
+                    <span class="n">df</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                    <span class="n">df</span><span class="p">[</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="n">err</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                    <span class="n">df</span><span class="p">[</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="n">err</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">err_alpha</span><span class="p">)</span>
+
+        <span class="c1"># set axis limits</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="n">yvmin</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="n">yvmax</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">xvmin</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">xvmax</span><span class="p">)</span>
+
+        <span class="c1"># set legend</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">hide_legend</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">legend_pos</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">legend_size</span><span class="p">))</span>
+
+        <span class="c1"># figure layout</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">grid_alpha</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">xlabel_size</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">ylabel_size</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">title_size</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="n">title_pad</span><span class="p">)</span>
+
+        <span class="c1"># save figure if specified</span>
+        <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
+            <span class="n">save_kw</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">save_kw</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">save_kw</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save</span><span class="p">,</span> <span class="o">**</span><span class="n">save_kw</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="barPlot"><a class="viewcode-back" href="../../../gojo.plotting.html#gojo.plotting.basic.barPlot">[docs]</a><span class="k">def</span> <span class="nf">barPlot</span><span class="p">(</span>
+        <span class="o">*</span><span class="n">dfs</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">labels</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">colors</span><span class="p">:</span> <span class="nb">list</span> <span class="ow">or</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ax</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">figsize</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">),</span>
+        <span class="n">style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;ggplot&#39;</span><span class="p">,</span>
+        <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">err_capsize</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">int</span> <span class="o">=</span> <span class="mf">0.15</span><span class="p">,</span>
+        <span class="n">err_lw</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">int</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span>
+        <span class="n">grid_alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.15</span><span class="p">,</span>
+        <span class="n">xlabel_size</span><span class="p">:</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+        <span class="n">ylabel_size</span><span class="p">:</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+        <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">title_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="n">title_pad</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="n">hide_legend</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">legend_pos</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;upper right&#39;</span><span class="p">,</span>
+        <span class="n">legend_bbox_to_anchor</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">legend_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="n">yvmin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">yvmax</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">xvmin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">xvmax</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">hide_xlabel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">hide_ylabel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">xaxis_tick_size</span><span class="p">:</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="n">yaxis_tick_size</span><span class="p">:</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="n">xaxis_rotation</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">int</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">yaxis_rotation</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">int</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">save</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">save_kw</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Bar plot function</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    *dfs</span>
+<span class="sd">        Input dataframes with the data to be represented.</span>
+
+<span class="sd">    x : str</span>
+<span class="sd">        X-axis variable. Must be present in the input dataframes.</span>
+
+<span class="sd">    y : str</span>
+<span class="sd">        Y-axis variable. Must be present in the input dataframes.</span>
+
+<span class="sd">    labels : list, default=None</span>
+<span class="sd">        Labels used for identifying the input dataframes.</span>
+
+<span class="sd">    colors : list or str, default=None</span>
+<span class="sd">        Colors used for identifying the dataframe information. A string colormap can be provided.</span>
+
+<span class="sd">    ax : mpl.axes.Axes, default=None</span>
+<span class="sd">        Axes used to represent the figure.</span>
+
+<span class="sd">    figsize : tuple, default=(6, 3.5)</span>
+<span class="sd">        Figure size.</span>
+
+<span class="sd">    style : str, default=&#39;ggplot&#39;</span>
+<span class="sd">        Plot styling. (see &#39;matplotlib.pyplot.styles&#39;)</span>
+
+<span class="sd">    dpi : int, default=100</span>
+<span class="sd">        Figure dpi.</span>
+
+<span class="sd">    err_capsize : float, default=0.15</span>
+<span class="sd">        Error capsize.</span>
+
+<span class="sd">    err_lw : float, default=1.5</span>
+<span class="sd">        Error linewidth.</span>
+
+<span class="sd">    grid_alpha : float, default=0.15</span>
+<span class="sd">        Gird lines opacity.</span>
+
+<span class="sd">    xlabel_size : int, default=13</span>
+<span class="sd">        Size of the x-label.</span>
+
+<span class="sd">    ylabel_size : int, default=13</span>
+<span class="sd">        Size of the y-label.</span>
+
+<span class="sd">    title : str, default=&#39;&#39;</span>
+<span class="sd">        Plot title.</span>
+
+<span class="sd">    title_size : int, default=15</span>
+<span class="sd">        Title font size.</span>
+
+<span class="sd">    title_pad : int, default=15</span>
+<span class="sd">        Title pad.</span>
+
+<span class="sd">    hide_legend : bool, default=False</span>
+<span class="sd">        Parameter indicating whether to hide the legend.</span>
+
+<span class="sd">    legend_pos : str, default=&#39;upper right&#39;</span>
+<span class="sd">        Legend position.</span>
+
+<span class="sd">    legend_bbox_to_anchor : tuple, default=None</span>
+<span class="sd">        Used for modifying the legend position relative to the position defined in `legend_pos`.</span>
+
+<span class="sd">    legend_size : int, default=12</span>
+<span class="sd">        Legend size.</span>
+
+<span class="sd">    yvmin : float, default=None</span>
+<span class="sd">        Minimum value in the y-axis.</span>
+
+<span class="sd">    yvmax : float, default=None</span>
+<span class="sd">        Maximum value in the y-axis.</span>
+
+<span class="sd">    xvmin : float, default=None</span>
+<span class="sd">        Minimum value in the x-axis.</span>
+
+<span class="sd">    xvmax : float, default=None</span>
+<span class="sd">        Maximum value in the x-axis.</span>
+
+<span class="sd">    hide_xlabel : bool, default=False</span>
+<span class="sd">        Parameter indicating whether to hide the x-axis label.</span>
+
+<span class="sd">    hide_ylabel : bool, default=False</span>
+<span class="sd">        Parameter indicating whether to hide the y-axis label.</span>
+
+<span class="sd">    xaxis_tick_size : int, default=12</span>
+<span class="sd">        Controls the x-axis tick size.</span>
+
+<span class="sd">    yaxis_tick_size : int, default=12</span>
+<span class="sd">        Controls the y-axis tick size.</span>
+
+<span class="sd">    xaxis_rotation : float or int, default=0.0</span>
+<span class="sd">        Y-axis tick rotation.</span>
+
+<span class="sd">    yaxis_rotation : float or int, default=0.0</span>
+<span class="sd">        Y-axis tick rotation.</span>
+
+<span class="sd">    save : str, default=None</span>
+<span class="sd">        Parameter indicating whether to save the generated plot. If None (default) the plot will not be</span>
+<span class="sd">        saved.</span>
+
+<span class="sd">    save_kw : dict, default=None</span>
+<span class="sd">        Optional parameters for saving the plot. This parameter will not have effect if the</span>
+<span class="sd">        save parameter was set as None.</span>
+
+<span class="sd">    show : bool, default=True</span>
+<span class="sd">        Parameter indicating whether to save the generated plot.</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import core</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import plotting</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # i.e., compute model performance metrics</span>
+<span class="sd">    &gt;&gt;&gt; scores_1 = report1.getScores(</span>
+<span class="sd">    &gt;&gt;&gt;     core.getDefaultMetrics(</span>
+<span class="sd">    &gt;&gt;&gt;     binary_classification, bin_threshold=0.5))[&#39;test&#39;]</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; scores_2 = report1.getScores(</span>
+<span class="sd">    &gt;&gt;&gt;     core.getDefaultMetrics(</span>
+<span class="sd">    &gt;&gt;&gt;     binary_classification, bin_threshold=0.5))[&#39;test&#39;]</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # adapt for barplot representation</span>
+<span class="sd">    &gt;&gt;&gt; scores_1 = scores_1.melt()</span>
+<span class="sd">    &gt;&gt;&gt; scores_2 = scores_2.melt()</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; plotting.barPlot(</span>
+<span class="sd">    &gt;&gt;&gt;     scores_1, scores_2,</span>
+<span class="sd">    &gt;&gt;&gt;     x=&#39;variable&#39;, y=&#39;value&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     labels=[&#39;Model 1&#39;, &#39;Model 2&#39;],</span>
+<span class="sd">    &gt;&gt;&gt;     title=&#39;Cross-validation results&#39;</span>
+<span class="sd">    &gt;&gt;&gt; )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">checkMultiInputTypes</span><span class="p">(</span>
+        <span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;colors&#39;</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;ax&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;figsize&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="p">,</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;style&#39;</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;dpi&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;err_capsize&#39;</span><span class="p">,</span> <span class="n">err_capsize</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;err_lw&#39;</span><span class="p">,</span> <span class="n">err_lw</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;grid_alpha&#39;</span><span class="p">,</span> <span class="n">grid_alpha</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;xlabel_size&#39;</span><span class="p">,</span> <span class="n">xlabel_size</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;ylabel_size&#39;</span><span class="p">,</span> <span class="n">ylabel_size</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;title_size&#39;</span><span class="p">,</span> <span class="n">title_size</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;title_pad&#39;</span><span class="p">,</span> <span class="n">title_pad</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;hide_legend&#39;</span><span class="p">,</span> <span class="n">hide_legend</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;legend_pos&#39;</span><span class="p">,</span> <span class="n">legend_pos</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;legend_size&#39;</span><span class="p">,</span> <span class="n">legend_size</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;legend_bbox_to_anchor&#39;</span><span class="p">,</span> <span class="n">legend_bbox_to_anchor</span><span class="p">,</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;yvmin&#39;</span><span class="p">,</span> <span class="n">yvmin</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;yvmax&#39;</span><span class="p">,</span> <span class="n">yvmax</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;xvmin&#39;</span><span class="p">,</span> <span class="n">xvmin</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;xvmax&#39;</span><span class="p">,</span> <span class="n">xvmax</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;hide_xlabel&#39;</span><span class="p">,</span> <span class="n">hide_xlabel</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;hide_ylabel&#39;</span><span class="p">,</span> <span class="n">hide_ylabel</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;xaxis_tick_size&#39;</span><span class="p">,</span> <span class="n">ylabel_size</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;yaxis_tick_size&#39;</span><span class="p">,</span> <span class="n">ylabel_size</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;xaxis_rotation&#39;</span><span class="p">,</span> <span class="n">xaxis_rotation</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;yaxis_rotation&#39;</span><span class="p">,</span> <span class="n">yaxis_rotation</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="n">save</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;save_kw&#39;</span><span class="p">,</span> <span class="n">save_kw</span><span class="p">,</span> <span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="n">show</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">]))</span>
+
+    <span class="c1"># check input data types</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dfs</span><span class="p">):</span>
+        <span class="n">checkInputType</span><span class="p">(</span><span class="s1">&#39;df (</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Missing &quot;x&quot; variable &quot;</span><span class="si">%s</span><span class="s1">&quot;. Available variables are: </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="n">y</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Missing &quot;y&quot; variable &quot;</span><span class="si">%s</span><span class="s1">&quot;. Available variables are: </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;(</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">))]</span>
+
+    <span class="c1"># check legend_labels consistency</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s1">&#39;Missing labels in &quot;labels&quot;. Number of labels provided &#39;</span> \
+            <span class="s1">&#39;(</span><span class="si">%d</span><span class="s1">) not match the number of input DataFrames (</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s1">&#39;Mismatch shape between input dataframes (</span><span class="si">%d</span><span class="s1">) and &quot;colors&quot; (</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">)))</span>
+
+    <span class="c1"># merge dataframes information</span>
+    <span class="n">dfs_</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">dfs</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;_label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span>
+        <span class="n">dfs_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+    <span class="n">merge_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># plot information</span>
+    <span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">context</span><span class="p">(</span><span class="n">style</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">set_dpi</span><span class="p">(</span><span class="n">dpi</span><span class="p">)</span>
+
+        <span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">merge_df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;_label&#39;</span><span class="p">,</span>
+            <span class="n">err_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;linewidth&#39;</span><span class="p">:</span> <span class="n">err_lw</span><span class="p">},</span>
+            <span class="n">capsize</span><span class="o">=</span><span class="n">err_capsize</span><span class="p">,</span>
+            <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+            <span class="n">palette</span><span class="o">=</span><span class="n">colors</span><span class="p">)</span>
+
+        <span class="c1"># set axis limits</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="n">yvmin</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="n">yvmax</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">xvmin</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">xvmax</span><span class="p">)</span>
+
+        <span class="c1"># set legend</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">hide_legend</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+                <span class="n">loc</span><span class="o">=</span><span class="n">legend_pos</span><span class="p">,</span>
+                <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="n">legend_bbox_to_anchor</span><span class="p">,</span>
+                <span class="n">prop</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">legend_size</span><span class="p">))</span>
+
+        <span class="c1"># figure layout</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">grid_alpha</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="n">hide_xlabel</span> <span class="k">else</span> <span class="n">x</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">xlabel_size</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="n">hide_ylabel</span> <span class="k">else</span> <span class="n">y</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">ylabel_size</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">title_size</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="n">xaxis_tick_size</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="n">xaxis_rotation</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="n">yaxis_tick_size</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="n">yaxis_rotation</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">title_size</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="n">title_pad</span><span class="p">)</span>
+
+        <span class="c1"># save figure if specified</span>
+        <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
+            <span class="n">save_kw</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">save_kw</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">save_kw</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save</span><span class="p">,</span> <span class="o">**</span><span class="n">save_kw</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="scatterPlot"><a class="viewcode-back" href="../../../gojo.plotting.html#gojo.plotting.basic.scatterPlot">[docs]</a><span class="k">def</span> <span class="nf">scatterPlot</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">hue</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">hue_mapping</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ax</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">figsize</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">),</span>
+        <span class="n">style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;ggplot&#39;</span><span class="p">,</span>
+        <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">maker_size</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">colors</span><span class="p">:</span> <span class="nb">list</span> <span class="ow">or</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">title_size</span><span class="p">:</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="n">title_pad</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="n">hide_legend</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">legend_pos</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">legend_size</span><span class="p">:</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="n">xlabel_size</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+        <span class="n">ylabel_size</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+        <span class="n">grid_alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">yvmin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">yvmax</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">xvmin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">xvmax</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">save</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">save_kw</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Scatter plot function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : pd.DataFrame</span>
+<span class="sd">        Input dataframes with the data to be represented.</span>
+
+<span class="sd">    x : str</span>
+<span class="sd">        X-axis variable. Must be present in the input dataframes.</span>
+
+<span class="sd">    y : str</span>
+<span class="sd">        Y-axis variable. Must be present in the input dataframes.</span>
+
+<span class="sd">    hue : str ,default=None</span>
+<span class="sd">        Hue variable for plotting groups.</span>
+
+<span class="sd">    hue_mapping : dict ,default=None</span>
+<span class="sd">        Hash to map group names from the hue variable in the df to user-defined names.</span>
+
+<span class="sd">    ax : mpl.axes.Axes ,default=None</span>
+<span class="sd">        Axes used to represent the figure.</span>
+
+<span class="sd">    figsize : tuple ,default=(6, 4.5)</span>
+<span class="sd">        Figure size.</span>
+
+<span class="sd">    style : str ,default=&#39;ggplot&#39;</span>
+<span class="sd">        Plot styling. (see &#39;matplotlib.pyplot.styles&#39;)</span>
+
+<span class="sd">    dpi : int ,default=100</span>
+<span class="sd">        Figure dpi.</span>
+
+<span class="sd">    maker_size : float or int ,default=None</span>
+<span class="sd">        Marker size.</span>
+
+<span class="sd">    colors : list or str ,default=None</span>
+<span class="sd">        Colors used for identifying the dataframe information. A string colormap can be provided.</span>
+
+<span class="sd">    title : str ,default=&#39;&#39;</span>
+<span class="sd">        Plot title.</span>
+
+<span class="sd">    title_size : int or float ,default=15</span>
+<span class="sd">        Title font size.</span>
+
+<span class="sd">    title_pad : int ,default=15</span>
+<span class="sd">        Title pad.</span>
+
+<span class="sd">    hide_legend : bool ,default=False</span>
+<span class="sd">        Parameter indicating whether to hide the legend.</span>
+
+<span class="sd">    legend_pos : str ,default=None</span>
+<span class="sd">        Legend position.</span>
+
+<span class="sd">    legend_size : int or float ,default=12</span>
+<span class="sd">        Legend size.</span>
+
+<span class="sd">    xlabel_size : float or int ,default=13</span>
+<span class="sd">        X-label size.</span>
+
+<span class="sd">    ylabel_size : float or int ,default=13</span>
+<span class="sd">        Y-label size.</span>
+
+<span class="sd">    grid_alpha : float ,default=0.5</span>
+<span class="sd">        Opcaity of the grid lines.</span>
+
+<span class="sd">    yvmin : float ,default=None</span>
+<span class="sd">        Minimum value in the y-axis.</span>
+
+<span class="sd">    yvmax : float ,default=None</span>
+<span class="sd">        Maximum value in the y-axis.</span>
+
+<span class="sd">    xvmin : float ,default=None</span>
+<span class="sd">        Minimum value in the x-axis.</span>
+
+<span class="sd">    xvmax : float ,default=None</span>
+<span class="sd">        Maximum value in the x-axis.</span>
+
+<span class="sd">    save : str ,default=None</span>
+<span class="sd">        Parameter indicating whether to save the generated plot. If None (default) the plot will not be</span>
+<span class="sd">        saved.</span>
+
+<span class="sd">    save_kw : dict ,default=None</span>
+<span class="sd">        Optional parameters for saving the plot. This parameter will not have effect if the</span>
+<span class="sd">        save parameter was set as None.</span>
+
+<span class="sd">    show : bool ,default=True</span>
+<span class="sd">        Parameter indicating whether to save the generated plot.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn import datasets</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.preprocessing import StandardScaler</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.decomposition import PCA</span>
+<span class="sd">    &gt;&gt;&gt; from gojo import plotting</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # load test dataset (Wine)</span>
+<span class="sd">    &gt;&gt;&gt; wine_dt = datasets.load_wine()</span>
+<span class="sd">    &gt;&gt;&gt; data = StandardScaler().fit_transform(wine_dt[&#39;data&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; PCs = PCA(n_components=2).fit_transform(data)</span>
+<span class="sd">    &gt;&gt;&gt; PCs = pd.DataFrame(PCs, columns=[&#39;PC1&#39;, &#39;PC2&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; PCs[&#39;target&#39;] = wine_dt[&#39;target&#39;]</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; plotting.scatterPlot(</span>
+<span class="sd">    &gt;&gt;&gt;     df=PCs,</span>
+<span class="sd">    &gt;&gt;&gt;     x=&#39;PC1&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     y=&#39;PC2&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     hue=&#39;target&#39;,</span>
+<span class="sd">    &gt;&gt;&gt;     hue_mapping={0: &#39;C0&#39;, 1: &#39;C1&#39;, 2: &#39;C2&#39;})</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">checkMultiInputTypes</span><span class="p">(</span>
+        <span class="p">(</span><span class="s1">&#39;df&#39;</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;hue&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;hue_mapping&#39;</span><span class="p">,</span> <span class="n">hue_mapping</span><span class="p">,</span> <span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;ax&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;figsize&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="p">,</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;style&#39;</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;dpi&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;maker_size&#39;</span><span class="p">,</span> <span class="n">maker_size</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;colors&#39;</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;title_size&#39;</span><span class="p">,</span> <span class="n">title_size</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;title_pad&#39;</span><span class="p">,</span> <span class="n">title_pad</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;hide_legend&#39;</span><span class="p">,</span> <span class="n">hide_legend</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;legend_pos&#39;</span><span class="p">,</span> <span class="n">legend_pos</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;legend_size&#39;</span><span class="p">,</span> <span class="n">legend_size</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;xlabel_size&#39;</span><span class="p">,</span> <span class="n">xlabel_size</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;ylabel_size&#39;</span><span class="p">,</span> <span class="n">ylabel_size</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;grid_alpha&#39;</span><span class="p">,</span> <span class="n">grid_alpha</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;yvmin&#39;</span><span class="p">,</span> <span class="n">yvmin</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;yvmax&#39;</span><span class="p">,</span> <span class="n">yvmax</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;xvmin&#39;</span><span class="p">,</span> <span class="n">xvmin</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;xvmax&#39;</span><span class="p">,</span> <span class="n">xvmax</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="n">save</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;save_kw&#39;</span><span class="p">,</span> <span class="n">save_kw</span><span class="p">,</span> <span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]),</span>
+        <span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span> <span class="n">show</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">]))</span>
+
+    <span class="c1"># check x, y and (optionally) hue variables</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Missing &quot;x&quot; variable &quot;</span><span class="si">%s</span><span class="s1">&quot;. Available variables are: </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="n">y</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Missing &quot;y&quot; variable &quot;</span><span class="si">%s</span><span class="s1">&quot;. Available variables are: </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="n">hue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">hue</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Missing &quot;hue&quot; variable &quot;</span><span class="si">%s</span><span class="s1">&quot;. Available variables are: </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">hue</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span>
+
+    <span class="c1"># avoid inplace modifications</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># rename hue if hue_mapping is provided</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">hue</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">hue_mapping</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">hue</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">hue</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">hue_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+
+    <span class="c1"># get the number of levels</span>
+    <span class="n">n_labels</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">hue_levels</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">hue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n_labels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">hue</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+        <span class="n">hue_levels</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">hue</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="n">n_labels</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="n">cmap</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_labels</span><span class="p">)]</span>
+
+    <span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">context</span><span class="p">(</span><span class="n">style</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">set_dpi</span><span class="p">(</span><span class="n">dpi</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_labels</span><span class="p">):</span>
+            <span class="c1"># select color (if specified)</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="c1"># separate the data to represent</span>
+            <span class="k">if</span> <span class="n">hue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">df_i</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">hue</span><span class="p">]</span> <span class="o">==</span> <span class="n">hue_levels</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">df_i</span> <span class="o">=</span> <span class="n">df</span>
+
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                <span class="n">df_i</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                <span class="n">df_i</span><span class="p">[</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="n">hue_levels</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">s</span><span class="o">=</span><span class="n">maker_size</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+
+        <span class="c1"># set legend</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">hide_legend</span> <span class="ow">and</span> <span class="n">hue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">legend_pos</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">legend_size</span><span class="p">))</span>
+
+        <span class="c1"># set axis limits</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="n">yvmin</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="n">yvmax</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">xvmin</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">xvmax</span><span class="p">)</span>
+
+        <span class="c1"># figure layout</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">grid_alpha</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">xlabel_size</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">ylabel_size</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">title_size</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="n">title_pad</span><span class="p">)</span>
+
+        <span class="c1"># save figure if specified</span>
+        <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
+            <span class="n">save_kw</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">save_kw</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">save_kw</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save</span><span class="p">,</span> <span class="o">**</span><span class="n">save_kw</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Fernando García Gutiérrez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

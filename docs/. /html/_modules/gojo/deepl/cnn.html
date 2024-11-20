@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gojo.deepl.cnn &mdash; gojo - Documentation 0.1.5.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #F24C4C" >
+            <a href="../../../index.html" class="icon icon-home"> gojo - Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Hands-on</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html">Model evaluation by cross validation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#definition-and-evaluation-of-a-support-vector-machine-svm-model"><strong>Definition and evaluation of a Support Vector Machine (SVM) model</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#understanding-svms-with-polynomial-kernels"><strong>Understanding SVMs with Polynomial Kernels</strong></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#introduction-to-svm"><strong>Introduction to SVM</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-hyperplane"><strong>The Mathematical Foundation - Hyperplane</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-maximizing-the-margin"><strong>The Mathematical Foundation - Maximizing the Margin</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-the-optimization-problem"><strong>The Mathematical Foundation - The Optimization Problem</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-introducing-kernels"><strong>The Mathematical Foundation - Introducing Kernels</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_1_Model_evaluation_by_cross_validation.html#hands-on"><strong>Hands-on</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_2_Neural_networks_integration.html">Neural networks integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_2_Neural_networks_integration.html#basic-model-training">Basic model training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_2_Neural_networks_integration.html#model-evaluation-via-cross-validation">Model evaluation via cross-validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_3_Hyperparameter_optimization_by_nested_cross_validation.html">Hyperparameter optimization by nested cross-validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_3_Hyperparameter_optimization_by_nested_cross_validation.html#initial-model-evaluation">Initial model evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_3_Hyperparameter_optimization_by_nested_cross_validation.html#hyperparameter-optimization">Hyperparameter optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html">Vanilla Variational Autoencoder (vVAE)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#data-loading">Data loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#model-training">Model training</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#model-convergence">Model convergence</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#model-evaluation">Model evaluation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#analyze-the-reconstruction-error">Analyze the reconstruction error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#compute-regression-metrics">Compute regression metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#visualize-embedding-dimensions">Visualize embedding dimensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_4_Vanilla_Variational_Autoencoder.html#generate-samples">Generate samples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html">Example 6. Testing different CNN architectures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#data-loading">Data loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#vanilla-cnn">Vanilla CNN</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#model-convergence">Model convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#model-evaluation">Model evaluation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#cnn-with-residual-connections">CNN with residual connections</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#id1">Model convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/Example_5_Testing_different_CNN_architectures.html#id2">Model evaluation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Advanced_use.html">Advanced use</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/Advanced_use.html#definition-of-your-own-transformations-gojo-interfaces-transform">Definition of your own transformations (gojo.interfaces.Transform)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.core.html">gojo.core package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.core.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.core.html#module-gojo.core.evaluation">gojo.core.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.core.html#module-gojo.core.loops">gojo.core.loops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.core.html#module-gojo.core.report">gojo.core.report module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.core.html#module-gojo.core">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.interfaces.html">gojo.interfaces package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.interfaces.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.interfaces.html#module-gojo.interfaces.model">gojo.interfaces.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.interfaces.html#module-gojo.interfaces.data">gojo.interfaces.data module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.interfaces.html#module-gojo.interfaces.transform">gojo.interfaces.transform module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.interfaces.html#module-gojo.interfaces">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.deepl.html">gojo.deepl package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.callback">gojo.deepl.callback module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.cnn">gojo.deepl.cnn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.ffn">gojo.deepl.ffn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.loading">gojo.deepl.loading module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.loops">gojo.deepl.loops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.loss">gojo.deepl.loss module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl.models">gojo.deepl.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.deepl.html#module-gojo.deepl">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.plotting.html">gojo.plotting package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.plotting.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.plotting.html#module-gojo.plotting.basic">gojo.plotting.basic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.plotting.html#module-gojo.plotting.classification">gojo.plotting.classification module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.plotting.html#module-gojo.plotting">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.util.html">gojo.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util.io">gojo.util.io module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util.login">gojo.util.login module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util.splitter">gojo.util.splitter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util.tools">gojo.util.tools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util.validation">gojo.util.validation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.util.html#module-gojo.util">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gojo.experimental.html">gojo.experimental package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gojo.experimental.html#module-gojo.experimental">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #F24C4C" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gojo - Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>gojo.deepl.cnn</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gojo.deepl.cnn</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Module with functions and utilities for generating basic Convolutional Neural networks (CNNs)</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Fernando García Gutiérrez</span>
+<span class="c1"># Email: ga.gu.fernando.concat@gmail.com</span>
+<span class="c1">#</span>
+<span class="c1"># STATUS: completed, functional, and documented.</span>
+<span class="c1">#</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">from</span> <span class="nn">..util.validation</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">checkMultiInputTypes</span><span class="p">,</span>
+    <span class="n">checkCallable</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="ResNetBlock"><a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.cnn.ResNetBlock">[docs]</a><span class="k">class</span> <span class="nc">ResNetBlock</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Block with residual connections to build convolutional networks. Based on:</span>
+
+<span class="sd">        He, K., Zhang, X., Ren, S., &amp; Sun, J. (2016). Deep residual learning for image recognition. In Proceedings of</span>
+<span class="sd">        the IEEE conference on computer vision and pattern recognition (pp. 770-778).</span>
+
+<span class="sd">    This block will perform the following operations:</span>
+
+<span class="sd">    .. graphviz::</span>
+
+<span class="sd">       digraph convolutional_block {</span>
+<span class="sd">           node [style=&quot;filled&quot; shape=&quot;box&quot; color=&quot;lightblue&quot; fontsize=&quot;10&quot; fontname=&quot;Arial&quot;]</span>
+
+<span class="sd">           subgraph cluster_input {</span>
+<span class="sd">               label=&quot;Input (1/2/3d)&quot;</span>
+<span class="sd">               A [label=&quot;Input (1/2/3d)&quot;]</span>
+<span class="sd">               B [label=&quot;Conv1&quot; fillcolor=&quot;#4CAF50&quot;]</span>
+<span class="sd">               C [label=&quot;Conv2&quot; fillcolor=&quot;#4CAF50&quot;]</span>
+<span class="sd">               D [label=&quot;Output&quot;]</span>
+<span class="sd">               H [label=&quot;Act. f.&quot; fillcolor=&quot;#9B59B6&quot;]</span>
+<span class="sd">               E [label=&quot;Output&quot;]</span>
+<span class="sd">           }</span>
+
+<span class="sd">           subgraph cluster_residual {</span>
+<span class="sd">               label=&quot;Conexión Residual&quot;</span>
+<span class="sd">               G [label=&quot;Projection&quot;]</span>
+<span class="sd">           }</span>
+
+<span class="sd">           A -&gt; B</span>
+<span class="sd">           B -&gt; C</span>
+<span class="sd">           C -&gt; D</span>
+<span class="sd">           D -&gt; H</span>
+<span class="sd">           H -&gt; E</span>
+
+<span class="sd">           A -&gt; G [label=&quot;  Residual block&quot; fontsize=&quot;9&quot;]</span>
+<span class="sd">           G -&gt; D [label=&quot;  Add&quot; fontsize=&quot;9&quot;]</span>
+
+<span class="sd">           {rank=same; A; B; C; D; H; E;}</span>
+<span class="sd">           {rank=same; G;}</span>
+<span class="sd">       }</span>
+
+<span class="sd">    |</span>
+
+<span class="sd">    where `Conv1` and `Conv2` will consist of:</span>
+
+<span class="sd">    .. graphviz::</span>
+
+<span class="sd">       digraph convolutional_block {</span>
+<span class="sd">           node [style=&quot;filled&quot; shape=&quot;box&quot; color=&quot;lightblue&quot; fontsize=&quot;10&quot; fontname=&quot;Arial&quot;]</span>
+
+<span class="sd">           subgraph cluster_input {</span>
+<span class="sd">               label=&quot;Input (1/2/3d)&quot;</span>
+<span class="sd">               A [label=&quot;Input (1/2/3d)&quot;]</span>
+<span class="sd">               B [label=&quot;Convolution&quot; fillcolor=&quot;#4CAF50&quot;]</span>
+<span class="sd">               C [label=&quot;Normalization&quot; fillcolor=&quot;#FAD7A0&quot;]</span>
+<span class="sd">               D [label=&quot;Act. f.&quot; fillcolor=&quot;#9B59B6&quot;]</span>
+<span class="sd">           }</span>
+
+<span class="sd">           A -&gt; B</span>
+<span class="sd">           B -&gt; C</span>
+<span class="sd">           C -&gt; D</span>
+
+<span class="sd">           {rank=same; A; B; C; D;}</span>
+<span class="sd">       }</span>
+
+
+<span class="sd">    |</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_channels : int</span>
+<span class="sd">        Number of input channels.</span>
+
+<span class="sd">    out_channels : int</span>
+<span class="sd">        Number of output channels.</span>
+
+<span class="sd">    kernel_size : int</span>
+<span class="sd">        Kernel size of the convolutional layers. Only squared kernels are supported.</span>
+
+<span class="sd">    normalization : str, default=&#39;batch&#39;</span>
+<span class="sd">        Normalization applied after convolutions. Available values are: &#39;batch&#39; for batch normalization and &#39;instance&#39;</span>
+<span class="sd">        for instance normalization.</span>
+
+<span class="sd">    dim : str, default=&#39;2d&#39;</span>
+<span class="sd">        Type of input data (&#39;1d&#39; for one-dimensional data, &#39;2d&#39; for two-dimensional data, and &#39;3d&#39; for tridimensional</span>
+<span class="sd">        data).</span>
+
+<span class="sd">    activation_fn : callable, default=torch.nn.ReLU()</span>
+<span class="sd">        Activation function.</span>
+
+<span class="sd">    stride_conv1 : int, default=1</span>
+<span class="sd">        Stride applied to the first convolutional layer.</span>
+
+<span class="sd">    padding_conv1 : int, default=1</span>
+<span class="sd">        Padding applied to the first convolutional layer.</span>
+
+<span class="sd">    stride_conv2 : int, default=1</span>
+<span class="sd">        Stride applied to the second convolutional layer.</span>
+
+<span class="sd">    padding_conv2 : int ,default=1</span>
+<span class="sd">        Padding applied to the second convolutional layer.</span>
+
+<span class="sd">    debugging : bool, default=False</span>
+<span class="sd">        Parameter that indicates whether to print the dimensions of the inputs/outputs of each of the layers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">out_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">normalization</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;batch&#39;</span><span class="p">,</span>
+            <span class="n">dim</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;2d&#39;</span><span class="p">,</span>
+            <span class="n">activation_fn</span><span class="p">:</span> <span class="n">callable</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">stride_conv1</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">padding_conv1</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">stride_conv2</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">padding_conv2</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">debugging</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ResNetBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># check input types</span>
+        <span class="n">checkCallable</span><span class="p">(</span><span class="s1">&#39;activation_fn&#39;</span><span class="p">,</span> <span class="n">activation_fn</span><span class="p">)</span>
+        <span class="n">checkMultiInputTypes</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;in_channels&#39;</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;out_channels&#39;</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;normalization&#39;</span><span class="p">,</span> <span class="n">normalization</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;dim&#39;</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;stride_conv1&#39;</span><span class="p">,</span> <span class="n">stride_conv1</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;padding_conv1&#39;</span><span class="p">,</span> <span class="n">padding_conv1</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;stride_conv2&#39;</span><span class="p">,</span> <span class="n">stride_conv2</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;padding_conv2&#39;</span><span class="p">,</span> <span class="n">padding_conv2</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s1">&#39;debugging&#39;</span><span class="p">,</span> <span class="n">debugging</span><span class="p">,</span> <span class="p">[</span><span class="nb">bool</span><span class="p">])</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">normalization</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;batch&#39;</span><span class="p">,</span> <span class="s1">&#39;instance&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Supported arguments for parameter &quot;normalization&quot; are &quot;batch&quot; for batch normalization or&#39;</span>
+                            <span class="s1">&#39;&quot;instance&quot; for instance normalization.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># select the convolutional layer</span>
+        <span class="n">conv_layer</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="p">,</span> <span class="s1">&#39;Conv</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">dim</span><span class="p">)</span>
+
+        <span class="c1"># select the normalization layer</span>
+        <span class="k">if</span> <span class="n">normalization</span> <span class="o">==</span> <span class="s1">&#39;batch&#39;</span><span class="p">:</span>
+            <span class="n">norm_layer</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="p">,</span> <span class="s1">&#39;BatchNorm</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">dim</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">normalization</span> <span class="o">==</span> <span class="s1">&#39;instance&#39;</span><span class="p">:</span>
+            <span class="n">norm_layer</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="p">,</span> <span class="s1">&#39;InstanceNorm</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">dim</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;Unhandled case&#39;</span>
+
+        <span class="c1"># create the convolutional blocks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">conv_layer</span><span class="p">(</span><span class="n">in_channels</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride_conv1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="n">padding_conv1</span><span class="p">),</span>
+            <span class="n">norm_layer</span><span class="p">(</span><span class="n">out_channels</span><span class="p">),</span>
+            <span class="n">activation_fn</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">conv_layer</span><span class="p">(</span><span class="n">out_channels</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride_conv2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="n">padding_conv2</span><span class="p">),</span>
+            <span class="n">norm_layer</span><span class="p">(</span><span class="n">out_channels</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation_fn</span> <span class="o">=</span> <span class="n">activation_fn</span>
+
+        <span class="c1"># create the projection of the residual layer</span>
+        <span class="k">if</span> <span class="n">stride_conv1</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">in_channels</span> <span class="o">!=</span> <span class="n">out_channels</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">residual_connection</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+                <span class="n">conv_layer</span><span class="p">(</span><span class="n">in_channels</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                <span class="n">norm_layer</span><span class="p">(</span><span class="n">out_channels</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">residual_connection</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Identity</span><span class="p">()</span>
+
+        <span class="c1"># set debugging mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debugging</span> <span class="o">=</span> <span class="n">debugging</span>
+
+<div class="viewcode-block" id="ResNetBlock.forward"><a class="viewcode-back" href="../../../gojo.deepl.html#gojo.deepl.cnn.ResNetBlock.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="c1"># pass the input thought the convolutional layers</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debugging</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">=====&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debugging</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;output c1&#39;</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debugging</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;output c2&#39;</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="c1"># project the residual connection</span>
+        <span class="n">residual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">residual_connection</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debugging</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;residual&#39;</span><span class="p">,</span> <span class="n">residual</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="c1"># add the residual connection</span>
+        <span class="n">out</span> <span class="o">+=</span> <span class="n">residual</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_fn</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Fernando García Gutiérrez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
