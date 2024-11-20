@@ -111,8 +111,8 @@ Modules
 ==================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: API
+   :maxdepth: 3
+   :caption: API Documentation
 
    gojo.core
    gojo.interfaces

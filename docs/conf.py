@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath('..'))
 project = 'gojo - Documentation'
 copyright = '2024, Fernando García Gutiérrez'
 author = 'Fernando García Gutiérrez'
-release = '0.1.4'
+release = '0.1.5'
 
 
 # -- General configuration ---------------------------------------------------
@@ -85,7 +85,7 @@ html_theme_options = {
     'collapse_navigation': False,
     'sticky_navigation': True,
     'navigation_depth': 4,
-    'titles_only': False
+    'titles_only': False,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

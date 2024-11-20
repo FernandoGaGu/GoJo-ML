@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neural networks integration &mdash; gojo - Documentation 0.1.5 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hyperparameter optimization by nested cross-validation" href="Example_3_Hyperparameter_optimization_by_nested_cross_validation.html" />
+    <link rel="prev" title="Model evaluation by cross validation" href="Example_1_Model_evaluation_by_cross_validation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #F24C4C" >
+            <a href="../index.html" class="icon icon-home"> gojo - Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Hands-on</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html">Model evaluation by cross validation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html#definition-and-evaluation-of-a-support-vector-machine-svm-model"><strong>Definition and evaluation of a Support Vector Machine (SVM) model</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html#understanding-svms-with-polynomial-kernels"><strong>Understanding SVMs with Polynomial Kernels</strong></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html#introduction-to-svm"><strong>Introduction to SVM</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-hyperplane"><strong>The Mathematical Foundation - Hyperplane</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-maximizing-the-margin"><strong>The Mathematical Foundation - Maximizing the Margin</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-the-optimization-problem"><strong>The Mathematical Foundation - The Optimization Problem</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-introducing-kernels"><strong>The Mathematical Foundation - Introducing Kernels</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html#hands-on"><strong>Hands-on</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Neural networks integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-model-training">Basic model training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#model-evaluation-via-cross-validation">Model evaluation via cross-validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Example_3_Hyperparameter_optimization_by_nested_cross_validation.html">Hyperparameter optimization by nested cross-validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example_3_Hyperparameter_optimization_by_nested_cross_validation.html#initial-model-evaluation">Initial model evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example_3_Hyperparameter_optimization_by_nested_cross_validation.html#hyperparameter-optimization">Hyperparameter optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html">Vanilla Variational Autoencoder (vVAE)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html#data-loading">Data loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html#model-training">Model training</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html#model-convergence">Model convergence</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html#model-evaluation">Model evaluation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html#analyze-the-reconstruction-error">Analyze the reconstruction error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html#compute-regression-metrics">Compute regression metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html#visualize-embedding-dimensions">Visualize embedding dimensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html#generate-samples">Generate samples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Example_5_Testing_different_CNN_architectures.html">Example 6. Testing different CNN architectures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Example_5_Testing_different_CNN_architectures.html#data-loading">Data loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_5_Testing_different_CNN_architectures.html#vanilla-cnn">Vanilla CNN</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Example_5_Testing_different_CNN_architectures.html#model-convergence">Model convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Example_5_Testing_different_CNN_architectures.html#model-evaluation">Model evaluation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Example_5_Testing_different_CNN_architectures.html#cnn-with-residual-connections">CNN with residual connections</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Example_5_Testing_different_CNN_architectures.html#id1">Model convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Example_5_Testing_different_CNN_architectures.html#id2">Model evaluation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Advanced_use.html">Advanced use</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Advanced_use.html#definition-of-your-own-transformations-gojo-interfaces-transform">Definition of your own transformations (gojo.interfaces.Transform)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../gojo.core.html">gojo.core package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.core.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.core.html#module-gojo.core.evaluation">gojo.core.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.core.html#module-gojo.core.loops">gojo.core.loops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.core.html#module-gojo.core.report">gojo.core.report module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.core.html#module-gojo.core">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gojo.interfaces.html">gojo.interfaces package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.interfaces.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.interfaces.html#module-gojo.interfaces.model">gojo.interfaces.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.interfaces.html#module-gojo.interfaces.data">gojo.interfaces.data module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.interfaces.html#module-gojo.interfaces.transform">gojo.interfaces.transform module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.interfaces.html#module-gojo.interfaces">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gojo.deepl.html">gojo.deepl package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#module-gojo.deepl.callback">gojo.deepl.callback module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#module-gojo.deepl.cnn">gojo.deepl.cnn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#module-gojo.deepl.ffn">gojo.deepl.ffn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#module-gojo.deepl.loading">gojo.deepl.loading module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#module-gojo.deepl.loops">gojo.deepl.loops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#module-gojo.deepl.loss">gojo.deepl.loss module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#module-gojo.deepl.models">gojo.deepl.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#module-gojo.deepl">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gojo.plotting.html">gojo.plotting package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.plotting.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.plotting.html#module-gojo.plotting.basic">gojo.plotting.basic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.plotting.html#module-gojo.plotting.classification">gojo.plotting.classification module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.plotting.html#module-gojo.plotting">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gojo.util.html">gojo.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.util.html#module-gojo.util.io">gojo.util.io module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.util.html#module-gojo.util.login">gojo.util.login module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.util.html#module-gojo.util.splitter">gojo.util.splitter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.util.html#module-gojo.util.tools">gojo.util.tools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.util.html#module-gojo.util.validation">gojo.util.validation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.util.html#module-gojo.util">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gojo.experimental.html">gojo.experimental package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.experimental.html#module-gojo.experimental">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #F24C4C" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gojo - Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Neural networks integration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/examples/Example_2_Neural_networks_integration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="Example_1_Model_evaluation_by_cross_validation.html" class="btn btn-neutral float-left" title="Model evaluation by cross validation" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Example_3_Hyperparameter_optimization_by_nested_cross_validation.html" class="btn btn-neutral float-right" title="Hyperparameter optimization by nested cross-validation" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="neural-networks-integration">
+<h1>Neural networks integration<a class="headerlink" href="#neural-networks-integration" title="Permalink to this headline"></a></h1>
+<p>This notebook contains a basic explanation of how neural network based
+models can be used within the <strong>gojo</strong> library.</p>
+<p>In this example we will use the <strong>Wine dataset</strong>:</p>
+<p><strong>Overview</strong></p>
+<p>The Wine dataset is a classic dataset often used for classification and
+clustering tasks in machine learning. It contains the results of a
+chemical analysis of wines grown in the same region in Italy but derived
+from three different cultivars. The goal is to classify the wines into
+one of these three classes based on their chemical properties.</p>
+<p><strong>Dataset Characteristics</strong></p>
+<ul class="simple">
+<li><p><strong>Number of Instances:</strong> 178</p></li>
+<li><p><strong>Number of Features:</strong> 13 numeric, predictive attributes</p></li>
+<li><p><strong>Number of Classes:</strong> 3 (Class 0, Class 1, Class 2)</p></li>
+</ul>
+<p><strong>Attribute Information</strong></p>
+<p>The dataset includes 13 real-valued features for each wine sample:</p>
+<ol class="arabic simple">
+<li><p><strong>Alcohol</strong></p></li>
+<li><p><strong>Malic acid</strong></p></li>
+<li><p><strong>Ash</strong></p></li>
+<li><p><strong>Alcalinity of ash</strong></p></li>
+<li><p><strong>Magnesium</strong></p></li>
+<li><p><strong>Total phenols</strong></p></li>
+<li><p><strong>Flavanoids</strong></p></li>
+<li><p><strong>Nonflavanoid phenols</strong></p></li>
+<li><p><strong>Proanthocyanins</strong></p></li>
+<li><p><strong>Color intensity</strong></p></li>
+<li><p><strong>Hue</strong></p></li>
+<li><p><strong>OD280/OD315 of diluted wines</strong></p></li>
+<li><p><strong>Proline</strong></p></li>
+</ol>
+<p>Each feature represents a chemical property or compound found in the
+wine. These features are used to classify the wine samples into one of
+the three cultivars.</p>
+<p><strong>Target Variable</strong></p>
+<p>The target variable is categorical and indicates the cultivar of the
+wine:</p>
+<ul class="simple">
+<li><p><strong>Class 0:</strong> Cultivar 0</p></li>
+<li><p><strong>Class 1:</strong> Cultivar 1</p></li>
+<li><p><strong>Class 2:</strong> Cultivar 2</p></li>
+</ul>
+<p>In our example we will merge classes 0 and 1 for simplicity.</p>
+<p><strong>Usage</strong></p>
+<p>This dataset is commonly used for:</p>
+<ul class="simple">
+<li><p>Classification tasks to distinguish between different wine cultivars</p></li>
+<li><p>Evaluating the performance of classification algorithms</p></li>
+<li><p>Feature selection and importance analysis</p></li>
+<li><p>Understanding the chemical properties that differentiate wine
+cultivars</p></li>
+</ul>
+<p><strong>Source</strong></p>
+<p>The dataset is publicly available from the UCI Machine Learning
+Repository and was donated by S. Aeberhard, D. Coomans, and O. de Vel
+from the Institute of Pharmaceutical and Food Analysis and Technologies
+in 1991.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="c1"># for a simpler use, we load the different submodules of the library</span>
+<span class="c1">#     - the gojo.core module contains all the subroutines used to evaluate the models</span>
+<span class="c1">#     - the gojo.interfaces module provides a standardized way to interact with the different elements of gojo.core</span>
+<span class="c1">#     - the gojo.util module implements some utilities</span>
+<span class="c1">#     - the gojo.deepl module contains all code neccessary to train deep learning models</span>
+<span class="c1">#     - the gojo.plotting module implements different visualization tools</span>
+<span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">core</span>
+<span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">interfaces</span>
+<span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">util</span>
+<span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">deepl</span>
+<span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">plotting</span>
+</pre></div>
+</div>
+<pre class="literal-block">C:Usersfgarciaanaconda3envsmlv0libsite-packagestqdmauto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm</pre>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># load test dataset (Wine)</span>
+<span class="n">wine_dt</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_wine</span><span class="p">()</span>
+
+<span class="c1"># create the target variable. Classification problem 0 vs rest</span>
+<span class="c1"># to see the target names you can use wine_dt[&#39;target_names&#39;]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">wine_dt</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">wine_dt</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+
+<span class="c1"># split Xs and Ys in training and test</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1997</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
+<span class="p">)</span>
+
+<span class="c1"># standarize the data based on the training set statistics</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%.3f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">y_train</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>  <span class="s1">&#39;</span><span class="si">%.3f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">y_test</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((</span><span class="mi">142</span><span class="p">,</span> <span class="mi">13</span><span class="p">),</span> <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">13</span><span class="p">),</span> <span class="s1">&#39;0.401&#39;</span><span class="p">,</span> <span class="s1">&#39;0.389&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="basic-model-training">
+<h2>Basic model training<a class="headerlink" href="#basic-model-training" title="Permalink to this headline"></a></h2>
+<p>Let’s start by training a basic model based on feed-forward networks
+(FFNs) without using a validation set and evaluating the performance of
+the model using a hold-out schema.</p>
+<p>For the sake of simplicity, let us define the components of the FFN
+model one by one. Lets start with the model…</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ffn</span> <span class="o">=</span> <span class="n">deepl</span><span class="o">.</span><span class="n">ffn</span><span class="o">.</span><span class="n">createSimpleFFNModel</span><span class="p">(</span>
+    <span class="n">in_feats</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">out_feats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">layer_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">],</span>
+    <span class="n">layer_activation</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ELU</span><span class="p">(),</span>
+    <span class="n">output_activation</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">())</span>
+<span class="n">ffn</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Sequential</span><span class="p">(</span>
+  <span class="p">(</span><span class="n">LinearLayer</span> <span class="mi">0</span><span class="p">):</span> <span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+  <span class="p">(</span><span class="n">Activation</span> <span class="mi">0</span><span class="p">):</span> <span class="n">ELU</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+  <span class="p">(</span><span class="n">LinearLayer</span> <span class="mi">1</span><span class="p">):</span> <span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+  <span class="p">(</span><span class="n">Activation</span> <span class="mi">1</span><span class="p">):</span> <span class="n">Sigmoid</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>And now let’s use the <strong>interfaces.TorchSKInterface</strong> interface to
+create a wrapper that can be evaluated as another model in the
+framework.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">interfaces</span><span class="o">.</span><span class="n">TorchSKInterface</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">ffn</span><span class="p">,</span>
+    <span class="n">iter_fn</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">iterSupervisedEpoch</span><span class="p">,</span>
+    <span class="n">loss_function</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">(),</span>
+    <span class="n">n_epochs</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>
+    <span class="n">optimizer_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">,</span>
+    <span class="n">dataset_class</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">loading</span><span class="o">.</span><span class="n">TorchDataset</span><span class="p">,</span>
+    <span class="n">dataloader_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">,</span>
+    <span class="n">optimizer_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span>
+    <span class="p">),</span>
+    <span class="n">train_dataset_kw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">train_dataloader_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+        <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">),</span>
+    <span class="n">iter_fn_kw</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">callbacks</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">1997</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+    <span class="n">metrics</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span>   <span class="c1"># adjust desired verbosity level</span>
+<span class="p">)</span>
+
+<span class="n">model</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>TorchSKInterface(
+    model=Sequential(
+  (LinearLayer 0): Linear(in_features=13, out_features=20, bias=True)
+  (Activation 0): ELU(alpha=1.0)
+  (LinearLayer 1): Linear(in_features=20, out_features=1, bias=True)
+  (Activation 1): Sigmoid()
+),
+    iter_fn=&lt;function iterSupervisedEpoch at 0x000002D199195480&gt;,
+    loss_function=BCELoss(),
+    n_epochs=150,
+    train_split=1.0,
+    train_split_stratify=False,
+    optimizer_class=&lt;class &#39;torch.optim.adam.Adam&#39;&gt;,
+    dataset_class=&lt;class &#39;gojo.deepl.loading.TorchDataset&#39;&gt;,
+    dataloader_class=&lt;class &#39;torch.utils.data.dataloader.DataLoader&#39;&gt;,
+    optimizer_kw={&#39;lr&#39;: 0.001},
+    train_dataset_kw={},
+    valid_dataset_kw={},
+    inference_dataset_kw=None,
+    train_dataloader_kw={&#39;batch_size&#39;: 16, &#39;shuffle&#39;: True},
+    valid_dataloader_kw={},
+    inference_dataloader_kw=None,
+    iter_fn_kw={},
+    callbacks=None,
+    metrics=[Metric(
+    name=accuracy,
+    function_kw={},
+    multiclass=False
+), Metric(
+    name=balanced_accuracy,
+    function_kw={},
+    multiclass=False
+), Metric(
+    name=precision,
+    function_kw={&#39;zero_division&#39;: 0},
+    multiclass=False
+), Metric(
+    name=recall,
+    function_kw={&#39;zero_division&#39;: 0},
+    multiclass=False
+), Metric(
+    name=sensitivity,
+    function_kw={&#39;zero_division&#39;: 0},
+    multiclass=False
+), Metric(
+    name=specificity,
+    function_kw={},
+    multiclass=False
+), Metric(
+    name=negative_predictive_value,
+    function_kw={},
+    multiclass=False
+), Metric(
+    name=f1_score,
+    function_kw={},
+    multiclass=False
+), Metric(
+    name=auc,
+    function_kw={},
+    multiclass=False
+)],
+    batch_size=None,
+    seed=1997,
+    device=cuda,
+    verbose=1
+)
+</pre></div>
+</div>
+<p>We can now train the model by calling the train method and passing it
+numpy arrays</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Training model...: 100%|█████████████████████████████████████████████████████████████| 150/150 [00:06&lt;00:00, 22.88it/s]
+</pre></div>
+</div>
+<p>Lets analyze model convergence…</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fitting_history</span>
+<span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>epoch</th>
+      <th>loss (mean)</th>
+      <th>loss (std)</th>
+      <th>accuracy</th>
+      <th>balanced_accuracy</th>
+      <th>precision</th>
+      <th>recall</th>
+      <th>sensitivity</th>
+      <th>specificity</th>
+      <th>negative_predictive_value</th>
+      <th>f1_score</th>
+      <th>auc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0.639395</td>
+      <td>0.019050</td>
+      <td>0.697183</td>
+      <td>0.680599</td>
+      <td>0.629630</td>
+      <td>0.596491</td>
+      <td>0.596491</td>
+      <td>0.764706</td>
+      <td>0.738636</td>
+      <td>0.612613</td>
+      <td>0.775851</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>0.601799</td>
+      <td>0.012565</td>
+      <td>0.823944</td>
+      <td>0.809598</td>
+      <td>0.807692</td>
+      <td>0.736842</td>
+      <td>0.736842</td>
+      <td>0.882353</td>
+      <td>0.833333</td>
+      <td>0.770642</td>
+      <td>0.897214</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>0.566573</td>
+      <td>0.021680</td>
+      <td>0.880282</td>
+      <td>0.865325</td>
+      <td>0.900000</td>
+      <td>0.789474</td>
+      <td>0.789474</td>
+      <td>0.941176</td>
+      <td>0.869565</td>
+      <td>0.841121</td>
+      <td>0.950052</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>0.530974</td>
+      <td>0.034932</td>
+      <td>0.887324</td>
+      <td>0.874097</td>
+      <td>0.901961</td>
+      <td>0.807018</td>
+      <td>0.807018</td>
+      <td>0.941176</td>
+      <td>0.879121</td>
+      <td>0.851852</td>
+      <td>0.970072</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>0.498827</td>
+      <td>0.022399</td>
+      <td>0.915493</td>
+      <td>0.903406</td>
+      <td>0.941176</td>
+      <td>0.842105</td>
+      <td>0.842105</td>
+      <td>0.964706</td>
+      <td>0.901099</td>
+      <td>0.888889</td>
+      <td>0.981011</td>
+    </tr>
+  </tbody>
+</table>
+</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># display model convergence</span>
+<span class="n">plotting</span><span class="o">.</span><span class="n">linePlot</span><span class="p">(</span>
+    <span class="n">model_history</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span>
+    <span class="n">x</span><span class="o">=</span><span class="s1">&#39;epoch&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;loss (mean)&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="s1">&#39;loss (std)&#39;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Train&#39;</span><span class="p">],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Model convergence&#39;</span><span class="p">,</span>
+    <span class="n">ls</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;solid&#39;</span><span class="p">],</span>
+    <span class="n">legend_pos</span><span class="o">=</span><span class="s1">&#39;center right&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/Example_2_Neural_networks_integration_11_0.png" src="../_images/Example_2_Neural_networks_integration_11_0.png" />
+<p>Since the model converges (the loss decreases asymptotically), let us
+evaluate the performance of the model on the test set</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">y_hat</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">performInference</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Accuracy: </span><span class="si">{:.2f}</span><span class="s1">%&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(((</span><span class="n">y_hat</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">==</span> <span class="n">y_test</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Accuracy</span><span class="p">:</span> <span class="mf">97.22</span><span class="o">%</span>
+</pre></div>
+</div>
+<p>During model training, it is also possible to easily add a validation
+set to evaluate possible model overfitting. For this pourpose we can
+specify the parameter <strong>train_split</strong> providing the proportion of
+samples splitted for training. In out example we also specify the
+parameter <strong>train_split_stratify</strong> to perform the train/validation split
+with class stratification. The parameters of the dataset and dataloader
+used can also be specified by means of parameters <strong>valid_dataset_kw</strong>
+and <strong>valid_dataloader_kw</strong>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_with_val</span> <span class="o">=</span> <span class="n">interfaces</span><span class="o">.</span><span class="n">TorchSKInterface</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">ffn</span><span class="o">.</span><span class="n">createSimpleFFNModel</span><span class="p">(</span>
+        <span class="n">in_feats</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">out_feats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">layer_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">],</span>
+        <span class="n">layer_activation</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ELU</span><span class="p">(),</span>
+        <span class="n">output_activation</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
+    <span class="p">),</span>
+    <span class="n">iter_fn</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">iterSupervisedEpoch</span><span class="p">,</span>
+    <span class="n">loss_function</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">(),</span>
+    <span class="n">n_epochs</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span>
+    <span class="n">train_split</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>                    <span class="c1"># (new) specify train/validation split</span>
+    <span class="n">train_split_stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>          <span class="c1"># (new) specify train/validation class stratification</span>
+    <span class="n">optimizer_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">,</span>
+    <span class="n">dataset_class</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">loading</span><span class="o">.</span><span class="n">TorchDataset</span><span class="p">,</span>
+    <span class="n">dataloader_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">,</span>
+    <span class="n">optimizer_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span>
+    <span class="p">),</span>
+    <span class="n">train_dataset_kw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">train_dataloader_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+        <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">),</span>
+    <span class="n">valid_dataloader_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>             <span class="c1"># (new) validation dataloader parameters</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="p">),</span>
+    <span class="n">iter_fn_kw</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">callbacks</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">1997</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+    <span class="n">metrics</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span>   <span class="c1"># adjust desired verbosity level</span>
+<span class="p">)</span>
+
+<span class="n">model_with_val</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>TorchSKInterface(
+    model=Sequential(
+  (LinearLayer 0): Linear(in_features=13, out_features=20, bias=True)
+  (Activation 0): ELU(alpha=1.0)
+  (LinearLayer 1): Linear(in_features=20, out_features=1, bias=True)
+  (Activation 1): Sigmoid()
+),
+    iter_fn=&lt;function iterSupervisedEpoch at 0x000002D199195480&gt;,
+    loss_function=BCELoss(),
+    n_epochs=75,
+    train_split=0.8,
+    train_split_stratify=True,
+    optimizer_class=&lt;class &#39;torch.optim.adam.Adam&#39;&gt;,
+    dataset_class=&lt;class &#39;gojo.deepl.loading.TorchDataset&#39;&gt;,
+    dataloader_class=&lt;class &#39;torch.utils.data.dataloader.DataLoader&#39;&gt;,
+    optimizer_kw={&#39;lr&#39;: 0.001},
+    train_dataset_kw={},
+    valid_dataset_kw={},
+    inference_dataset_kw=None,
+    train_dataloader_kw={&#39;batch_size&#39;: 16, &#39;shuffle&#39;: True},
+    valid_dataloader_kw={&#39;batch_size&#39;: 142},
+    inference_dataloader_kw=None,
+    iter_fn_kw={},
+    callbacks=None,
+    metrics=[Metric(
+    name=accuracy,
+    function_kw={},
+    multiclass=False
+), Metric(
+    name=balanced_accuracy,
+    function_kw={},
+    multiclass=False
+), Metric(
+    name=precision,
+    function_kw={&#39;zero_division&#39;: 0},
+    multiclass=False
+), Metric(
+    name=recall,
+    function_kw={&#39;zero_division&#39;: 0},
+    multiclass=False
+), Metric(
+    name=sensitivity,
+    function_kw={&#39;zero_division&#39;: 0},
+    multiclass=False
+), Metric(
+    name=specificity,
+    function_kw={},
+    multiclass=False
+), Metric(
+    name=negative_predictive_value,
+    function_kw={},
+    multiclass=False
+), Metric(
+    name=f1_score,
+    function_kw={},
+    multiclass=False
+), Metric(
+    name=auc,
+    function_kw={},
+    multiclass=False
+)],
+    batch_size=None,
+    seed=1997,
+    device=cuda,
+    verbose=1
+)
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_with_val</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Training model...: 100%|███████████████████████████████████████████████████████████████| 75/75 [00:01&lt;00:00, 48.47it/s]
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_with_val_history</span> <span class="o">=</span> <span class="n">model_with_val</span><span class="o">.</span><span class="n">fitting_history</span>
+
+<span class="c1"># display model convergence</span>
+<span class="n">plotting</span><span class="o">.</span><span class="n">linePlot</span><span class="p">(</span>
+    <span class="n">model_with_val_history</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">model_with_val_history</span><span class="p">[</span><span class="s1">&#39;valid&#39;</span><span class="p">],</span>
+    <span class="n">x</span><span class="o">=</span><span class="s1">&#39;epoch&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;loss (mean)&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="s1">&#39;loss (std)&#39;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Train&#39;</span><span class="p">,</span> <span class="s1">&#39;Validation&#39;</span><span class="p">],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Model convergence&#39;</span><span class="p">,</span>
+    <span class="n">ls</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="s1">&#39;dashed&#39;</span><span class="p">],</span>
+    <span class="n">legend_pos</span><span class="o">=</span><span class="s1">&#39;center right&#39;</span><span class="p">)</span>
+
+<span class="c1"># display model performance</span>
+<span class="n">plotting</span><span class="o">.</span><span class="n">linePlot</span><span class="p">(</span>
+    <span class="n">model_with_val_history</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">model_with_val_history</span><span class="p">[</span><span class="s1">&#39;valid&#39;</span><span class="p">],</span>
+    <span class="n">x</span><span class="o">=</span><span class="s1">&#39;epoch&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;f1_score&#39;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Train&#39;</span><span class="p">,</span> <span class="s1">&#39;Validation&#39;</span><span class="p">],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Model F1-score&#39;</span><span class="p">,</span>
+    <span class="n">ls</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="s1">&#39;dashed&#39;</span><span class="p">],</span>
+    <span class="n">legend_pos</span><span class="o">=</span><span class="s1">&#39;center right&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/Example_2_Neural_networks_integration_18_0.png" src="../_images/Example_2_Neural_networks_integration_18_0.png" />
+<img alt="../_images/Example_2_Neural_networks_integration_18_1.png" src="../_images/Example_2_Neural_networks_integration_18_1.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># test the model on the validation dataset</span>
+<span class="n">y_hat</span> <span class="o">=</span> <span class="n">model_with_val</span><span class="o">.</span><span class="n">performInference</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">core</span><span class="o">.</span><span class="n">getScores</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_hat</span><span class="p">,</span>
+               <span class="n">metrics</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))])</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>accuracy</th>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>balanced_accuracy</th>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>precision</th>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>recall</th>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sensitivity</th>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>specificity</th>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>negative_predictive_value</th>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>f1_score</th>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>auc</th>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></section>
+<section id="model-evaluation-via-cross-validation">
+<h2>Model evaluation via cross-validation<a class="headerlink" href="#model-evaluation-via-cross-validation" title="Permalink to this headline"></a></h2>
+<p>Next, let us evaluate the model by cross-validation. In this case we
+will dispense with the validation set and train the model for 50 epochs
+evaluating its performance by 5-fold cross-validation with class
+stratification.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># This is the same definition as the previous model but we have omitted some</span>
+<span class="c1"># parameters that are selected by default</span>
+<span class="n">model_cv</span> <span class="o">=</span> <span class="n">interfaces</span><span class="o">.</span><span class="n">TorchSKInterface</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">ffn</span><span class="o">.</span><span class="n">createSimpleFFNModel</span><span class="p">(</span>
+        <span class="n">in_feats</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">out_feats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">layer_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">],</span>
+        <span class="n">layer_activation</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ELU</span><span class="p">(),</span>
+        <span class="n">output_activation</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
+    <span class="p">),</span>
+    <span class="n">iter_fn</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">iterSupervisedEpoch</span><span class="p">,</span>
+    <span class="n">loss_function</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">(),</span>
+    <span class="n">n_epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">optimizer_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">,</span>
+    <span class="n">dataset_class</span><span class="o">=</span><span class="n">deepl</span><span class="o">.</span><span class="n">loading</span><span class="o">.</span><span class="n">TorchDataset</span><span class="p">,</span>
+    <span class="n">dataloader_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">,</span>
+    <span class="n">optimizer_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span>
+    <span class="p">),</span>
+    <span class="n">train_dataloader_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+        <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">),</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">1997</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">model_cv</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>TorchSKInterface(
+    model=Sequential(
+  (LinearLayer 0): Linear(in_features=13, out_features=20, bias=True)
+  (Activation 0): ELU(alpha=1.0)
+  (LinearLayer 1): Linear(in_features=20, out_features=1, bias=True)
+  (Activation 1): Sigmoid()
+),
+    iter_fn=&lt;function iterSupervisedEpoch at 0x000002D199195480&gt;,
+    loss_function=BCELoss(),
+    n_epochs=50,
+    train_split=1.0,
+    train_split_stratify=False,
+    optimizer_class=&lt;class &#39;torch.optim.adam.Adam&#39;&gt;,
+    dataset_class=&lt;class &#39;gojo.deepl.loading.TorchDataset&#39;&gt;,
+    dataloader_class=&lt;class &#39;torch.utils.data.dataloader.DataLoader&#39;&gt;,
+    optimizer_kw={&#39;lr&#39;: 0.001},
+    train_dataset_kw={},
+    valid_dataset_kw={},
+    inference_dataset_kw=None,
+    train_dataloader_kw={&#39;batch_size&#39;: 16, &#39;shuffle&#39;: True},
+    valid_dataloader_kw={},
+    inference_dataloader_kw=None,
+    iter_fn_kw={},
+    callbacks=None,
+    metrics=None,
+    batch_size=None,
+    seed=1997,
+    device=cuda,
+    verbose=1
+)
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># standarize the data based on the training data</span>
+<span class="n">zscores_scaler</span> <span class="o">=</span> <span class="n">interfaces</span><span class="o">.</span><span class="n">SKLearnTransformWrapper</span><span class="p">(</span><span class="n">transform_class</span><span class="o">=</span><span class="n">StandardScaler</span><span class="p">)</span>
+<span class="n">cv_obj</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">splitter</span><span class="o">.</span><span class="n">getCrossValObj</span><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">repeats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stratified</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">cv_report</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">evalCrossVal</span><span class="p">(</span>
+    <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model_cv</span><span class="p">,</span>
+    <span class="n">cv</span><span class="o">=</span><span class="n">cv_obj</span><span class="p">,</span>
+    <span class="n">save_train_preds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">save_models</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">transforms</span><span class="o">=</span><span class="p">[</span><span class="n">zscores_scaler</span><span class="p">],</span>
+    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">5</span>
+<span class="p">)</span>
+<span class="n">cv_report</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Performing</span> <span class="n">cross</span><span class="o">-</span><span class="n">validation</span><span class="o">...</span><span class="p">:</span> <span class="mi">5</span><span class="n">it</span> <span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span> <span class="mf">213.13</span><span class="n">it</span><span class="o">/</span><span class="n">s</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">gojo</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">CVReport</span> <span class="n">at</span> <span class="mh">0x2d206657250</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Let’s calculate the performance obtained on the test set. In this case
+it is important to note that the parameter <strong>bin_threshold</strong> is being
+specified since the predictions given by the model are probabilistic and
+to calculate the metrics it is necessary to binarize the predictions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">performance</span> <span class="o">=</span> <span class="n">cv_report</span><span class="o">.</span><span class="n">getScores</span><span class="p">(</span>
+    <span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">supress_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">performance</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Performance (test)&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;n_fold&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">performance</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Performance (train)&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;n_fold&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Performance (test)</th>
+      <th>Performance (train)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>accuracy</th>
+      <td>0.978</td>
+      <td>0.996</td>
+    </tr>
+    <tr>
+      <th>balanced_accuracy</th>
+      <td>0.974</td>
+      <td>0.995</td>
+    </tr>
+    <tr>
+      <th>precision</th>
+      <td>0.987</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th>recall</th>
+      <td>0.958</td>
+      <td>0.989</td>
+    </tr>
+    <tr>
+      <th>sensitivity</th>
+      <td>0.958</td>
+      <td>0.989</td>
+    </tr>
+    <tr>
+      <th>specificity</th>
+      <td>0.990</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th>negative_predictive_value</th>
+      <td>0.974</td>
+      <td>0.993</td>
+    </tr>
+    <tr>
+      <th>f1_score</th>
+      <td>0.971</td>
+      <td>0.995</td>
+    </tr>
+    <tr>
+      <th>auc</th>
+      <td>0.999</td>
+      <td>1.000</td>
+    </tr>
+  </tbody>
+</table>
+</div><p>Lets plot some ROC curves…</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">predictions</span> <span class="o">=</span> <span class="n">cv_report</span><span class="o">.</span><span class="n">getTestPredictions</span><span class="p">()</span>
+<span class="n">predictions</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th>pred_labels</th>
+      <th>true_labels</th>
+    </tr>
+    <tr>
+      <th>n_fold</th>
+      <th>indices</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="5" valign="top">0</th>
+      <th>14</th>
+      <td>0.000363</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>0.007147</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>0.046430</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>0.003143</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>0.022284</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plotting</span><span class="o">.</span><span class="n">roc</span><span class="p">(</span>
+    <span class="n">df</span><span class="o">=</span><span class="n">predictions</span><span class="p">,</span>
+    <span class="n">y_pred</span><span class="o">=</span><span class="s1">&#39;pred_labels&#39;</span><span class="p">,</span>
+    <span class="n">y_true</span><span class="o">=</span><span class="s1">&#39;true_labels&#39;</span><span class="p">,</span>
+    <span class="n">average</span><span class="o">=</span><span class="s1">&#39;n_fold&#39;</span>
+
+<span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/Example_2_Neural_networks_integration_27_0.png" src="../_images/Example_2_Neural_networks_integration_27_0.png" />
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Example_1_Model_evaluation_by_cross_validation.html" class="btn btn-neutral float-left" title="Model evaluation by cross validation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Example_3_Hyperparameter_optimization_by_nested_cross_validation.html" class="btn btn-neutral float-right" title="Hyperparameter optimization by nested cross-validation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Fernando García Gutiérrez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hyperparameter optimization by nested cross-validation &mdash; gojo - Documentation 0.1.5 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Vanilla Variational Autoencoder (vVAE)" href="Example_4_Vanilla_Variational_Autoencoder.html" />
+    <link rel="prev" title="Neural networks integration" href="Example_2_Neural_networks_integration.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #F24C4C" >
+            <a href="../index.html" class="icon icon-home"> gojo - Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Hands-on</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html">Model evaluation by cross validation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html#definition-and-evaluation-of-a-support-vector-machine-svm-model"><strong>Definition and evaluation of a Support Vector Machine (SVM) model</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html#understanding-svms-with-polynomial-kernels"><strong>Understanding SVMs with Polynomial Kernels</strong></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html#introduction-to-svm"><strong>Introduction to SVM</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-hyperplane"><strong>The Mathematical Foundation - Hyperplane</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-maximizing-the-margin"><strong>The Mathematical Foundation - Maximizing the Margin</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-the-optimization-problem"><strong>The Mathematical Foundation - The Optimization Problem</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html#the-mathematical-foundation-introducing-kernels"><strong>The Mathematical Foundation - Introducing Kernels</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Example_1_Model_evaluation_by_cross_validation.html#hands-on"><strong>Hands-on</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Example_2_Neural_networks_integration.html">Neural networks integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Example_2_Neural_networks_integration.html#basic-model-training">Basic model training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_2_Neural_networks_integration.html#model-evaluation-via-cross-validation">Model evaluation via cross-validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Hyperparameter optimization by nested cross-validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#initial-model-evaluation">Initial model evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#hyperparameter-optimization">Hyperparameter optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html">Vanilla Variational Autoencoder (vVAE)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html#data-loading">Data loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html#model-training">Model training</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html#model-convergence">Model convergence</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html#model-evaluation">Model evaluation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html#analyze-the-reconstruction-error">Analyze the reconstruction error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html#compute-regression-metrics">Compute regression metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html#visualize-embedding-dimensions">Visualize embedding dimensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Example_4_Vanilla_Variational_Autoencoder.html#generate-samples">Generate samples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Example_5_Testing_different_CNN_architectures.html">Example 6. Testing different CNN architectures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Example_5_Testing_different_CNN_architectures.html#data-loading">Data loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_5_Testing_different_CNN_architectures.html#vanilla-cnn">Vanilla CNN</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Example_5_Testing_different_CNN_architectures.html#model-convergence">Model convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Example_5_Testing_different_CNN_architectures.html#model-evaluation">Model evaluation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Example_5_Testing_different_CNN_architectures.html#cnn-with-residual-connections">CNN with residual connections</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Example_5_Testing_different_CNN_architectures.html#id1">Model convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Example_5_Testing_different_CNN_architectures.html#id2">Model evaluation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Advanced_use.html">Advanced use</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Advanced_use.html#definition-of-your-own-transformations-gojo-interfaces-transform">Definition of your own transformations (gojo.interfaces.Transform)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../gojo.core.html">gojo.core package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.core.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.core.html#module-gojo.core.evaluation">gojo.core.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.core.html#module-gojo.core.loops">gojo.core.loops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.core.html#module-gojo.core.report">gojo.core.report module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.core.html#module-gojo.core">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gojo.interfaces.html">gojo.interfaces package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.interfaces.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.interfaces.html#module-gojo.interfaces.model">gojo.interfaces.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.interfaces.html#module-gojo.interfaces.data">gojo.interfaces.data module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.interfaces.html#module-gojo.interfaces.transform">gojo.interfaces.transform module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.interfaces.html#module-gojo.interfaces">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gojo.deepl.html">gojo.deepl package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#module-gojo.deepl.callback">gojo.deepl.callback module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#module-gojo.deepl.cnn">gojo.deepl.cnn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#module-gojo.deepl.ffn">gojo.deepl.ffn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#module-gojo.deepl.loading">gojo.deepl.loading module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#module-gojo.deepl.loops">gojo.deepl.loops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#module-gojo.deepl.loss">gojo.deepl.loss module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#module-gojo.deepl.models">gojo.deepl.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.deepl.html#module-gojo.deepl">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gojo.plotting.html">gojo.plotting package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.plotting.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.plotting.html#module-gojo.plotting.basic">gojo.plotting.basic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.plotting.html#module-gojo.plotting.classification">gojo.plotting.classification module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.plotting.html#module-gojo.plotting">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gojo.util.html">gojo.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.util.html#module-gojo.util.io">gojo.util.io module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.util.html#module-gojo.util.login">gojo.util.login module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.util.html#module-gojo.util.splitter">gojo.util.splitter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.util.html#module-gojo.util.tools">gojo.util.tools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.util.html#module-gojo.util.validation">gojo.util.validation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.util.html#module-gojo.util">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gojo.experimental.html">gojo.experimental package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gojo.experimental.html#module-gojo.experimental">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #F24C4C" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gojo - Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Hyperparameter optimization by nested cross-validation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/examples/Example_3_Hyperparameter_optimization_by_nested_cross_validation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="Example_2_Neural_networks_integration.html" class="btn btn-neutral float-left" title="Neural networks integration" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Example_4_Vanilla_Variational_Autoencoder.html" class="btn btn-neutral float-right" title="Vanilla Variational Autoencoder (vVAE)" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="hyperparameter-optimization-by-nested-cross-validation">
+<h1>Hyperparameter optimization by nested cross-validation<a class="headerlink" href="#hyperparameter-optimization-by-nested-cross-validation" title="Permalink to this headline"></a></h1>
+<p>In this example we will see how to evaluate a model by cross-validation
+by coupling a hyperparameter optimization step using a nested
+cross-validation. The main idea here is that, for each fold, using the
+training data of that fold, we try to find the hyperparameters that
+maximize/minimize a certain objective function. Usually this objective
+function corresponds to a classification/regression metric (depending on
+the problem) obtained by cross-validation (hence the name nested
+cross-validation). Once we obtain a model derived from the
+hyperparameter optimization, we apply that model to the test data of the
+cross-validation fold and thus estimate its performance on that fold.</p>
+<p>Below is a schema of the nested cross validation (<strong>will only work in
+jupyterlab versions &gt; 4.1 and jupyter &gt; 7.1</strong>):</p>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>graph TD
+    A[Dataset] --&gt;|Outer Split| B[Outer Fold 1]
+    A[Dataset] --&gt;|Outer Split| C[Outer Fold 2]
+    A[Dataset] --&gt;|Outer Split| D[Outer Fold 3]
+    A[Dataset] --&gt;|Outer Split| E[Outer Fold 4]
+    A[Dataset] --&gt;|Outer Split| F[Outer Fold 5]
+
+    B[Outer Fold 1] --&gt; |Inner Split - train| BA[Training data]
+    B[Outer Fold 1] --&gt; |Inner Split - test| BB[Test data]
+
+    BA[Training data] --&gt; |Inner CV| BAA[Cross-validation with HPO]
+    BAA[Cross-validation with HPO] --&gt; |Hyperparameter combination| BAAA[Best model]
+
+    BAAA[Best model] --&gt; |Predictions| BB[Test data]
+
+
+    C[Outer Fold 2] --&gt; |Inner CV| CA[Cross-validation with HPO] --&gt; |Predictions| CAA[Test data]
+    D[Outer Fold 3] --&gt; |Inner CV| CB[Cross-validation with HPO] --&gt; |Predictions| CBA[Test data]
+    E[Outer Fold 4] --&gt; |Inner CV| CC[Cross-validation with HPO] --&gt; |Predictions| CCA[Test data]
+    F[Outer Fold 5] --&gt; |Inner CV| CD[Cross-validation with HPO] --&gt; |Predictions| CDA[Test data]
+
+BB[Test data] --&gt; DA[Aggregate predictions]
+CAA[Test data] --&gt; DA[Aggregate predictions]
+CBA[Test data] --&gt; DA[Aggregate predictions]
+CCA[Test data] --&gt; DA[Aggregate predictions]
+CDA[Test data] --&gt; DA[Aggregate predictions]
+</pre></div>
+</div>
+<p>For this example we will use the <strong>Breast Cancer Wisconsin
+(Diagnostic)</strong> dataset.The following is a description of the dataset:</p>
+<p><strong>Overview</strong></p>
+<p>The Breast Cancer Wisconsin (Diagnostic) dataset is a widely used
+dataset for binary classification tasks in the field of machine
+learning. It consists of features that describe the characteristics of
+cell nuclei present in breast cancer biopsies. The goal is to predict
+whether a given sample is benign or malignant based on these
+characteristics.</p>
+<p><strong>Dataset Characteristics</strong></p>
+<ul class="simple">
+<li><p>Number of Instances: 569</p></li>
+<li><p>Number of Features: 30 numeric, predictive attributes</p></li>
+<li><p>Class Distribution:</p>
+<ul>
+<li><p>Malignant: 212 samples</p></li>
+<li><p>Benign: 357 samples</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Attribute Information</strong></p>
+<p>The dataset includes 10 real-valued features for each cell nucleus,
+which are computed for each of the 569 instances. These features are:</p>
+<ul class="simple">
+<li><p>Radius (mean of distances from center to points on the perimeter)</p></li>
+<li><p>Texture (standard deviation of gray-scale values)</p></li>
+<li><p>Perimeter</p></li>
+<li><p>Area</p></li>
+<li><p>Smoothness (local variation in radius lengths)</p></li>
+<li><p>Compactness (perimeter^2 / area - 1.0)</p></li>
+<li><p>Concavity (severity of concave portions of the contour)</p></li>
+<li><p>Concave points (number of concave portions of the contour)</p></li>
+<li><p>Symmetry</p></li>
+<li><p>Fractal dimension (“coastline approximation” - 1)</p></li>
+</ul>
+<p>For each of these features, the dataset provides the mean, standard
+error, and worst (largest) value. This results in a total of 30 features
+per instance (10 features * 3 measures = 30).</p>
+<p><strong>Target Variable</strong></p>
+<p>The target variable is binary and indicates the diagnosis of the breast
+tissue:</p>
+<ul class="simple">
+<li><p>0: Malignant</p></li>
+<li><p>1: Benign</p></li>
+</ul>
+<p><em>The dataset is publicly available from the UCI Machine Learning
+Repository and was originally curated by Dr. William H. Wolberg from the
+University of Wisconsin.</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">optuna</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+
+<span class="c1"># for a simpler use, we load the different submodules of the library</span>
+<span class="c1">#     - the gojo.core module contains all the subroutines used to evaluate the models</span>
+<span class="c1">#     - the gojo.interfaces module provides a standardized way to interact with the different elements of gojo.core</span>
+<span class="c1">#     - the gojo.util module implements some utilities</span>
+<span class="c1">#     - the gojo.plotting module implements different visualization tools</span>
+<span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">core</span>
+<span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">interfaces</span>
+<span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">util</span>
+<span class="kn">from</span> <span class="nn">gojo</span> <span class="kn">import</span> <span class="n">plotting</span>
+</pre></div>
+</div>
+<pre class="literal-block">C:Usersfgarciaanaconda3envsmlv0libsite-packagestqdmauto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm</pre>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># load the dataset</span>
+<span class="n">breast_cancer</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_breast_cancer</span><span class="p">()</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">breast_cancer</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">breast_cancer</span><span class="o">.</span><span class="n">target</span>
+<span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((</span><span class="mi">569</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="p">(</span><span class="mi">569</span><span class="p">,))</span>
+</pre></div>
+</div>
+</section>
+<section id="initial-model-evaluation">
+<h1>Initial model evaluation<a class="headerlink" href="#initial-model-evaluation" title="Permalink to this headline"></a></h1>
+<p>First let’s start by defining a simple decision tree-based model and
+evaluating its performance by cross-validation to get a first idea of
+the performance we can expect. To do this we will use the default
+parameters of the model and evaluate it by a five-fold cross-validation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># define the model and the cross validation schema</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">interfaces</span><span class="o">.</span><span class="n">SklearnModelWrapper</span><span class="p">(</span><span class="n">model_class</span><span class="o">=</span><span class="n">DecisionTreeClassifier</span><span class="p">)</span>
+<span class="n">cv_obj</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">splitter</span><span class="o">.</span><span class="n">getCrossValObj</span><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">repeats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stratified</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">model</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SklearnModelWrapper</span><span class="p">(</span>
+    <span class="n">base_model</span><span class="o">=</span><span class="s1">&#39;sklearn.tree._classes.DecisionTreeClassifier&#39;</span><span class="p">,</span>
+    <span class="n">model_params</span><span class="o">=</span><span class="p">{},</span>
+    <span class="n">predict_proba</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">supress_warnings</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># evaluate the model using the cross-validation schema defined in the previous cell keeping the</span>
+<span class="c1"># training set predictions to evaluate the possible overfitting</span>
+<span class="n">cv_report</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">evalCrossVal</span><span class="p">(</span>
+    <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">cv</span><span class="o">=</span><span class="n">cv_obj</span><span class="p">,</span>
+    <span class="n">save_train_preds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">cv_report</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Performing</span> <span class="n">cross</span><span class="o">-</span><span class="n">validation</span><span class="o">...</span><span class="p">:</span> <span class="mi">5</span><span class="n">it</span> <span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span> <span class="mf">172.43</span><span class="n">it</span><span class="o">/</span><span class="n">s</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">gojo</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">CVReport</span> <span class="n">at</span> <span class="mh">0x15fffee8d60</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># calculate performance metrics</span>
+<span class="n">performance</span> <span class="o">=</span> <span class="n">cv_report</span><span class="o">.</span><span class="n">getScores</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">),</span> <span class="n">supress_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">performance</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Performance (test)&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;n_fold&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">performance</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Performance (train)&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;n_fold&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Performance (test)</th>
+      <th>Performance (train)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>accuracy</th>
+      <td>0.921</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>balanced_accuracy</th>
+      <td>0.920</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>precision</th>
+      <td>0.948</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>recall</th>
+      <td>0.924</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sensitivity</th>
+      <td>0.924</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>specificity</th>
+      <td>0.915</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>negative_predictive_value</th>
+      <td>0.882</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>f1_score</th>
+      <td>0.936</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>auc</th>
+      <td>0.920</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div><p>Now, lets use the <strong>gojo.plotting</strong> module to display the confusion
+matrices.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cv_report</span><span class="o">.</span><span class="n">getTrainPredictions</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th>pred_labels</th>
+      <th>true_labels</th>
+    </tr>
+    <tr>
+      <th>n_fold</th>
+      <th>indices</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="5" valign="top">0</th>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plotting</span><span class="o">.</span><span class="n">confusionMatrix</span><span class="p">(</span>
+    <span class="n">df</span><span class="o">=</span><span class="n">cv_report</span><span class="o">.</span><span class="n">getTestPredictions</span><span class="p">(),</span>
+    <span class="n">y_pred</span><span class="o">=</span><span class="s1">&#39;pred_labels&#39;</span><span class="p">,</span>
+    <span class="n">y_true</span><span class="o">=</span><span class="s1">&#39;true_labels&#39;</span><span class="p">,</span>
+    <span class="n">average</span><span class="o">=</span><span class="s1">&#39;n_fold&#39;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Malignant&#39;</span><span class="p">,</span> <span class="s1">&#39;Benign&#39;</span><span class="p">],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Predictions on the test data&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/Example_3_Hyperparameter_optimization_by_nested_cross_validation_10_0.png" src="../_images/Example_3_Hyperparameter_optimization_by_nested_cross_validation_10_0.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plotting</span><span class="o">.</span><span class="n">confusionMatrix</span><span class="p">(</span>
+    <span class="n">df</span><span class="o">=</span><span class="n">cv_report</span><span class="o">.</span><span class="n">getTrainPredictions</span><span class="p">(),</span>
+    <span class="n">y_pred</span><span class="o">=</span><span class="s1">&#39;pred_labels&#39;</span><span class="p">,</span>
+    <span class="n">y_true</span><span class="o">=</span><span class="s1">&#39;true_labels&#39;</span><span class="p">,</span>
+    <span class="n">average</span><span class="o">=</span><span class="s1">&#39;n_fold&#39;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Malignant&#39;</span><span class="p">,</span> <span class="s1">&#39;Benign&#39;</span><span class="p">],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Predictions on the train data&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/Example_3_Hyperparameter_optimization_by_nested_cross_validation_11_0.png" src="../_images/Example_3_Hyperparameter_optimization_by_nested_cross_validation_11_0.png" />
+</section>
+<section id="hyperparameter-optimization">
+<h1>Hyperparameter optimization<a class="headerlink" href="#hyperparameter-optimization" title="Permalink to this headline"></a></h1>
+<p>Next we will optimize the same model as before by means of a nested
+cross validation as described above (outer cross-validation of 5-fold,
+and inner cross-validation of 5-fold). This can be easily accomplished
+using the <strong>gojo.core.evalCrossValNestedHPO</strong> function. This function
+depends on the <strong>samplers</strong> defined in the
+<a class="reference external" href="https://optuna.org/">optuna</a> library as this is the library that the
+function uses internally to optimize the hyperparameters.</p>
+<p>First of all, lets define the search space (aka parameter grid) to be
+explored. In this case we will explore the following hyperparameters:</p>
+<ul class="simple">
+<li><p>Maximum tree depth</p></li>
+<li><p>Minimum number of samples (defined as proportion) to make a split</p></li>
+<li><p>Minimum number of samples (defined as proportion) that can be in a
+terminal node.</p></li>
+<li><p>Number of features considered for a split.</p></li>
+<li><p>Pruning parameter (<em>ccp_alpha</em>)</p></li>
+</ul>
+<p>Note that here some parameters are sampled considering a categorical
+distribution (<strong>suggest_categorical</strong>), others a continuous distribution
+(<strong>suggest_float</strong>), and others a continuous distribution with integers
+(<strong>suggest_int</strong>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">search_space</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;max_depth&#39;</span>        <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;suggest_int&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">15</span><span class="p">)),</span>
+    <span class="s1">&#39;min_samples_split&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;suggest_float&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)),</span>
+    <span class="s1">&#39;min_samples_leaf&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;suggest_float&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)),</span>
+    <span class="s1">&#39;max_features&#39;</span>     <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;suggest_categorical&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="s1">&#39;log2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]),</span>
+    <span class="s1">&#39;ccp_alpha&#39;</span>        <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;suggest_float&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.00</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Subsequently, we perform hyperparameter optimization using both internal
+and external five-fold cross-validation, and using the optuna
+tree-Parzen estimator (TPE) to explore the search space. The TPE model
+will sample the first 100 hyperparameter combinations randomly, and the
+remaining 300 using the distribution of values learned and refined from
+the first random iterations and refined from subsequent iterations. As
+the objective metric of hyperparameter optimization we will maximize the
+balanced accuracy obtained on the internal cross-validation test set.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># perform the HPO to optimice model-hyperparameters</span>
+<span class="n">hpo_cv_report</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">evalCrossValNestedHPO</span><span class="p">(</span>
+    <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span><span class="p">,</span>
+    <span class="n">outer_cv</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">getCrossValObj</span><span class="p">(</span>
+        <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">repeats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stratified</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">loocv</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1997</span><span class="p">),</span>
+    <span class="n">inner_cv</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">getCrossValObj</span><span class="p">(</span>
+        <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">repeats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stratified</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">loocv</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1997</span><span class="p">),</span>
+    <span class="n">hpo_sampler</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">samplers</span><span class="o">.</span><span class="n">TPESampler</span><span class="p">(</span><span class="n">n_startup_trials</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+    <span class="n">hpo_n_trials</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+    <span class="n">minimization</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">metrics</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">getDefaultMetrics</span><span class="p">(</span><span class="s1">&#39;binary_classification&#39;</span><span class="p">,</span> <span class="n">bin_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+    <span class="n">objective_metric</span><span class="o">=</span><span class="s1">&#39;balanced_accuracy&#39;</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">save_train_preds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">save_models</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">25</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Performing</span> <span class="n">cross</span><span class="o">-</span><span class="n">validation</span><span class="o">...</span><span class="p">:</span> <span class="mi">5</span><span class="n">it</span> <span class="p">[</span><span class="mi">02</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span> <span class="mf">28.06</span><span class="n">s</span><span class="o">/</span><span class="n">it</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The report obtained after calling the <strong>evalCrossValNestedHPO</strong> function
+is exactly the same as the previous one (although as we will see below
+it contains more information). Let’s see the confusion matrix obtained
+with this model and compare it with the one obtained previously.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">plotting</span><span class="o">.</span><span class="n">confusionMatrix</span><span class="p">(</span>
+    <span class="n">df</span><span class="o">=</span><span class="n">cv_report</span><span class="o">.</span><span class="n">getTestPredictions</span><span class="p">(),</span>
+    <span class="n">y_pred</span><span class="o">=</span><span class="s1">&#39;pred_labels&#39;</span><span class="p">,</span>
+    <span class="n">y_true</span><span class="o">=</span><span class="s1">&#39;true_labels&#39;</span><span class="p">,</span>
+    <span class="n">average</span><span class="o">=</span><span class="s1">&#39;n_fold&#39;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Malignant&#39;</span><span class="p">,</span> <span class="s1">&#39;Benign&#39;</span><span class="p">],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Cross-validation&#39;</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">show</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="n">plotting</span><span class="o">.</span><span class="n">confusionMatrix</span><span class="p">(</span>
+    <span class="n">df</span><span class="o">=</span><span class="n">hpo_cv_report</span><span class="o">.</span><span class="n">getTestPredictions</span><span class="p">(),</span>
+    <span class="n">y_pred</span><span class="o">=</span><span class="s1">&#39;pred_labels&#39;</span><span class="p">,</span>
+    <span class="n">y_true</span><span class="o">=</span><span class="s1">&#39;true_labels&#39;</span><span class="p">,</span>
+    <span class="n">average</span><span class="o">=</span><span class="s1">&#39;n_fold&#39;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Malignant&#39;</span><span class="p">,</span> <span class="s1">&#39;Benign&#39;</span><span class="p">],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Cross-validation (HPO)&#39;</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">show</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/Example_3_Hyperparameter_optimization_by_nested_cross_validation_18_0.png" src="../_images/Example_3_Hyperparameter_optimization_by_nested_cross_validation_18_0.png" />
+<p>We see that the performance obtained by HPO is slightly worse than that
+obtained without optimizing the hyperparameters… however, this is
+because the problem addressed is quite simple in nature. However, let’s
+see if we have a level of overfitting (recall that without HPO the model
+learned the training data perfectly).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">plotting</span><span class="o">.</span><span class="n">confusionMatrix</span><span class="p">(</span>
+    <span class="n">df</span><span class="o">=</span><span class="n">hpo_cv_report</span><span class="o">.</span><span class="n">getTestPredictions</span><span class="p">(),</span>
+    <span class="n">y_pred</span><span class="o">=</span><span class="s1">&#39;pred_labels&#39;</span><span class="p">,</span>
+    <span class="n">y_true</span><span class="o">=</span><span class="s1">&#39;true_labels&#39;</span><span class="p">,</span>
+    <span class="n">average</span><span class="o">=</span><span class="s1">&#39;n_fold&#39;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Malignant&#39;</span><span class="p">,</span> <span class="s1">&#39;Benign&#39;</span><span class="p">],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Cross-validation (HPO) - Test&#39;</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">show</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="n">plotting</span><span class="o">.</span><span class="n">confusionMatrix</span><span class="p">(</span>
+    <span class="n">df</span><span class="o">=</span><span class="n">hpo_cv_report</span><span class="o">.</span><span class="n">getTrainPredictions</span><span class="p">(),</span>
+    <span class="n">y_pred</span><span class="o">=</span><span class="s1">&#39;pred_labels&#39;</span><span class="p">,</span>
+    <span class="n">y_true</span><span class="o">=</span><span class="s1">&#39;true_labels&#39;</span><span class="p">,</span>
+    <span class="n">average</span><span class="o">=</span><span class="s1">&#39;n_fold&#39;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Malignant&#39;</span><span class="p">,</span> <span class="s1">&#39;Benign&#39;</span><span class="p">],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Cross-validation (HPO) - Train&#39;</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">show</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/Example_3_Hyperparameter_optimization_by_nested_cross_validation_20_0.png" src="../_images/Example_3_Hyperparameter_optimization_by_nested_cross_validation_20_0.png" />
+<p>Now we see that the model does not show the extreme overfitting that we
+observed before which can make the model work better in a production
+environment.</p>
+<p>On the other hand, the results of the HPO (the history) are stored in
+the <strong>metadata</strong> attribute of the obtained report:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">hpo_cv_report</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dict_keys</span><span class="p">([</span><span class="s1">&#39;hpo_history&#39;</span><span class="p">,</span> <span class="s1">&#39;hpo_best_params&#39;</span><span class="p">,</span> <span class="s1">&#39;op_instance_args&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Using the key <em>hpo_best_params</em> we can access the best combinations of
+hyperparameters obtained within each cross validation. This allows us to
+learn about how the different hyperparameters behave.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">hpo_cv_report</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;hpo_best_params&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>max_depth</th>
+      <td>12</td>
+      <td>12.000000</td>
+      <td>5</td>
+      <td>14</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>min_samples_split</th>
+      <td>0.135302</td>
+      <td>0.059464</td>
+      <td>0.168597</td>
+      <td>0.139786</td>
+      <td>0.021478</td>
+    </tr>
+    <tr>
+      <th>min_samples_leaf</th>
+      <td>0.128331</td>
+      <td>0.026129</td>
+      <td>0.035262</td>
+      <td>0.035723</td>
+      <td>0.016587</td>
+    </tr>
+    <tr>
+      <th>max_features</th>
+      <td>log2</td>
+      <td>NaN</td>
+      <td>sqrt</td>
+      <td>sqrt</td>
+      <td>sqrt</td>
+    </tr>
+    <tr>
+      <th>ccp_alpha</th>
+      <td>0.061524</td>
+      <td>0.011771</td>
+      <td>0.026528</td>
+      <td>0.029911</td>
+      <td>0.001725</td>
+    </tr>
+  </tbody>
+</table>
+</div><p>Let’s also look at the convergence of the HPO</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">hpo_cv_report</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;hpo_history&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>number</th>
+      <th>value</th>
+      <th>datetime_start</th>
+      <th>datetime_complete</th>
+      <th>duration</th>
+      <th>params_ccp_alpha</th>
+      <th>params_max_depth</th>
+      <th>params_max_features</th>
+      <th>params_min_samples_leaf</th>
+      <th>params_min_samples_split</th>
+      <th>state</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>-0.913699</td>
+      <td>2024-06-12 15:28:52.894498</td>
+      <td>2024-06-12 15:28:54.360391</td>
+      <td>0 days 00:00:01.465893</td>
+      <td>0.258801</td>
+      <td>6</td>
+      <td>log2</td>
+      <td>0.025152</td>
+      <td>0.179437</td>
+      <td>COMPLETE</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>-0.500000</td>
+      <td>2024-06-12 15:28:52.895498</td>
+      <td>2024-06-12 15:28:54.454688</td>
+      <td>0 days 00:00:01.559190</td>
+      <td>0.490937</td>
+      <td>8</td>
+      <td>None</td>
+      <td>0.084618</td>
+      <td>0.185654</td>
+      <td>COMPLETE</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>-0.912698</td>
+      <td>2024-06-12 15:28:52.897541</td>
+      <td>2024-06-12 15:28:54.302652</td>
+      <td>0 days 00:00:01.405111</td>
+      <td>0.198169</td>
+      <td>13</td>
+      <td>log2</td>
+      <td>0.114808</td>
+      <td>0.015214</td>
+      <td>COMPLETE</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>-0.897909</td>
+      <td>2024-06-12 15:28:52.898561</td>
+      <td>2024-06-12 15:28:54.429326</td>
+      <td>0 days 00:00:01.530765</td>
+      <td>0.024611</td>
+      <td>13</td>
+      <td>sqrt</td>
+      <td>0.084600</td>
+      <td>0.101999</td>
+      <td>COMPLETE</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>-0.881339</td>
+      <td>2024-06-12 15:28:52.899591</td>
+      <td>2024-06-12 15:28:54.472548</td>
+      <td>0 days 00:00:01.572957</td>
+      <td>0.196477</td>
+      <td>5</td>
+      <td>log2</td>
+      <td>0.107105</td>
+      <td>0.024681</td>
+      <td>COMPLETE</td>
+    </tr>
+  </tbody>
+</table>
+</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot the HPO convergence for each plot</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">n_fold</span> <span class="ow">in</span> <span class="n">hpo_cv_report</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;hpo_history&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">hpo_cv_report</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;hpo_history&#39;</span><span class="p">][</span><span class="n">n_fold</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Fold </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">n_fold</span>
+    <span class="p">)</span>
+<span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;grey&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Iteration&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Objective&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;HPO convergence&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/Example_3_Hyperparameter_optimization_by_nested_cross_validation_27_0.png" src="../_images/Example_3_Hyperparameter_optimization_by_nested_cross_validation_27_0.png" />
+<p>Alternatively, we can use some auxiliary functions of the library to
+represent the above graph.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plotting</span><span class="o">.</span><span class="n">linePlot</span><span class="p">(</span>
+    <span class="o">*</span><span class="nb">list</span><span class="p">(</span><span class="n">hpo_cv_report</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;hpo_history&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+    <span class="n">x</span><span class="o">=</span><span class="s1">&#39;number&#39;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Fold </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)],</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;HPO convergence&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/Example_3_Hyperparameter_optimization_by_nested_cross_validation_29_0.png" src="../_images/Example_3_Hyperparameter_optimization_by_nested_cross_validation_29_0.png" />
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Example_2_Neural_networks_integration.html" class="btn btn-neutral float-left" title="Neural networks integration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Example_4_Vanilla_Variational_Autoencoder.html" class="btn btn-neutral float-right" title="Vanilla Variational Autoencoder (vVAE)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Fernando García Gutiérrez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
