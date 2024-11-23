@@ -4,7 +4,7 @@ import numpy
 
 # install using 'pip install -e .'
 setup(name='gojo',
-      version='0.1.5',
+      version='0.1.6',
       license='MIT',
       description='Package with diverse Machine Learning and Deep Learning pipelines.',
       author='Fernando García Gutiérrez',

@@ -25,6 +25,9 @@ def _regressionLossWithNaNs(y_hat: torch.Tensor, y_true: torch.Tensor, loss_fn: 
     to belong to `torch.functional` module. """
     y_true_, y_true_bin_mask = _createNaNMask(y_true)
 
+    if y_true_bin_mask.sum() < 1e-03:
+        return torch.tensor(0.0, device=y_hat.device)
+    
     # calculate the unreduced loss
     unreduced_loss = loss_fn(
         input=y_hat,
@@ -60,6 +63,9 @@ def weightedBCEwithNaNs(y_hat: torch.Tensor, y_true: torch.Tensor, weight: float
         Averaged loss value.
     """
     y_true_, y_true_bin_mask = _createNaNMask(y_true)
+
+    if y_true_bin_mask.sum() < 1e-03:
+        return torch.tensor(0.0, device=y_hat.device)
 
     # calculate the unreduced loss
     unreduced_loss = torch.nn.functional.binary_cross_entropy(
@@ -154,6 +160,51 @@ def mseLossWithNaNs(y_hat: torch.Tensor, y_true: torch.Tensor) -> torch.Tensor:
     return _regressionLossWithNaNs(y_hat=y_hat, y_true=y_true, loss_fn=torch.nn.functional.mse_loss)
 
 
+def crossEntropyLossWithNaNs(y_hat: torch.Tensor, y_true: torch.Tensor) -> torch.Tensor:
+    """ Compute the cross-entropy loss while handling missing values (NaNs) in the target tensor.
+
+    This function computes the cross-entropy loss for the given predictions (`y_hat`) and true labels (`y_true`),
+    while ignoring the entries in `y_true` that are NaN (missing values). If all input values are missing the 
+    loss will return 0.0
+
+    Parameters
+    ----------
+    y_hat : torch.Tensor
+        A tensor containing the predicted values. Logits from the model are expected.
+        Shape: (N, C), where N is the batch size and C is the number of classes.
+    
+    y_true : torch.Tensor
+        A tensor containing the true labels.
+        Shape: (N,), where N is the batch size, with values in the range [0, C-1], or NaN for missing entries.
+
+    Returns
+    -------
+    torch.Tensor
+        A tensor containing the computed cross-entropy loss. If all the values in `y_true` are NaN, 
+        the loss will be set to 0.0. Otherwise, the loss is computed only on the valid (non-NaN) entries.
+
+    """
+    y_true_, y_true_bin_mask = _createNaNMask(y_true)
+
+    if y_true_bin_mask.sum() < 1e-03:
+        return torch.tensor(0.0, device=y_hat.device)
+
+    # calculate the unreduced loss
+    unreduced_loss = torch.nn.functional.cross_entropy(
+        input=y_hat,
+        target=y_true_.to(torch.long),
+        reduction='none'
+    )
+
+    # ignore entries with missing values
+    unreduced_loss_masked = unreduced_loss * y_true_bin_mask
+
+    # reduc the weighted loss
+    loss_masked = unreduced_loss_masked.sum(dim=0) / y_true_bin_mask.sum(dim=0)
+
+    return loss_masked
+
+
 class BCELoss(torch.nn.Module):
     """ Weighted binary cross-entropy.
 
@@ -182,6 +233,31 @@ class BCELoss(torch.nn.Module):
 
         return w_loss
 
+
+class CrossEntropyLoss(torch.nn.Module):
+    """ Compute the cross-entropy loss while handling missing values (NaNs) in the target tensor.
+
+    Parameters
+    ----------
+    allow_nans : bool, default = False
+        Boolean parameter indicating whether the true values contain missing values. If the value is indicated as
+        `True` this class will use :func:`gojo.deepl.loss.crossEntropyLossWithNaNs` as internal function, if the value 
+        is indicated as `False`, the class will use :func:`torch.nn.functional.cross_entropy` as internal function
+    """
+    def __init__(self, allow_nans: bool = False):
+        super(CrossEntropyLoss, self).__init__()
+
+        self.allow_nans = allow_nans
+
+    def forward(self, y_hat: torch.Tensor, y_true: torch.Tensor) -> torch.Tensor:
+
+        if self.allow_nans:
+            w_loss = crossEntropyLossWithNaNs(y_hat=y_hat, y_true=y_true)
+        else:
+            w_loss = torch.nn.functional.cross_entropy(input=y_hat, target=y_true, reduction='mean')
+
+        return w_loss
+    
 
 class ELBO(torch.nn.Module):
     """ Evidence lower bound (ELBO) loss function as described in "Auto-Encoding Variational Bayes" from Kigma and
