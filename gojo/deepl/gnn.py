@@ -236,7 +236,7 @@ class GeneralGNN(torch.nn.Module):
         self.use_tabular_x = use_tabular_x
 
     def gnnForward(self, x):
-        return self.gnn_model(x=x.x, edge_index=x.edge_index)
+        return self.gnn_model(x=x.x, edge_index=x.edge_index, batch=x.batch)
 
     def graphPooling(self, x, batch):
         if self.gp_agg is not None:

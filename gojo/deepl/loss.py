@@ -6,7 +6,7 @@
 # STATUS: under development
 #
 import torch
-from typing import Tuple
+from typing import Tuple, Union
 from copy import deepcopy
 
 
@@ -234,6 +234,62 @@ class BCELoss(torch.nn.Module):
         return w_loss
 
 
+class HuberLoss(torch.nn.Module):
+    """ Huber loss. Creates a criterion that uses a squared term if the absolute element-wise error falls below delta 
+    and a delta-scaled L1 term otherwise
+
+    Parameters
+    ----------
+    delta : float, default = 1.0
+        Controls the application of L2 or L1 in the piecewise function.
+
+    allow_nans : bool, default = False
+        Boolean parameter indicating whether the true values contain missing values. If the value is indicated as
+        `False` this class will use :func:`torch.nn.functional.huber_loss` as internal function, if the value is 
+        indicated as `True`, the class will use :func:`gojo.deepl.loss.huberLossWithNaNs` as internal function.
+    """
+    def __init__(self, delta: Union[float, int] = 1.0, allow_nans: bool = False):
+        super(HuberLoss, self).__init__()
+
+        self.delta = delta
+        self.allow_nans = allow_nans
+
+    def forward(self, y_hat: torch.Tensor, y_true: torch.Tensor) -> torch.Tensor:
+
+        if self.allow_nans:
+            loss = huberLossWithNaNs(y_hat=y_hat, y_true=y_true, delta=self.delta)
+        else:
+            loss = torch.nn.functional.huber_loss(y_hat, y_true, delta=self.delta)
+
+        return loss
+    
+class MSELoss(torch.nn.Module):
+    """ 
+    Creates a criterion that measures the mean squared error (squared L2 norm) between each element in the input `x` and 
+    target `y`.
+
+    Parameters
+    ----------
+    allow_nans : bool, default = False
+        Boolean parameter indicating whether the true values contain missing values. If the value is indicated as
+        `False` this class will use :func:`torch.nn.functional.mse_loss` as internal function, if the value is 
+        indicated as `True`, the class will use :func:`gojo.deepl.loss.mseLossWithNaNs` as internal function.
+    """
+    def __init__(self, allow_nans: bool = False):
+        super(MSELoss, self).__init__()
+
+        self.allow_nans = allow_nans
+
+    def forward(self, y_hat: torch.Tensor, y_true: torch.Tensor) -> torch.Tensor:
+
+        if self.allow_nans:
+            loss = mseLossWithNaNs(y_hat=y_hat, y_true=y_true)
+        else:
+            loss = torch.nn.functional.mse_loss(y_hat, y_true)
+
+        return loss
+
+
 class CrossEntropyLoss(torch.nn.Module):
     """ Compute the cross-entropy loss while handling missing values (NaNs) in the target tensor.
 
@@ -254,7 +310,7 @@ class CrossEntropyLoss(torch.nn.Module):
         if self.allow_nans:
             w_loss = crossEntropyLossWithNaNs(y_hat=y_hat, y_true=y_true)
         else:
-            w_loss = torch.nn.functional.cross_entropy(input=y_hat, target=y_true, reduction='mean')
+            w_loss = torch.nn.functional.cross_entropy(input=y_hat, target=y_true.to(torch.long), reduction='mean')
 
         return w_loss
     

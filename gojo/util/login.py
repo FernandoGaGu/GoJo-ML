@@ -67,8 +67,6 @@ def configureLogger(file: str or None = None, add_time_prefix: bool = True):
         ('file', file, [str, type(None)]),
         ('format_file', add_time_prefix, [bool]))
 
-    warnings.warn('gojo.util.login.configureLogger() is still an experimental feature.')
-
     # add custom handlers
     if file is None:
         logger.add(sys.stdout, format="{time:HH:mm:ss.SS} | {level} | {message}", colorize=True)
